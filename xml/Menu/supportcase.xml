@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/supportcase</path>
+    <page_callback>CRM_Supportcase_Form_Dashboard</page_callback>
+    <title>Support Dashboard</title>
+    <access_arguments>access support cases</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/supportcase/manage</path>
+    <page_callback>CRM_Supportcase_Page_Supportcase</page_callback>
+    <title>Supportcase</title>
+    <access_arguments>access support cases</access_arguments>
+  </item>
+</menu>
