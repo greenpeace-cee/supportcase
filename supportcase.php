@@ -236,7 +236,7 @@ function supportcase_civicrm_themes(&$themes) {
  *
  */
 function supportcase_civicrm_navigationMenu(&$menu) {
-  _mailingwork_civix_insert_navigation_menu($menu, 'Cases', array(
+  _supportcase_civix_insert_navigation_menu($menu, 'Cases', array(
     'label' => E::ts('Support Dashboard'),
     'name' => 'Support_Dashboard',
     'url' => 'civicrm/supportcase',
