@@ -12,7 +12,7 @@
           <div class="supportcase__search-block">
 
             <div class="supportcase__search-by-case-id-wrap">
-              <table class="form-layout">
+              <table class="supportcase__search-table form-layout">
                 <tr>
                   <td class="crm-case-common-form-block-case_id">
                     {$form.case_id.label}<br />
@@ -26,7 +26,7 @@
             </div>
 
             <div class="supportcase__search-filters-wrap">
-              <table class="form-layout">
+              <table class="supportcase__search-table form-layout">
                 <tr>
                   {include file="CRM/Core/DatePickerRangeWrapper.tpl" fieldName="case_start_date" colspan="1"}
                   {include file="CRM/Core/DatePickerRangeWrapper.tpl" fieldName="case_end_date"  colspan="1"}
@@ -58,7 +58,7 @@
               </table>
             </div>
 
-            <table class="form-layout">
+            <table class="supportcase__search-table form-layout">
               <tr>
                 <td colspan="2">{$form.buttons.html}</td>
               </tr>
@@ -190,6 +190,22 @@
 
     .supportcase__search-block.searching-by-case-id .supportcase__search-by-case-id-clear-button {
       display: inline-block;
+    }
+
+    .supportcase__search-table {
+      max-width: 820px;
+    }
+
+    .supportcase__search-block {
+      padding: 10px 10px;
+    }
+
+    .supportcase__search-block .supportcase__search-filters-wrap select,
+    .supportcase__search-block .supportcase__search-filters-wrap input {
+      width: 100%;
+      max-width: 340px;
+      box-sizing: border-box;
+      height: 30px;
     }
   </style>
 {/literal}
