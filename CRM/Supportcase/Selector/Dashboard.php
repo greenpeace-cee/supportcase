@@ -133,7 +133,9 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
     $context = 'search'
   ) {
     // submitted form values
-    $this->_queryParams = &$queryParams;
+    // if 'case_id' is set then ignore all other params
+    $caseIdParams = $this->findCaseIdParams($queryParams);
+    $this->_queryParams = ($caseIdParams) ? [$caseIdParams] : $queryParams;
 
     $this->_single = $single;
     $this->_limit = $limit;
@@ -154,6 +156,22 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
 
     $this->_query->_distinctComponentClause = " civicrm_case.id ";
     $this->_query->_groupByComponentClause = " GROUP BY civicrm_case.id ";
+  }
+
+  /**
+   * Finds 'case_id' in params array
+   *
+   * @param $queryParams
+   * @return bool|array
+   */
+  private function findCaseIdParams($queryParams) {
+    foreach ($queryParams as $param) {
+      if (isset($param[0]) && $param[0] == 'case_id') {
+        return $param;
+      }
+    }
+
+    return FALSE;
   }
 
   /**

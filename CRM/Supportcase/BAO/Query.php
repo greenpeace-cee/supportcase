@@ -22,6 +22,12 @@ class CRM_Supportcase_BAO_Query extends CRM_Case_BAO_Query {
       'is_pseudofield' => TRUE,
       'html' => ['type' => 'text'],
     ];
+
+    if (isset($metadata['case_id'])) {
+      $metadata['case_id']['title'] = ts('Search by Case ID');
+      //TODO: Make this filed only integer
+    }
+
     return $metadata;
   }
 
