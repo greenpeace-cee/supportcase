@@ -54,9 +54,18 @@
                         </table>
                     </div>
 
-                    <table class="supportcase__search-table form-layout">
+                    <table class="supportcase__search-table form-layout-compressed">
                         <tr>
-                            <td colspan="2">{$form.buttons.html}</td>
+                            <td>
+                                {$form.buttons.html}
+                            </td>
+                            <td>
+                                <div class="crm-submit-buttons reset-advanced-search">
+                                    <a href="{crmURL p='civicrm/supportcase' q='reset=1'}" class="crm-hover-button" title="{ts}Clear all search criteria{/ts}">
+                                        <i class="crm-i fa-undo"></i>&nbsp;{ts}Reset Form{/ts}
+                                    </a>
+                                </div>
+                            </td>
                         </tr>
                     </table>
                 </div>
