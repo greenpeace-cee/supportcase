@@ -142,6 +142,49 @@ function supportcase_civicrm_enable() {
   }
   civicrm_api3('CaseType', 'create', $caseTypeDefinition);
 
+  //TODO: move it in another place?
+  // install custom group 'Support Case Details' and custom field 'category':
+  $caseTypeId = civicrm_api3('CaseType', 'getvalue', [
+    'return' => "id",
+    'name' => "support_case",
+  ]);
+
+  civicrm_api3('CustomGroup', 'create', [
+    'name' => 'support_case_details',
+    'title' => ts('Support Case Details'),
+    'extends' => "Case",
+    "extends_entity_column_value" => [$caseTypeId],
+  ]);
+
+  $categoryOptionGroup = civicrm_api3('OptionGroup', 'create', [
+    'name' => "support_case_category",
+  ]);
+
+  civicrm_api3('CustomField', 'create', [
+    'custom_group_id' => 'support_case_details',
+    'label' => ts('Category'),
+    'name' => "category",
+    'html_type' => "Select",
+    'data_type' => "Int",
+    'is_searchable' => 1,
+    'is_required' => 1,
+    'option_group_id' => $categoryOptionGroup['id']
+  ]);
+
+  //TODO: add real data (now its dummy data)
+  civicrm_api3('OptionValue', 'create', [
+    'option_group_id' => "support_case_category",
+    'label' => ts("Td do"),
+  ]);
+  civicrm_api3('OptionValue', 'create', [
+    'option_group_id' => "support_case_category",
+    'label' => ts("In progress"),
+  ]);
+  civicrm_api3('OptionValue', 'create', [
+    'option_group_id' => "support_case_category",
+    'label' => ts("Done"),
+  ]);
+
   _supportcase_civix_civicrm_enable();
 }
 
