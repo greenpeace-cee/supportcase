@@ -83,7 +83,74 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     }
     $controller->moveFromSessionToTemplate();
 
+    $this->assign('caseTabs', $this->getPrepareTabs());
     $this->assign('summary', $this->get('summary'));
+  }
+
+  /**
+   * Prepare case tabs
+   *
+   * @return array
+   */
+  private function getPrepareTabs() {
+    $rows = $this->get('rows');
+    $tabs = [];
+
+    $tabs[] = [
+      'title' => 'All',
+      'html_id' => 'all',
+      'count_cases' => count($rows),
+      'extra_counters' => [//TODO: Add needed counters, its dummy
+        [
+          'color' => 'blue',
+          'count' => 9,
+          'title' => 'title',
+        ]
+      ],
+      'cases' => $rows
+    ];
+
+    //TODO: fill “My Cases” tab
+    $tabs[] = [
+      'title' => 'My Cases',
+      'html_id' => 'my_cases',
+      'count_cases' => 0,
+      'extra_counters' => [],
+      'cases' => []
+    ];
+
+    $categories = CRM_Supportcase_Utils_Category::get();
+    foreach ($categories as $category) {
+      $cases = $this->findCasesByCategory($category, $rows);
+      $tabs[] = [
+        'title' => $category['label'],
+        'html_id' => 'category_' . $category['id'],
+        'count_cases' => count($cases),
+        'extra_counters' => [],
+        'cases' => $cases
+      ];
+    }
+
+    return $tabs;
+  }
+
+  /**
+   * Filters cases by category
+   *
+   * @param $category
+   * @param $cases
+   * @return mixed
+   */
+  private function findCasesByCategory($category, $cases) {
+    $filteredCases = [];
+
+    foreach ($cases as $case) {
+      if ($category['id'] == $case['category']) {
+        $filteredCases[] = $case;
+      }
+    }
+
+    return $filteredCases;
   }
 
   /**
@@ -104,6 +171,7 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
       $this->addTaskMenu($tasks);
     }
 
+    CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/dashboard.css');
   }
 
   public function postProcess() {

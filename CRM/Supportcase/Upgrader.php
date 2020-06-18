@@ -111,6 +111,7 @@ class CRM_Supportcase_Upgrader extends CRM_Supportcase_Upgrader_Base {
 
     $categoryOptionGroup = civicrm_api3('OptionGroup', 'create', [
       'name' => "support_case_category",
+      'title' => ts("Support Case Category"),
     ]);
 
     civicrm_api3('CustomField', 'create', [
@@ -127,7 +128,8 @@ class CRM_Supportcase_Upgrader extends CRM_Supportcase_Upgrader_Base {
     //TODO: add real data (now its dummy data)
     civicrm_api3('OptionValue', 'create', [
       'option_group_id' => "support_case_category",
-      'label' => ts("Td do"),
+      'label' => ts("To do"),
+      'is_default' => 1,
     ]);
     civicrm_api3('OptionValue', 'create', [
       'option_group_id' => "support_case_category",

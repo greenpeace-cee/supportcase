@@ -364,6 +364,8 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
       else {
         $row['class'] = "status-normal";
       }
+      //TODO:: add real category
+      $row['category'] = 111;
 
       $rows[$result->case_id] = $row;
     }
