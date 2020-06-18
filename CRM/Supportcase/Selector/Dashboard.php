@@ -148,7 +148,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
 
     $this->_query = new CRM_Contact_BAO_Query($this->_queryParams,
       CRM_Case_BAO_Query::defaultReturnProperties(CRM_Contact_BAO_Query::MODE_CASE,
-        FALSE
+        TRUE
       ),
       NULL, FALSE, FALSE,
       CRM_Contact_BAO_Query::MODE_CASE
@@ -315,6 +315,8 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
 
     $scheduledInfo = [];
 
+    $categoryCustomFieldName = CRM_Core_BAO_CustomField::getCustomFieldID('category', 'support_case_details', true);
+
     while ($result->fetch()) {
       $row = [];
       // the columns we are interested in
@@ -364,8 +366,8 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
       else {
         $row['class'] = "status-normal";
       }
-      //TODO:: add real category
-      $row['category'] = 111;
+
+      $row['category'] = (!empty($categoryCustomFieldName)) ? $result->$categoryCustomFieldName: '';
 
       $rows[$result->case_id] = $row;
     }

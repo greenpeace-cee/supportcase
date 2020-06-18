@@ -124,7 +124,7 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
       $cases = $this->findCasesByCategory($category, $rows);
       $tabs[] = [
         'title' => $category['label'],
-        'html_id' => 'category_' . $category['id'],
+        'html_id' => 'category_' . $category['value'],
         'count_cases' => count($cases),
         'extra_counters' => [],
         'cases' => $cases
@@ -145,7 +145,7 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $filteredCases = [];
 
     foreach ($cases as $case) {
-      if ($category['id'] == $case['category']) {
+      if ($category['value'] == $case['category']) {
         $filteredCases[] = $case;
       }
     }
