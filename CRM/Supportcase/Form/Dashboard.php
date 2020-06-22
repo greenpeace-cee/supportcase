@@ -43,9 +43,11 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
    */
   public function preProcess() {
     //validate case configuration.
+    $isCaseComponentEnabled = CRM_Case_BAO_Case::enabled();
     $configured = CRM_Case_BAO_Case::isCaseConfigured();
     $this->assign('notConfigured', !$configured['configured']);
-    if (!$configured['configured']) {
+    $this->assign('isCaseComponentEnabled', $isCaseComponentEnabled);
+    if (!$isCaseComponentEnabled || !$configured['configured']) {
       return;
     }
 
