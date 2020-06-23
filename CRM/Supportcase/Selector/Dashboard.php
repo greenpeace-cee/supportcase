@@ -121,35 +121,44 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
    *   How many signers do we want returned.
    *
    * @param string $context
-   *
-   * @return \CRM_Case_Selector_Search
    */
-  public function __construct(
-    &$queryParams,
-    $action = CRM_Core_Action::NONE,
-    $additionalClause = NULL,
-    $single = FALSE,
-    $limit = NULL,
-    $context = 'search'
-  ) {
-    // submitted form values
+  public function __construct(&$queryParams, $action = CRM_Core_Action::NONE, $additionalClause = NULL, $single = FALSE, $limit = NULL, $context = 'search') {
+    $listOfAdditionalClause = [];
+    if (!empty($additionalClause)) {
+      $listOfAdditionalClause[] = $additionalClause;
+    }
+
     // if 'case_id' is set then ignore all other params
     $caseIdParams = $this->findCaseIdParams($queryParams);
-    $this->_queryParams = ($caseIdParams) ? [$caseIdParams] : $queryParams;
+    if ($caseIdParams) {
+      $this->_queryParams = [$caseIdParams];
+    } else {
+      $this->_queryParams = $queryParams;
+
+      foreach ($this->_queryParams as $key => $param) {
+        if (isset($param[0]) && $param[0] == 'case_keyword') {
+          $keyWord = (string) $param[2];//TODO: Fix notice. This line always returns notice 'Array to string conversion' but it is not array!
+          $listOfAdditionalClause[] = CRM_Core_DAO::composeQuery(" (case_activity.subject  LIKE %1 OR case_activity.details LIKE %1 ) ", [
+            1 => [ '%' . $keyWord . '%', 'String'],
+          ]);
+        }
+      }
+    }
 
     $this->_single = $single;
     $this->_limit = $limit;
     $this->_context = $context;
-
-    $this->_additionalClause = $additionalClause;
-
-    // type of selector
+    $this->_additionalClause = implode(' AND ', $listOfAdditionalClause);
     $this->_action = $action;
 
+    $returnFields = CRM_Case_BAO_Query::defaultReturnProperties(CRM_Contact_BAO_Query::MODE_CASE, FALSE);
+    $categoryCustomFieldName = CRM_Core_BAO_CustomField::getCustomFieldID('category', 'support_case_details', TRUE);
+    if (!empty($categoryCustomFieldName)) {
+      $returnFields[$categoryCustomFieldName] = 1;
+    }
+
     $this->_query = new CRM_Contact_BAO_Query($this->_queryParams,
-      CRM_Case_BAO_Query::defaultReturnProperties(CRM_Contact_BAO_Query::MODE_CASE,
-        TRUE
-      ),
+      $returnFields,
       NULL, FALSE, FALSE,
       CRM_Contact_BAO_Query::MODE_CASE
     );
