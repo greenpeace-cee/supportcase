@@ -112,7 +112,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
    *
    * @param array $queryParams
    *   Array of parameters for query.
-   * @param \const|int $action - action of search basic or advanced.
+   * @param int $action - action of search basic or advanced. It const from CRM_Core_Action
    * @param string $additionalClause
    *   If the caller wants to further restrict the search (used in participations).
    * @param bool $single
@@ -121,50 +121,68 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
    *   How many signers do we want returned.
    *
    * @param string $context
+   * @throws CRM_Core_Exception
    */
   public function __construct(&$queryParams, $action = CRM_Core_Action::NONE, $additionalClause = NULL, $single = FALSE, $limit = NULL, $context = 'search') {
-    $listOfAdditionalClause = [];
-    if (!empty($additionalClause)) {
-      $listOfAdditionalClause[] = $additionalClause;
-    }
-
     // if 'case_id' is set then ignore all other params
     $caseIdParams = $this->findCaseIdParams($queryParams);
-    if ($caseIdParams) {
-      $this->_queryParams = [$caseIdParams];
-    } else {
-      $this->_queryParams = $queryParams;
-
-      foreach ($this->_queryParams as $key => $param) {
-        if (isset($param[0]) && $param[0] == 'case_keyword') {
-          $keyWord = (string) $param[2];//TODO: Fix notice. This line always returns notice 'Array to string conversion' but it is not array!
-          $listOfAdditionalClause[] = CRM_Core_DAO::composeQuery(" (case_activity.subject  LIKE %1 OR case_activity.details LIKE %1 ) ", [
-            1 => [ '%' . $keyWord . '%', 'String'],
-          ]);
-        }
-      }
-    }
+    $isFindByIdMode = !empty($caseIdParams);
+    $this->_queryParams = ($isFindByIdMode) ? [$caseIdParams] : $queryParams;
 
     $this->_single = $single;
     $this->_limit = $limit;
     $this->_context = $context;
-    $this->_additionalClause = implode(' AND ', $listOfAdditionalClause);
+    $this->_additionalClause = $additionalClause;
     $this->_action = $action;
 
-    $returnFields = CRM_Case_BAO_Query::defaultReturnProperties(CRM_Contact_BAO_Query::MODE_CASE, FALSE);
-    $categoryCustomFieldName = CRM_Core_BAO_CustomField::getCustomFieldID('category', 'support_case_details', TRUE);
-    if (!empty($categoryCustomFieldName)) {
-      $returnFields[$categoryCustomFieldName] = 1;
-    }
-
-    $this->_query = new CRM_Contact_BAO_Query($this->_queryParams,
-      $returnFields,
-      NULL, FALSE, FALSE,
-      CRM_Contact_BAO_Query::MODE_CASE
-    );
-
+    $this->_query = new CRM_Contact_BAO_Query($this->_queryParams, $this->getReturnFields(), NULL, FALSE, FALSE, CRM_Contact_BAO_Query::MODE_CASE);
     $this->_query->_distinctComponentClause = " civicrm_case.id ";
     $this->_query->_groupByComponentClause = " GROUP BY civicrm_case.id ";
+
+    if ($isFindByIdMode) {
+      return;
+    }
+
+    foreach ($queryParams as $param) {
+      if (isset($param[0]) && $param[0] == 'case_keyword') {
+        $keyWord = (is_array($param[2])) ? $param[2]['LIKE'] : '%' . $param[2] . '%' ;
+        $where = CRM_Core_DAO::composeQuery(" (case_activity.subject  LIKE %1 OR case_activity.details LIKE %1 ) ", [
+          1 => [$keyWord , 'String'],
+        ]);
+        $this->_query->_where[0][] = $where;
+        $this->_query->_whereClause = (empty($this->_query->_whereClause)) ? $where : $this->_query->_whereClause . ' AND ' . $where;
+      }
+
+      if (isset($param[0]) && $param[0] == 'case_agents' && !empty($param[2])) {
+        $tableName = 'civicrm_activity_contact';
+        $whereTable = "\n LEFT JOIN civicrm_activity_contact ON (civicrm_activity_contact.activity_id = civicrm_case_activity.activity_id) ";
+        $this->_query->_whereTables[$tableName] = $this->_query->_tables[$tableName] = $whereTable;
+
+        $where = CRM_Core_DAO::composeQuery(" civicrm_activity_contact.contact_id IN(%1) AND civicrm_activity_contact.record_type_id = %2 ", [
+          1 => [$param[2] , 'CommaSeparatedIntegers'],
+          2 => [2 , 'Integer'], // 1 assignee, 2 creator, 3 focus or target
+        ]);
+        $this->_query->_where[0][] = $where;
+        $this->_query->_whereClause = (empty($this->_query->_whereClause)) ? $where : $this->_query->_whereClause . ' AND ' . $where;
+      }
+    }
+  }
+
+  /**
+   * Gits list of 'return fields' for query
+   *
+   * @return array
+   */
+  private function getReturnFields() {
+    $returnFields = CRM_Case_BAO_Query::defaultReturnProperties(CRM_Contact_BAO_Query::MODE_CASE, FALSE);
+    try {
+      $categoryCustomFieldName = CRM_Core_BAO_CustomField::getCustomFieldID('category', 'support_case_details', TRUE);
+      if (!empty($categoryCustomFieldName)) {
+        $returnFields[$categoryCustomFieldName] = 1;
+      }
+    } catch (CiviCRM_API3_Exception $e) {}
+
+    return $returnFields;
   }
 
   /**
