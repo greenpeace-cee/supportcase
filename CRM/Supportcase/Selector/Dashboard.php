@@ -144,40 +144,46 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
     }
 
     foreach ($queryParams as $param) {
-      if (isset($param[0]) && $param[0] == 'case_keyword') {
+      if (isset($param[0]) && $param[0] == 'case_keyword' && !empty($param[2])) {
         $keyWord = (is_array($param[2])) ? $param[2]['LIKE'] : '%' . $param[2] . '%' ;
         $where = CRM_Core_DAO::composeQuery(" (case_activity.subject  LIKE %1 OR case_activity.details LIKE %1 ) ", [
           1 => [$keyWord , 'String'],
         ]);
-        $this->_query->_where[0][] = $where;
-        $this->_query->_whereClause = (empty($this->_query->_whereClause)) ? $where : $this->_query->_whereClause . ' AND ' . $where;
+        $this->addNewWhere($where);
       }
 
       if (isset($param[0]) && $param[0] == 'case_agents' && !empty($param[2])) {
-        $tableName = 'civicrm_activity_contact';
         $whereTable = "\n LEFT JOIN civicrm_activity_contact ON (civicrm_activity_contact.activity_id = civicrm_case_activity.activity_id) ";
-        $this->_query->_whereTables[$tableName] = $this->_query->_tables[$tableName] = $whereTable;
+        $this->_query->_whereTables['civicrm_activity_contact'] = $whereTable;
+        $this->_query->_tables['civicrm_activity_contact'] = $whereTable;
 
         $where = CRM_Core_DAO::composeQuery(" civicrm_activity_contact.contact_id IN(%1) AND civicrm_activity_contact.record_type_id = %2 ", [
           1 => [$param[2] , 'CommaSeparatedIntegers'],
           2 => [2 , 'Integer'], // 1 assignee, 2 creator, 3 focus or target
         ]);
-        $this->_query->_where[0][] = $where;
-        $this->_query->_whereClause = (empty($this->_query->_whereClause)) ? $where : $this->_query->_whereClause . ' AND ' . $where;
+        $this->addNewWhere($where);
       }
 
       if (isset($param[0]) && $param[0] == 'case_client' && !empty($param[2])) {
         $where = CRM_Core_DAO::composeQuery(" civicrm_case_contact.contact_id IN(%1) ", [
           1 => [$param[2] , 'CommaSeparatedIntegers'],
         ]);
-        $this->_query->_where[0][] = $where;
-        $this->_query->_whereClause = (empty($this->_query->_whereClause)) ? $where : $this->_query->_whereClause . ' AND ' . $where;
+        $this->addNewWhere($where);
       }
     }
   }
 
   /**
-   * Gits list of 'return fields' for query
+   * Adds new where to the query object
+   * @param $where
+   */
+  private function addNewWhere($where) {
+    $this->_query->_where[0][] = $where;
+    $this->_query->_whereClause = (empty($this->_query->_whereClause)) ? $where : $this->_query->_whereClause . ' AND ' . $where;
+  }
+
+  /**
+   * Gets list of 'return fields' for query
    *
    * @return array
    */
