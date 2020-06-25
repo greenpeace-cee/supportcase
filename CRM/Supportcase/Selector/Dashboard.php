@@ -327,8 +327,9 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
    * @param string $output
    *   What should the result set include (web/email/csv).
    *
-   * @return int
-   *   the total number of rows for this action
+   * @return array
+   * @throws CRM_Core_Exception
+   * @throws CiviCRM_API3_Exception
    */
   public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
     $result = $this->_query->searchQuery($offset, $rowCount, $sort,
@@ -397,7 +398,9 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
 
       //adding case manager to case selector.CRM-4510.
       $caseType = CRM_Case_BAO_Case::getCaseType($result->case_id, 'name');
-      $row['casemanager'] = CRM_Case_BAO_Case::getCaseManagerContact($caseType, $result->case_id);
+      $caseManagerContactData = self::getCaseManagerContact($caseType, $result->case_id);
+      $row['casemanager'] = $caseManagerContactData['case_manager_link'];
+      $row['case_manager_contact_id'] = $caseManagerContactData['case_manager_contact_id'];
 
       if (isset($result->case_status_id) &&
         array_key_exists($result->case_status_id, $caseStatus)
@@ -427,6 +430,64 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
       }
     }
     return $rows;
+  }
+
+  /**
+   * Get case manger contact which is assigned a case role of case manager.
+   * Returns contact id and html link on that contact id
+   *
+   * @param int $caseType
+   * @param int $caseId
+   *
+   * @return array
+   */
+  public static function getCaseManagerContact($caseType, $caseId) {
+    if (!$caseType || !$caseId) {
+      return NULL;
+    }
+
+    $managerData = [
+      'case_manager_link' => '---',
+      'case_manager_contact_id' => '',
+    ];
+    $managerRoleId = (new CRM_Case_XMLProcessor_Process())->getCaseManagerRoleId($caseType);
+
+    if (!empty($managerRoleId)) {
+      if (substr($managerRoleId, -4) == '_a_b') {
+        $managerRoleQuery = "
+          SELECT civicrm_contact.id as casemanager_id, civicrm_contact.sort_name as casemanager
+          FROM civicrm_contact
+          LEFT JOIN civicrm_relationship ON (civicrm_relationship.contact_id_b = civicrm_contact.id 
+          AND civicrm_relationship.relationship_type_id = %1) AND civicrm_relationship.is_active
+          LEFT JOIN civicrm_case ON civicrm_case.id = civicrm_relationship.case_id
+          WHERE civicrm_case.id = %2 AND is_active = 1";
+      }
+      if (substr($managerRoleId, -4) == '_b_a') {
+        $managerRoleQuery = "
+          SELECT civicrm_contact.id as casemanager_id, civicrm_contact.sort_name as casemanager
+          FROM civicrm_contact
+          LEFT JOIN civicrm_relationship ON (civicrm_relationship.contact_id_a = civicrm_contact.id 
+          AND civicrm_relationship.relationship_type_id = %1) AND civicrm_relationship.is_active
+          LEFT JOIN civicrm_case ON civicrm_case.id = civicrm_relationship.case_id
+          WHERE civicrm_case.id = %2 AND is_active = 1";
+      }
+
+      $dao = CRM_Core_DAO::executeQuery($managerRoleQuery, [
+        1 => [substr($managerRoleId, 0, -4), 'Integer'],
+        2 => [$caseId, 'Integer'],
+      ]);
+      
+      if ($dao->fetch()) {
+        $managerData['case_manager_link'] = sprintf(
+          '<a href="%s">%s</a>',
+          CRM_Utils_System::url('civicrm/contact/view', ['cid' => $dao->casemanager_id]),
+          $dao->casemanager
+        );
+        $managerData['case_manager_contact_id'] = $dao->casemanager_id;
+      }
+    }
+
+    return $managerData;
   }
 
   /**

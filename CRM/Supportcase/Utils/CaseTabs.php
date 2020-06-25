@@ -48,19 +48,13 @@ class CRM_Supportcase_Utils_CaseTabs {
    * @return array
    */
   private function getPrepareAllCaseTab() {
-    $allTab = [
+    return [
       'title' => 'All',
       'html_id' => 'all',
       'count_cases' => count($this->caseRows),
-      'extra_counters' => [],
+      'extra_counters' => $this->prepareCaseExtraCounters($this->caseRows),
       'cases' => $this->caseRows
     ];
-    $countOfUrgentCases = $this->getCountOfUrgentCases($this->caseRows);
-    if ($countOfUrgentCases > 0) {
-      $allTab['extra_counters'][] = $this->prepareUrgentCounterParams($countOfUrgentCases);
-    }
-
-    return $allTab;
   }
 
   /**
@@ -69,13 +63,24 @@ class CRM_Supportcase_Utils_CaseTabs {
    * @return array
    */
   private function getPrepareMyCaseTab() {
-    //TODO: fill “My Cases” tab
+    $cases = [];
+    $currentContactId = CRM_Core_Session::getLoggedInContactID();
+    if (empty($currentContactId)) {
+      return [];
+    }
+
+    foreach ($this->caseRows as $case) {
+      if ($currentContactId == $case['case_manager_contact_id']) {
+        $cases[] = $case;
+      }
+    }
+
     return [
       'title' => 'My Cases',
       'html_id' => 'my_cases',
-      'count_cases' => 0,
-      'extra_counters' => [],
-      'cases' => []
+      'count_cases' => count($cases),
+      'extra_counters' => $this->prepareCaseExtraCounters($cases),
+      'cases' => $cases
     ];
   }
 
@@ -90,21 +95,32 @@ class CRM_Supportcase_Utils_CaseTabs {
     $categories = CRM_Supportcase_Utils_Category::get();
     foreach ($categories as $category) {
       $cases = $this->findCasesByCategory($category, $this->caseRows);
-      $countOfUrgentCases = $this->getCountOfUrgentCases($cases);
-      $tab = [
+      $tabs[] = [
         'title' => $category['label'],
         'html_id' => 'category_' . $category['value'],
         'count_cases' => count($cases),
-        'extra_counters' => [],
+        'extra_counters' => $this->prepareCaseExtraCounters($cases),
         'cases' => $cases
       ];
-      if ($countOfUrgentCases > 0) {
-        $tab['extra_counters'][] = $this->prepareUrgentCounterParams($countOfUrgentCases);
-      }
-      $tabs[] = $tab;
     }
 
     return $tabs;
+  }
+
+  /**
+   * Prepares extra counters params for case rows
+   *
+   * @param $cases
+   * @return array
+   */
+  private function prepareCaseExtraCounters($cases) {
+    $extraCounters = [];
+    $countOfUrgentCases = $this->getCountOfUrgentCases($cases);
+    if ($countOfUrgentCases > 0) {
+      $extraCounters[] = $this->prepareUrgentCounterParams($countOfUrgentCases);
+    }
+
+    return $extraCounters;
   }
 
   /**
