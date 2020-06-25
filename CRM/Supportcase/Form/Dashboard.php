@@ -26,15 +26,23 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     return 'Case';
   }
 
+  /**
+   * @return array
+   * @throws CRM_Core_Exception
+   * @throws CiviCRM_API3_Exception
+   */
   public function setDefaultValues() {
     $defaultValues = parent::setDefaultValues();
-    $support_case_type_id = civicrm_api3('CaseType', 'getvalue', [
+    $supportCaseTypeId = civicrm_api3('CaseType', 'getvalue', [
       'return' => 'id',
       'name'   => 'support_case',
     ]);
-    // TODO: replace hardcoded values
-    $defaultValues['case_type_id'] = $support_case_type_id;
-    $defaultValues['case_status_id'] = [1, 3];
+    $defaultValues['case_type_id'] = $supportCaseTypeId;
+    $defaultValues['case_status_id'] = [
+      CRM_Core_PseudoConstant::getKey('CRM_Case_BAO_Case', 'case_status_id', 'Open'),
+      CRM_Core_PseudoConstant::getKey('CRM_Case_BAO_Case', 'case_status_id', 'Urgent'),
+    ];
+
     return $defaultValues;
   }
 
