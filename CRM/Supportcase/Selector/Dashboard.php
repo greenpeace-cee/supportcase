@@ -165,6 +165,14 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
         $this->_query->_where[0][] = $where;
         $this->_query->_whereClause = (empty($this->_query->_whereClause)) ? $where : $this->_query->_whereClause . ' AND ' . $where;
       }
+
+      if (isset($param[0]) && $param[0] == 'case_client' && !empty($param[2])) {
+        $where = CRM_Core_DAO::composeQuery(" civicrm_case_contact.contact_id IN(%1) ", [
+          1 => [$param[2] , 'CommaSeparatedIntegers'],
+        ]);
+        $this->_query->_where[0][] = $where;
+        $this->_query->_whereClause = (empty($this->_query->_whereClause)) ? $where : $this->_query->_whereClause . ' AND ' . $where;
+      }
     }
   }
 
