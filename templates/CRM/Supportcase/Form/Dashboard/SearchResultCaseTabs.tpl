@@ -38,6 +38,40 @@
             {/foreach}
 
         </div>
-        {include file="CRM/common/TabSelected.tpl" defaultTab="tab_body_all"}
+        {include file="CRM/common/TabSelected.tpl"}
     </div>
 </div>
+
+{literal}
+    <script>
+        CRM.$(function ($) {
+            handleActiveTab();
+
+            function handleActiveTab() {
+                var mainTabContainer = $('#mainTabContainer');
+                mainTabContainer.tabs({active: getActiveTabIndex()});
+
+                mainTabContainer.click(function() {
+                    var currentTabIndex = mainTabContainer.tabs('option', 'active');
+                    setActiveTabIndex(currentTabIndex);
+                });
+            }
+
+            function getActiveTabIndex() {
+                return (window.localStorage) ? localStorage.getItem(getStorageKey()): 0;
+            }
+
+            function setActiveTabIndex(tabIndex) {
+                if (window.localStorage) {
+                    localStorage.setItem(getStorageKey(), tabIndex);
+                }
+            }
+
+            function getStorageKey() {
+                var currentContactId = '{/literal}{$currentContactId}{literal}';
+                return 'supportcase_search_form_active_tab_contact_id_' + currentContactId;
+            }
+
+        });
+    </script>
+{/literal}
