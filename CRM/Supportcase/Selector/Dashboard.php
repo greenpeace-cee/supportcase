@@ -418,18 +418,62 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
 
     //retrive the scheduled & recent Activity type and date for selector
     if (!empty($scheduledInfo)) {
-      $schdeduledActivity = CRM_Case_BAO_Case::getNextScheduledActivity($scheduledInfo, 'upcoming');
-      foreach ($schdeduledActivity as $key => $value) {
-        $rows[$key]['case_scheduled_activity_date'] = $value['date'];
-        $rows[$key]['case_scheduled_activity_type'] = $value['type'];
+      $userID = CRM_Core_Session::getLoggedInContactID();
+      $caseIds = implode(',', $scheduledInfo['case_id']);
+      $contactIds = implode(',', $scheduledInfo['contact_id']);
+      $condition = CRM_Core_DAO::composeQuery(" 
+        civicrm_case_contact.contact_id IN(%1)
+        AND civicrm_case.id IN(%2)
+        AND civicrm_case.is_deleted = %3 ", [
+        1 => [$contactIds , 'CommaSeparatedIntegers'],
+        2 => [$caseIds , 'CommaSeparatedIntegers'],
+        3 => [$scheduledInfo['case_deleted'] , 'Integer'],
+      ]);
+
+      $upcomingQuery = CRM_Case_BAO_Case::getCaseActivityQuery('upcoming', $userID, $condition);
+      $recentQuery = CRM_Case_BAO_Case::getCaseActivityQuery('recent', $userID, $condition);
+      $activityTypes = $this->getAvailableActivityTypes();
+
+      $dao = CRM_Core_DAO::executeQuery($upcomingQuery);
+      while ($dao->fetch()) {
+        $rows[$dao->case_id]['case_scheduled_activity_date'] = $dao->activity_date_time;
+        $rows[$dao->case_id]['case_scheduled_activity_type'] = $activityTypes[$dao->activity_type_id] ?? NULL;
       }
-      $recentActivity = CRM_Case_BAO_Case::getNextScheduledActivity($scheduledInfo, 'recent');
-      foreach ($recentActivity as $key => $value) {
-        $rows[$key]['case_recent_activity_date'] = $value['date'];
-        $rows[$key]['case_recent_activity_type'] = $value['type'];
+
+      $dao = CRM_Core_DAO::executeQuery($recentQuery);
+      while ($dao->fetch()) {
+        $rows[$dao->case_id]['case_recent_activity_date'] = $dao->activity_date_time;
+        $rows[$dao->case_id]['case_recent_activity_type'] = $activityTypes[$dao->activity_type_id] ?? NULL;
       }
     }
+
     return $rows;
+  }
+
+  /**
+   * Gets list of available activity type (value => label)
+   *
+   * @return array
+   */
+  public function getAvailableActivityTypes() {
+    $availableActivityTypes = CRM_Supportcase_Utils_Setting::get('supportcase_available_activity_type_names');
+
+    $dao = CRM_Core_DAO::executeQuery("
+      SELECT civicrm_option_value.label AS option_label, civicrm_option_value.value AS option_value
+      FROM civicrm_option_value
+      LEFT JOIN civicrm_option_group ON civicrm_option_value.option_group_id = civicrm_option_group.id
+      WHERE civicrm_option_group.name = 'activity_type' 
+        AND civicrm_option_value.is_active = 1 
+        AND civicrm_option_value.name IN('" . implode("' , '", $availableActivityTypes) . "')
+      ORDER BY civicrm_option_value.weight
+    ");
+
+    $activityTypes = [];
+    while ($dao->fetch()) {
+      $activityTypes[$dao->option_value] = $dao->option_label;
+    }
+
+    return $activityTypes;
   }
 
   /**
