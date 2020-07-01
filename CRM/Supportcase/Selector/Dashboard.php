@@ -438,12 +438,14 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
       while ($dao->fetch()) {
         $rows[$dao->case_id]['case_scheduled_activity_date'] = $dao->activity_date_time;
         $rows[$dao->case_id]['case_scheduled_activity_type'] = $activityTypes[$dao->activity_type_id] ?? NULL;
+        $rows[$dao->case_id]['case_scheduled_activity_id'] = $dao->activity_id ?? NULL;
       }
 
       $dao = CRM_Core_DAO::executeQuery($recentQuery);
       while ($dao->fetch()) {
         $rows[$dao->case_id]['case_recent_activity_date'] = $dao->activity_date_time;
         $rows[$dao->case_id]['case_recent_activity_type'] = $activityTypes[$dao->activity_type_id] ?? NULL;
+        $rows[$dao->case_id]['case_recent_activity_id'] = $dao->activity_id ?? NULL;
       }
     }
 

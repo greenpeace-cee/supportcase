@@ -52,3 +52,7 @@
     box-sizing: border-box;
     height: 30px;
 }
+
+.crm-container .crm-tooltip .supportcase__tooltip-wrap  .crm-summary-group {
+    width: 550px;
+}
