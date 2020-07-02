@@ -37,10 +37,6 @@
     display: inline-block;
 }
 
-.supportcase__search-table {
-    max-width: 820px;
-}
-
 .supportcase__search-block {
     padding: 10px 10px;
 }
@@ -55,4 +51,54 @@
 
 .crm-container .crm-tooltip .supportcase__tooltip-wrap  .crm-summary-group {
     width: 550px;
+}
+
+.crm-container .supportcase__dashboard-search-filters-wrap .supportcase__case-tags-filter-wrap .crm-accordion-body {
+    box-shadow: none;
+    padding: 10px 0 0 0 !important;
+}
+
+.crm-container .supportcase__dashboard-search-filters-wrap .supportcase__case-tags-filter-wrap .crm-accordion-header {
+    padding: 5px 10px;
+}
+
+.supportcase__case-tags-filter .tag-section label {
+    display: block;
+}
+
+.supportcase__case-tags-filter .tag-section {
+    max-width: 336px;
+    width: 100%;
+    padding-right: 5px;
+    padding-left: 5px;
+    display: inline-block;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    overflow: hidden;
+}
+
+.supportcase__case-tags-filter {
+    margin-right: -5px;
+    margin-left: -5px;
+}
+
+.supportcase__case-tags-filter-wrap {
+    max-width: 750px;
+}
+
+.supportcase__search-buttons .crm-submit-buttons.reset-advanced-search {
+    display: inline-block;
+    padding: 5px 10px;
+}
+
+.supportcase__search-buttons .supportcase__search-button-submit {
+    display: inline-block;
+}
+
+.supportcase__search-buttons {
+    margin-top: 20px;
+}
+
+.supportcase__dashboard-search-filters-wrap {
+    max-width: 720px;
 }

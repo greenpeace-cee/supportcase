@@ -96,6 +96,7 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $this->assign('caseTabs', (new CRM_Supportcase_Utils_CaseTabs($this->get('rows')))->separateToTabs());
     $this->assign('summary', $this->get('summary'));
     $this->assign('currentContactId', CRM_Core_Session::getLoggedInContactID());
+    $this->assign('isTagsFilterEmpty', $this->isTagsFilterEmpty());
   }
 
   /**
@@ -200,6 +201,25 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
    */
   protected function isInitialDisplay() {
     return empty($this->get('rows')) && empty($_POST);
+  }
+
+  /**
+   * Is tags filter empty?
+   *
+   * @return bool
+   */
+  protected function isTagsFilterEmpty() {
+    if (empty($this->_formValues['case_taglist'])) {
+      return TRUE;
+    }
+
+    foreach ($this->_formValues['case_taglist'] as $tag) {
+      if (!empty($tag)) {
+        return FALSE;
+      }
+    }
+
+    return TRUE;
   }
 
 }
