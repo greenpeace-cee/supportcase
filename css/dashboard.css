@@ -102,3 +102,7 @@
 .supportcase__dashboard-search-filters-wrap {
     max-width: 720px;
 }
+
+.supportcase__result-block .ui-tabs .ui-corner-top.ui-tabs-active {
+    z-index: 10;
+}
