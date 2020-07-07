@@ -11,7 +11,6 @@
 {strip}
   <table class="dataTable">
     <tr>
-
       <th scope="col" title="Select Rows">{$form.toggleSelect.html}</th>
 
       {foreach from=$columnHeaders item=header}
@@ -52,6 +51,16 @@
       </td>
       <td class="crm-case-subject" style="width: 300px;">
         {$row.case_subject}
+      </td>
+      <td class="{$row.class} crm-case-tags">
+        <ul class="supportcase__case-tags-wrap">
+          {foreach from=$row.case_tags item=tag}
+            <li class="supportcase__case-tag-item" title="{$tag.description}">
+              <span class="supportcase__case-tag-color" style="background-color: {$tag.color}"></span>
+              <span class="supportcase__case-tag-name">{$tag.name}</span>
+            </li>
+          {/foreach}
+        </ul>
       </td>
       <td class="{$row.class} crm-case-status_{$row.case_status}">
         {$row.case_status}

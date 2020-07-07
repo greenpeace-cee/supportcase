@@ -108,6 +108,13 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
   protected $_query;
 
   /**
+   * Case all available tags
+   *
+   * @var string
+   */
+  protected $_caseAllTags;
+
+  /**
    * Class constructor.
    *
    * @param array $queryParams
@@ -143,6 +150,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
     $this->_query = new CRM_Contact_BAO_Query($this->_queryParams, $this->getReturnFields(), NULL, FALSE, FALSE, CRM_Contact_BAO_Query::MODE_CASE);
     $this->_query->_distinctComponentClause = " civicrm_case.id ";
     $this->_query->_groupByComponentClause = " GROUP BY civicrm_case.id ";
+    $this->_caseAllTags = CRM_Core_BAO_Tag::getTagsUsedFor('civicrm_case', FALSE);
 
     if ($isSearchByCaseId) {
       return;
@@ -325,8 +333,6 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
       FALSE,
       $this->_additionalClause
     );
-    // process the result of the query
-    $rows = [];
 
     //CRM-4418 check for view, edit, delete
     $permissions = [CRM_Core_Permission::VIEW];
@@ -338,12 +344,11 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
     if (CRM_Core_Permission::check('delete in CiviCase')) {
       $permissions[] = CRM_Core_Permission::DELETE;
     }
+
+    $rows = [];
     $mask = CRM_Core_Action::mask($permissions);
-
     $caseStatus = CRM_Core_OptionGroup::values('case_status', FALSE, FALSE, FALSE, " AND v.name = 'Urgent' ");
-
     $scheduledInfo = [];
-
     $categoryCustomFieldName = CRM_Core_BAO_CustomField::getCustomFieldID('category', 'support_case_details', true);
 
     while ($result->fetch()) {
@@ -380,8 +385,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
         $result->case_id
       );
 
-      $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ? $result->contact_sub_type : $result->contact_type
-      );
+      $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ? $result->contact_sub_type : $result->contact_type);
 
       //adding case manager to case selector.CRM-4510.
       $caseType = CRM_Case_BAO_Case::getCaseType($result->case_id, 'name');
@@ -389,15 +393,13 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
       $row['casemanager'] = $caseManagerContactData['case_manager_link'];
       $row['case_manager_contact_id'] = $caseManagerContactData['case_manager_contact_id'];
 
-      if (isset($result->case_status_id) &&
-        array_key_exists($result->case_status_id, $caseStatus)
-      ) {
+      if (isset($result->case_status_id) && array_key_exists($result->case_status_id, $caseStatus)) {
         $row['class'] = "status-urgent";
-      }
-      else {
+      } else {
         $row['class'] = "status-normal";
       }
 
+      $row['case_tags'] = $this->getCaseTags($result->case_id);
       $row['category'] = (!empty($categoryCustomFieldName)) ? $result->$categoryCustomFieldName: '';
 
       $rows[$result->case_id] = $row;
@@ -437,6 +439,29 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
     }
 
     return $rows;
+  }
+
+  /**
+   * Gets tags assigned to case id
+   *
+   * @param $caseId
+   *
+   * @return array
+   */
+  private function getCaseTags($caseId) {
+    $caseTagIds = CRM_Core_BAO_EntityTag::getTag($caseId, 'civicrm_case');
+    if (empty($caseTagIds)) {
+     return [];
+    }
+
+    $caseTags = [];
+    foreach ($caseTagIds as $tagId) {
+      if (isset($this->_caseAllTags[$tagId])) {
+        $caseTags[] = $this->_caseAllTags[$tagId];
+      }
+    }
+
+    return $caseTags;
   }
 
   /**
@@ -546,7 +571,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
     if (!isset(self::$_columnHeaders)) {
       self::$_columnHeaders = [
         [
-          'name' => ts('Case ID'),
+          'name' => ts('ID'),
           'sort' => 'case_id',
           'direction' => CRM_Utils_Sort::DONTCARE,
         ],
@@ -561,6 +586,10 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
         ],
         [
           'name' => ts('Subject'),
+          'direction' => CRM_Utils_Sort::DONTCARE,
+        ],
+        [
+          'name' => ts('Tags'),
           'direction' => CRM_Utils_Sort::DONTCARE,
         ],
         [

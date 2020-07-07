@@ -106,3 +106,40 @@
 .supportcase__result-block .ui-tabs .ui-corner-top.ui-tabs-active {
     z-index: 10;
 }
+
+.crm-container .supportcase__case-tags-wrap {
+    list-style: none;
+    padding: 0;
+}
+
+.supportcase__case-tag-item {
+    display: inline-block;
+    position: relative;
+    margin-bottom: 5px;
+    border: solid 1px #d3dee2;
+    padding: 6px 6px 6px 24px;
+    cursor: default;
+}
+
+.supportcase__case-tag-color {
+    display: block;
+    height: 15px;
+    width: 15px;
+    position: absolute;
+    top: 50%;
+    left: 4px;
+    transform: translate(0, -50%);
+}
+
+.supportcase__case-tag-name {
+    display: block;
+    max-width: 100px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    line-height: 15px;
+}
+
+.crm-container table.dataTable tr td .supportcase__case-tag-name {
+    line-height: 15px;
+}
