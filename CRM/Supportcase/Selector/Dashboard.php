@@ -124,52 +124,55 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
    * @throws CRM_Core_Exception
    */
   public function __construct(&$queryParams, $action = CRM_Core_Action::NONE, $additionalClause = NULL, $single = FALSE, $limit = NULL, $context = 'search') {
+    $params = [];
+    foreach ($queryParams as $queryParam) {
+      if (!empty($queryParam[0]) && !empty($queryParam[2])) {
+        $params[$queryParam[0]] = $queryParam;
+      }
+    }
+
     // if 'case_id' is set then ignore all other params
-    $caseIdParams = $this->findCaseIdParams($queryParams);
-    $isFindByIdMode = !empty($caseIdParams);
-    $this->_queryParams = ($isFindByIdMode) ? [$caseIdParams] : $queryParams;
+    $isSearchByCaseId = isset($params['case_id']);
+    $this->_queryParams = $isSearchByCaseId ? [$params['case_id']] : $queryParams;
 
     $this->_single = $single;
     $this->_limit = $limit;
     $this->_context = $context;
     $this->_additionalClause = $additionalClause;
     $this->_action = $action;
-
     $this->_query = new CRM_Contact_BAO_Query($this->_queryParams, $this->getReturnFields(), NULL, FALSE, FALSE, CRM_Contact_BAO_Query::MODE_CASE);
     $this->_query->_distinctComponentClause = " civicrm_case.id ";
     $this->_query->_groupByComponentClause = " GROUP BY civicrm_case.id ";
 
-    if ($isFindByIdMode) {
+    if ($isSearchByCaseId) {
       return;
     }
 
-    foreach ($queryParams as $param) {
-      if (isset($param[0]) && $param[0] == 'case_keyword' && !empty($param[2])) {
-        $keyWord = (is_array($param[2])) ? $param[2]['LIKE'] : '%' . $param[2] . '%' ;
-        $where = CRM_Core_DAO::composeQuery(" (case_activity.subject  LIKE %1 OR case_activity.details LIKE %1 ) ", [
-          1 => [$keyWord , 'String'],
-        ]);
-        $this->addNewWhere($where);
-      }
+    if (isset($params['case_keyword'])) {
+      $keyWord = (is_array($params['case_keyword'][2])) ? $params['case_keyword'][2]['LIKE'] : '%' . $params['case_keyword'][2] . '%' ;
+      $where = CRM_Core_DAO::composeQuery(" (case_activity.subject  LIKE %1 OR case_activity.details LIKE %1 ) ", [
+        1 => [$keyWord , 'String'],
+      ]);
+      $this->addNewWhere($where);
+    }
 
-      if (isset($param[0]) && $param[0] == 'case_agents' && !empty($param[2])) {
-        $whereTable = "\n LEFT JOIN civicrm_activity_contact ON (civicrm_activity_contact.activity_id = civicrm_case_activity.activity_id) ";
-        $this->_query->_whereTables['civicrm_activity_contact'] = $whereTable;
-        $this->_query->_tables['civicrm_activity_contact'] = $whereTable;
+    if (isset($params['case_agents'])) {
+      $whereTable = "\n LEFT JOIN civicrm_activity_contact ON (civicrm_activity_contact.activity_id = civicrm_case_activity.activity_id) ";
+      $this->_query->_whereTables['civicrm_activity_contact'] = $whereTable;
+      $this->_query->_tables['civicrm_activity_contact'] = $whereTable;
 
-        $where = CRM_Core_DAO::composeQuery(" civicrm_activity_contact.contact_id IN(%1) AND civicrm_activity_contact.record_type_id = %2 ", [
-          1 => [$param[2] , 'CommaSeparatedIntegers'],
-          2 => [2 , 'Integer'], // 1 assignee, 2 creator, 3 focus or target
-        ]);
-        $this->addNewWhere($where);
-      }
+      $where = CRM_Core_DAO::composeQuery(" civicrm_activity_contact.contact_id IN(%1) AND civicrm_activity_contact.record_type_id = %2 ", [
+        1 => [$params['case_agents'][2] , 'CommaSeparatedIntegers'],
+        2 => [2 , 'Integer'], // 1 assignee, 2 creator, 3 focus or target
+      ]);
+      $this->addNewWhere($where);
+    }
 
-      if (isset($param[0]) && $param[0] == 'case_client' && !empty($param[2])) {
-        $where = CRM_Core_DAO::composeQuery(" civicrm_case_contact.contact_id IN(%1) ", [
-          1 => [$param[2] , 'CommaSeparatedIntegers'],
-        ]);
-        $this->addNewWhere($where);
-      }
+    if (isset($params['case_client'])) {
+      $where = CRM_Core_DAO::composeQuery(" civicrm_case_contact.contact_id IN(%1) ", [
+        1 => [$params['case_client'][2] , 'CommaSeparatedIntegers'],
+      ]);
+      $this->addNewWhere($where);
     }
   }
 
@@ -197,22 +200,6 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
     } catch (CiviCRM_API3_Exception $e) {}
 
     return $returnFields;
-  }
-
-  /**
-   * Finds 'case_id' in params array
-   *
-   * @param $queryParams
-   * @return bool|array
-   */
-  private function findCaseIdParams($queryParams) {
-    foreach ($queryParams as $param) {
-      if (isset($param[0]) && $param[0] == 'case_id') {
-        return $param;
-      }
-    }
-
-    return FALSE;
   }
 
   /**
