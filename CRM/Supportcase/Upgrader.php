@@ -21,6 +21,13 @@ class CRM_Supportcase_Upgrader extends CRM_Supportcase_Upgrader_Base {
         'activityAsgmtGrps' => [
           'support_agent',
         ],
+        'caseStatuses' => [
+          'Closed',
+          'Open',
+          'Urgent',
+          'forwarded',
+          'spam',
+        ],
         'activityTypes' => [
           [
             'name' => 'Open Case',
