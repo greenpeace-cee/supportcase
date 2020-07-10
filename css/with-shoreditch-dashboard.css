@@ -60,6 +60,10 @@
     padding-left: 15px;
 }
 
-.crm-container .supportcase__result-block table.dataTable {
-    /*box-shadow: none;*/
+.crm-container .supportcase__result-block .ui-tabs .supportcase__tab-link-wrap {
+    padding: 0;
+}
+
+.crm-container .supportcase__result-block .ui-tabs .supportcase__tab-link-wrap .supportcase__tab-link {
+    padding: 12px !important;
 }
