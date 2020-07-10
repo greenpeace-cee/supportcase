@@ -7,12 +7,21 @@ use CRM_Supportcase_ExtensionUtil as E;
 class CRM_Supportcase_Upgrader extends CRM_Supportcase_Upgrader_Base {
 
   public function install() {
-    // for some reason using civicrm_managed for CaseType causes an error because
-    // Civi attempts to add it twice, so we're adding it here instead
+    $this->installCaseType();
+    $this->installCustomFields();
+  }
+
+  /**
+   * Installs 'support_case' case type
+   * For some reason using civicrm_managed for CaseType causes an error because
+   * Civi attempts to add it twice, so we're adding it here instead
+   */
+  private function installCaseType() {
     $caseType = civicrm_api3('CaseType', 'get', [
       'return' => ['id'],
       'name'   => 'support_case',
     ]);
+
     $caseTypeDefinition = [
       'title' => 'Support Case',
       'name' => 'support_case',
@@ -100,10 +109,14 @@ class CRM_Supportcase_Upgrader extends CRM_Supportcase_Upgrader_Base {
     if (!empty($caseType['id'])) {
       $caseTypeDefinition['id'] = $caseType['id'];
     }
-    civicrm_api3('CaseType', 'create', $caseTypeDefinition);
 
-    //TODO: move it in another place?
-    // install custom group 'Support Case Details' and custom field 'category':
+    civicrm_api3('CaseType', 'create', $caseTypeDefinition);
+  }
+
+  /**
+   * Installs custom group 'Support Case Details' and custom field 'category':
+   */
+  private function installCustomFields() {
     $caseTypeId = civicrm_api3('CaseType', 'getvalue', [
       'return' => "id",
       'name' => "support_case",
@@ -134,19 +147,10 @@ class CRM_Supportcase_Upgrader extends CRM_Supportcase_Upgrader_Base {
 
     //TODO: add real data (now its dummy data)
     civicrm_api3('OptionValue', 'create', [
-      'option_group_id' => "support_case_category",
-      'label' => ts("To do"),
+      'option_group_id' => "support_case_without_category",
+      'label' => ts("Without category"),
       'is_default' => 1,
     ]);
-    civicrm_api3('OptionValue', 'create', [
-      'option_group_id' => "support_case_category",
-      'label' => ts("In progress"),
-    ]);
-    civicrm_api3('OptionValue', 'create', [
-      'option_group_id' => "support_case_category",
-      'label' => ts("Done"),
-    ]);
-
   }
 
 }
