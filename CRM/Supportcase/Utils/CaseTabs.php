@@ -13,13 +13,6 @@ class CRM_Supportcase_Utils_CaseTabs {
   public $caseRows = [];
 
   /**
-   * Prepared case tabs to display
-   *
-   * @var array
-   */
-  public $tabs = [];
-
-  /**
    * CRM_Supportcase_Utils_Category constructor.
    * @param $caseRows
    */
@@ -33,13 +26,14 @@ class CRM_Supportcase_Utils_CaseTabs {
    * @return array
    */
   public function separateToTabs() {
-    $this->tabs[] = $this->getPrepareAllCaseTab();
-    $this->tabs[] = $this->getPrepareMyCaseTab();
+    $tabs = [];
+    $tabs[] = $this->getPrepareAllCaseTab();
+    $tabs[] = $this->getPrepareMyCaseTab();
     foreach ($this->getCaseCategoryTabs() as $categoryTab) {
-      $this->tabs[] = $categoryTab;
+      $tabs[] = $categoryTab;
     }
 
-    return $this->tabs;
+    return $tabs;
   }
 
   /**

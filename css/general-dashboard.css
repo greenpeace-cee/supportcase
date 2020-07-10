@@ -37,29 +37,15 @@
     display: inline-block;
 }
 
-.supportcase__search-block {
-    padding: 10px 10px;
-}
-
 .supportcase__search-block .supportcase__search-filters-wrap select,
 .supportcase__search-block .supportcase__search-filters-wrap input {
     width: 100%;
     max-width: 340px;
     box-sizing: border-box;
-    height: 30px;
 }
 
 .crm-container .crm-tooltip .supportcase__tooltip-wrap  .crm-summary-group {
     width: 550px;
-}
-
-.crm-container .supportcase__dashboard-search-filters-wrap .supportcase__case-tags-filter-wrap .crm-accordion-body {
-    box-shadow: none;
-    padding: 10px 0 0 0 !important;
-}
-
-.crm-container .supportcase__dashboard-search-filters-wrap .supportcase__case-tags-filter-wrap .crm-accordion-header {
-    padding: 5px 10px;
 }
 
 .supportcase__case-tags-filter .tag-section label {
@@ -77,34 +63,20 @@
     overflow: hidden;
 }
 
-.supportcase__case-tags-filter {
-    margin-right: -5px;
-    margin-left: -5px;
-}
-
 .supportcase__case-tags-filter-wrap {
     max-width: 750px;
 }
 
 .supportcase__search-buttons .crm-submit-buttons.reset-advanced-search {
     display: inline-block;
-    padding: 5px 10px;
 }
 
 .supportcase__search-buttons .supportcase__search-button-submit {
     display: inline-block;
 }
 
-.supportcase__search-buttons {
-    margin-top: 20px;
-}
-
 .supportcase__dashboard-search-filters-wrap {
     max-width: 720px;
-}
-
-.supportcase__result-block .ui-tabs .ui-corner-top.ui-tabs-active {
-    z-index: 10;
 }
 
 .crm-container .supportcase__case-tags-wrap {
@@ -142,4 +114,12 @@
 
 .crm-container table.dataTable tr td .supportcase__case-tag-name {
     line-height: 15px;
+}
+
+.supportcase__result-action-block {
+    padding-top: 30px;
+}
+
+.supportcase__empty-result-block {
+    padding: 10px;
 }

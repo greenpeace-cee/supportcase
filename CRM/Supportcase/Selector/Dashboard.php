@@ -243,7 +243,6 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
           'url' => 'civicrm/supportcase/manage',
           'qs' => 'reset=1&id=%%id%%&cid=%%cid%%&action=view&context=%%cxt%%&selectedChild=case' . $extraParams,
           'ref' => 'manage-case',
-          // 'class' => 'no-popup',
           'title' => ts('Manage Case'),
         ],
         CRM_Core_Action::UPDATE => [

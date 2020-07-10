@@ -1,5 +1,5 @@
 <div class="supportcase__dashboard-search-filters-wrap">
-    <div class="crm-block crm-form-block crm-contribution-search-form-block">
+    <div class="crm-block crm-form-block">
         <div class="crm-accordion-wrapper crm-contribution_search_form-accordion">
             <div class="crm-accordion-header crm-master-accordion-header">
                 {ts}Filter{/ts}
@@ -30,7 +30,7 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="crm-case-common-form-block-case_subject">
+                                    <td class="crm-case-common-form-block-case_keyword">
                                         {$form.case_keyword.label}<br />
                                         {$form.case_keyword.html}
                                     </td>

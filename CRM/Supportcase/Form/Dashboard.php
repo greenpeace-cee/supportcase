@@ -117,7 +117,12 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
       $this->addTaskMenu($tasks);
     }
 
-    CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/dashboard.css');
+    CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/general-dashboard.css');
+    if (function_exists('_shoreditch_isActive') && _shoreditch_isActive()) {
+      CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/with-shoreditch-dashboard.css');
+    } else {
+      CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/without-shoreditch-dashboard.css');
+    }
   }
 
   public function postProcess() {

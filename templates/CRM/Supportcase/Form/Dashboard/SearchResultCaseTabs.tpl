@@ -1,5 +1,5 @@
 <div class="supportcase__result-block">
-    <div class="crm-content-block crm-block">
+    <div class="crm-content-block crm-form-block">
         <div id="mainTabContainer" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
             <ul>
                 {foreach from=$caseTabs item=tab}
@@ -23,9 +23,10 @@
                             <div class="crm-search-results">
                                 {include file="CRM/Supportcase/Form/Dashboard/Selector.tpl" rows=$tab.cases}
                             </div>
-
-                            <div class="crm-search-tasks crm-event-search-tasks" style="box-shadow: none;">
-                                {include file="CRM/Supportcase/Form/Dashboard/SearchResultTasks.tpl" context="Case" rows=$tab.cases}
+                            <div class="supportcase__result-action-block">
+                                <div class="crm-search-tasks crm-event-search-tasks" style="box-shadow: none;">
+                                      {include file="CRM/Supportcase/Form/Dashboard/SearchResultTasks.tpl" context="Case" rows=$tab.cases}
+                                </div>
                             </div>
                         </div>
                     {else}
