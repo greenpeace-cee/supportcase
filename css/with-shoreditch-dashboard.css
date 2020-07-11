@@ -55,8 +55,7 @@
     width: 100%;
 }
 
-.crm-container .supportcase__result-block table.dataTable tr td:first-child,
-.crm-container .supportcase__result-block table.dataTable tr:first-child th:first-child {
+.crm-container .supportcase__result-block table.dataTable .supportcase__result-table-first-column {
     padding-left: 15px;
 }
 

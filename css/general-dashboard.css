@@ -89,8 +89,9 @@
     position: relative;
     margin-bottom: 5px;
     border: solid 1px #d3dee2;
-    padding: 6px 6px 6px 24px;
+    padding: 6px 6px 6px 6px;
     cursor: default;
+    margin-right: 5px;
 }
 
 .supportcase__case-tag-color {
@@ -101,6 +102,10 @@
     top: 50%;
     left: 4px;
     transform: translate(0, -50%);
+}
+
+.supportcase__case-tag-item.supportcase__case-tag-item-with-color {
+    padding-left: 24px;
 }
 
 .supportcase__case-tag-name {

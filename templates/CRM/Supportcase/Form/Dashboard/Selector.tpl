@@ -11,7 +11,7 @@
 {strip}
   <table class="dataTable">
     <tr>
-      <th scope="col" title="Select Rows">{$form.toggleSelect.html}</th>
+      <th class="supportcase__result-table-first-column" scope="col" title="Select Rows">{$form.toggleSelect.html}</th>
 
       {foreach from=$columnHeaders item=header}
         <th scope="col">
@@ -30,7 +30,7 @@
 
     <tr id='rowid{$list}{$row.case_id}' class="{cycle values="odd-row,even-row"} crm-case crm-case-status_{$row.case_status_id} crm-case-type_{$row.case_type_id}">
       {assign var=cbName value=$row.checkbox}
-      <td style="width: 50px; font-weight: 600; font-size: 16px;">
+      <td class=" supportcase__result-table-first-column" style="width: 50px; font-weight: 600; font-size: 16px;">
         {$form.$cbName.html}
         {if $row.case_status == 'Urgent'}
           <i title="This case needs urgent attention" class="crm-i fa-exclamation-circle" aria-hidden="true" style="color: red; padding-left: 5px; padding-right: 5px;"></i>
@@ -55,8 +55,10 @@
       <td class="{$row.class} crm-case-tags">
         <ul class="supportcase__case-tags-wrap">
           {foreach from=$row.case_tags item=tag}
-            <li class="supportcase__case-tag-item" title="{$tag.description}">
-              <span class="supportcase__case-tag-color" style="background-color: {$tag.color}"></span>
+            <li class="supportcase__case-tag-item {if $tag.color}supportcase__case-tag-item-with-color{/if}" {if $tag.description}title="{$tag.description}"{/if}>
+              {if $tag.color}
+                <span class="supportcase__case-tag-color" style="background-color: {$tag.color}"></span>
+              {/if}
               <span class="supportcase__case-tag-name">{$tag.name}</span>
             </li>
           {/foreach}
