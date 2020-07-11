@@ -125,7 +125,7 @@ class CRM_Supportcase_Utils_CaseTabs {
    */
   private function prepareUrgentCounterParams($count) {
     return  [
-      'color' => 'red',
+      'color' => '#d54040',
       'count' => $count,
       'title' => 'Urgent',
     ];

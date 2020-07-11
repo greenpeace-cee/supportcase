@@ -28,7 +28,7 @@
     {counter start=0 skip=1 print=false}
     {foreach from=$rows item=row}
 
-    <tr id='rowid{$list}{$row.case_id}' class="{cycle values="odd-row,even-row"} crm-case crm-case-status_{$row.case_status_id} crm-case-type_{$row.case_type_id}">
+    <tr id='rowid{$list}{$row.case_id}' class="supportcase__case-row {if $row.case_status == 'Urgent'}supportcase__case-row-urgent{/if} {cycle values="odd-row,even-row"} crm-case crm-case-status_{$row.case_status}">
       {assign var=cbName value=$row.checkbox}
       <td class=" supportcase__result-table-first-column" style="width: 50px; font-weight: 600; font-size: 16px;">
         {$form.$cbName.html}

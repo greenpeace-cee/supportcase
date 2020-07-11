@@ -80,6 +80,10 @@
     padding: 0;
 }
 
+.supportcase__case-tags-wrap {
+    max-width: 300px;
+}
+
 .supportcase__case-tag-item {
     display: inline-block;
     position: relative;
@@ -88,6 +92,7 @@
     padding: 6px 6px 6px 6px;
     cursor: default;
     margin-right: 5px;
+    background: white;
 }
 
 .supportcase__case-tag-color {
@@ -127,4 +132,8 @@
 
 .supportcase__search-block {
     max-width: 720px;
+}
+
+.supportcase__result-block .supportcase__case-row.supportcase__case-row-urgent > td {
+    background: #fff2f2 !important;
 }
