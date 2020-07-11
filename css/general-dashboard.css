@@ -64,7 +64,7 @@
 }
 
 .supportcase__case-tags-filter-wrap {
-    max-width: 750px;
+    max-width: 700px;
 }
 
 .supportcase__search-buttons .crm-submit-buttons.reset-advanced-search {
@@ -73,10 +73,6 @@
 
 .supportcase__search-buttons .supportcase__search-button-submit {
     display: inline-block;
-}
-
-.supportcase__dashboard-search-filters-wrap {
-    max-width: 720px;
 }
 
 .crm-container .supportcase__case-tags-wrap {
@@ -127,4 +123,8 @@
 
 .supportcase__empty-result-block {
     padding: 10px;
+}
+
+.supportcase__search-block {
+    max-width: 720px;
 }

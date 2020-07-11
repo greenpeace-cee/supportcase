@@ -66,3 +66,21 @@
 .crm-container .supportcase__result-block .ui-tabs .supportcase__tab-link-wrap .supportcase__tab-link {
     padding: 12px !important;
 }
+
+.crm-container .supportcase__result-block a.sorting_asc::after,
+.crm-container .supportcase__result-block a.sorting_desc::after,
+.crm-container .supportcase__result-block a.sorting::after {
+    right: auto;
+    padding-left: 7px;
+    top: 23px;
+}
+
+.supportcase__result-table-head-column span,
+.supportcase__result-table-head-column a {
+    line-height: 20px;
+}
+
+.crm-container .supportcase__result-block table.dataTable .supportcase__result-table-head-column {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}

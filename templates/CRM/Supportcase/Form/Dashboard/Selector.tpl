@@ -11,15 +11,15 @@
 {strip}
   <table class="dataTable">
     <tr>
-      <th class="supportcase__result-table-first-column" scope="col" title="Select Rows">{$form.toggleSelect.html}</th>
+      <th class="supportcase__result-table-head-column supportcase__result-table-first-column" scope="col" title="Select Rows">{$form.toggleSelect.html}</th>
 
       {foreach from=$columnHeaders item=header}
-        <th scope="col">
+        <th class="supportcase__result-table-head-column" scope="col">
           {if $header.sort}
             {assign var='key' value=$header.sort}
             {$sort->_response.$key.link}
           {else}
-            {$header.name}
+            <span>{$header.name}</span>
           {/if}
         </th>
       {/foreach}
