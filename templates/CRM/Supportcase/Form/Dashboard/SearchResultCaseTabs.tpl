@@ -37,7 +37,9 @@
                 </div>
                 <div class="clear"></div>
             {/foreach}
-
+            {if $caseTabs}
+              {crmScript file='js/crm.expandRow.js'}
+            {/if}
         </div>
         {include file="CRM/common/TabSelected.tpl"}
     </div>
