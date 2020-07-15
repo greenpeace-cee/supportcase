@@ -84,3 +84,9 @@
     padding-top: 15px;
     padding-bottom: 15px;
 }
+
+.crm-container table.dataTable tr td .supportcase__case-tags-wrap .supportcase__case-tag-item {
+    line-height: 135%;
+    display: block;
+    float: left;
+}

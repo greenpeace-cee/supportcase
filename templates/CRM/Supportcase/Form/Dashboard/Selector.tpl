@@ -58,17 +58,18 @@
       <td class="crm-case-subject" style="width: 300px;">
         {$row.case_subject}
       </td>
-      <td class="{$row.class} crm-case-tags">
-        <ul class="supportcase__case-tags-wrap">
-          {foreach from=$row.case_tags item=tag}
-            <li class="supportcase__case-tag-item {if $tag.color}supportcase__case-tag-item-with-color{/if}" {if $tag.description}title="{$tag.description}"{/if}>
-              {if $tag.color}
-                <span class="supportcase__case-tag-color" style="background-color: {$tag.color}"></span>
-              {/if}
-              <span class="supportcase__case-tag-name">{$tag.name}</span>
-            </li>
-          {/foreach}
-        </ul>
+      <td class="{$row.class} crm-summary-row">
+        <div class="supportcase__case-tags-wrap">
+          {if $row.case_tags}
+            <div class="crm-block crm-content-block">
+              {foreach from=$row.case_tags item='tag'}
+                <div class="crm-tag-item supportcase__case-tag-item" {if !empty($tag.color)}style="background-color: {$tag.color}; color: {$tag.color|colorContrast};" {/if} title="{$tag.description|escape}">
+                    {$tag.name}
+                </div>
+              {/foreach}
+            </div>
+          {/if}
+        </div>
       </td>
       <td class="{$row.class} crm-case-status_{$row.case_status}">
         {$row.case_status}
