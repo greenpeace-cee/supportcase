@@ -50,6 +50,8 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
    * Processing needed for buildForm and later.
    */
   public function preProcess() {
+    $this->set('searchFormName', 'Dashboard');
+
     //validate case configuration.
     $isCaseComponentEnabled = CRM_Case_BAO_Case::enabled();
     $configured = CRM_Case_BAO_Case::isCaseConfigured();

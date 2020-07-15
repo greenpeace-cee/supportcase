@@ -2,7 +2,7 @@
 <menu>
   <item>
     <path>civicrm/supportcase</path>
-    <page_callback>CRM_Supportcase_Form_Dashboard</page_callback>
+    <page_callback>CRM_Supportcase_Controller_Dashboard</page_callback>
     <title>Support Dashboard</title>
     <access_arguments>access support cases</access_arguments>
   </item>

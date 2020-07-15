@@ -5,13 +5,17 @@ class CRM_Supportcase_Task extends CRM_Core_Task {
   const RESOLVE_CASE = 1;
   const MARK_SPAM = 2;
   const TASK_DELETE = 3;
-  const BATCH_UPDATE = 4;
 
   /**
    * @var string
    */
   public static $objectType = 'case';
 
+  /**
+   * Returns list of available task for cases
+   *
+   * @return array
+   */
   public static function tasks() {
     if (!self::$_tasks) {
       self::$_tasks = [
@@ -30,15 +34,6 @@ class CRM_Supportcase_Task extends CRM_Core_Task {
           'class' => 'CRM_Case_Form_Task_Delete',
           'result' => FALSE,
         ],
-        self::BATCH_UPDATE => [
-          'title' => ts('Update multiple cases'),
-          'class' => [
-            'CRM_Case_Form_Task_PickProfile',
-            'CRM_Case_Form_Task_Batch',
-          ],
-          'result' => FALSE,
-        ],
-
       ];
 
       if (!CRM_Core_Permission::check('delete in CiviCase')) {
@@ -51,11 +46,37 @@ class CRM_Supportcase_Task extends CRM_Core_Task {
     return self::$_tasks;
   }
 
+  /**
+   * @param int $permission
+   * @param array $params
+   * @return array
+   */
   public static function permissionedTaskTitles($permission, $params = []) {
     $tasks = self::taskTitles();
     $tasks = parent::corePermissionedTaskTitles($tasks, $permission, $params);
     ksort($tasks);
     return $tasks;
+  }
+
+  /**
+   * These tasks are the core set of tasks.
+   *
+   * @param int $value
+   *
+   * @return array
+   *   the set of tasks for a group of contacts
+   */
+  public static function getTask($value) {
+    self::tasks();
+    if (!$value || empty(self::$_tasks[$value])) {
+      // make the print task by default
+      $value = self::MARK_SPAM;
+    }
+
+    return [
+      self::$_tasks[$value]['class'],
+      self::$_tasks[$value]['result'],
+    ];
   }
 
 }

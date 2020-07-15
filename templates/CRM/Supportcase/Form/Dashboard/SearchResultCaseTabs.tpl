@@ -21,13 +21,15 @@
                     {if $tab.count_cases > 0}
                         <div class="crm-results-block">
                             <div class="crm-search-results">
-                                {include file="CRM/Supportcase/Form/Dashboard/Selector.tpl" rows=$tab.cases}
+                                {include file="CRM/Supportcase/Form/Dashboard/Selector.tpl" rows=$tab.cases tab_html_id=$tab.html_id}
                             </div>
-                            <div class="supportcase__result-action-block">
-                                <div class="crm-search-tasks crm-event-search-tasks" style="box-shadow: none;">
-                                      {include file="CRM/Supportcase/Form/Dashboard/SearchResultTasks.tpl" context="Case" rows=$tab.cases}
-                                </div>
-                            </div>
+                            {if $tab.html_id == 'all'}
+                              <div class="supportcase__result-action-block">
+                                  <div class="crm-search-tasks crm-event-search-tasks" style="box-shadow: none;">
+                                        {include file="CRM/Supportcase/Form/Dashboard/SearchResultTasks.tpl" context="Case" rows=$tab.cases}
+                                  </div>
+                              </div>
+                            {/if}
                         </div>
                     {else}
                         <div class="crm-results-block crm-results-block-empty">

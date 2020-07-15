@@ -11,7 +11,7 @@
         <span id='task-section'>
         {$form.task.html}
           {if $actionButtonName}
-            {$form.$actionButtonName.html} &nbsp; &nbsp;
+            {$form.$actionButtonName.html}
           {else}
             {$form._qf_Search_next_action.html}
           {/if}
