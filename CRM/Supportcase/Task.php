@@ -31,7 +31,7 @@ class CRM_Supportcase_Task extends CRM_Core_Task {
         ],
         self::TASK_DELETE => [
           'title' => ts('Delete cases'),
-          'class' => 'CRM_Case_Form_Task_Delete',
+          'class' => 'CRM_Supportcase_Form_Task_Delete',
           'result' => FALSE,
         ],
       ];

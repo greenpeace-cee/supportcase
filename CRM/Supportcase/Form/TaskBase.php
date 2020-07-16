@@ -25,6 +25,25 @@ abstract class CRM_Supportcase_Form_TaskBase extends CRM_Core_Form_Task {
     CRM_Utils_System::setTitle($this->getTitle());
     $this->checkPermission();
     parent::preProcess();
+    $this->setRedirectUrl('civicrm/supportcase');
+  }
+
+  /**
+   * Set redirection url
+   * After tasks user will be redirected to this url
+   *
+   * @param $redirectUrl
+   * @throws CRM_Core_Exception
+   */
+  private function setRedirectUrl($redirectUrl) {
+    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
+    $urlParams = 'force=1';
+    if (CRM_Utils_Rule::qfKey($qfKey)) {
+      $urlParams .= "&qfKey=$qfKey";
+    }
+
+    $session = CRM_Core_Session::singleton();
+    $session->replaceUserContext(CRM_Utils_System::url($redirectUrl, $urlParams));
   }
 
   /**
