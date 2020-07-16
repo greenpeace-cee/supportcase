@@ -90,3 +90,7 @@
     display: block;
     float: left;
 }
+
+.crm-container  .supportcase__dashboard-search-filters-wrap .crm-accordion-header {
+    padding: 7px;
+}

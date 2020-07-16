@@ -5,6 +5,7 @@
 .supportcase__search-block .supportcase__search-filters-wrap select,
 .supportcase__search-block .supportcase__search-filters-wrap input {
     height: 24px;
+    max-width: 230px;
 }
 
 .supportcase__search-block .supportcase__search-filters-wrap .crm-case-common-form-block-case_keyword input {
@@ -14,4 +15,8 @@
 .supportcase__search-buttons {
     margin-top: 15px;
     margin-left: 5px;
+}
+
+.supportcase__case-tags-filter .tag-section {
+    max-width: 320px;
 }

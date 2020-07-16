@@ -64,7 +64,7 @@
 }
 
 .supportcase__case-tags-filter-wrap {
-    max-width: 700px;
+    max-width: 1040px;
 }
 
 .supportcase__search-buttons .crm-submit-buttons.reset-advanced-search {
@@ -92,7 +92,7 @@
 }
 
 .supportcase__search-block {
-    max-width: 720px;
+    max-width: 1060px;
 }
 
 .supportcase__result-block .supportcase__case-row.supportcase__case-row-urgent > td {

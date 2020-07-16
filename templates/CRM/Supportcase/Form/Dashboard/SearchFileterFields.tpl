@@ -27,6 +27,10 @@
                                 <tr>
                                     {include file="CRM/Core/DatePickerRangeWrapper.tpl" fieldName="case_start_date" colspan="1"}
                                     {include file="CRM/Core/DatePickerRangeWrapper.tpl" fieldName="case_end_date"  colspan="1"}
+                                    <td>
+                                        {$form.case_agents.label}<br />
+                                        {$form.case_agents.html}
+                                    </td>
                                 </tr>
 
                                 <tr>
@@ -38,13 +42,6 @@
                                         {$form.case_status_id.label}<br />
                                         {$form.case_status_id.html}
                                     </td>
-                                </tr>
-
-                                <tr id='case_search_form'>
-                                    <td>
-                                        {$form.case_agents.label}<br />
-                                        {$form.case_agents.html}
-                                    </td>
                                     <td>
                                         {$form.case_client.label}<br />
                                         {$form.case_client.html}
@@ -53,7 +50,7 @@
 
                                 {if $tagsetInfo}
                                     <tr>
-                                        <td colspan="2">
+                                        <td colspan="3">
                                             <div class="supportcase__case-tags-filter-wrap">
                                                 <div class="crm-accordion-wrapper {if $isTagsFilterEmpty}collapsed{/if}">
                                                     <div class="crm-accordion-header">{ts}Tags:{/ts}</div>
