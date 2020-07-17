@@ -14,9 +14,6 @@
                                     <td class="crm-case-common-form-block-case_id">
                                         {$form.case_id.label}<br />
                                         {$form.case_id.html}
-                                        <a class="supportcase__search-by-case-id-clear-button crm-hover-button" title="Clear">
-                                            <i class="crm-i fa-times"></i>
-                                        </a>
                                     </td>
                                 </tr>
                             </table>
@@ -25,8 +22,14 @@
                         <div class="supportcase__search-filters-wrap">
                             <table class="supportcase__search-table form-layout">
                                 <tr>
-                                    {include file="CRM/Core/DatePickerRangeWrapper.tpl" fieldName="case_start_date" colspan="1"}
-                                    {include file="CRM/Core/DatePickerRangeWrapper.tpl" fieldName="case_end_date"  colspan="1"}
+                                  <td class="crm-case-common-form-block-case_keyword">
+                                      {$form.case_keyword.label}<br />
+                                      {$form.case_keyword.html}
+                                  </td>
+                                  <td class="crm-case-common-form-block-case_status_id">
+                                      {$form.case_status_id.label}<br />
+                                      {$form.case_status_id.html}
+                                  </td>
                                     <td>
                                         {$form.case_agents.label}<br />
                                         {$form.case_agents.html}
@@ -34,14 +37,8 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="crm-case-common-form-block-case_keyword">
-                                        {$form.case_keyword.label}<br />
-                                        {$form.case_keyword.html}
-                                    </td>
-                                    <td class="crm-case-common-form-block-case_status_id">
-                                        {$form.case_status_id.label}<br />
-                                        {$form.case_status_id.html}
-                                    </td>
+                                    {include file="CRM/Core/DatePickerRangeWrapper.tpl" fieldName="case_start_date" colspan="1"}
+                                    {include file="CRM/Core/DatePickerRangeWrapper.tpl" fieldName="case_end_date"  colspan="1"}
                                     <td>
                                         {$form.case_client.label}<br />
                                         {$form.case_client.html}
@@ -76,6 +73,11 @@
                                     <i class="crm-i fa-undo"></i>&nbsp;{ts}Reset Form{/ts}
                                 </a>
                             </div>
+
+                            <button class="supportcase__toggle-filter-button button" id="toggleFilterButton">
+                              <span class="supportcase__toggle-filter-button-case-id-text">Toggle to search by case id</span>
+                              <span class="supportcase__toggle-filter-button-params-text">Toggle to search by params</span>
+                            </button>
                         </div>
                     </div>
                 {/strip}
@@ -92,20 +94,18 @@
             function initCaseIdFieldHandler() {
                 var caseIdElement = $('.supportcase__search-by-case-id-wrap input#case_id');
                 var searchBlockElement = $('.supportcase__search-block');
-                var clearButtonElement = $('.supportcase__search-by-case-id-clear-button');
-                var handleFilersBlock = function() {
-                    if (caseIdElement.val().length > 0) {
-                        searchBlockElement.addClass('searching-by-case-id');
-                    } else {
-                        searchBlockElement.removeClass('searching-by-case-id');
-                    }
-                };
-                caseIdElement.on("change paste keyup", handleFilersBlock);
-                clearButtonElement.click(function() {
+
+                $('#toggleFilterButton').click(function(e) {
+                    e.preventDefault();
+                    searchBlockElement.toggleClass('searching-by-case-id');
                     caseIdElement.val('');
-                    handleFilersBlock();
                 });
-                handleFilersBlock();
+
+                if (caseIdElement.val().length > 0) {
+                    searchBlockElement.addClass('searching-by-case-id');
+                } else {
+                    searchBlockElement.removeClass('searching-by-case-id');
+                }
             }
         });
     </script>

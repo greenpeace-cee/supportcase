@@ -13,10 +13,6 @@
     position: relative;
 }
 
-.supportcase__search-block a.supportcase__search-by-case-id-clear-button {
-    display: none;
-}
-
 .supportcase__search-filters-wrap::after {
     background: rgba(255, 255, 255, 0.6);
     content: '';
@@ -27,14 +23,6 @@
     display: none;
     position: absolute;
     z-index: 10;
-}
-
-.supportcase__search-block.searching-by-case-id .supportcase__search-filters-wrap::after {
-    display: block;
-}
-
-.supportcase__search-block.searching-by-case-id .supportcase__search-by-case-id-clear-button {
-    display: inline-block;
 }
 
 .supportcase__search-block .supportcase__search-filters-wrap select,
@@ -97,4 +85,33 @@
 
 .supportcase__result-block .supportcase__case-row.supportcase__case-row-urgent > td {
     background: #fff2f2 !important;
+}
+
+.supportcase__toggle-filter-button {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.supportcase__search-by-case-id-wrap {
+    display: none;
+}
+
+.supportcase__search-block.searching-by-case-id .supportcase__search-by-case-id-wrap {
+    display: block;
+}
+
+.supportcase__search-block.searching-by-case-id .supportcase__toggle-filter-button-case-id-text {
+    display: none;
+}
+
+.supportcase__search-block.searching-by-case-id .supportcase__toggle-filter-button-params-text  {
+    display: block;
+}
+
+.supportcase__search-block .supportcase__toggle-filter-button-params-text {
+    display: none;
+}
+
+.supportcase__search-block.searching-by-case-id .supportcase__search-filters-wrap  {
+    display: none;
 }
