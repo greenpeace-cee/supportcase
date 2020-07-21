@@ -61,6 +61,7 @@
 
 .crm-container .supportcase__result-block .ui-tabs .supportcase__tab-link-wrap {
     padding: 0;
+    margin: 0 1px;
 }
 
 .crm-container .supportcase__result-block .ui-tabs .supportcase__tab-link-wrap .supportcase__tab-link {
@@ -93,4 +94,8 @@
 
 .crm-container  .supportcase__dashboard-search-filters-wrap .crm-accordion-header {
     padding: 7px;
+}
+
+.crm-container .supportcase__result-block .ui-tabs .supportcase__tab-link-wrap:first-child {
+    margin-left: 6px;
 }

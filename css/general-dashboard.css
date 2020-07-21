@@ -115,3 +115,32 @@
 .supportcase__search-block.searching-by-case-id .supportcase__search-filters-wrap  {
     display: none;
 }
+
+.crm-container .supportcase__result-block .supportcase__tab-link-wrap {
+    cursor: pointer;
+    float: none;
+    display: inline-block;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border: none;
+}
+
+.supportcase__tab-link-wrap.ui-tabs-active {
+    cursor: default;
+}
+
+.supportcase__tab-link {
+    display: block;
+}
+
+.crm-container .supportcase__result-block .supportcase__tabs {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background: #d5dadc;
+}
+
+.crm-container .supportcase__result-block .supportcase__tab-link .supportcase__counter {
+    font-style: normal;
+    font-size: 11px;
+}

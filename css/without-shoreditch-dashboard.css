@@ -20,3 +20,12 @@
 .supportcase__case-tags-filter .tag-section {
     max-width: 320px;
 }
+
+.crm-container .supportcase__result-block .supportcase__tab-link-wrap {
+    margin: 0 1px;
+    padding: 12px;
+}
+
+.crm-container .supportcase__result-block .ui-tabs .supportcase__tab-link-wrap:first-child {
+    margin-left: 5px;
+}
