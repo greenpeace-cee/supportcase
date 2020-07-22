@@ -144,3 +144,7 @@
     font-style: normal;
     font-size: 11px;
 }
+
+.supportcase__empty-result-wrap {
+    display: none;
+}

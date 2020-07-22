@@ -18,28 +18,34 @@
             </ul>
 
             <div class="ui-tabs-panel ui-widget-content ui-corner-bottom" style="padding: 0;">
-                {if $cases.rows}
+
+                <div class="supportcase__result-wrap">
+                  {if $cases.rows}
                     <div class="crm-results-block">
-                        <div class="crm-search-results">
-                            {include file="CRM/Supportcase/Form/Dashboard/Selector.tpl" rows=$cases.rows}
-                        </div>
+                      <div class="crm-search-results">
+                          {include file="CRM/Supportcase/Form/Dashboard/Selector.tpl" rows=$cases.rows}
+                      </div>
                       <div class="supportcase__result-action-block">
                         <div class="crm-search-tasks crm-event-search-tasks" style="box-shadow: none;">
                             {include file="CRM/Supportcase/Form/Dashboard/SearchResultTasks.tpl" context="Case" rows=$cases.rows}
                         </div>
                       </div>
                     </div>
-                {else}
-                    <div class="crm-results-block crm-results-block-empty">
-                        {include file="CRM/Supportcase/Form/Dashboard/EmptyResults.tpl"}
-                    </div>
+                  {/if}
+                </div>
+
+                <div class="supportcase__empty-result-wrap">
+                  <div class="crm-results-block crm-results-block-empty">
+                      {include file="CRM/Supportcase/Form/Dashboard/EmptyResults.tpl"}
+                  </div>
+                </div>
+
+                <div class="clear"></div>
+
+                {if $cases.rows}
+                  {crmScript file='js/crm.expandRow.js'}
                 {/if}
             </div>
-            <div class="clear"></div>
-
-            {if $cases.rows}
-              {crmScript file='js/crm.expandRow.js'}
-            {/if}
         </div>
     </div>
 </div>
@@ -70,7 +76,15 @@
                 activeTabElement.addClass('ui-tabs-active').addClass('ui-state-active');
 
                 allRows.hide();
-                $('.' + activeTabElement.data('case-class-selector')).show();
+                var visibleRows = $('.' + activeTabElement.data('case-class-selector'));
+                if (visibleRows.length > 0) {
+                    $('.supportcase__empty-result-wrap').hide();
+                    $('.supportcase__result-wrap').show();
+                    visibleRows.show();
+                } else {
+                    $('.supportcase__empty-result-wrap').show();
+                    $('.supportcase__result-wrap').hide();
+                }
             }
 
             function storageGetActiveTab() {
