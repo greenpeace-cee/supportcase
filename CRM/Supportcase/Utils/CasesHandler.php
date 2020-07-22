@@ -107,7 +107,7 @@ class CRM_Supportcase_Utils_CasesHandler {
     if (empty($this->caseTabs[$tabName])) {
       $this->caseTabs[$tabName] = [
         'title' => $tabLabel,
-        'case_class_selector' => $tabName,
+        'case_class_selector' => '.' . $tabName,
         'name' => $tabName,
         'count_cases' => 0,
         'extra_counters' => [],

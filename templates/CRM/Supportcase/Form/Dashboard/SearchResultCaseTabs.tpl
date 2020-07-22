@@ -83,7 +83,7 @@
                 allRows.parent().children('.crm-child-row').remove();
                 showCaseActivityButtons.removeClass('expanded');
 
-                var visibleRows = $('.' + activeTabElement.data('case-class-selector'));
+                var visibleRows = $(activeTabElement.data('case-class-selector'));
                 if (visibleRows.length > 0) {
                     caseEmptyResultBlock.hide();
                     caseResultBlock.show();
