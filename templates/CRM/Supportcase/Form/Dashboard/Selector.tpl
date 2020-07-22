@@ -46,8 +46,8 @@
       <td class="crm-case-id crm-case-id_{$row.case_id}" style="font-weight: 600; font-size: 15px; width: 70px;">
         #{$row.case_id}
       </td>
-      <td class="crm-case-id crm-case-id_{$row.case_id}" style="width: 30px;">
-        <a title="{ts}Show Activities{/ts}" class="crm-expand-row" href="{crmURL p='civicrm/case/details' q="caseId=`$row.case_id`&cid=`$row.contact_id`"}"></a>
+      <td style="width: 30px;">
+        <a title="{ts}Show Activities{/ts}" class="supportcase__show-case-activity-button crm-expand-row" href="{crmURL p='civicrm/case/details' q="caseId=`$row.case_id`&cid=`$row.contact_id`"}"></a>
       </td>
       <td class="crm-case-id crm-case-id_{$row.case_id}" style="width: 250px;">
         <a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}" title="{ts}View Contact Details{/ts}" target="_blank">{$row.sort_name}</a>{if $row.phone}<br /><span class="description">{$row.phone}</span>{/if}

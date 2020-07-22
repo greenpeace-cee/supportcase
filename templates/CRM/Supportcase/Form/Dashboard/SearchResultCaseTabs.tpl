@@ -55,6 +55,10 @@
         CRM.$(function ($) {
             var allTabs = $('.supportcase__tab-link-wrap');
             var allRows = $('.supportcase__case-row');
+            var caseEmptyResultBlock = $('.supportcase__empty-result-wrap');
+            var caseResultBlock = $('.supportcase__result-wrap');
+            var showCaseActivityButtons = $('.supportcase__show-case-activity-button');
+
             initTabs();
             activateTab(storageGetActiveTab());
 
@@ -76,14 +80,17 @@
                 activeTabElement.addClass('ui-tabs-active').addClass('ui-state-active');
 
                 allRows.hide();
+                allRows.parent().children('.crm-child-row').remove();
+                showCaseActivityButtons.removeClass('expanded');
+
                 var visibleRows = $('.' + activeTabElement.data('case-class-selector'));
                 if (visibleRows.length > 0) {
-                    $('.supportcase__empty-result-wrap').hide();
-                    $('.supportcase__result-wrap').show();
+                    caseEmptyResultBlock.hide();
+                    caseResultBlock.show();
                     visibleRows.show();
                 } else {
-                    $('.supportcase__empty-result-wrap').show();
-                    $('.supportcase__result-wrap').hide();
+                    caseEmptyResultBlock.show();
+                    caseResultBlock.hide();
                 }
             }
 
