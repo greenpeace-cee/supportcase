@@ -58,9 +58,11 @@
             var caseEmptyResultBlock = $('.supportcase__empty-result-wrap');
             var caseResultBlock = $('.supportcase__result-wrap');
             var showCaseActivityButtons = $('.supportcase__show-case-activity-button');
+            var caseToggleSelectButton = $('#supportcaseToggleSelectCases');
 
             initTabs();
             activateTab(storageGetActiveTab());
+            initCaseToggleSelectButton();
 
             function initTabs() {
                 allTabs.click(function() {
@@ -82,6 +84,8 @@
                 allRows.hide();
                 allRows.parent().children('.crm-child-row').remove();
                 showCaseActivityButtons.removeClass('expanded');
+                allRows.find('.supportcase__result-table-select-column input[type="checkbox"]').prop("checked", false);
+                caseToggleSelectButton.prop("checked", false);
 
                 var visibleRows = $(activeTabElement.data('case-class-selector'));
                 if (visibleRows.length > 0) {
@@ -93,6 +97,19 @@
                     caseResultBlock.hide();
                 }
             }
+
+            function initCaseToggleSelectButton() {
+                caseToggleSelectButton.change(function() {
+                    allRows.find('.supportcase__result-table-select-column input[type="checkbox"]').prop("checked", false);
+
+                    if (this.checked) {
+                        var activeTabElement = $('.supportcase__tab-link-wrap.ui-state-active');
+                        var activeRowsSelector = activeTabElement.data('case-class-selector');
+                        $(activeRowsSelector).find('.supportcase__result-table-select-column input[type="checkbox"]').prop("checked", true);
+                    }
+                });
+            }
+
 
             function storageGetActiveTab() {
                 return (window.localStorage) ? localStorage.getItem(getStorageKey()): false;

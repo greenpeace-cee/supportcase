@@ -12,7 +12,7 @@
   <table class="dataTable">
     <tr>
       <th class="supportcase__result-table-head-column supportcase__result-table-first-column" scope="col" title="Select Rows">
-        {$form.toggleSelect.html}
+        <input type="checkbox" id="supportcaseToggleSelectCases">
       </th>
 
       {foreach from=$columnHeaders item=header}
@@ -33,7 +33,7 @@
     <tr id='rowid{$list}{$row.case_id}'
       class="supportcase__case-row {' '|implode:$row.classes} {if $row.case_status == 'Urgent'}supportcase__case-row-urgent{/if} {cycle values="odd-row,even-row"} crm-case crm-case-status_{$row.case_status}">
       {assign var=cbName value=$row.checkbox}
-      <td class=" supportcase__result-table-first-column" style="width: 50px; font-weight: 600; font-size: 16px;">
+      <td class="supportcase__result-table-select-column supportcase__result-table-first-column" style="width: 50px; font-weight: 600; font-size: 16px;">
         {$form.$cbName.html}
         {if $row.case_status == 'Urgent'}
           <i title="This case needs urgent attention" class="crm-i fa-exclamation-circle" aria-hidden="true" style="color: red; padding-left: 5px; padding-right: 5px;"></i>
