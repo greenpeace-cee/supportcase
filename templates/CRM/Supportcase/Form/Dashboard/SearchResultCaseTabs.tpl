@@ -63,6 +63,7 @@
             initTabs();
             activateTab(storageGetActiveTab());
             initCaseToggleSelectButton();
+            hideSelectAllCasesButton();
 
             function initTabs() {
                 allTabs.click(function() {
@@ -80,12 +81,12 @@
 
                 allTabs.removeClass('ui-tabs-active').removeClass('ui-state-active');
                 activeTabElement.addClass('ui-tabs-active').addClass('ui-state-active');
-
                 allRows.hide();
                 allRows.parent().children('.crm-child-row').remove();
                 showCaseActivityButtons.removeClass('expanded');
                 allRows.find('.supportcase__result-table-select-column input[type="checkbox"]').prop("checked", false);
                 caseToggleSelectButton.prop("checked", false);
+                $('.supportcase__result-action-block label[for*=ts_sel] span').text('0');
 
                 var visibleRows = $(activeTabElement.data('case-class-selector'));
                 if (visibleRows.length > 0) {
@@ -110,6 +111,19 @@
                 });
             }
 
+            function hideSelectAllCasesButton() {
+                if (allRows.length  === 0) {
+                    return;
+                }
+
+                if (allRows.length > 1) {
+                    var selectAllInput = $('.supportcase__result-action-block input[name=radio_ts][value=ts_all]');
+                    var selectAllInputId = selectAllInput.prop('id');
+                    var selectAllInputLabel = $('.supportcase__result-action-block label[for=' + selectAllInputId + ']');
+                    selectAllInput.hide();
+                    selectAllInputLabel.hide();
+                }
+            }
 
             function storageGetActiveTab() {
                 return (window.localStorage) ? localStorage.getItem(getStorageKey()): false;
