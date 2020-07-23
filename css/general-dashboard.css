@@ -148,3 +148,44 @@
 .supportcase__empty-result-wrap {
     display: none;
 }
+
+.crm-container .supportcase__result-block .supportcase__case-subject-column-wrap {
+    width: 300px;
+    line-height: 18px;
+}
+
+.supportcase__view-activities-column-wrap {
+    width: 30px;
+}
+
+.supportcase__case-client-column-wrap {
+    width: 250px;
+}
+
+.supportcase__case-id-column-wrap {
+    font-weight: 600;
+    font-size: 15px;
+    width: 70px;
+}
+
+.supportcase__case-select-column-wrap {
+    width: 50px;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.supportcase__case-ico {
+    color: black;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.supportcase__case-ico.supportcase__case-ico-urgent {
+    color: rgb(213, 64, 64);
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.supportcase__case-ico.supportcase__case-ico-lock {
+    color: rgb(0, 113, 189);
+}
