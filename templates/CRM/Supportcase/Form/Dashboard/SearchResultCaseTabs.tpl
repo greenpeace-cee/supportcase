@@ -84,7 +84,7 @@
                 allRows.hide();
                 allRows.parent().children('.crm-child-row').remove();
                 showCaseActivityButtons.removeClass('expanded');
-                allRows.find('.supportcase__result-table-select-column input[type="checkbox"]').prop("checked", false);
+                allRows.find('.supportcase__case-select-column-wrap input[type="checkbox"]').prop("checked", false);
                 caseToggleSelectButton.prop("checked", false);
                 $('.supportcase__result-action-block label[for*=ts_sel] span').text('0');
 
@@ -101,12 +101,12 @@
 
             function initCaseToggleSelectButton() {
                 caseToggleSelectButton.change(function() {
-                    allRows.find('.supportcase__result-table-select-column input[type="checkbox"]').prop("checked", false);
+                    allRows.find('.supportcase__case-select-column-wrap input[type="checkbox"]').prop("checked", false);
 
                     if (this.checked) {
                         var activeTabElement = $('.supportcase__tab-link-wrap.ui-state-active');
                         var activeRowsSelector = activeTabElement.data('case-class-selector');
-                        $(activeRowsSelector).find('.supportcase__result-table-select-column input[type="checkbox"]').prop("checked", true);
+                        $(activeRowsSelector).find('.supportcase__case-select-column-wrap input[type="checkbox"]').prop("checked", true);
                     }
                 });
             }
