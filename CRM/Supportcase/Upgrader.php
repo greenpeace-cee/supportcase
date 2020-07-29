@@ -147,7 +147,7 @@ class CRM_Supportcase_Upgrader extends CRM_Supportcase_Upgrader_Base {
 
     //TODO: add real data (now its dummy data)
     civicrm_api3('OptionValue', 'create', [
-      'option_group_id' => "support_case_without_category",
+      'option_group_id' => "support_case_category",
       'label' => ts("Without category"),
       'is_default' => 1,
     ]);
