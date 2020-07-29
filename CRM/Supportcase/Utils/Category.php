@@ -29,4 +29,18 @@ class CRM_Supportcase_Utils_Category {
     return $categories['values'];
   }
 
+  /**
+   * Gets list of categories(value => label)
+   *
+   * @return array
+   */
+  public static function getOptions() {
+    $categoryOptions = [];
+    foreach (self::get() as $category) {
+      $categoryOptions[$category['value']] = $category['label'];
+    }
+
+    return $categoryOptions;
+  }
+
 }

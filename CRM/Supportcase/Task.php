@@ -5,6 +5,7 @@ class CRM_Supportcase_Task extends CRM_Core_Task {
   const RESOLVE_CASE = 1;
   const MARK_SPAM = 2;
   const TASK_DELETE = 3;
+  const CASE_CHANGE_CATEGORY = 4;
 
   /**
    * @var string
@@ -32,6 +33,11 @@ class CRM_Supportcase_Task extends CRM_Core_Task {
         self::TASK_DELETE => [
           'title' => ts('Delete cases'),
           'class' => 'CRM_Supportcase_Form_Task_Delete',
+          'result' => FALSE,
+        ],
+        self::CASE_CHANGE_CATEGORY => [
+          'title' => ts('Change Category'),
+          'class' => 'CRM_Supportcase_Form_Task_ChangeCategory',
           'result' => FALSE,
         ],
       ];
