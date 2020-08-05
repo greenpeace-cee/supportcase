@@ -43,6 +43,16 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
       CRM_Core_PseudoConstant::getKey('CRM_Case_BAO_Case', 'case_status_id', 'Urgent'),
     ];
 
+    $isDefaultTask = $this->controller->getStateMachine()->getTaskFormName() == 'DefaultTask';
+    if ($isDefaultTask) {
+      $this->clearSelectedCaseCheckboxes();
+      foreach ($defaultValues as $key => $field) {
+        if(preg_match('/^' . self::CB_PREFIX . '/', $key)){
+          unset($defaultValues[$key]);
+        }
+      }
+    }
+
     return $defaultValues;
   }
 
@@ -227,6 +237,27 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     }
 
     return TRUE;
+  }
+
+  /**
+   * Clear select case checkboxes
+   */
+  protected function clearSelectedCaseCheckboxes() {
+    if (!empty($this->_submitValues) && is_array($this->_submitValues)) {
+      foreach ($this->_submitValues as $key => $field) {
+        if(preg_match('/^' . self::CB_PREFIX . '/', $key)){
+          unset($this->_submitValues[$key]);
+        }
+      }
+    }
+
+    if (!empty($_POST) && is_array($_POST)) {
+      foreach ($_POST as $key => $field) {
+        if(preg_match('/^' . self::CB_PREFIX . '/', $key)){
+          unset($_POST[$key]);
+        }
+      }
+    }
   }
 
 }

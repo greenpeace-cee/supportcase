@@ -86,9 +86,8 @@
                 showCaseActivityButtons.removeClass('expanded');
                 allRows.find('.supportcase__case-select-column-wrap input[type="checkbox"]').prop("checked", false);
                 caseToggleSelectButton.prop("checked", false);
-                $('.supportcase__result-action-block label[for*=ts_sel] span').text('0');
 
-                var visibleRows = $(activeTabElement.data('case-class-selector'));
+                var visibleRows = getVisibleRows();
                 if (visibleRows.length > 0) {
                     caseEmptyResultBlock.hide();
                     caseResultBlock.show();
@@ -97,6 +96,31 @@
                     caseEmptyResultBlock.show();
                     caseResultBlock.hide();
                 }
+
+                handleActionTaskMenu();
+            }
+
+            function handleActionTaskMenu() {
+                var checkedVisibleRows = getVisibleRows().find('.supportcase__case-select-column-wrap input[type="checkbox"]:checked');
+                var tasksActionSelect = $('.supportcase__result-action-block select#task');
+                $('.supportcase__result-action-block input[name=radio_ts][value=ts_all]').prop('checked', false);
+
+                if (checkedVisibleRows.length > 0) {
+                    tasksActionSelect.val('').select2('val', '').prop('disabled', false).select2('enable');
+                    $('.supportcase__result-action-block input[name=radio_ts][value=ts_sel]').prop('checked', true);
+                } else {
+                    tasksActionSelect.val('').select2('val', '').prop('disabled', true).select2('disable');
+                    $('.supportcase__result-action-block input[name=radio_ts][value=ts_sel]').prop('checked', false);
+                }
+
+                $('.supportcase__result-action-block label[for*=ts_sel] span').text(checkedVisibleRows.length);
+            }
+
+            function getVisibleRows() {
+                var activeTabElement = $('.supportcase__tab-link-wrap.ui-state-active');
+                var visibleRowsSelector = activeTabElement.data('case-class-selector');
+
+                return $(visibleRowsSelector);
             }
 
             function initCaseToggleSelectButton() {
@@ -104,10 +128,10 @@
                     allRows.find('.supportcase__case-select-column-wrap input[type="checkbox"]').prop("checked", false);
 
                     if (this.checked) {
-                        var activeTabElement = $('.supportcase__tab-link-wrap.ui-state-active');
-                        var activeRowsSelector = activeTabElement.data('case-class-selector');
-                        $(activeRowsSelector).find('.supportcase__case-select-column-wrap input[type="checkbox"]').prop("checked", true);
+                        getVisibleRows().find('.supportcase__case-select-column-wrap input[type="checkbox"]').prop("checked", true);
                     }
+
+                    handleActionTaskMenu();
                 });
             }
 
@@ -119,6 +143,7 @@
                 if (allRows.length > 1) {
                     var selectAllInput = $('.supportcase__result-action-block input[name=radio_ts][value=ts_all]');
                     var selectAllInputId = selectAllInput.prop('id');
+                    selectAllInput.prop('checked', false);
                     var selectAllInputLabel = $('.supportcase__result-action-block label[for=' + selectAllInputId + ']');
                     selectAllInput.hide();
                     selectAllInputLabel.hide();

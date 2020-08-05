@@ -74,9 +74,9 @@ class CRM_Supportcase_Task extends CRM_Core_Task {
    */
   public static function getTask($value) {
     self::tasks();
+
     if (!$value || empty(self::$_tasks[$value])) {
-      // make the print task by default
-      $value = self::MARK_SPAM;
+      return ['CRM_Supportcase_Form_Task_DefaultTask', FALSE];
     }
 
     return [
