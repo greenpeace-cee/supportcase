@@ -25,6 +25,8 @@ abstract class CRM_Supportcase_Form_TaskBase extends CRM_Core_Form_Task {
     CRM_Utils_System::setTitle($this->getTitle());
     $this->checkPermission();
     parent::preProcess();
+    CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/case-tasks.css');
+    $this->assign('cases', $this->getCasesSubjects());
     $this->setRedirectUrl('civicrm/supportcase');
   }
 
@@ -100,5 +102,23 @@ abstract class CRM_Supportcase_Form_TaskBase extends CRM_Core_Form_Task {
    * Check permission to access to task
    */
   protected function checkPermission() {}
+
+  /**
+   * Get cases subjects by ids
+   */
+  private function getCasesSubjects() {
+    try {
+      $cases = civicrm_api3('Case', 'get', [
+        'sequential' => 1,
+        'id' => ['IN' => $this->_entityIds],
+        'options' => ['limit' => 0],
+        "return" => ["subject"],
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      return [];
+    }
+
+    return (!empty($cases['values'])) ? $cases['values'] : [];
+  }
 
 }
