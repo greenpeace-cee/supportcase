@@ -216,16 +216,7 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
    * @return bool
    */
   protected function isInitialDisplay() {
-    if (empty($_POST)) {
-      return TRUE;
-    }
-
-    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
-    if (empty($qfKey)) {
-      return TRUE;
-    }
-
-    return empty($this->get('rows'));
+    return empty($this->get('rows')) && empty($_POST);
   }
 
   /**
