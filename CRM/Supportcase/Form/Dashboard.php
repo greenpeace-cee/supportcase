@@ -33,11 +33,7 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
    */
   public function setDefaultValues() {
     $defaultValues = parent::setDefaultValues();
-    $supportCaseTypeId = civicrm_api3('CaseType', 'getvalue', [
-      'return' => 'id',
-      'name'   => 'support_case',
-    ]);
-    $defaultValues['case_type_id'] = $supportCaseTypeId;
+    $defaultValues['case_type_id'] = CRM_Supportcase_Utils_Setting::getMainCaseTypeId();
     $defaultValues['case_status_id'] = [
       CRM_Core_PseudoConstant::getKey('CRM_Case_BAO_Case', 'case_status_id', 'Open'),
       CRM_Core_PseudoConstant::getKey('CRM_Case_BAO_Case', 'case_status_id', 'Urgent'),
@@ -144,13 +140,16 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
 
     $this->_done = TRUE;
     $this->setFormValues();
+
     // TODO: hack - find some other way to signal "initial page load, search with default filters"
-    foreach ($this->setDefaultValues() as $field => $value) {
-      // TODO: move fixed case_type_id filter to CRM_Supportcase_BAO_Query?
-      if ($this->isInitialDisplay() || $field == 'case_type_id') {
+    if ($this->isInitialDisplay()) {
+      foreach ($this->setDefaultValues() as $field => $value) {
+        // TODO: move fixed case_type_id filter to CRM_Supportcase_BAO_Query?
         $this->_formValues[$field] = $value;
       }
     }
+
+    $this->_formValues['case_type_id'] = CRM_Supportcase_Utils_Setting::getMainCaseTypeId();
 
     // @todo - stop changing formValues - respect submitted form values, change a working array.
     $this->_queryParams = CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
@@ -217,7 +216,16 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
    * @return bool
    */
   protected function isInitialDisplay() {
-    return empty($this->get('rows')) && empty($_POST);
+    if (empty($_POST)) {
+      return TRUE;
+    }
+
+    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
+    if (empty($qfKey)) {
+      return TRUE;
+    }
+
+    return empty($this->get('rows'));
   }
 
   /**
