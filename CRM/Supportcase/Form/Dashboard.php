@@ -175,16 +175,18 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
    * @return array
    */
   private function getQueryParams() {
+    $values = [];
     $isInitialDisplay = empty($_GET['qfKey']);
     if ($isInitialDisplay) {
       foreach ($this->setDefaultValues() as $field => $value) {
-        $this->_formValues[$field] = $value;
+        $values[$field] = $value;
       }
     }
 
-    $this->_formValues['case_type_id'] = CRM_Supportcase_Utils_Setting::getMainCaseTypeId();
+    $values = array_merge($values, $this->_submitValues);
+    $values['case_type_id'] = CRM_Supportcase_Utils_Setting::getMainCaseTypeId();
 
-    return CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
+    return CRM_Contact_BAO_Query::convertFormValues($values);
   }
 
 }
