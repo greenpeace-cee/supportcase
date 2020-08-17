@@ -3,6 +3,13 @@
 class CRM_Supportcase_Utils_Setting {
 
   /**
+   * Cache for case type id where name = 'support_case'
+   *
+   * @var int|null
+   */
+  private static $mainCaseTypeId = NULL;
+
+  /**
    * Gets Supportcase setting by name
    *
    * @param $settingName
@@ -27,16 +34,20 @@ class CRM_Supportcase_Utils_Setting {
    * @return integer|null
    */
   public static function getMainCaseTypeId() {
-    try {
-      $supportCaseTypeId = civicrm_api3('CaseType', 'getvalue', [
-        'return' => 'id',
-        'name' => 'support_case',
-      ]);
-    } catch (CiviCRM_API3_Exception $e) {
-      return null;
+    if (is_null(self::$mainCaseTypeId)) {
+      try {
+        $supportCaseTypeId = civicrm_api3('CaseType', 'getvalue', [
+          'return' => 'id',
+          'name' => 'support_case',
+        ]);
+      } catch (CiviCRM_API3_Exception $e) {
+        return NULL;
+      }
+
+      self::$mainCaseTypeId = $supportCaseTypeId;
     }
 
-    return $supportCaseTypeId;
+    return self::$mainCaseTypeId;
   }
 
 }

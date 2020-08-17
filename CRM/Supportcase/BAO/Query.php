@@ -29,7 +29,7 @@ class CRM_Supportcase_BAO_Query extends CRM_Case_BAO_Query {
   /**
    * Add all the elements shared between case search and advanced search.
    *
-   * @param CRM_Case_Form_Search $form
+   * @param CRM_Supportcase_Form_Dashboard $form
    */
   public static function buildSearchForm(&$form) {
     $form->addSearchFieldMetadata(['Case' => self::getSearchFieldMetadata()]);
@@ -38,7 +38,7 @@ class CRM_Supportcase_BAO_Query extends CRM_Case_BAO_Query {
     if ($caseTags) {
       $form->add('select2', 'case_tags', ts('Case Tag(s)'), $caseTags, FALSE, ['class' => 'big', 'placeholder' => ts('- select -'), 'multiple' => TRUE]);
     }
-    // $form->add('select2', 'case_agents', ts('Involved Agent(s)'), $caseAgents, FALSE, ['class' => 'big', 'placeholder' => ts('- select -'), 'multiple' => TRUE]);
+
     $form->add('text', 'case_keyword', ts('Keyword'), ['class' => 'huge', 'placeholder' => 'Search within subject or message']);
     $form->addEntityRef('case_agents', ts('Involved Agent(s)'), ['multiple' => TRUE, 'api' => ['params' => ['group' => 'support_agent']]], FALSE, ['class' => 'big']);
     $form->addEntityRef('case_client', ts('Client(s)'), ['multiple' => TRUE], FALSE, ['class' => 'big']);
