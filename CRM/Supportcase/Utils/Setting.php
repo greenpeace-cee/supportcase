@@ -50,4 +50,27 @@ class CRM_Supportcase_Utils_Setting {
     return self::$mainCaseTypeId;
   }
 
+  /**
+   * Gets available case statuses based on extension setting(supportcase_available_case_status_names)
+   *
+   * @return array
+   */
+  public static function getCaseStatusOptions() {
+    $availableCaseStatuses = CRM_Supportcase_Utils_Setting::get('supportcase_available_case_status_names');
+
+    try {
+      $caseStatuses = civicrm_api3('OptionValue', 'get', [
+        'sequential' => 1,
+        'option_group_id' => "case_status",
+        'name' => ['IN' => $availableCaseStatuses],
+        'is_active' => 1,
+        'options' => ['limit' => 0],
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      return [];
+    }
+
+    return $caseStatuses['values'];
+  }
+
 }

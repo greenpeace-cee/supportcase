@@ -42,7 +42,13 @@ class CRM_Supportcase_BAO_Query extends CRM_Case_BAO_Query {
     $form->add('text', 'case_keyword', ts('Keyword'), ['class' => 'huge', 'placeholder' => 'Search within subject or message']);
     $form->addEntityRef('case_agents', ts('Involved Agent(s)'), ['multiple' => TRUE, 'api' => ['params' => ['group' => 'support_agent']]], FALSE, ['class' => 'big']);
     $form->addEntityRef('case_client', ts('Client(s)'), ['multiple' => TRUE], FALSE, ['class' => 'big']);
-    $form->getElement('case_status_id')->setAttribute('class', 'huge crm-select2');
+
+    $caseStatusIdElement = $form->getElement('case_status_id');
+    $caseStatusIdElement->setAttribute('class', 'huge crm-select2');
+    $caseStatusIdElement->_options = [];
+    foreach (CRM_Supportcase_Utils_Setting::getCaseStatusOptions() as $option) {
+      $caseStatusIdElement->addOption($option['label'], $option['value']);
+    }
 
     $parentNames = CRM_Core_BAO_Tag::getTagSet('civicrm_case');
     CRM_Core_Form_Tag::buildQuickForm($form, $parentNames, 'civicrm_case', NULL, TRUE, FALSE);

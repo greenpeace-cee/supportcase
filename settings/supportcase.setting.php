@@ -21,5 +21,22 @@ return [
     'is_domain' => 1,
     'is_contact' => 0,
     'description' => 'List of available activity type names',
+  ],
+  'supportcase_available_case_status_names' => [
+    'group_name' => 'SupportcaseConfig',
+    'group' => 'SupportcaseConfig',
+    'name' => 'supportcase_available_case_status_names',
+    'type' => 'Array',
+    'default' => [
+      'Closed',
+      'Open',
+      'Urgent',
+      'forwarded',
+      'spam',
+    ],
+    'add' => '4.7',
+    'is_domain' => 1,
+    'is_contact' => 0,
+    'description' => 'List of available activity type names',
   ]
 ];
