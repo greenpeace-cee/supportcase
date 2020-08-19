@@ -247,9 +247,9 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
         ],
         CRM_Core_Action::UPDATE => [
           'name' => ts('Report Spam'),
-          'url' => 'civicrm/contact/view/case',
-          'qs' => 'reset=1&action=delete&id=%%id%%&cid=%%cid%%&context=%%cxt%%' . $extraParams,
-          'ref' => 'delete-case',
+          'url' => 'civicrm/supportcase/report-spam',
+          'qs' => 'reset=1&id=%%id%%&context=%%cxt%%' . $extraParams,
+          'ref' => 'report-spam',
           'title' => ts('Report Spam'),
         ],
         CRM_Core_Action::DELETE => [
