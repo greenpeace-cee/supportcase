@@ -9,7 +9,12 @@ class CRM_Supportcase_Upgrader extends CRM_Supportcase_Upgrader_Base {
   /**
    * Runs while extension is installing
    */
-  public function install() {
+  public function install() {}
+
+  /**
+   * Runs after extension is installed
+   */
+  public function onPostInstall() {
     CRM_Supportcase_Install_Install::createEntities();
   }
 

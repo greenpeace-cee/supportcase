@@ -38,7 +38,7 @@ class CRM_Supportcase_Install_Entity_CaseType extends CRM_Supportcase_Install_En
           'activityAsgmtGrps' => [
             CRM_Supportcase_Install_Entity_Group::SUPPORT_AGENT,
           ],
-          'caseStatuses' => CRM_Supportcase_Utils_Setting::get('supportcase_available_case_status_names'),
+          'statuses' => CRM_Supportcase_Utils_Setting::get('supportcase_available_case_status_names'),
           'activityTypes' => [
             [
               'name' => 'Open Case',
