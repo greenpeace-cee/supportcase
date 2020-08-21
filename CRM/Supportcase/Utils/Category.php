@@ -11,7 +11,7 @@ class CRM_Supportcase_Utils_Category {
     try {
       $optionGroupId = civicrm_api3('OptionGroup', 'getvalue', [
         'return' => "id",
-        'name' => "support_case_category",
+        'name' => CRM_Supportcase_Install_Entity_OptionGroup::CASE_CATEGORY,
       ]);
     } catch (CiviCRM_API3_Exception $e) {
       return [];

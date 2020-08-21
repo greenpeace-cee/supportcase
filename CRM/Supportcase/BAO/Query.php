@@ -40,7 +40,7 @@ class CRM_Supportcase_BAO_Query extends CRM_Case_BAO_Query {
     }
 
     $form->add('text', 'case_keyword', ts('Keyword'), ['class' => 'huge', 'placeholder' => 'Search within subject or message']);
-    $form->addEntityRef('case_agents', ts('Involved Agent(s)'), ['multiple' => TRUE, 'api' => ['params' => ['group' => 'support_agent']]], FALSE, ['class' => 'big']);
+    $form->addEntityRef('case_agents', ts('Involved Agent(s)'), ['multiple' => TRUE, 'api' => ['params' => ['group' => CRM_Supportcase_Install_Entity_Group::SUPPORT_AGENT]]], FALSE, ['class' => 'big']);
     $form->addEntityRef('case_client', ts('Client(s)'), ['multiple' => TRUE], FALSE, ['class' => 'big']);
 
     $caseStatusIdElement = $form->getElement('case_status_id');

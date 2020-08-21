@@ -30,7 +30,7 @@ class CRM_Supportcase_Form_Task_ChangeCategory extends CRM_Supportcase_Form_Task
    * Process the form after the input has been submitted and validated.
    */
   public function postProcess() {
-    $categoryCustomFieldName = CRM_Core_BAO_CustomField::getCustomFieldID('category', 'support_case_details', TRUE);
+    $categoryCustomFieldName = CRM_Core_BAO_CustomField::getCustomFieldID('category', CRM_Supportcase_Install_Entity_CustomGroup::CASE_DETAILS, TRUE);
     $submitValues = $this->exportValues();
     $categories = CRM_Supportcase_Utils_Category::getOptions();
     $updatedCaseCount = 0;

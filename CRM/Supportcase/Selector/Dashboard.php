@@ -201,7 +201,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
   private function getReturnFields() {
     $returnFields = CRM_Case_BAO_Query::defaultReturnProperties(CRM_Contact_BAO_Query::MODE_CASE, FALSE);
     try {
-      $categoryCustomFieldName = CRM_Core_BAO_CustomField::getCustomFieldID('category', 'support_case_details', TRUE);
+      $categoryCustomFieldName = CRM_Core_BAO_CustomField::getCustomFieldID('category', CRM_Supportcase_Install_Entity_CustomGroup::CASE_DETAILS, TRUE);
       if (!empty($categoryCustomFieldName)) {
         $returnFields[$categoryCustomFieldName] = 1;
       }
@@ -348,7 +348,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
     $mask = CRM_Core_Action::mask($permissions);
     $caseStatus = CRM_Core_OptionGroup::values('case_status', FALSE, FALSE, FALSE, " AND v.name = 'Urgent' ");
     $scheduledInfo = [];
-    $categoryCustomFieldName = CRM_Core_BAO_CustomField::getCustomFieldID('category', 'support_case_details', true);
+    $categoryCustomFieldName = CRM_Core_BAO_CustomField::getCustomFieldID('category', CRM_Supportcase_Install_Entity_CustomGroup::CASE_DETAILS, true);
 
     while ($result->fetch()) {
       $row = [];

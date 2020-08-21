@@ -3,7 +3,7 @@
 class CRM_Supportcase_Utils_Setting {
 
   /**
-   * Cache for case type id where name = 'support_case'
+   * Cache for main case type id
    *
    * @var int|null
    */
@@ -29,7 +29,7 @@ class CRM_Supportcase_Utils_Setting {
   }
 
   /**
-   * Gets id of main case type('support_case')
+   * Gets id of main case type
    *
    * @return integer|null
    */
@@ -38,7 +38,7 @@ class CRM_Supportcase_Utils_Setting {
       try {
         $supportCaseTypeId = civicrm_api3('CaseType', 'getvalue', [
           'return' => 'id',
-          'name' => 'support_case',
+          'name' => CRM_Supportcase_Install_Entity_CaseType::SUPPORT_CASE,
         ]);
       } catch (CiviCRM_API3_Exception $e) {
         return NULL;
