@@ -80,7 +80,7 @@ class CRM_Supportcase_Utils_Setting {
    */
   public static function isPopupFormsEnabled() {
     try {
-      $isEnabled = civicrm_api3('Setting', 'get', [
+      $settings = civicrm_api3('Setting', 'get', [
         'sequential' => 1,
         'return' => ["ajaxPopupsEnabled"],
       ]);
@@ -88,7 +88,7 @@ class CRM_Supportcase_Utils_Setting {
       return FALSE;
     }
 
-    return (bool) $isEnabled;
+    return !empty($settings['values'][0]['ajaxPopupsEnabled']) && $settings['values'][0]['ajaxPopupsEnabled'] == 1;
   }
 
 }
