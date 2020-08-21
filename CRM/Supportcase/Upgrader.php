@@ -9,7 +9,9 @@ class CRM_Supportcase_Upgrader extends CRM_Supportcase_Upgrader_Base {
   /**
    * Runs while extension is installing
    */
-  public function install() {}
+  public function install() {
+    $this->validateConfiguration();
+  }
 
   /**
    * Runs after extension is installed
@@ -37,6 +39,29 @@ class CRM_Supportcase_Upgrader extends CRM_Supportcase_Upgrader_Base {
    */
   public function disable() {
     CRM_Supportcase_Install_Install::disableEntities();
+  }
+
+  /**
+   * Validates configuration requires to use the extension
+   */
+  private function validateConfiguration() {
+    $isCaseComponentEnabled = CRM_Case_BAO_Case::enabled();
+    $title = ts('Support case installation');
+    if (!$isCaseComponentEnabled) {
+      $message = ts('Case component is disabled. To correctly work with extension please enable "Case" component. See "Administer->Configuration Checklist->Enable Components".');
+      CRM_Core_Session::setStatus($message, $title, 'warning');
+    }
+
+    $configured = CRM_Case_BAO_Case::isCaseConfigured();
+    if (!$configured['configured']) {
+      $message = ts('Case is  not configured. To correctly work with extension please configure "Case" component.');
+      CRM_Core_Session::setStatus($message, $title, 'warning');
+    }
+
+    if (CRM_Supportcase_Utils_Setting::isPopupFormsEnabled()) {
+      $message = ts('CiviCRM "Enable Popup Forms" setting is disabled. To correctly work with extension please enable the setting. See "Administer->Configuration Checklist->Display Preferences".');
+      CRM_Core_Session::setStatus($message, $title, 'warning');
+    }
   }
 
 }

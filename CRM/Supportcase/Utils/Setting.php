@@ -73,4 +73,22 @@ class CRM_Supportcase_Utils_Setting {
     return $caseStatuses['values'];
   }
 
+  /**
+   * Checks if 'Enable Popup Forms'(ajaxPopupsEnabled) setting is checked
+   *
+   * @return bool
+   */
+  public static function isPopupFormsEnabled() {
+    try {
+      $isEnabled = civicrm_api3('Setting', 'get', [
+        'sequential' => 1,
+        'return' => ["ajaxPopupsEnabled"],
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      return FALSE;
+    }
+
+    return (bool) $isEnabled;
+  }
+
 }
