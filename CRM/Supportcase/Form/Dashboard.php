@@ -53,8 +53,8 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
       CRM_Core_PseudoConstant::getKey('CRM_Case_BAO_Case', 'case_status_id', 'Urgent'),
     ];
 
-    //to prevent accidentally selecting cases on not active tabs - clears cases checkboxes
-    //clears only if it is not default task
+    // to prevent accidentally selecting cases on not active tabs - clears cases checkboxes
+    // clears if current task is default task
     $isDefaultTask = $this->controller->getStateMachine()->getTaskFormName() == 'DefaultTask';
     if ($isDefaultTask) {
       foreach ($defaultValues as $key => $field) {
