@@ -183,7 +183,7 @@ class CRM_Supportcase_BAO_CaseLock extends CRM_Supportcase_DAO_CaseLock {
 
     $sql = 'SELECT * FROM civicrm_supportcase_case_lock WHERE case_id = %1 AND lock_expire_at > %2 ';
     $result = CRM_Core_DAO::executeQuery($sql, [
-      1 => [implode(',', $caseId) , 'Integer'],
+      1 => [$caseId , 'Integer'],
       2 => [(new DateTime())->getTimestamp() , 'Integer']
     ]);
 
