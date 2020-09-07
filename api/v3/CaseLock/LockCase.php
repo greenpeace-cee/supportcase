@@ -20,7 +20,7 @@ function civicrm_api3_case_lock_lock_case($params) {
     throw new api_Exception('Cannot find contact id.', 'can_not_find_contact_id');
   }
 
-  if (CRM_Supportcase_BAO_CaseLock::isCaseLockedForContact($params['case_id'], $params['contact_id'])) {
+  if (CRM_Supportcase_BAO_CaseLock::isCaseLockedForContact($params['case_id'], $contactId)) {
     throw new api_Exception('The case is locked by another user.', 'case_locked_by_another_user');
   }
 
