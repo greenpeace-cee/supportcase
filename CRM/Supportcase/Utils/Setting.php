@@ -91,4 +91,38 @@ class CRM_Supportcase_Utils_Setting {
     return !empty($settings['values'][0]['ajaxPopupsEnabled']) && $settings['values'][0]['ajaxPopupsEnabled'] == 1;
   }
 
+  /**
+   * Time(in second).
+   * Time which use for locking cases
+   * Case will be locked for this time
+   */
+  public static function getCaseLocTime() {
+    return 25;// value in second
+  }
+
+  /**
+   * Time(in second).
+   * When this time is expired dashboard will check if cases has lock.
+   */
+  public static function getDashboardLockReloadTime() {
+    return 15;// value in second
+  }
+
+  /**
+   * Time(in second).
+   * Uses when user is managing case.
+   * When this time is expired dashboard will continue locking of open case.
+   * This value have to be lower than value from getCaseLocTime() method.
+   */
+  public static function getMangeCaseUpdateLockTime() {
+    return 15;// value in second
+  }
+
+  /**
+   * This message will show when case is locked by self
+   */
+  public static function getLockedCaseBySelfMessage() {
+    return ts('This case locked by you.');
+  }
+
 }

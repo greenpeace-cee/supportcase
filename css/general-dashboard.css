@@ -186,6 +186,22 @@
     padding-right: 5px;
 }
 
-.supportcase__case-ico.supportcase__case-ico-lock {
-    color: rgb(0, 113, 189);
+.supportcase__case-ico.fa-lock {
+    color: rgb(82, 82, 82);
+}
+
+.supportcase__case-ico.fa-unlock {
+    color: rgb(33, 135, 43);
+}
+
+.supportcase__case-select-row-checkbox {
+    display: inline-block;
+}
+
+.supportcase__case-row-icons {
+    display: inline-block;
+}
+
+.supportcase__case-select-row-column {
+    width: 70px;
 }

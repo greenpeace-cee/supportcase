@@ -53,6 +53,7 @@
 {literal}
     <script>
         CRM.$(function ($) {
+            var lockReloadTime = '{/literal}{$lockReloadTimeInSek}{literal}' * 1000;
             var allTabs = $('.supportcase__tab-link-wrap');
             var allRows = $('.supportcase__case-row');
             var caseEmptyResultBlock = $('.supportcase__empty-result-wrap');
@@ -64,6 +65,7 @@
             activateTab(storageGetActiveTab());
             initCaseToggleSelectButton();
             hideSelectAllCasesButton();
+            initLocker();
 
             function initTabs() {
                 allTabs.click(function() {
@@ -163,6 +165,42 @@
             function getStorageKey() {
                 var currentContactId = '{/literal}{$currentContactId}{literal}';
                 return 'supportcase_search_form_active_tab_contact_id_' + currentContactId;
+            }
+
+            function initLocker() {
+                //hack to prevent double initialization
+                if (window.isSupportCaseLockerLoaded === true) {
+                    return;
+                }
+
+                setInterval(updateCaseLocking, lockReloadTime);
+                window.isSupportCaseLockerLoaded = true;
+            }
+
+            function findCaseIds() {
+                var caseIds = [];
+                $('.supportcase__case-row ').each(function() {
+                    caseIds.push(this.getAttribute('data-case-id'));
+                });
+                return caseIds;
+            }
+
+            function updateCaseLocking() {
+                var caseIds = findCaseIds();
+
+                CRM.api3('CaseLock', 'get_locked_cases', {
+                    "case_ids": caseIds
+                }).then(function(result) {
+                    if (!result.is_error) {
+                        $('.supportcase__case-row .supportcase__case-row-icons .supportcase__case-ico-lock').remove();
+                        result.values.map(caseLock => {
+                            var icoClass = (caseLock.is_locked_by_self) ? 'fa-unlock' : 'fa-lock';
+                            var icoHtml = '<i title="' + caseLock.lock_message + '" class="supportcase__case-ico crm-i supportcase__case-ico-lock ' + icoClass + '" aria-hidden="true"></i>';
+                            var caseElement = $('.supportcase__case-row[data-case-id="' + caseLock.case_id + '"]');
+                            caseElement.find('.supportcase__case-row-icons').append(icoHtml);
+                        });
+                    }
+                }, function(error) {});
             }
 
         });

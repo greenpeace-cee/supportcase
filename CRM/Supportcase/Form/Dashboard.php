@@ -105,6 +105,7 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $this->assign('limit', $this->_limit);
     $this->assign('currentContactId', CRM_Core_Session::getLoggedInContactID());
     $this->assign('isTagsFilterEmpty', $this->isTagsFilterEmpty());
+    $this->assign('lockReloadTimeInSek', CRM_Supportcase_Utils_Setting::getDashboardLockReloadTime());
   }
 
   /**

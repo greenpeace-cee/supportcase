@@ -30,18 +30,24 @@
     {counter start=0 skip=1 print=false}
     {foreach from=$rows item=row}
 
-      <tr id='rowid{$list}{$row.case_id}'
+      <tr id='rowid{$list}{$row.case_id}' data-case-id="{$row.case_id}"
         class="supportcase__case-row {' '|implode:$row.classes} {if $row.case_status == 'Urgent'}supportcase__case-row-urgent{/if} {cycle values="odd-row,even-row"} crm-case crm-case-status_{$row.case_status}">
         {assign var=cbName value=$row.checkbox}
         <td class="supportcase__case-select-column-wrap supportcase__result-table-first-column">
-          {$form.$cbName.html}
-          {if $row.case_status == 'Urgent'}
-            <i title="This case needs urgent attention" class="supportcase__case-ico supportcase__case-ico-urgent crm-i fa-exclamation-circle" aria-hidden="true"></i>
-          {/if}
-          <!-- TODO: replace with lock implementation -->
-          {if $row.case_id == 5}
-            <i title="This case is currently locked by Patrick Figel" class="supportcase__case-ico supportcase__case-ico-lock crm-i fa-lock" aria-hidden="true"></i>
-          {/if}
+          <div class="supportcase__case-select-row-column">
+            <div class="supportcase__case-select-row-checkbox">
+              {$form.$cbName.html}
+            </div>
+            <div class="supportcase__case-row-icons">
+              {if $row.case_status == 'Urgent'}
+                <i title="This case needs urgent attention" class="supportcase__case-ico supportcase__case-ico-urgent crm-i fa-exclamation-circle" aria-hidden="true"></i>
+              {/if}
+
+              {if $row.is_case_locked}
+                <i title="{$row.lock_message}" class="supportcase__case-ico crm-i supportcase__case-ico-lock {if $row.is_locked_by_self}fa-unlock{else}fa-lock{/if}" aria-hidden="true"></i>
+              {/if}
+            </div>
+          </div>
         </td>
         <td class="supportcase__case-id-column-wrap">
           <span>#{$row.case_id}</span>
