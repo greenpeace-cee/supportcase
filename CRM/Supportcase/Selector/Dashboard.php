@@ -151,12 +151,6 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
     $this->_query->_distinctComponentClause = " civicrm_case.id ";
     $this->_query->_groupByComponentClause = " GROUP BY civicrm_case.id ";
     $this->_caseAllTags = CRM_Core_BAO_Tag::getTagsUsedFor('civicrm_case', FALSE);
-    $whereTable = "\n LEFT JOIN civicrm_supportcase_case_lock ON civicrm_supportcase_case_lock.case_id = civicrm_case.id ";
-    $this->_query->_whereTables['civicrm_supportcase_case_lock'] = $whereTable;
-    $this->_query->_tables['civicrm_supportcase_case_lock'] = $whereTable;
-    $this->_query->_select[] = CRM_Supportcase_BAO_CaseLock::getIsCaseLockedSelectSql();
-    $this->_query->_select[] = ' civicrm_supportcase_case_lock.lock_message AS lock_message ';
-    $this->_query->_select[] = ' civicrm_supportcase_case_lock.contact_id AS lock_contact_id ';
 
     if ($isSearchByCaseId) {
       return;
@@ -355,6 +349,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
     }
 
     $rows = [];
+    $foundCaseIds = [];
     $mask = CRM_Core_Action::mask($permissions);
     $caseStatus = CRM_Core_OptionGroup::values('case_status', FALSE, FALSE, FALSE, " AND v.name = 'Urgent' ");
     $scheduledInfo = [];
@@ -362,6 +357,8 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
 
     while ($result->fetch()) {
       $row = [];
+      $foundCaseIds[] = $result->case_id;
+
       // the columns we are interested in
       foreach (self::$_properties as $property) {
         if (isset($result->$property)) {
@@ -410,11 +407,28 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
 
       $row['case_tags'] = $this->getCaseTags($result->case_id);
       $row['category'] = (!empty($categoryCustomFieldName)) ? $result->$categoryCustomFieldName: '';
-      $row['is_locked_by_self'] = CRM_Core_Session::getLoggedInContactID() == $result->lock_contact_id;
-      $row['is_case_locked'] = $result->is_case_locked == 1;
-      $row['lock_message'] = $row['is_locked_by_self'] ? CRM_Supportcase_Utils_Setting::getLockedCaseBySelfMessage() : $result->lock_message;
+
+      //default locking values:
+      $row['is_case_locked'] = FALSE;
+      $row['is_locked_by_self'] = FALSE;
+      $row['lock_message'] = '';
 
       $rows[$result->case_id] = $row;
+    }
+
+    //sets case locking info
+    try {
+      $lockedCases = civicrm_api3('CaseLock', 'get_locked_cases', [
+        'case_ids' => $foundCaseIds,
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {}
+
+    if (!empty($lockedCases['values'])) {
+      foreach ($lockedCases['values'] as $lockedCase) {
+        $rows[$lockedCase['case_id']]['is_case_locked'] = $lockedCase['is_case_locked'];
+        $rows[$lockedCase['case_id']]['is_locked_by_self'] = $lockedCase['is_locked_by_self'];
+        $rows[$lockedCase['case_id']]['lock_message'] = $lockedCase['lock_message'];
+      }
     }
 
     //retrieve the scheduled & recent Activity type and date for selector
