@@ -162,6 +162,10 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
       return;
     }
 
+    if (!isset($params['is_show_deleted_cases'])) {
+      $this->addNewWhere(' civicrm_case.is_deleted <> 1 ');
+    }
+
     if (isset($params['case_keyword'])) {
       $keyWord = (is_array($params['case_keyword'][2])) ? $params['case_keyword'][2]['LIKE'] : '%' . $params['case_keyword'][2] . '%' ;
       $where = CRM_Core_DAO::composeQuery(" (case_activity.subject  LIKE %1 OR case_activity.details LIKE %1 ) ", [

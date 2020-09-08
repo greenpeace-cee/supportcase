@@ -80,7 +80,7 @@
 }
 
 .supportcase__search-block {
-    max-width: 1060px;
+    max-width: 1160px;
 }
 
 .supportcase__result-block .supportcase__case-row.supportcase__case-row-urgent > td {
@@ -204,4 +204,17 @@
 
 .supportcase__case-select-row-column {
     width: 70px;
+}
+
+.supportcase__is-case-deleted-search-filter {
+    padding-left: 5px;
+    width: 220px;
+    text-align: left;
+    vertical-align: center;
+}
+
+.supportcase__search-block .supportcase__search-filters-wrap .supportcase__is-case-deleted-search-filter input {
+    width: 20px;
+    height: 20px;
+    margin-top: 6px;
 }

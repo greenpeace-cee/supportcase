@@ -22,17 +22,23 @@
                         <div class="supportcase__search-filters-wrap">
                             <table class="supportcase__search-table form-layout">
                                 <tr>
-                                  <td class="crm-case-common-form-block-case_keyword">
-                                      {$form.case_keyword.label}<br />
-                                      {$form.case_keyword.html}
-                                  </td>
-                                  <td class="crm-case-common-form-block-case_status_id">
-                                      {$form.case_status_id.label}<br />
-                                      {$form.case_status_id.html}
-                                  </td>
+                                    <td class="crm-case-common-form-block-case_keyword">
+                                        {$form.case_keyword.label}<br />
+                                        {$form.case_keyword.html}
+                                    </td>
+                                    <td class="crm-case-common-form-block-case_status_id">
+                                        {$form.case_status_id.label}<br />
+                                        {$form.case_status_id.html}
+                                    </td>
                                     <td>
                                         {$form.case_agents.label}<br />
                                         {$form.case_agents.html}
+                                    </td>
+                                    <td>
+                                        <div class="supportcase__is-case-deleted-search-filter">
+                                            {$form.is_show_deleted_cases.label}<br />
+                                            {$form.is_show_deleted_cases.html}
+                                        </div>
                                     </td>
                                 </tr>
 
