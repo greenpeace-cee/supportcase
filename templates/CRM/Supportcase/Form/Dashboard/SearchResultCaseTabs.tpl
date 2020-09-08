@@ -6,7 +6,7 @@
                     <li class="ui-state-default ui-corner-all crm-tab-button ui-tabs-tab ui-corner-top ui-tab crm-tab-button supportcase__tab-link-wrap"
                         data-tab-name="{$tab.name}" data-case-class-selector="{$tab.case_class_selector}">
                         <span title="{ts}{$tab.title}{/ts}" class="ui-tabs-anchor supportcase__tab-link">
-                            <span>{ts}{$tab.title}{/ts} [#{$tab.count_cases}]</span>
+                            <span>{ts}{$tab.title}{/ts} [{$tab.count_cases}]</span>
                             {foreach from=$tab.extra_counters item=counter}
                                 <em class="supportcase__counter" style="background: {$counter.color};" title="{$counter.title}">
                                     {$counter.count}

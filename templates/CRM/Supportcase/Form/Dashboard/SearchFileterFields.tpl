@@ -81,8 +81,8 @@
                             </div>
 
                             <button class="supportcase__toggle-filter-button button" id="toggleFilterButton">
-                              <span class="supportcase__toggle-filter-button-case-id-text">Toggle to search by case id</span>
-                              <span class="supportcase__toggle-filter-button-params-text">Toggle to search by params</span>
+                              <span class="supportcase__toggle-filter-button-case-id-text">Search by Case ID</span>
+                              <span class="supportcase__toggle-filter-button-params-text">Advanced Search</span>
                             </button>
                         </div>
                     </div>

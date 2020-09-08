@@ -11,7 +11,7 @@ class CRM_Supportcase_BAO_Query extends CRM_Case_BAO_Query {
       'html' => ['type' => 'Select2'],
     ];
     $metadata['is_show_deleted_cases'] = [
-      'title' => ts('Is show deleted cases?'),
+      'title' => ts('Show deleted cases?'),
       'type' => CRM_Utils_Type::T_BOOLEAN,
       'is_pseudofield' => TRUE,
       'html' => ['type' => 'CheckBox'],
@@ -48,7 +48,7 @@ class CRM_Supportcase_BAO_Query extends CRM_Case_BAO_Query {
     $form->add('text', 'case_keyword', ts('Keyword'), ['class' => 'huge', 'placeholder' => 'Search within subject or message']);
     $form->addEntityRef('case_agents', ts('Involved Agent(s)'), ['multiple' => TRUE, 'api' => ['params' => ['group' => CRM_Supportcase_Install_Entity_Group::SUPPORT_AGENT]]], FALSE, ['class' => 'big']);
     $form->addEntityRef('case_client', ts('Client(s)'), ['multiple' => TRUE], FALSE, ['class' => 'big']);
-    $form->add('checkbox', 'is_show_deleted_cases', ts('Is show deleted cases?'));
+    $form->add('checkbox', 'is_show_deleted_cases', ts('Show deleted cases?'));
 
     $caseStatusIdElement = $form->getElement('case_status_id');
     $caseStatusIdElement->setAttribute('class', 'huge crm-select2');
