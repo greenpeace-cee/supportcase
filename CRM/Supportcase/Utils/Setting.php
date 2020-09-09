@@ -97,7 +97,7 @@ class CRM_Supportcase_Utils_Setting {
    * Case will be locked for this time
    */
   public static function getCaseLocTime() {
-    return 25;// value in second
+    return 15;// value in second
   }
 
   /**
@@ -105,7 +105,7 @@ class CRM_Supportcase_Utils_Setting {
    * When this time is expired dashboard will check if cases has lock.
    */
   public static function getDashboardLockReloadTime() {
-    return 15;// value in second
+    return 10;// value in second
   }
 
   /**
@@ -115,7 +115,7 @@ class CRM_Supportcase_Utils_Setting {
    * This value have to be lower than value from getCaseLocTime() method.
    */
   public static function getMangeCaseUpdateLockTime() {
-    return 15;// value in second
+    return 10;// value in second
   }
 
   /**
