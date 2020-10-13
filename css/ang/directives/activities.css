@@ -1,0 +1,12 @@
+/*
+    Uses on activities directive
+    Prefix-alias: act  = Activities
+*/
+
+.act__block-wrap {
+    padding: 10px 10px 5px 10px;
+}
+
+.act__activities {
+    margin-top: 5px;
+}

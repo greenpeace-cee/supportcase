@@ -1,0 +1,38 @@
+<div class="ci__case-info-item tagsField">
+	<div class="ci__case-info-header">
+		<div class="ci__case-info-item-label">Tags</div>
+		<div class="ci__case-info-edit-button" title="Edit tags" ng-click="toggleMode('tagsField')">
+			<i class="crm-i fa-pencil"></i>
+		</div>
+	</div>
+
+	<div class="ci__case-info-view-mode">
+		<div class="ci__case-info-item-content">
+			<div class="ci__tags-wrap">
+				<div ng-repeat="tagId in ctrl.model['tags_ids']" class="crm-tag-item ci__tag"
+					 style="{{generateStyles(ctrl.model['available_tags'][tagId]['color'])}}"
+					 title="{{ctrl.model['available_tags'][tagId]['description']}}">
+					{{ctrl.model['available_tags'][tagId]['name']}}
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="ci__case-info-edit-mode">
+		<div class="ci__case-info-errors-wrap"></div>
+
+		<div class="crm-section">
+			<select ng-model="caseTags" style="width:100%;" multiple name="tagsField" id="tagsField" class="crm-form-select" ng-required="true">
+				<option ng-repeat="option in ctrl.model['available_tags']" value="{{option.id}}">{{option.name}}</option>
+			</select>
+		</div>
+
+		<div class="clear"></div>
+
+		<div class="ci__case-info-edit-mode-buttons">
+			<button class="ci__case-info-edit-confirm"  ng-click="editConfirm()">confirm</button>
+			<button class="ci__case-info-edit-cancel"  ng-click="toggleMode('tagsField')">cancel</button>
+		</div>
+	</div>
+</div>

@@ -6,7 +6,6 @@ use CRM_Supportcase_ExtensionUtil as E;
  */
 class CRM_Supportcase_Page_Supportcase extends CRM_Core_Page {
 
-
   /**
    * The action links that we need to display for the browse screen.
    *
@@ -19,6 +18,11 @@ class CRM_Supportcase_Page_Supportcase extends CRM_Core_Page {
   public function preProcess() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
+    $caseId = CRM_Utils_Request::retrieve('id', 'Positive', $this);
+    $contactId = CRM_Core_Session::getLoggedInContactID();
+    $this->assign('caseId', $caseId);
+    $this->assign('mangeCaseUpdateLockTime', CRM_Supportcase_Utils_Setting::getMangeCaseUpdateLockTime());
+    $this->assign('isCaseLocked', CRM_Supportcase_BAO_CaseLock::isCaseLockedForContact($caseId, $contactId));
 
     //validate case configuration.
     $configured = CRM_Case_BAO_Case::isCaseConfigured($this->_contactId);

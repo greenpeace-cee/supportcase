@@ -1,0 +1,50 @@
+<div class="ci__case-info">
+	<div class="crm-accordion-wrapper">
+		<div class="crm-accordion-header crm-master-accordion-header">{{ts('Case info')}}</div>
+		<div class="crm-accordion-body">
+			<div class="ci__block-wrap">
+
+				<div class="ci__case-info-item-wrap">
+					<div class="ci__case-info-item caseIdField">
+						<div class="ci__case-info-header">
+							<div class="ci__case-info-item-label">Case Id</div>
+						</div>
+
+						<div class="ci__case-info-view-mode">
+							<div class="ci__case-info-item-content">
+								<div>{{ctrl.model['id']}}</div>
+								<div ng-if="ctrl.model['is_deleted'] == 1">(This case is in the trash)</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="ci__case-info-item-wrap">
+					<case-clients model="ctrl.model"></case-clients>
+				</div>
+
+				<div class="ci__case-info-item-wrap">
+					<case-subject model="ctrl.model"></case-subject>
+				</div>
+
+				<div class="ci__case-info-item-wrap">
+					<case-status model="ctrl.model"></case-status>
+				</div>
+
+				<div class="ci__case-info-item-wrap">
+					<case-start-date model="ctrl.model"></case-start-date>
+				</div>
+
+				<div class="ci__case-info-item-wrap">
+					<case-category model="ctrl.model"></case-category>
+				</div>
+
+				<div class="ci__case-info-item-wrap">
+					<case-tags model="ctrl.model"></case-tags>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+

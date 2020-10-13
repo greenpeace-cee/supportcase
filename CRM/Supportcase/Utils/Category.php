@@ -19,6 +19,8 @@ class CRM_Supportcase_Utils_Category {
 
     try {
       $categories = civicrm_api3('OptionValue', 'get', [
+        'return' => ["id", "value", "label"],
+        "sequential" => 1,
         'option_group_id' => $optionGroupId,
         'options' => ['limit' => 0],
       ]);

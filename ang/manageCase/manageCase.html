@@ -1,0 +1,17 @@
+<h1 crm-page-title>{{ts('Manage Case')}}</h1>
+
+<div class="supportcase-manage-case-module-wrap">
+	<div class="crm-form-block">
+		<div ng-if="isError">
+			<div class="mc__error-message crm-error">{{errorMessage}}</div>
+		</div>
+
+		<div ng-if="!isError">
+			<case-info model='caseInfo'></case-info>
+			<communication model='caseInfo'></communication>
+			<activities model='caseInfo'></activities>
+			<recent-cases model='caseInfo'></recent-cases>
+			<manage-panel model='caseInfo'></manage-panel>
+		</div>
+	</div>
+</div>

@@ -150,7 +150,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
     $this->_query = new CRM_Contact_BAO_Query($this->_queryParams, $this->getReturnFields(), NULL, FALSE, FALSE, CRM_Contact_BAO_Query::MODE_CASE);
     $this->_query->_distinctComponentClause = " civicrm_case.id ";
     $this->_query->_groupByComponentClause = " GROUP BY civicrm_case.id ";
-    $this->_caseAllTags = CRM_Core_BAO_Tag::getTagsUsedFor('civicrm_case', FALSE);
+    $this->_caseAllTags = CRM_Supportcase_Utils_Tags::getAvailableTags('civicrm_case');
 
     if ($isSearchByCaseId) {
       return;
@@ -244,10 +244,16 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
       self::$_links = [
         CRM_Core_Action::VIEW => [
           'name' => ts('Manage'),
+          'url' => 'civicrm/a/#/supportcase/manage-case',//TODO add case id here
+          'ref' => 'manage-case',
+          'title' => ts('Manage Case'),
+        ],
+        111 => [//TODO remove this link it is old manage page
+          'name' => ts('Manage Case old'),
           'url' => 'civicrm/supportcase/manage',
           'qs' => 'reset=1&id=%%id%%&cid=%%cid%%&action=view&context=%%cxt%%&selectedChild=case' . $extraParams,
           'ref' => 'manage-case',
-          'title' => ts('Manage Case'),
+          'title' => ts('Manage Case old'),
         ],
         CRM_Core_Action::UPDATE => [
           'name' => ts('Report Spam'),
@@ -390,6 +396,11 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
         'Case',
         $result->case_id
       );
+
+      //TODO fix it without replacing
+      $searchUrl = 'civicrm/a/#/supportcase/manage-case';
+      $manageCaseUrl = CRM_Utils_System::url('civicrm/a/', NULL, TRUE, 'supportcase/manage-case/' . $result->case_id);
+      $row['action'] = str_replace($searchUrl, $manageCaseUrl, $row['action']);
 
       $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ? $result->contact_sub_type : $result->contact_type);
 

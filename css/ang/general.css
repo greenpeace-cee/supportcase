@@ -1,0 +1,15 @@
+.supportcase-manage-case-module-wrap .crm-accordion-wrapper .crm-accordion-header {
+    padding: 7px;
+}
+
+.supportcase-manage-case-module-wrap .crm-accordion-wrapper .crm-accordion-body {
+    box-shadow: none !important;
+}
+
+.crm-container .supportcase-manage-case-module-wrap .crm-accordion-header:not(.crm-master-accordion-header)+.crm-accordion-body {
+    padding: 0 !important;
+}
+
+.supportcase-manage-case-module-wrap input {
+    box-sizing: border-box;
+}

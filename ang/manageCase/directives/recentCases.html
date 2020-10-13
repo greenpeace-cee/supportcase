@@ -1,0 +1,19 @@
+<div class="rc__recent-cases" ng-if="isContactExist">
+	<div class="crm-accordion-wrapper">
+		<div class="crm-accordion-header crm-master-accordion-header">Recent cases</div>
+		<div class="crm-accordion-body">
+			<div class="rc__block-wrap">
+				<p>
+					<span>Recent cases for contact </span>
+					<a href="{{contactLink}}" target="_blank" title="View Contact Details">{{contactDisplayName}}</a>
+				</p>
+
+				<ul>
+					<li ng-repeat="recentCase in recentCases">
+						<a href="{{recentCase.link}}" target="_blank">(id = {{recentCase.id }}) {{recentCase.subject}}</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

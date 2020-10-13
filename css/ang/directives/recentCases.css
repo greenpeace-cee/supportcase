@@ -1,0 +1,12 @@
+/*
+    Uses on recentCases directive
+    Prefix-alias: rc  = recentCases
+*/
+
+.rc__block-wrap {
+    padding: 10px 10px 5px 10px;
+}
+
+.rc__recent-cases {
+    margin-top: 5px;
+}

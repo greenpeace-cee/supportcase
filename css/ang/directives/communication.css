@@ -1,0 +1,12 @@
+/*
+    Uses on communication directive
+    Prefix-alias: com  = Communication
+*/
+
+.com__block-wrap {
+    padding: 10px 10px 5px 10px;
+}
+
+.com__communication {
+    margin-top: 5px;
+}
