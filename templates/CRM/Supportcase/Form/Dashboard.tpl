@@ -13,7 +13,7 @@
 {else}
   {include file="CRM/Supportcase/Form/Dashboard/SearchFileterFields.tpl"}
 
-  {if $pager and $pager->_response and $pager->_response.numPages > 1}
+  {if $isShowPagination}
     <div class="supportcase__top-pagination-wrap">
       {include file="CRM/common/pager.tpl" location="bottom"}
     </div>

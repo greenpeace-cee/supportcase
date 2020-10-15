@@ -244,8 +244,11 @@
     box-shadow: none;
     margin: 0;
     width: 100%;
-    max-width: 700px;
     padding: 0;
+}
+
+.supportcase__top-pagination-wrap .crm-pager {
+    max-width: 700px;
 }
 
 .supportcase__top-pagination-wrap .clear,

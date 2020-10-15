@@ -99,6 +99,9 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $controller->setEmbedded(TRUE);
     $controller->moveFromSessionToTemplate();
 
+    $pager = (CRM_Core_Smarty::singleton())->get_template_vars('pager');
+    $isShowPagination = !empty($pager) && $pager->numItems() > $pager->getPageRowCount();
+
     $this->set('searchFormName', 'Dashboard');
     $this->assign('cases', (new CRM_Supportcase_Utils_CasesHandler($this->caseRows))->run());
     $this->assign('summary', $this->get('summary'));
@@ -106,6 +109,7 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $this->assign('currentContactId', CRM_Core_Session::getLoggedInContactID());
     $this->assign('isTagsFilterEmpty', $this->isTagsFilterEmpty());
     $this->assign('lockReloadTimeInSek', CRM_Supportcase_Utils_Setting::getDashboardLockReloadTime());
+    $this->assign('isShowPagination', $isShowPagination);
   }
 
   /**
