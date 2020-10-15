@@ -96,6 +96,11 @@
     padding: 7px;
 }
 
-.crm-container .supportcase__result-block .ui-tabs .supportcase__tab-link-wrap:first-child {
-    margin-left: 6px;
+.supportcase__top-pagination-wrap {
+    background-color: white;
+}
+
+.supportcase__top-pagination-wrap {
+    margin: 0 10px 10px 10px;
+    max-width: 900px;
 }

@@ -222,3 +222,41 @@
     height: 20px;
     margin-top: 6px;
 }
+
+.supportcase__top-pagination-wrap,
+.supportcase__bottom-pagination-wrap {
+    display: flex;
+    padding: 10px;
+    justify-content: space-between;
+}
+
+.supportcase__bottom-pagination-wrap {
+    border-bottom: 1px solid #e8eef0;
+    margin: 0 10px 0 0;
+}
+
+.supportcase__top-pagination-wrap {
+    margin-bottom: 10px;
+}
+
+.supportcase__top-pagination-wrap .crm-pager,
+.supportcase__bottom-pagination-wrap .crm-pager {
+    box-shadow: none;
+    margin: 0;
+    width: 100%;
+    max-width: 700px;
+    padding: 0;
+}
+
+.supportcase__top-pagination-wrap .clear,
+.supportcase__bottom-pagination-wrap .clear {
+    display: none;
+}
+
+.crm-container .supportcase__result-block .ui-tabs .supportcase__tab-link-wrap:first-child {
+    margin-left: 10px;
+}
+
+.supportcase__result-table-wrap {
+    margin-bottom: 20px;
+}

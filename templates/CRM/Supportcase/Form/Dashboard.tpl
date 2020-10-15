@@ -12,5 +12,12 @@
   {include file="CRM/Case/Page/ConfigureError.tpl"}
 {else}
   {include file="CRM/Supportcase/Form/Dashboard/SearchFileterFields.tpl"}
+
+  {if $pager and $pager->_response and $pager->_response.numPages > 1}
+    <div class="supportcase__top-pagination-wrap">
+      {include file="CRM/common/pager.tpl" location="bottom"}
+    </div>
+  {/if}
+
   {include file="CRM/Supportcase/Form/Dashboard/SearchResultCaseTabs.tpl"}
 {/if}

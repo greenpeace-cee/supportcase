@@ -26,6 +26,6 @@
     padding: 12px;
 }
 
-.crm-container .supportcase__result-block .ui-tabs .supportcase__tab-link-wrap:first-child {
-    margin-left: 5px;
+.supportcase__top-pagination-wrap {
+    background-color: #f5f6f1;
 }
