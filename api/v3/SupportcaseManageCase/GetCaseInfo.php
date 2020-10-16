@@ -35,6 +35,7 @@ function civicrm_api3_supportcase_manage_case_get_case_info($params) {
     }
   }
 
+  $recentCaseForContact = [];
   $clientIds = [];
   $clientsInfo = [];
   if (!empty($case['contacts'])) {
@@ -52,6 +53,9 @@ function civicrm_api3_supportcase_manage_case_get_case_info($params) {
             'cid' => $contact['contact_id'],
           ]),
         ];
+        if (empty($recentCaseForContact)) {
+          $recentCaseForContact = $clientsInfo[$contact['contact_id']];
+        }
         $clientIds[] = $contact['contact_id'];
       }
     }
@@ -69,6 +73,7 @@ function civicrm_api3_supportcase_manage_case_get_case_info($params) {
     'status_id' => $case['status_id'],
     'available_statuses' => CRM_Supportcase_Utils_Case::getCaseStatuses(),
     "is_case_locked" => $isCaseLocked,
+    "recent_case_for_contact" => $recentCaseForContact,
     "is_locked_by_self" => $isLockedBySelf,
     "locked_by_contact_id" => $lockedByContactId,
     "lock_message" => $lockMessage,

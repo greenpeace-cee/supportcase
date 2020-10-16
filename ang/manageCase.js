@@ -428,27 +428,11 @@
             controller: function($scope) {
                 $scope.ts = CRM.ts();
                 $scope.recentCases = [];
-                $scope.contactDisplayName = '';
-                $scope.contactLink = '#';
-                $scope.isContactExist = ($scope.ctrl.model['clients'][0] !== undefined);
-
-                //TODO remove generating link from front
-                if ($scope.isContactExist) {
-                    $scope.contactDisplayName = $scope.ctrl.model['clients'][0]['display_name']
-                    $scope.contactLink = CRM.url('civicrm/contact/view', {
-                        reset: 1,
-                        cid: $scope.ctrl.model['clients'][0]['contact_id']
-                    });
-                }
 
                 $scope.updateRecentCases = function() {
-                    if (!$scope.isContactExist) {
-                        return;
-                    }
-
                     CRM.api3('SupportcaseManageCase', 'get_recent_cases', {
-                        "client_id": $scope.ctrl.model['clients'][0]['contact_id'],
-                        "limit_per_page": 10,
+                        "client_id": $scope.ctrl.model['recent_case_for_contact']['contact_id'],
+                        "limit_per_page": 100,
                         "page_number": 1
                     }).then(function(result) {
                         if (result.is_error === 1) {
