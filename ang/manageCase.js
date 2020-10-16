@@ -30,7 +30,6 @@
     ]);
 
     angular.module(moduleName).controller("manageCaseCtrl", function($scope, crmApi, apiCalls, caseId) {
-        $scope.url = CRM.url;
         $scope.ts = CRM.ts();
         $scope.caseInfo = {};
         $scope.isError = false;
@@ -51,9 +50,7 @@
         return {
             restrict: "E",
             templateUrl: "~/manageCase/directives/caseInfo.html",
-            scope: {
-                model: "=",
-            },
+            scope: {model: "="},
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope) {
@@ -78,6 +75,15 @@
                     return style;
                 };
 
+                $scope.getInputStyles = function() {
+                    return {
+                        'width' : '100%',
+                        'max-width' : '300px',
+                        'box-sizing' : 'border-box',
+                        'height' : '28px'
+                    };
+                };
+
                 $scope.toggleMode = function(field) {
                     var caseInfoItem = $('.ci__case-info-item.' + field);
                     if (caseInfoItem.length === 0) {
@@ -97,22 +103,18 @@
                      caseInfoItem.find('.ci__case-info-errors-wrap').empty().append('<div class="crm-error">' + errorMessage + '</div>');
                 };
 
-                $scope.editStartDateConfirm = function() {
-                    $scope.toggleMode('startDateField');
-                };
+                $scope.editConfirm = function(apiFieldName, apiFieldValue, fieldSelector, successCallback) {
+                    var apiParams = {"case_id": $scope.ctrl.model['id']};
+                    apiParams[apiFieldName] = apiFieldValue;
 
-                $scope.editCategoryConfirm = function() {
-                    CRM.api3('SupportcaseManageCase', 'update_case_info', {
-                        "case_id": $scope.ctrl.model['id'],
-                        "category_id": $scope.ctrl.model['category_id']
-                    }).then(function(result) {
-                        CRM.status(ts('Category updated.'));
+                    CRM.api3('SupportcaseManageCase', 'update_case_info', apiParams).then(function(result) {
+                        if (result.is_error === 1) {
+                            $scope.showError(fieldSelector, result.error_message);
+                        } else {
+                            successCallback(result);
+                            $scope.toggleMode(fieldSelector);
+                        }
                     }, function(error) {});
-                    $scope.toggleMode('categoryField');
-                };
-
-                $scope.editTagsConfirm = function() {
-                    $scope.toggleMode('tagsField');
                 };
             }
         };
@@ -122,31 +124,18 @@
         return {
             restrict: "E",
             templateUrl: "~/manageCase/directives/caseInfo/caseSubject.html",
-            scope: {
-                model: "=",
-            },
+            scope: {model: "="},
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope) {
                 $scope.toggleMode = $scope.$parent.toggleMode;
-                $scope.showError = $scope.$parent.showError;
-                $scope.setFieldFromModel = function() {
-                    $scope.subject = $scope.ctrl.model['subject'];
-                };
+                $scope.setFieldFromModel = function() {$scope.subject = $scope.ctrl.model['subject'];};
                 $scope.editConfirm = function() {
-                    CRM.api3('SupportcaseManageCase', 'update_case_info', {
-                        "case_id": $scope.ctrl.model['id'],
-                        "subject": $scope.subject,
-                    }).then(function(result) {
-                        if (result.is_error === 1) {
-                            $scope.showError('subjectField', result.error_message);
-                        } else {
-                            $scope.ctrl.model['subject'] = $scope.subject;
-                            $scope.$apply();
-                            CRM.status(ts('Subject updated.'));
-                            $scope.toggleMode('subjectField');
-                        }
-                    }, function(error) {});
+                    $scope.$parent.editConfirm('subject', $scope.subject, 'subjectField', function(result) {
+                        $scope.ctrl.model['subject'] = $scope.subject;
+                        $scope.$apply();
+                        CRM.status(ts('Subject updated.'));
+                    });
                 };
 
                 $scope.setFieldFromModel();
@@ -158,42 +147,23 @@
         return {
             restrict: "E",
             templateUrl: "~/manageCase/directives/caseInfo/caseStatus.html",
-            scope: {
-                model: "=",
-            },
+            scope: {model: "="},
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope) {
                 $scope.toggleMode = $scope.$parent.toggleMode;
-                $scope.showError = $scope.$parent.showError;
                 $scope.getEntityLabel = $scope.$parent.getEntityLabel;
-                $scope.setFieldFromModel = function() {
-                    $scope.statusId = $scope.ctrl.model['status_id'];
-                };
+                $scope.setFieldFromModel = function() {$scope.statusId = $scope.ctrl.model['status_id'];};
                 $scope.editConfirm = function() {
-                    CRM.api3('SupportcaseManageCase', 'update_case_info', {
-                        "case_id": $scope.ctrl.model['id'],
-                        "status_id": $scope.statusId
-                    }).then(function(result) {
-                        if (result.is_error === 1) {
-                            $scope.showError('statusField', result.error_message);
-                        } else {
-                            $scope.ctrl.model['status_id'] = $scope.statusId;
-                            $scope.$apply();
-                            CRM.status(ts('Status updated.'));
-                            $scope.toggleMode('statusField');
-                        }
-                    }, function(error) {});
+                    $scope.$parent.editConfirm('status_id', $scope.statusId, 'statusField', function(result) {
+                        $scope.ctrl.model['status_id'] = $scope.statusId;
+                        $scope.$apply();
+                        CRM.status(ts('Status updated.'));
+                    });
                 };
 
                 $scope.setFieldFromModel();
-                var inputStyles =  {
-                    'width' : '100%',
-                    'max-width' : '300px',
-                    'box-sizing' : 'border-box',
-                    'height' : '28px'
-                };
-                setTimeout(function() {$(".ci__case-info-item.statusField select").css(inputStyles).select2();}, 0);
+                setTimeout(function() {$(".ci__case-info-item.statusField select").css($scope.$parent.getInputStyles()).select2();}, 0);
             }
         };
     });
@@ -202,48 +172,28 @@
         return {
             restrict: "E",
             templateUrl: "~/manageCase/directives/caseInfo/caseClients.html",
-            scope: {
-                model: "=",
-            },
+            scope: {model: "="},
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope, $window) {
                 $scope.generateStyles = $scope.$parent.generateStyles;
-                $scope.showError = $scope.$parent.showError;
                 $scope.toggleMode = $scope.$parent.toggleMode;
-                $scope.setFieldFromModel = function() {
-                    $scope.clientId = $scope.ctrl.model['client_ids'][0];
-                };
+                $scope.setFieldFromModel = function() {$scope.clientId = $scope.ctrl.model['client_ids'][0];};
                 $scope.editConfirm = function() {
-                    CRM.api3('SupportcaseManageCase', 'update_case_info', {
-                        "case_id": $scope.ctrl.model['id'],
-                        "new_case_client_id": $scope.clientId
-                    }).then(function(result) {
-                        if (result.is_error === 1) {
-                            $scope.showError('clientsField', result.error_message);
-                        } else {
-                            var message = '<ul>';
-                            message += '<li>Case(id=' + $scope.ctrl.model['id'] + ') have been moved to the trash.</li>';
-                            message += '<li>Created the same case(with activities) and new client.</li>';
-                            message += '<li>You have been redireced to this new case.</li>';
-                            message += '</ul>';
-                            CRM.alert(message, 'Change case client', 'success');
-                            $window.location.href = "#/supportcase/manage-case/" + result.values.case.id;
-                        }
-                    }, function(error) {});
+                    $scope.$parent.editConfirm('new_case_client_id', $scope.clientId, 'clientsField', function(result) {
+                        var message = '<ul>';
+                        message += '<li>Case(id=' + $scope.ctrl.model['id'] + ') have been moved to the trash.</li>';
+                        message += '<li>Created the same case(with activities) and new client.</li>';
+                        message += '<li>You have been redireced to this new case.</li>';
+                        message += '</ul>';
+                        CRM.alert(message, 'Change case client', 'success');
+                        $window.location.href = "#/supportcase/manage-case/" + result.values.case.id;
+                    });
                 };
-                $scope.toggleClientDescription = function(clientClassName) {
-                    $('.ci__client.' + clientClassName).toggleClass('opened');
-                };
+                $scope.toggleClientDescription = function(clientClassName) {$('.ci__client.' + clientClassName).toggleClass('opened');};
 
                 $scope.setFieldFromModel();
-                var inputStyles =  {
-                    'width' : '100%',
-                    'max-width' : '300px',
-                    'box-sizing' : 'border-box',
-                    'height' : '28px'
-                };
-                setTimeout(function() {$(".ci__case-info-item.clientsField input").css(inputStyles).crmEntityRef();}, 0);
+                setTimeout(function() {$(".ci__case-info-item.clientsField input").css($scope.$parent.getInputStyles()).crmEntityRef();}, 0);
             }
         };
     });
@@ -252,31 +202,18 @@
         return {
             restrict: "E",
             templateUrl: "~/manageCase/directives/caseInfo/caseStartDate.html",
-            scope: {
-                model: "=",
-            },
+            scope: {model: "="},
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope) {
                 $scope.toggleMode = $scope.$parent.toggleMode;
-                $scope.showError = $scope.$parent.showError;
-                $scope.setFieldFromModel = function() {
-                    $scope.startDate = $scope.ctrl.model['start_date'];
-                };
+                $scope.setFieldFromModel = function() {$scope.startDate = $scope.ctrl.model['start_date'];};
                 $scope.editConfirm = function() {
-                    CRM.api3('SupportcaseManageCase', 'update_case_info', {
-                        "case_id": $scope.ctrl.model['id'],
-                        "start_date": $scope.startDate
-                    }).then(function(result) {
-                        if (result.is_error === 1) {
-                            $scope.showError('startDateField', result.error_message);
-                        } else {
-                            $scope.ctrl.model['start_date'] = $scope.startDate;
-                            $scope.$apply();
-                            CRM.status(ts('Start date updated.'));
-                            $scope.toggleMode('startDateField');
-                        }
-                    }, function(error) {});
+                    $scope.$parent.editConfirm('start_date', $scope.startDate, 'startDateField', function(result) {
+                        $scope.ctrl.model['start_date'] = $scope.startDate;
+                        $scope.$apply();
+                        CRM.status(ts('Start date updated.'));
+                    });
                 };
 
                 $scope.setFieldFromModel();
@@ -288,42 +225,23 @@
         return {
             restrict: "E",
             templateUrl: "~/manageCase/directives/caseInfo/caseCategory.html",
-            scope: {
-                model: "=",
-            },
+            scope: {model: "="},
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope) {
                 $scope.toggleMode = $scope.$parent.toggleMode;
                 $scope.getEntityLabel = $scope.$parent.getEntityLabel;
-                $scope.showError = $scope.$parent.showError;
-                $scope.setFieldFromModel = function() {
-                    $scope.categoryId = $scope.ctrl.model['category_id'];
-                };
+                $scope.setFieldFromModel = function() {$scope.categoryId = $scope.ctrl.model['category_id'];};
                 $scope.editConfirm = function() {
-                    CRM.api3('SupportcaseManageCase', 'update_case_info', {
-                        "case_id": $scope.ctrl.model['id'],
-                        "category_id": $scope.categoryId
-                    }).then(function(result) {
-                        if (result.is_error === 1) {
-                            $scope.showError('categoryField', result.error_message);
-                        } else {
-                            $scope.ctrl.model['category_id'] = $scope.categoryId;
-                            $scope.$apply();
-                            CRM.status(ts('Category updated.'));
-                            $scope.toggleMode('categoryField');
-                        }
-                    }, function(error) {});
+                    $scope.$parent.editConfirm('category_id', $scope.categoryId, 'categoryField', function(result) {
+                        $scope.ctrl.model['category_id'] = $scope.categoryId;
+                        $scope.$apply();
+                        CRM.status(ts('Category updated.'));
+                    });
                 };
 
                 $scope.setFieldFromModel();
-                var inputStyles =  {
-                    'width' : '100%',
-                    'max-width' : '300px',
-                    'box-sizing' : 'border-box',
-                    'height' : '28px'
-                };
-                setTimeout(function() {$(".ci__case-info-item.categoryField select").css(inputStyles).select2();}, 0);
+                setTimeout(function() {$(".ci__case-info-item.categoryField select").css($scope.$parent.getInputStyles()).select2();}, 0);
             }
         };
     });
@@ -332,40 +250,26 @@
         return {
             restrict: "E",
             templateUrl: "~/manageCase/directives/caseInfo/caseTags.html",
-            scope: {
-                model: "=",
-            },
+            scope: {model: "="},
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope) {
                 $scope.toggleMode = $scope.$parent.toggleMode;
                 $scope.generateStyles = $scope.$parent.generateStyles;
-                $scope.showError = $scope.$parent.showError;
-                $scope.setFieldFromModel = function() {
-                    $scope.caseTags = $scope.ctrl.model['tags_ids'];
-                };
+                $scope.setFieldFromModel = function() {$scope.caseTags = $scope.ctrl.model['tags_ids'];};
                 $scope.editConfirm = function() {
-                    CRM.api3('SupportcaseManageCase', 'update_case_info', {
-                        "case_id": $scope.ctrl.model['id'],
-                        "tags_ids": ($scope.caseTags === undefined) ? [] : $scope.caseTags
-                    }).then(function(result) {
-                        if (result.is_error === 1) {
-                            $scope.showError('tagsField', result.error_message);
-                        } else {
-                            $scope.ctrl.model['tags_ids'] = $scope.caseTags;
-                            CRM.status(ts('Tags updated.'));
-                            $scope.toggleMode('tagsField');
-                            $scope.$apply();
-                        }
-                    }, function(error) {});
+                    var tagsIds = ($scope.caseTags === undefined) ? [] : $scope.caseTags;
+                    $scope.$parent.editConfirm('tags_ids', tagsIds, 'tagsField', function(result) {
+                        $scope.ctrl.model['tags_ids'] = $scope.caseTags;
+                        CRM.status(ts('Tags updated.'));
+                        $scope.$apply();
+                    });
                 };
+
                 $scope.setFieldFromModel();
 
-                var inputStyles =  {
-                    'width' : '100%',
-                    'max-width' : '300px',
-                    'box-sizing' : 'border-box',
-                };
+                var inputStyles =  $scope.$parent.getInputStyles();
+                inputStyles['height'] = 'auto';
                 setTimeout(function() {$(".ci__case-info-item.tagsField select").css(inputStyles).select2();}, 0);
             }
         };
@@ -375,9 +279,7 @@
         return {
             restrict: "E",
             templateUrl: "~/manageCase/directives/communication.html",
-            scope: {
-                model: "=",
-            },
+            scope: {model: "="},
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope) {
@@ -390,9 +292,7 @@
         return {
             restrict: "E",
             templateUrl: "~/manageCase/directives/activities.html",
-            scope: {
-                model: "=",
-            },
+            scope: {model: "="},
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope) {
@@ -420,15 +320,12 @@
         return {
             restrict: "E",
             templateUrl: "~/manageCase/directives/recentCases.html",
-            scope: {
-                model: "=",
-            },
+            scope: {model: "="},
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope) {
                 $scope.ts = CRM.ts();
                 $scope.recentCases = [];
-
                 $scope.updateRecentCases = function() {
                     CRM.api3('SupportcaseManageCase', 'get_recent_cases', {
                         "client_id": $scope.ctrl.model['recent_case_for_contact']['contact_id'],
@@ -444,6 +341,7 @@
                         }
                     }, function(error) {});
                 };
+
                 $scope.updateRecentCases();
             }
         };
@@ -453,9 +351,7 @@
         return {
             restrict: "E",
             templateUrl: "~/manageCase/directives/managePanel.html",
-            scope: {
-                model: "=",
-            },
+            scope: {model: "="},
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope) {
