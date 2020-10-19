@@ -85,7 +85,7 @@
                 };
 
                 $scope.toggleMode = function(directiveElement) {
-                    var caseInfoItem = CRM.$(directiveElement);
+                    var caseInfoItem = $(directiveElement);
                     if (caseInfoItem.length === 0) {
                         return;
                     }
@@ -95,7 +95,7 @@
                 };
 
                 $scope.showError = function(directiveElement, errorMessage) {
-                    var caseInfoItem = CRM.$(directiveElement);
+                    var caseInfoItem = $(directiveElement);
                     if (caseInfoItem.length === 0) {
                         return;
                     }
@@ -153,6 +153,12 @@
             controller: function($scope, $element) {
                 $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
                 $scope.setFieldFromModel = function() {$scope.statusId = $scope.ctrl.model['status_id'];};
+                $scope.updateInputValue = function() {
+                    $scope.setFieldFromModel();
+                    setTimeout(function() {
+                        $($element).find(".ci__case-info-edit-mode select").val($scope.statusId).trigger('change');
+                    }, 0);
+                };
                 $scope.getEntityLabel = $scope.$parent.getEntityLabel;
                 $scope.editConfirm = function() {
                     $scope.$parent.editConfirm('status_id', $scope.statusId, $element, function(result) {
@@ -163,7 +169,7 @@
                 };
 
                 $scope.setFieldFromModel();
-                setTimeout(function() {$(".ci__case-info-item.statusField select").css($scope.$parent.getInputStyles()).select2();}, 0);
+                setTimeout(function() {$($element).find(".ci__case-info-edit-mode select").css($scope.$parent.getInputStyles()).select2();}, 0);
             }
         };
     });
@@ -190,10 +196,10 @@
                         $window.location.href = "#/supportcase/manage-case/" + result.values.case.id;
                     });
                 };
-                
+
                 $scope.setFieldFromModel();
                 $scope.toggleClientDescription = function(clientClassName) {$('.ci__client.' + clientClassName).toggleClass('opened');};
-                setTimeout(function() {$(".ci__case-info-item.clientsField input").css($scope.$parent.getInputStyles()).crmEntityRef();}, 0);
+                setTimeout(function() {$($element).find(".ci__case-info-edit-mode input").css($scope.$parent.getInputStyles()).crmEntityRef();}, 0);
             }
         };
     });
@@ -225,6 +231,12 @@
             controllerAs: "ctrl",
             controller: function($scope, $element) {
                 $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
+                $scope.updateInputValue = function() {
+                    $scope.setFieldFromModel();
+                    setTimeout(function() {
+                        $($element).find(".ci__case-info-edit-mode select").val($scope.categoryId).trigger('change');
+                    }, 0);
+                };
                 $scope.getEntityLabel = $scope.$parent.getEntityLabel;
                 $scope.setFieldFromModel = function() {$scope.categoryId = $scope.ctrl.model['category_id'];};
                 $scope.editConfirm = function() {
@@ -236,7 +248,7 @@
                 };
 
                 $scope.setFieldFromModel();
-                setTimeout(function() {$(".ci__case-info-item.categoryField select").css($scope.$parent.getInputStyles()).select2();}, 0);
+                setTimeout(function() {$($element).find(".ci__case-info-edit-mode select").css($scope.$parent.getInputStyles()).select2();}, 0);
             }
         };
     });
@@ -252,6 +264,12 @@
                 $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
                 $scope.generateStyles = $scope.$parent.generateStyles;
                 $scope.setFieldFromModel = function() {$scope.caseTags = $scope.ctrl.model['tags_ids'];};
+                $scope.updateInputValue = function() {
+                    $scope.setFieldFromModel();
+                    setTimeout(function() {
+                        $($element).find(".ci__case-info-edit-mode select").val($scope.caseTags).trigger('change');
+                    }, 0);
+                };
                 $scope.editConfirm = function() {
                     var tagsIds = ($scope.caseTags === undefined) ? [] : $scope.caseTags;
                     $scope.$parent.editConfirm('tags_ids', tagsIds, $element, function(result) {
@@ -264,7 +282,7 @@
                 $scope.setFieldFromModel();
                 var inputStyles =  $scope.$parent.getInputStyles();
                 inputStyles['height'] = 'auto';
-                setTimeout(function() {$(".ci__case-info-item.tagsField select").css(inputStyles).select2();}, 0);
+                setTimeout(function() {$($element).find(".ci__case-info-edit-mode select").css(inputStyles).select2();}, 0);
             }
         };
     });
