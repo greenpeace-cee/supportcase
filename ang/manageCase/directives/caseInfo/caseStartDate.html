@@ -1,26 +1,26 @@
 <div class="ci__case-info-item startDateField">
 	<div class="ci__case-info-header">
 		<div class="ci__case-info-item-label">Start Date</div>
-		<div class="ci__case-info-edit-button" title="Edit start date" ng-click="toggleMode('startDateField')">
+		<label for="startDateField">Start Date</label>
+		<div class="ci__case-info-edit-button" title="Edit start date" ng-click="toggleMode()">
 			<i class="crm-i fa-pencil"></i>
 		</div>
 	</div>
 
 	<div class="ci__case-info-view-mode">
-		<div class="ci__case-info-item-content">{{startDate}}</div>
+		<div class="ci__case-info-item-content">{{ctrl.model['start_date']}}</div>
 	</div>
 
 	<div class="ci__case-info-edit-mode">
 		<div class="ci__case-info-errors-wrap"></div>
-
 		<div class="crm-section">
-			<input crm-ui-datepicker ng-model="startDate" name="startDateField" />
+			<input crm-ui-datepicker="{time: true}" ng-model="ctrl.model['start_date']" name="startDateField" id="startDateField"/>
 			<div class="clear"></div>
 		</div>
 
 		<div class="ci__case-info-edit-mode-buttons">
 			<button class="ci__case-info-edit-confirm" ng-click="editConfirm()">confirm</button>
-			<button class="ci__case-info-edit-cancel" ng-click="toggleMode('startDateField')">cancel</button>
+			<button class="ci__case-info-edit-cancel" ng-click="toggleMode()">cancel</button>
 		</div>
 	</div>
 </div>
