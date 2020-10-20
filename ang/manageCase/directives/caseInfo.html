@@ -13,7 +13,9 @@
 						<div class="ci__case-info-view-mode">
 							<div class="ci__case-info-item-content">
 								<div>{{ctrl.model['id']}}</div>
-								<div ng-if="ctrl.model['is_deleted'] == 1">(This case is in the trash)</div>
+								<div ng-if="ctrl.model['is_deleted'] == 1">
+									<span>(<i title="This case in the trash" class="supportcase-ico fa-trash" aria-hidden="true"></i>This case is in the trash)</span>
+								</div>
 							</div>
 						</div>
 					</div>

@@ -419,6 +419,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
 
       $row['case_tags'] = $this->getCaseTags($result->case_id);
       $row['category'] = (!empty($categoryCustomFieldName)) ? $result->$categoryCustomFieldName: '';
+      $row['is_case_deleted'] = $result->case_deleted == '1';
 
       //default locking values:
       $row['is_case_locked'] = FALSE;

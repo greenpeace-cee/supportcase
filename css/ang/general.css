@@ -13,3 +13,26 @@
 .supportcase-manage-case-module-wrap input {
     box-sizing: border-box;
 }
+
+.supportcase-ico {
+    color: #464354;
+    padding-left: 5px;
+    padding-right: 5px;
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.supportcase-ico:hover {
+    color: #464354;
+}
+
+.supportcase-ico.supportcase-ico-grey {
+    color: #aaaaaa;
+}
+
+.supportcase-ico.supportcase-ico-grey:hover {
+    color: #aaaaaa;
+}
