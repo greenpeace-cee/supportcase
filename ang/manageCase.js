@@ -221,9 +221,18 @@
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope, $element) {
+                $scope.setFieldFromModel = function() {$scope.startDate = $scope.ctrl.model['start_date'];};
                 $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
+                $scope.updateInputValue = function() {
+                    $scope.setFieldFromModel();
+                    setTimeout(function() {
+                        $($element).find(".ci__case-info-edit-mode input").val($scope.startDate).trigger('change');
+                    }, 0);
+                };
                 $scope.editConfirm = function() {
-                    $scope.$parent.editConfirm('start_date', $scope.ctrl.model['start_date'], $element, function(result) {
+                    $scope.$parent.editConfirm('start_date', $scope.startDate, $element, function(result) {
+                        $scope.ctrl.model['start_date'] = $scope.startDate;
+                        $scope.$apply();
                         CRM.status(ts('Start date updated.'));
                     });
                 };

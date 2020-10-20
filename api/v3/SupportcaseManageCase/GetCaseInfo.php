@@ -68,7 +68,6 @@ function civicrm_api3_supportcase_manage_case_get_case_info($params) {
     'subject' => $case['subject'],
     'clients' => $clientsInfo,
     'client_ids' => $clientIds,
-    'start_date_formatted' => $case['start_date'],
     'start_date' => $case['start_date'],
     'status_id' => $case['status_id'],
     'available_statuses' => CRM_Supportcase_Utils_Case::getCaseStatuses(),

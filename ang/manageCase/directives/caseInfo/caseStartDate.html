@@ -1,7 +1,7 @@
 <div class="ci__case-info-item startDateField">
 	<div class="ci__case-info-header">
 		<div class="ci__case-info-item-label">Start Date</div>
-		<div class="ci__case-info-edit-button" title="Edit start date" ng-click="toggleMode()">
+		<div class="ci__case-info-edit-button" title="Edit start date" ng-click="toggleMode();updateInputValue();">
 			<i class="crm-i fa-pencil"></i>
 		</div>
 	</div>
@@ -14,7 +14,7 @@
 		<div class="ci__case-info-errors-wrap"></div>
 		<div class="crm-section">
 			<form><!-- this tag need to fix issue with datepicker: you redirect to another page after selecting date-->
-				<input crm-ui-datepicker="{time: true}" ng-model="ctrl.model['start_date']" name="startDateField" id="startDateField"/>
+				<input style="width:150px;" crm-ui-datepicker="{time: false}" ng-model="startDate" name="startDateField" />
 				<div class="clear"></div>
 			</form>
 		</div>

@@ -29,9 +29,12 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
   }
 
   //handles start_date:
-  if (!empty($params['start_date'])) {
-    //TODO validate start_date
-    $updateCaseParams['start_date'] = $params['start_date'];
+  if (isset($params['start_date'] )) {
+    if (!empty($params['start_date'])) {
+      $updateCaseParams['start_date'] = $params['start_date'];
+    } else {
+      throw new api_Exception('Start date cannot be empty.', 'start_date_cannot_be_empty');
+    }
   }
 
   //handles new_case_client_id:
