@@ -19,13 +19,21 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
   $updateCaseParams = [];
 
   //handles subject:
-  if (!empty($params['subject'])) {
-    $updateCaseParams['subject'] = $params['subject'];
+  if (isset($params['subject'] )) {
+    if (!empty($params['subject'])) {
+      $updateCaseParams['subject'] = $params['subject'];
+    } else {
+      throw new api_Exception('Subject cannot be empty.', 'subject_cannot_be_empty');
+    }
   }
 
   //handles status_id:
-  if (!empty($params['status_id'])) {
-    $updateCaseParams['status_id'] = $params['status_id'];
+  if (isset($params['status_id'] )) {
+    if (!empty($params['status_id'])) {
+      $updateCaseParams['status_id'] = $params['status_id'];
+    } else {
+      throw new api_Exception('Status cannot be empty.', 'status_id_cannot_be_empty');
+    }
   }
 
   //handles start_date:
@@ -38,25 +46,29 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
   }
 
   //handles new_case_client_id:
-  if (!empty($params['new_case_client_id'])) {
-    try {
-      $newClient = civicrm_api3('Contact', 'getsingle', [
-        'id' => $params['new_case_client_id'],
-      ]);
-    } catch (CiviCRM_API3_Exception $e) {
-      throw new api_Exception('Client id does not exist', 'client_id_does_not_exist');
-    }
+  if (isset($params['new_case_client_id'] )) {
+    if (!empty($params['start_date'])) {
+      try {
+        $newClient = civicrm_api3('Contact', 'getsingle', [
+          'id' => $params['new_case_client_id'],
+        ]);
+      } catch (CiviCRM_API3_Exception $e) {
+        throw new api_Exception('Client id does not exist', 'client_id_does_not_exist');
+      }
 
-    $currentClientId = '';
-    foreach ($case['client_id'] as $clientId) {
-      $currentClientId = $clientId;
-    }
+      $currentClientId = '';
+      foreach ($case['client_id'] as $clientId) {
+        $currentClientId = $clientId;
+      }
 
-    if ($currentClientId == $params['new_case_client_id']) {
-      throw new api_Exception('New client id and current client id is the same.', 'the_same_current_client_id_and_new_client_id');
-    }
+      if ($currentClientId == $params['new_case_client_id']) {
+        throw new api_Exception('New client id and current client id is the same.', 'the_same_current_client_id_and_new_client_id');
+      }
 
-    $updateCaseParams['client_id'] = $params['new_case_client_id'];
+      $updateCaseParams['client_id'] = $params['new_case_client_id'];
+    } else {
+      throw new api_Exception('Clients cannot be empty.', 'clients_cannot_be_empty');
+    }
   }
 
   //handles category_id:
