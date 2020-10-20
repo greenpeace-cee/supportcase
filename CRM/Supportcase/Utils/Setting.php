@@ -125,4 +125,11 @@ class CRM_Supportcase_Utils_Setting {
     return ts('This case locked by you.');
   }
 
+  /**
+   * Default count of rows on supportcase dashboard
+   */
+  public static function getDefaultCountOfRows() {
+    return 1000;
+  }
+
 }

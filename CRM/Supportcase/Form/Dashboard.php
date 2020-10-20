@@ -100,7 +100,7 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $controller->moveFromSessionToTemplate();
 
     $pager = (CRM_Core_Smarty::singleton())->get_template_vars('pager');
-    $isShowPagination = !empty($pager) && $pager->numItems() > $pager->getPageRowCount();
+    $isShowPagination = !empty($pager) && $pager->numItems() > $pager->_perPage;
 
     $this->set('searchFormName', 'Dashboard');
     $this->assign('cases', (new CRM_Supportcase_Utils_CasesHandler($this->caseRows))->run());
