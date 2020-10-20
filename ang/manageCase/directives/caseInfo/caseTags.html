@@ -23,7 +23,7 @@
 		<div class="ci__case-info-errors-wrap"></div>
 
 		<div class="crm-section">
-			<select ng-model="caseTags" style="width:100%;" multiple name="tagsField" id="tagsField" class="crm-form-select" ng-required="true">
+			<select ng-model="caseTags" style="width:100%;" multiple name="tagsField" id="tagsField" class="crm-form-select">
 				<option ng-repeat="option in ctrl.model['available_tags']" value="{{option.id}}">{{option.name}}</option>
 			</select>
 		</div>

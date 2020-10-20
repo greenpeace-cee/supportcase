@@ -14,7 +14,7 @@
 		<div class="ci__case-info-errors-wrap"></div>
 
 		<div class="crm-section">
-			<select ng-model="statusId" name="statusField" id="statusField" class="crm-form-select" ng-required="true">
+			<select ng-model="statusId" name="statusField" id="statusField" class="crm-form-select" >
 				<option ng-repeat="option in ctrl.model['available_statuses']" value="{{option.value}}">{{option.label}}</option>
 			</select>
 		</div>

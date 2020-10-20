@@ -14,7 +14,7 @@
 		<div class="ci__case-info-errors-wrap"></div>
 
 		<div class="crm-section">
-			<select ng-model="categoryId" name="categoryField" id="categoryField" class="crm-form-select" ng-required="true">
+			<select ng-model="categoryId" name="categoryField" id="categoryField" class="crm-form-select">
 				<option ng-repeat="option in ctrl.model['available_categories']" value="{{option.value}}">{{option.label}}</option>
 			</select>
 		</div>
