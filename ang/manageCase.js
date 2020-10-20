@@ -56,6 +56,14 @@
             controller: function($scope) {
                 $scope.ts = CRM.ts();
 
+                $scope.showHelpInfo =  function(title, helpId, fileLocation) {
+                    CRM.help(title, {
+                        id: helpId,
+                        file: fileLocation
+                    });
+                    return false;
+                };
+
                 $scope.getEntityLabel = function(entities, entityId) {
                     for (var i = 0; i < entities.length; i++) {
                         if (entities[i]['value'] === entityId) {
@@ -182,6 +190,7 @@
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope, $window, $element) {
+                $scope.showHelpInfo = $scope.$parent.showHelpInfo;
                 $scope.generateStyles = $scope.$parent.generateStyles;
                 $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
                 $scope.setFieldFromModel = function() {$scope.clientId = $scope.ctrl.model['client_ids'][0];};

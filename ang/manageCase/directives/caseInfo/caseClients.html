@@ -1,6 +1,9 @@
 <div class="ci__case-info-item clientsField">
 	<div class="ci__case-info-header">
-		<div class="ci__case-info-item-label">Clients</div>
+		<div class="ci__case-info-item-label">
+			<span>Clients</span>
+			<a ng-click="showHelpInfo('About clients updating', 'id-about-clients-updating', 'CRM\/Supportcase\/Helper\/CaseInfo')" href="javascript:;" title="Help" class="helpicon"></a>
+		</div>
 		<div class="ci__case-info-edit-button" title="Edit clients" ng-click="toggleMode();setFieldFromModel();">
 			<i class="crm-i fa-pencil"></i>
 		</div>
@@ -53,15 +56,9 @@
 	</div>
 
 	<div class="ci__case-info-edit-mode">
-		<div class="ci__case-info-help-message">
-			<div class="status">If you change client system adds this case(id={{ctrl.model['id']}}) to the trash and create the same new case(with activities) with new client.</div>
-		</div>
-
 		<div class="crm-section">
-			<input class="crm-form-select" ng-model="clientId" placeholder="- none -" data-select-params='{"multiple":false}'
-				   data-api-entity="contact" type="text" />
+			<input class="crm-form-select" ng-model="clientId" placeholder="- none -" data-select-params='{"multiple":false}' data-api-entity="contact" type="text" />
 		</div>
-
 
 		<div class="ci__case-info-errors-wrap"></div>
 
