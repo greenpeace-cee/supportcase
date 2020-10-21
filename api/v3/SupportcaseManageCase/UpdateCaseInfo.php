@@ -47,7 +47,7 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
 
   //handles new_case_client_id:
   if (isset($params['new_case_client_id'] )) {
-    if (!empty($params['start_date'])) {
+    if (!empty($params['new_case_client_id'])) {
       try {
         $newClient = civicrm_api3('Contact', 'getsingle', [
           'id' => $params['new_case_client_id'],
