@@ -7,12 +7,6 @@
     <access_arguments>access support cases</access_arguments>
   </item>
   <item>
-    <path>civicrm/supportcase/manage</path>
-    <page_callback>CRM_Supportcase_Page_Supportcase</page_callback>
-    <title>Supportcase</title>
-    <access_arguments>access support cases</access_arguments>
-  </item>
-  <item>
     <path>civicrm/supportcase/tooltip-activity-view</path>
     <page_callback>CRM_Supportcase_Page_Tooltip_ActivityView</page_callback>
     <title>Supportcase</title>
