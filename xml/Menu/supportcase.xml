@@ -24,4 +24,10 @@
     <title>Report Spam</title>
     <access_arguments>access support cases</access_arguments>
   </item>
+  <item>
+    <path>civicrm/supportcase/manage-case-angular-wrap</path>
+    <page_callback>CRM_Supportcase_Page_ManageCaseAngularWrap</page_callback>
+    <title>Manage Case</title>
+    <access_arguments>access support cases</access_arguments>
+  </item>
 </menu>

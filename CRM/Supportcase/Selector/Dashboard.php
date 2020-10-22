@@ -244,16 +244,10 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
       self::$_links = [
         CRM_Core_Action::VIEW => [
           'name' => ts('Manage'),
-          'url' => 'civicrm/a/#/supportcase/manage-case',//TODO add case id here
+          'url' => 'civicrm/supportcase/manage-case-angular-wrap',
+          'qs' => 'reset=1&case_id=%%id%%',
           'ref' => 'manage-case',
           'title' => ts('Manage Case'),
-        ],
-        111 => [//TODO remove this link it is old manage page
-          'name' => ts('Manage Case old'),
-          'url' => 'civicrm/supportcase/manage',
-          'qs' => 'reset=1&id=%%id%%&cid=%%cid%%&action=view&context=%%cxt%%&selectedChild=case' . $extraParams,
-          'ref' => 'manage-case',
-          'title' => ts('Manage Case old'),
         ],
         CRM_Core_Action::UPDATE => [
           'name' => ts('Report Spam'),

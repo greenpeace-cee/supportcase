@@ -6,12 +6,15 @@
     angular.module(moduleName).config([
         "$routeProvider",
         function($routeProvider) {
-            $routeProvider.when("/supportcase/manage-case/:caseId?", {
+            $routeProvider.when("/supportcase/manage-case/:caseId?/:viewType?", {
                 controller: "manageCaseCtrl",
                 templateUrl: "~/manageCase/manageCase.html",
                 resolve: {
                     caseId: function($route) {
                         return angular.isDefined($route.current.params.caseId) ? $route.current.params.caseId : false;
+                    },
+                    isLoadedInIframe: function($route) {
+                        return angular.isDefined($route.current.params.viewType) && $route.current.params.viewType == 'in-iframe';
                     },
                     apiCalls: function($route, crmApi) {
                         var reqs = {};
@@ -29,7 +32,7 @@
         }
     ]);
 
-    angular.module(moduleName).controller("manageCaseCtrl", function($scope, crmApi, apiCalls, caseId) {
+    angular.module(moduleName).controller("manageCaseCtrl", function($scope, crmApi, apiCalls, caseId, isLoadedInIframe) {
         $scope.ts = CRM.ts();
         $scope.caseInfo = {};
         $scope.isError = false;
@@ -42,7 +45,34 @@
                 $scope.caseInfo = apiCalls.caseInfoResponse.values;
             }
         };
+        $scope.handleIframe = function() {
+            if (!isLoadedInIframe) {
+                return;
+            }
 
+            $('#header').hide();
+            $('#civicrm-menu-nav').hide();
+            $('#page-title').hide();
+            $('#content > .section .tabs').hide();
+            $('#breadcrumb').hide();
+            $('#civicrm-footer').hide();
+            $('#footer-wrapper').hide();
+            $('#access.footer').hide();
+            $('#toolbar').hide();
+            $('#main').css('margin', 0);
+
+            var style = document.createElement('style');
+            style.innerHTML = 'body.crm-menubar-visible.crm-menubar-over-cms-menu.crm-menubar-wrapped {padding-top: 0px !important;}';
+            document.head.appendChild(style);
+            setTimeout(function () {
+                var body = document.getElementsByTagName('body');
+                if (body.length >= 1) {
+                    body[0].style.paddingTop = '0';
+                }
+            }, 200);
+        };
+
+        $scope.handleIframe();
         $scope.handleCaseInfoResponse();
     });
 
