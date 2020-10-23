@@ -26,45 +26,4 @@ class CRM_Supportcase_Utils_Case {
     return (!empty($caseStatus['values'])) ? $caseStatus['values'] : [];
   }
 
-  /**
-   * Is case's tag existence
-   *
-   * @param $caseTagId
-   * @return bool
-   */
-  public static function isCaseTagExist($caseTagId) {
-    if (empty($caseTagId)) {
-      return false;
-    }
-
-    try {
-      $tag = civicrm_api3('Tag', 'getsingle', [
-        'used_for' => "Cases",
-        'id' => $caseTagId,
-      ]);
-    } catch (CiviCRM_API3_Exception $e) {
-      return false;
-    }
-
-    return !empty($tag['id']);
-  }
-
-  /**
-   * Remove all related tags to case
-   *
-   * @param $caseId
-   */
-  public static function deleteAllTagsRelatedToCase($caseId) {
-    if (empty($caseId)) {
-      return;
-    }
-
-    $tagParams = [
-      'entity_table' => 'civicrm_case',
-      'entity_id' => $caseId,
-    ];
-
-    CRM_Core_BAO_EntityTag::del($tagParams);
-  }
-
 }

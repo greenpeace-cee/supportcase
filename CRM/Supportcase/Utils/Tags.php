@@ -78,4 +78,65 @@ class CRM_Supportcase_Utils_Tags {
     return $tags;
   }
 
+  /**
+   * Is entity's tag exist
+   *
+   * @param $entityTagId
+   * @param $entityTableName
+   * @return bool
+   */
+  public static function isTagExist($entityTagId, $entityTableName) {
+    if (empty($entityTagId)) {
+      return false;
+    }
+
+    try {
+      $tag = civicrm_api3('Tag', 'getsingle', [
+        'used_for' => $entityTableName,
+        'id' => $entityTagId,
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      return false;
+    }
+
+    return !empty($tag['id']);
+  }
+
+  /**
+   * Remove all tags related to the entity
+   *
+   * @param $entityId
+   * @param $entityTableName
+   */
+  public static function deleteAllTagsRelatedToEntity($entityId, $entityTableName) {
+    if (empty($entityId)) {
+      return;
+    }
+
+    $tagParams = [
+      'entity_table' => $entityTableName,
+      'entity_id' => $entityId,
+    ];
+
+    CRM_Core_BAO_EntityTag::del($tagParams);
+  }
+
+  /**
+   * Sets list of tags ids to the entity
+   *
+   * @param $entityId
+   * @param $newTagsIds
+   * @param $entityTableName
+   */
+  public static function setTagIdsToEntity($entityId, $newTagsIds, $entityTableName) {
+    self::deleteAllTagsRelatedToEntity($entityId, $entityTableName);
+
+    $entityIds = [$entityId];
+    foreach ($newTagsIds as $tagId) {
+      if (self::isTagExist($tagId, $entityTableName)) {
+        CRM_Core_BAO_EntityTag::addEntitiesToTag($entityIds, $tagId, $entityTableName, FALSE);
+      }
+    }
+  }
+
 }

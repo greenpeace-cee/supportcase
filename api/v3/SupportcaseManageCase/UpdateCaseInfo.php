@@ -49,7 +49,7 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
   if (isset($params['new_case_client_id'] )) {
     if (!empty($params['new_case_client_id'])) {
       try {
-        $newClient = civicrm_api3('Contact', 'getsingle', [
+        civicrm_api3('Contact', 'getsingle', [
           'id' => $params['new_case_client_id'],
         ]);
       } catch (CiviCRM_API3_Exception $e) {
@@ -81,14 +81,7 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
 
   //handles tags_ids:
   if (isset($params['tags_ids']) && is_array($params['tags_ids'])) {
-    CRM_Supportcase_Utils_Case::deleteAllTagsRelatedToCase($params['case_id']);
-
-    $caseIds = [$params['case_id']];
-    foreach ($params['tags_ids'] as $tagId) {
-      if (CRM_Supportcase_Utils_Case::isCaseTagExist($tagId)) {
-        CRM_Core_BAO_EntityTag::addEntitiesToTag($caseIds, $tagId, 'civicrm_case', FALSE);
-      }
-    }
+    CRM_Supportcase_Utils_Tags::setTagIdsToEntity($params['case_id'], $params['tags_ids'], 'civicrm_case');
   }
 
   if (!empty($updateCaseParams)) {
