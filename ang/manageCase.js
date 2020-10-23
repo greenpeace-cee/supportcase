@@ -228,8 +228,8 @@
                     $scope.$parent.editConfirm('new_case_client_id', $scope.clientId, $element, function(result) {
                         var message = '<ul>';
                         message += '<li>Case(id=' + $scope.ctrl.model['id'] + ') have been moved to the trash.</li>';
-                        message += '<li>Created the same case(with activities) and new client.</li>';
-                        message += '<li>You have been redireced to this new case.</li>';
+                        message += '<li>Created the same case(with the same activities and tags) with new client.</li>';
+                        message += '<li>You have been redirected to this new case(id=' + result.values.case.id + ').</li>';
                         message += '</ul>';
                         CRM.alert(message, 'Change case client', 'success');
                         $window.location.href = "#/supportcase/manage-case/" + result.values.case.id;
