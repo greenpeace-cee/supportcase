@@ -87,6 +87,11 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
   if (!empty($updateCaseParams)) {
     $updateCaseParams['id'] = $params['case_id'];
     $case = civicrm_api3('Case', 'create', $updateCaseParams);
+
+    if ($params['case_id'] != $case['id']) {
+      $tagsIds = CRM_Supportcase_Utils_Tags::getTagsIds($params['case_id'], 'civicrm_case');
+      CRM_Supportcase_Utils_Tags::setTagIdsToEntity($case['id'], $tagsIds, 'civicrm_case');
+    }
   }
 
   return civicrm_api3_create_success(['message' => 'Case is updated!', 'case' => $case]);
