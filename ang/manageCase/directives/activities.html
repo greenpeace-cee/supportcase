@@ -5,50 +5,68 @@
 			<div class="act__block-wrap">
 				<table class="crm-search-results">
 					<thead>
-					<tr role="row">
-						<th class="crm-case-activities-date sorting" >Date</th>
-						<th data-data="subject" class="crm-case-activities-subject sorting" tabindex="0" aria-controls="case_id_6" >Subject</th>
-						<th data-data="type" class="crm-case-activities-type sorting" tabindex="0" aria-controls="case_id_6" >Type</th>
-						<th data-data="target_contact_name" class="crm-case-activities-with sorting">With</th>
-						<th class="crm-case-activities-assignee sorting" >Reporter</th>
-						<th data-data="assignee_contact_name" class="crm-case-activities-assignee sorting" >Assignee</th>
-						<th data-data="status_id" class="crm-case-activities-status sorting" tabindex="0" >Status</th>
-						<th data-data="links" data-orderable="false" class="crm-case-activities-status sorting_disabled">&nbsp;</th>
+					<tr>
+						<th class="act__column-head">Date</th>
+						<th class="act__column-head">Subject</th>
+						<th class="act__column-head">Type</th>
+						<th class="act__column-head">With</th>
+						<th class="act__column-head">Reporter</th>
+						<th class="act__column-head" >Assignee</th>
+						<th class="act__column-head">Status</th>
+						<th class="act__column-head">&nbsp;</th>
 					</tr>
 					</thead>
 					<tbody>
-					<tr ng-repeat="activity in activities" value="{{option.value}}" class="crm-entity status-completed odd">
-						<td><div>{{activity.created_date}}</div></td>
-						<td>
-							<div>{{activity.subject}}</div>
-						</td>
-						<td>
-							{{activity.activity_type}}
-						</td>
-						<td>
-							<div ng-repeat="creatorContact in activity.creator_contacts">
-								<a href="{{creatorContact.link}}" class="action-item crm-hover-button" target="_blank">{{creatorContact.display_name}}</a>
-							</div>
-						</td>
-						<td>
-							<div ng-repeat="targetContact in activity.target_contacts">
-								<a href="{{targetContact.link}}" class="action-item crm-hover-button" target="_blank">{{targetContact.display_name}}</a>
-							</div>
-						</td>
-						<td>
-							<div ng-repeat="assigneeContact in activity.assignee_contacts">
-								<a href="{{assigneeContact.link}}" class="action-item crm-hover-button" target="_blank">{{assigneeContact.display_name}}</a>
-							</div>
-						</td>
-						<td>
-							<div>{{activity.status}}</div>
-						</td>
-						<td>
-							<span ng-repeat="actionLink in activity.action_links">
-								<a href="{{actionLink.url}}" class="action-item crm-hover-button" target="_blank">{{actionLink.label}}</a>
-							</span>
-						</td>
-					</tr>
+						<tr ng-repeat="activity in activities" value="{{option.value}}" class="crm-entity">
+							<td>
+								<div class="act__column act__column-created-date">{{activity.created_date}}</div>
+							</td>
+							<td>
+								<div class="act__column act__column-subject">{{activity.subject}}</div>
+							</td>
+							<td>
+								<div class="act__column act__column-activity-type">{{activity.activity_type}}</div>
+							</td>
+							<td>
+								<div class="act__column act__column-creator-contacts">
+									<div ng-repeat="creatorContact in activity.creator_contacts">
+										<div class="act__contact-link">
+											<a href="{{creatorContact.link}}" class="action-item crm-hover-button" target="_blank">{{creatorContact.display_name}}</a>
+										</div>
+									</div>
+								</div>
+							</td>
+							<td>
+								<div class="act__column act__column-target-contacts">
+									<div ng-repeat="targetContact in activity.target_contacts">
+										<div class="act__contact-link">
+											<a href="{{targetContact.link}}" class="action-item crm-hover-button" target="_blank">{{targetContact.display_name}}</a>
+										</div>
+									</div>
+								</div>
+							</td>
+							<td>
+								<div class="act__column act__column-assignee-contacts">
+									<div ng-repeat="assigneeContact in activity.assignee_contacts">
+										<div class="act__contact-link">
+											<a href="{{assigneeContact.link}}" class="action-item crm-hover-button act__contact-link" target="_blank">{{assigneeContact.display_name}}</a>
+										</div>
+									</div>
+								</div>
+							</td>
+							<td>
+								<div class="act__column act__column-status">
+									<div>{{activity.status}}</div>
+								</div>
+							</td>
+							<td>
+								<div class="act__column act__column-action-links">
+									<span ng-repeat="actionLink in activity.action_links" class="act__action-link">
+										<a href="{{actionLink.url}}" class="action-item crm-hover-button" target="_blank">{{actionLink.label}}</a>
+									</span>
+								</div>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>

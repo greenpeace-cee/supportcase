@@ -58,8 +58,13 @@
             $('#civicrm-footer').hide();
             $('#footer-wrapper').hide();
             $('#access.footer').hide();
+            $('.column.sidebar').hide();
+            $('#sidebar-first').hide();
             $('#toolbar').hide();
+            $('#main').css('width', '100%');
             $('#main').css('margin', 0);
+            $('#content').css('width', '100%');
+            $('#content').css('margin', 0);
 
             var style = document.createElement('style');
             style.innerHTML = 'body.crm-menubar-visible.crm-menubar-over-cms-menu.crm-menubar-wrapped {padding-top: 0px !important;}';

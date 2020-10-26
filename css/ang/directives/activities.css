@@ -4,9 +4,49 @@
 */
 
 .act__block-wrap {
-    padding: 10px 10px 5px 10px;
+    padding: 0;
 }
 
 .act__activities {
     margin-top: 5px;
+}
+
+.act__column {
+    overflow: hidden;
+}
+
+.act__column-subject {
+    max-width: 120px;
+}
+
+.act__column-created-date {
+    max-width: 100px;
+}
+
+.act__column-activity-type {
+    max-width: 100px;
+}
+
+.act__column-status {
+    max-width: 100px;
+}
+
+.act__action-link {
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+.act__action-link a.action-item {
+    padding: 0;
+}
+
+.act__contact-link {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
 }
