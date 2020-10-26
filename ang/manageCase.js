@@ -60,11 +60,14 @@
             $('#access.footer').hide();
             $('.column.sidebar').hide();
             $('#sidebar-first').hide();
+            $('#branding').hide();
             $('#toolbar').hide();
             $('#main').css('width', '100%');
             $('#main').css('margin', 0);
             $('#content').css('width', '100%');
             $('#content').css('margin', 0);
+            $('#page').css('margin-right', 0);
+            $('#page').css('margin-left', 0);
 
             var style = document.createElement('style');
             style.innerHTML = 'body.crm-menubar-visible.crm-menubar-over-cms-menu.crm-menubar-wrapped {padding-top: 0px !important;}';
