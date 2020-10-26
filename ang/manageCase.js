@@ -32,17 +32,19 @@
         }
     ]);
 
-    angular.module(moduleName).controller("manageCaseCtrl", function($scope, crmApi, apiCalls, caseId, isLoadedInIframe) {
+    angular.module(moduleName).controller("manageCaseCtrl", function($scope, crmApi, apiCalls, caseId, isLoadedInIframe, $interval) {
         $scope.ts = CRM.ts();
         $scope.caseInfo = {};
         $scope.isError = false;
         $scope.errorMessage = '';
+        $scope.isCaseLocked = false;
         $scope.handleCaseInfoResponse = function() {
             if (apiCalls.caseInfoResponse.is_error == 1) {
                 $scope.isError = true;
                 $scope.errorMessage = apiCalls.caseInfoResponse.error_message;
             } else {
                 $scope.caseInfo = apiCalls.caseInfoResponse.values;
+                $scope.isCaseLocked = $scope.caseInfo['is_case_locked'] && !$scope.caseInfo['is_locked_by_self'];
             }
         };
         $scope.handleIframe = function() {
@@ -80,8 +82,44 @@
             }, 200);
         };
 
+        $scope.getMangeCaseUpdateLockTime = function() {
+            if ($scope.caseInfo !== undefined && $scope.caseInfo['mange_case_update_lock_time'] !== undefined) {
+                return $scope.caseInfo['mange_case_update_lock_time'] * 1000;
+            } else {
+                return 10000;
+            }
+        };
+
+        $scope.initLockTimer = function() {
+            if ($scope.lockTimer !== undefined) {
+                return;
+            }
+
+            $scope.lockTimer = $interval(function() {
+                $scope.lockCase();
+            }, $scope.getMangeCaseUpdateLockTime());
+        };
+
+        $scope.lockCase = function() {
+            if ($scope.isCaseLocked) {
+                return;
+            }
+
+            CRM.api3('CaseLock', 'lock_case', {
+                "case_id": $scope.caseInfo.id
+            }).then(function(result) {
+            }, function(error) {});
+        };
+
+        $scope.$on('$destroy', function() {
+            $interval.cancel($scope.lockTimer);
+            $scope.lockTimer = undefined;
+        });
+
         $scope.handleIframe();
         $scope.handleCaseInfoResponse();
+        $scope.initLockTimer();
+        $scope.lockCase();
     });
 
     angular.module(moduleName).directive("caseInfo", function() {

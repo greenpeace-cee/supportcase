@@ -6,7 +6,11 @@
 			<div class="mc__error-message crm-error">{{errorMessage}}</div>
 		</div>
 
-		<div ng-if="!isError">
+		<div ng-if="!isError && isCaseLocked">
+			<div class="mc__error-message crm-error">{{caseInfo.lock_message}}</div>
+		</div>
+
+		<div ng-if="!isError && !isCaseLocked">
 			<case-info model='caseInfo'></case-info>
 			<communication model='caseInfo'></communication>
 			<activities model='caseInfo'></activities>

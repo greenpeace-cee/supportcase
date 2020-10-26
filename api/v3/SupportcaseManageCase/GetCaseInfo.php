@@ -78,6 +78,7 @@ function civicrm_api3_supportcase_manage_case_get_case_info($params) {
     "lock_message" => $lockMessage,
     "is_deleted" => $case['is_deleted'],
     "category_id" => $case[$categoryFieldName],
+    "mange_case_update_lock_time" => CRM_Supportcase_Utils_Setting::getMangeCaseUpdateLockTime(),
     'available_categories' => CRM_Supportcase_Utils_Category::get(),
     'tags_ids' => CRM_Supportcase_Utils_Tags::getTagsIds($params['case_id'],'civicrm_case'),
     'available_tags' => CRM_Supportcase_Utils_Tags::getAvailableTags('civicrm_case'),

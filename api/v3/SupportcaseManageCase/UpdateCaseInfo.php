@@ -16,6 +16,15 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
     throw new api_Exception('Case does not exist.', 'case_does_not_exist');
   }
 
+  $contactId = CRM_Core_Session::getLoggedInContactID();
+  if (empty($contactId)) {
+    throw new api_Exception('Cannot find contact id.', 'can_not_find_contact_id');
+  }
+
+  if (CRM_Supportcase_BAO_CaseLock::isCaseLockedForContact($params['case_id'], $contactId)) {
+    throw new api_Exception('The case is locked by another user.', 'case_locked_by_another_user');
+  }
+
   $updateCaseParams = [];
 
   //handles subject:
