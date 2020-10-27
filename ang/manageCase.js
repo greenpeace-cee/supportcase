@@ -83,8 +83,8 @@
         };
 
         $scope.getMangeCaseUpdateLockTime = function() {
-            if ($scope.caseInfo !== undefined && $scope.caseInfo['mange_case_update_lock_time'] !== undefined) {
-                return $scope.caseInfo['mange_case_update_lock_time'] * 1000;
+            if ($scope.caseInfo !== undefined && $scope.caseInfo['settings']['mange_case_update_lock_time'] !== undefined) {
+                return $scope.caseInfo['settings']['mange_case_update_lock_time'] * 1000;
             } else {
                 return 10000;
             }
@@ -460,8 +460,79 @@
             scope: {model: "="},
             bindToController: true,
             controllerAs: "ctrl",
-            controller: function($scope) {
+            controller: function($scope, $window, $element) {
+                $scope.showError = function(errorMessage) {
+                    $($element).find('.mp__error-wrap').empty().append('<div class="crm-error">' + errorMessage + '</div>');
+                };
 
+                $scope.doAction = function(apiFieldName, apiFieldValue, successCallback) {
+                    var apiParams = {"case_id": $scope.ctrl.model['id']};
+                    apiParams[apiFieldName] = apiFieldValue;
+
+                    CRM.api3('SupportcaseManageCase', 'update_case_info', apiParams).then(function(result) {
+                        if (result.is_error === 1) {
+                            $scope.showError(result.error_message);
+                        } else {
+                            successCallback();
+                        }
+                    }, function(error) {});
+                };
+
+                $scope.isCaseHasStatus = function(statusName) {
+                   return $scope.ctrl.model['settings']['case_status_ids'][statusName] === $scope.ctrl.model['status_id'];
+                };
+
+                $scope.isCaseDeleted = function() {
+                   return $scope.ctrl.model['is_deleted'] == '1';
+                };
+
+                $scope.resolveCase = function() {
+                    $scope.doAction('status_id', $scope.ctrl.model['settings']['case_status_ids']['resolve'], function () {
+                        $scope.ctrl.model['status_id'] = $scope.ctrl.model['settings']['case_status_ids']['resolve'];
+                        $scope.$apply();
+                        CRM.status('Case is resolved. Case status is updated.');
+                    });
+                };
+
+                $scope.reportSpamCase = function() {
+                    $scope.doAction('status_id', $scope.ctrl.model['settings']['case_status_ids']['spam'],function () {
+                        $scope.ctrl.model['status_id'] = $scope.ctrl.model['settings']['case_status_ids']['spam'];
+                        $scope.$apply();
+                        CRM.status('Case is marked as spam. Case status is updated.');
+                    });
+                };
+
+                $scope.makeCaseUrgent = function() {
+                    $scope.doAction('status_id', $scope.ctrl.model['settings']['case_status_ids']['urgent'],function () {
+                        $scope.ctrl.model['status_id'] = $scope.ctrl.model['settings']['case_status_ids']['urgent'];
+                        $scope.$apply();
+                        CRM.status('Case is made urgent. Case status is updated.');
+                    });
+                };
+
+                $scope.makeCaseOngoing = function() {
+                    $scope.doAction('status_id', $scope.ctrl.model['settings']['case_status_ids']['ongoing'],function () {
+                        $scope.ctrl.model['status_id'] = $scope.ctrl.model['settings']['case_status_ids']['ongoing'];
+                        $scope.$apply();
+                        CRM.status('Case iis made ongoing. Case status is updated.');
+                    });
+                };
+
+                $scope.moveToTrashCase = function() {
+                    $scope.doAction('is_deleted', '1',function () {
+                        $scope.ctrl.model['is_deleted'] = 1;
+                        $scope.$apply();
+                        CRM.status('Case is deleted.');
+                    });
+                };
+
+                $scope.restoreCase = function() {
+                    $scope.doAction('is_deleted', '0',function () {
+                        $scope.ctrl.model['is_deleted'] = 0;
+                        $scope.$apply();
+                        CRM.status('Case is restored.');
+                    });
+                };
             }
         };
     });

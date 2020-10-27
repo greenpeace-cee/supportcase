@@ -1,0 +1,8 @@
+/*
+    Uses on managePanel directive
+    Prefix-alias: mp  = managePanel
+*/
+
+.mp__button {
+    cursor: pointer;
+}

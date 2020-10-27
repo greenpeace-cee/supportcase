@@ -1,19 +1,31 @@
 <div class="crm-submit-buttons">
 	<div class="crm-section">
-<!--		<button class="crm-button crm-form-submit">-->
-<!--			<span class="ui-button-icon ui-icon crm-i fa-trash"></span>-->
-<!--			<span class="ui-button-icon-space"> </span>-->
-<!--			<span>&nbsp; Delete</span>-->
-<!--		</button>-->
-<!--		<button class="crm-button crm-form-submit">-->
-<!--			<span class="ui-button-icon ui-icon crm-i fa-flag"></span>-->
-<!--			<span class="ui-button-icon-space"> </span>-->
-<!--			<span>&nbsp; Report Spam</span>-->
-<!--		</button>-->
-<!--		<button class="crm-button crm-form-submit">-->
-<!--			<span class="ui-button-icon ui-icon crm-i fa-check"></span>-->
-<!--			<span class="ui-button-icon-space"> </span>-->
-<!--			<span>&nbsp; Resolve Case</span>-->
-<!--		</button>-->
+		<div class="mp__buttons-wrap">
+			<div ng-if="!isCaseDeleted();">
+				<button ng-if="!isCaseHasStatus('spam');" class="mp__button crm-form-submit" ng-click="reportSpamCase();">
+					<span>Report Spam</span>
+				</button>
+				<button ng-if="!isCaseHasStatus('resolve');" class="mp__button crm-form-submit" ng-click="resolveCase();">
+					<span>Resolve</span>
+				</button>
+				<button ng-if="!isCaseHasStatus('ongoing');" class="mp__button crm-form-submit" ng-click="makeCaseOngoing();">
+					<span>Make ongoing</span>
+				</button>
+				<button ng-if="!isCaseHasStatus('urgent');" class="mp__button crm-form-submit" ng-click="makeCaseUrgent();">
+					<span>Make urgent</span>
+				</button>
+				<button class="mp__button crm-form-submit" ng-click="moveToTrashCase();">
+					<span>Delete case</span>
+				</button>
+			</div>
+			<div ng-if="isCaseDeleted();">
+				<button class="mp__button crm-form-submit" ng-click="restoreCase();">
+					<span>Restore case from trash</span>
+				</button>
+			</div>
+		</div>
+		<div class="mp__error-wrap">
+
+		</div>
 	</div>
 </div>

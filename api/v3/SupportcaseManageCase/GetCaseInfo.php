@@ -62,6 +62,20 @@ function civicrm_api3_supportcase_manage_case_get_case_info($params) {
   }
 
   $categoryFieldName = CRM_Core_BAO_CustomField::getCustomFieldID('category', CRM_Supportcase_Install_Entity_CustomGroup::CASE_DETAILS, TRUE);
+  $availableStatuses = CRM_Supportcase_Utils_Case::getCaseStatuses();
+
+  $caseStatusSettings = [];
+  foreach ($availableStatuses as $status) {
+    if ($status['name'] == 'spam') {
+      $caseStatusSettings['spam'] = $status['value'];
+    } elseif ($status['name'] == 'Open') {
+      $caseStatusSettings['ongoing'] = $status['value'];
+    } elseif ($status['name'] == 'Closed') {
+      $caseStatusSettings['resolve'] = $status['value'];
+    } elseif ($status['name'] == 'Urgent') {
+      $caseStatusSettings['urgent'] = $status['value'];
+    }
+  }
 
   $caseInfo = [
     'id' => $case['id'],
@@ -70,7 +84,7 @@ function civicrm_api3_supportcase_manage_case_get_case_info($params) {
     'client_ids' => $clientIds,
     'start_date' => $case['start_date'],
     'status_id' => $case['status_id'],
-    'available_statuses' => CRM_Supportcase_Utils_Case::getCaseStatuses(),
+    'available_statuses' => $availableStatuses,
     "is_case_locked" => $isCaseLocked,
     "recent_case_for_contact" => $recentCaseForContact,
     "is_locked_by_self" => $isLockedBySelf,
@@ -78,10 +92,13 @@ function civicrm_api3_supportcase_manage_case_get_case_info($params) {
     "lock_message" => $lockMessage,
     "is_deleted" => $case['is_deleted'],
     "category_id" => $case[$categoryFieldName],
-    "mange_case_update_lock_time" => CRM_Supportcase_Utils_Setting::getMangeCaseUpdateLockTime(),
     'available_categories' => CRM_Supportcase_Utils_Category::get(),
     'tags_ids' => CRM_Supportcase_Utils_Tags::getTagsIds($params['case_id'],'civicrm_case'),
     'available_tags' => CRM_Supportcase_Utils_Tags::getAvailableTags('civicrm_case'),
+    'settings' => [
+      'case_status_ids' => $caseStatusSettings,
+      'mange_case_update_lock_time' => CRM_Supportcase_Utils_Setting::getMangeCaseUpdateLockTime(),
+    ]
   ];
 
   return civicrm_api3_create_success($caseInfo);

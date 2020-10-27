@@ -10,7 +10,7 @@ class CRM_Supportcase_Utils_Case {
   public static function getCaseStatuses() {
     try {
       $caseStatus = civicrm_api3('OptionValue', 'get', [
-        'return' => ["value", "label"],
+        'return' => ["value", "label", "name"],
         "sequential" => 1,
         'option_group_id' => 'case_status',
         'is_active' => 1,
