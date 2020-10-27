@@ -47,6 +47,8 @@
                 $scope.isCaseLocked = $scope.caseInfo['is_case_locked'] && !$scope.caseInfo['is_locked_by_self'];
             }
         };
+
+        //TODO: handle iframe in another way without js, try to fix issues when add param 'snippet = 1' to angular page
         $scope.handleIframe = function() {
             if (!isLoadedInIframe) {
                 return;
