@@ -2,3 +2,16 @@
     Uses on manageCaseCtr controller. It is main module.
     Prefix-alias: mc  = Manage Case
 */
+.mc__scrollable-block {
+    overflow-y: scroll;
+    height: 410px;
+}
+
+.mc__fixed-block {
+    border-top: 1px solid #d3dee2;
+    width: 100%;
+}
+
+.mc__block-wrap {
+    position: relative;
+}

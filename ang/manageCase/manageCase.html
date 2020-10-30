@@ -2,20 +2,28 @@
 
 <div class="supportcase-manage-case-module-wrap">
 	<div class="crm-form-block">
-		<div ng-if="isError">
-			<div class="mc__error-message crm-error">{{errorMessage}}</div>
-		</div>
+		<div class="mc__block-wrap">
+			<div class="mc__scrollable-block">
+				<div ng-if="isError">
+					<div class="mc__error-message crm-error">{{errorMessage}}</div>
+				</div>
 
-		<div ng-if="!isError && isCaseLocked">
-			<div class="mc__error-message crm-error">{{caseInfo.lock_message}}</div>
-		</div>
+				<div ng-if="!isError && isCaseLocked">
+					<div class="mc__error-message crm-error">{{caseInfo.lock_message}}</div>
+				</div>
 
-		<div ng-if="!isError && !isCaseLocked">
-			<case-info model='caseInfo'></case-info>
-			<communication model='caseInfo'></communication>
-			<activities model='caseInfo'></activities>
-			<recent-cases model='caseInfo'></recent-cases>
-			<manage-panel model='caseInfo'></manage-panel>
+				<div ng-if="!isError && !isCaseLocked">
+					<case-info model='caseInfo'></case-info>
+					<communication model='caseInfo'></communication>
+					<activities model='caseInfo'></activities>
+					<recent-cases model='caseInfo'></recent-cases>
+				</div>
+			</div>
+			<div class="mc__fixed-block">
+				<div ng-if="!isError && !isCaseLocked">
+					<manage-panel model='caseInfo'></manage-panel>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

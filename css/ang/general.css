@@ -25,6 +25,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
 .supportcase-ico:hover {
     color: #464354;
 }
@@ -35,4 +36,17 @@
 
 .supportcase-ico.supportcase-ico-grey:hover {
     color: #aaaaaa;
+}
+
+.crm-container .supportcase-manage-case-module-wrap .crm-form-block {
+    box-shadow: none;
+    margin-bottom: 0;
+}
+
+.crm-container .mp__manage-panel .crm-section {
+    margin-bottom: 0;
+}
+
+.crm-container .mp__manage-panel .crm-submit-buttons {
+    padding: 20px 0 0 0;
 }
