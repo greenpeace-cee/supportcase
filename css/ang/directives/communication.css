@@ -1,12 +1,24 @@
 /*
-    Uses on communication directive
-    Prefix-alias: com  = Communication
+    Uses on communication directive;
+    Prefix-alias: com = communication
 */
 
 .com__block-wrap {
-    padding: 10px 10px 5px 10px;
+    padding: 0;
 }
 
-.com__communication {
+.com__activities {
     margin-top: 5px;
+}
+
+.com__column-subject {
+    max-width: 500px;
+}
+
+.com__column-created-date {
+    max-width: 130px;
+}
+
+.com__column-details {
+    max-width: 200px;
 }

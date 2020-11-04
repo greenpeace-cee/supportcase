@@ -393,7 +393,22 @@
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope) {
+                $scope.smsActivities = [];
                 $scope.ts = CRM.ts();
+                this.$onInit = function() {
+                    CRM.api3('SupportcaseManageCase', 'get_sms_activities', {
+                        "sequential": 1,
+                        "case_id": $scope.ctrl.model['id'],
+                    }).then(function(result) {
+                        if (result.is_error === 1) {
+                            console.error('Activity get error:');
+                            console.error(result.error_message);
+                        } else {
+                            $scope.smsActivities = result.values;
+                            $scope.$apply();
+                        }
+                    }, function(error) {});
+                };
             }
         };
     });

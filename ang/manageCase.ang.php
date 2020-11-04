@@ -16,6 +16,7 @@ return [
     4 => 'css/ang/directives/recentCases.css',
     5 => 'css/ang/directives/activities.css',
     6 => 'css/ang/directives/managePanel.css',
+    7 => 'css/ang/directives/communication.css',
   ],
   'partials' => [
     0 => 'ang/manageCase',

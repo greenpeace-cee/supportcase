@@ -3,7 +3,30 @@
 		<div class="crm-accordion-header crm-master-accordion-header">Communication</div>
 		<div class="crm-accordion-body">
 			<div class="com__block-wrap">
-				<p>TODO import Communication Directive here</p>
+				<div class="com__activities-wrap">
+					<table class="crm-search-results">
+						<thead>
+							<tr>
+								<th class="com__column-head">Date</th>
+								<th class="com__column-head">Subject</th>
+								<th class="com__column-head">Details</th>
+							</tr>
+						</thead>
+						<tbody>
+						<tr ng-repeat="activity in smsActivities" class="crm-entity">
+							<td>
+								<div class="com__column com__column-created-date">{{activity.created_date}}</div>
+							</td>
+							<td>
+								<div class="com__column com__column-subject">{{activity.subject}}</div>
+							</td>
+							<td>
+								<div class="com__column com__column-details">{{activity.details}}</div>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>

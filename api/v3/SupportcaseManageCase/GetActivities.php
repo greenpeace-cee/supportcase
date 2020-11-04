@@ -18,7 +18,7 @@ function civicrm_api3_supportcase_manage_case_get_activities($params) {
 
   try {
     $activities = civicrm_api3('Activity', 'get', [
-      'is_deleted' => "",
+      'is_deleted' => "0",
       'options' => ['limit' => 0],
       'case_id' => $params['case_id'],
     ]);
