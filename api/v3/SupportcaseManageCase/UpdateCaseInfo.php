@@ -36,8 +36,13 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
     }
   }
 
+  //handles is_deleted:
+  if (isset($params['is_deleted'])) {
+    $updateCaseParams['is_deleted'] = ($params['is_deleted'] == 1) ? 1 : 0;
+  }
+
   //handles status_id:
-  if (isset($params['status_id'] )) {
+  if (isset($params['status_id'])) {
     if (!empty($params['status_id'])) {
       $updateCaseParams['status_id'] = $params['status_id'];
     } else {
@@ -55,7 +60,7 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
   }
 
   //handles new_case_client_id:
-  if (isset($params['new_case_client_id'] )) {
+  if (isset($params['new_case_client_id'])) {
     if (!empty($params['new_case_client_id'])) {
       try {
         civicrm_api3('Contact', 'getsingle', [
@@ -149,5 +154,11 @@ function _civicrm_api3_supportcase_manage_case_update_case_info_spec(&$params) {
     'api.required' => 0,
     'type' => CRM_Utils_Type::T_INT,
     'title' => 'New case client id',
+  ];
+  $params['is_deleted'] = [
+    'name' => 'is_deleted',
+    'api.required' => 0,
+    'type' => CRM_Utils_Type::T_BOOLEAN,
+    'title' => 'Is case deleted',
   ];
 }
