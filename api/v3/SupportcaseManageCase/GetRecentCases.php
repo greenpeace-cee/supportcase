@@ -18,7 +18,7 @@ function civicrm_api3_supportcase_manage_case_get_recent_cases($params) {
 
   $cases = civicrm_api3('Case', 'get', [
     'sequential' => 1,
-    'return' => ["id", "subject"],
+    'return' => ["id", "subject", "status_id", "start_date"],
     'case_type_id' => "support_case",
     'client_id' => $params['client_id'],
     'is_deleted' => 0,
@@ -29,11 +29,9 @@ function civicrm_api3_supportcase_manage_case_get_recent_cases($params) {
 
   if (!empty($cases['values'])) {
     foreach ($cases['values'] as $case) {
-      $recentCases[] = [
-        'subject' => $case['subject'],
-        'id' => $case['id'],
-        'link' =>CRM_Utils_System::url('civicrm/a/', NULL, TRUE, 'supportcase/manage-case/' . $case['id']),
-      ];
+      $recentCases[] = array_merge($case, [
+        'link' => CRM_Utils_System::url('civicrm/a/', NULL, TRUE, 'supportcase/manage-case/' . $case['id']),
+      ]);
     }
   }
 

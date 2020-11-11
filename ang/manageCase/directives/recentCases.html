@@ -3,16 +3,40 @@
 		<div class="crm-accordion-header crm-master-accordion-header">Recent cases</div>
 		<div class="crm-accordion-body">
 			<div class="rc__block-wrap">
-				<p>
-					<span>Recent cases for contact </span>
-					<a href="{{ctrl.model['recent_case_for_contact']['link']}}" target="_blank" title="View Contact Details">{{ctrl.model['recent_case_for_contact']['display_name']}}</a>
-				</p>
-
-				<ul>
-					<li ng-repeat="recentCase in recentCases">
-						<a href="{{recentCase.link}}">(id = {{recentCase.id }}) {{recentCase.subject}}</a>
-					</li>
-				</ul>
+				<table class="crm-search-results">
+					<thead>
+					<tr>
+						<th class="rc__column-head">ID</th>
+						<th class="rc__column-head">Date</th>
+						<th class="rc__column-head">Subject</th>
+						<th class="rc__column-head">Status</th>
+						<th class="rc__column-head">&nbsp;</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr ng-repeat="recentCase in recentCases" class="crm-entity">
+						<td>
+							<div class="rc__column rc__column-case-id">#{{recentCase.id }}</div>
+						</td>
+						<td>
+							<div class="rc__column rc__column-start-date">{{recentCase.start_date}}</div>
+						</td>
+						<td>
+							<div class="rc__column rc__column-subject">{{recentCase.subject}}</div>
+						</td>
+						<td>
+							<div class="rc__column rc__column-status">
+								<div>{{recentCase.status}}</div>
+							</div>
+						</td>
+						<td>
+							<div class="rc__column rc__column-links">
+								<a href="{{recentCase.link}}" class="action-item crm-hover-button" target="_blank">View</a>
+							</div>
+						</td>
+					</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>
