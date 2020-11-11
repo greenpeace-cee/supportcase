@@ -17,6 +17,9 @@ return [
     5 => 'css/ang/directives/activities.css',
     6 => 'css/ang/directives/managePanel.css',
     7 => 'css/ang/directives/communication.css',
+    8 => 'css/ang/directives/quickAction.css',
+    9 => 'css/ang/directives/actions/exampleAction.css',
+    10 => 'css/ang/directives/actions/doNotSms.css',
   ],
   'partials' => [
     0 => 'ang/manageCase',

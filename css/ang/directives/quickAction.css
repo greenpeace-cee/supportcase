@@ -1,0 +1,77 @@
+/*
+    Uses on quickActions directive
+    Prefix-alias: qa = quickActions
+*/
+
+.qa__quick-actions {
+    padding-bottom: 5px;
+}
+
+.qa__block-wrap {
+    display: flex;
+}
+
+.qa__actions-wrap {
+    width: 100%;
+    position: relative;
+}
+
+.qa__panel-wrap {
+    max-width: 200px;
+    padding: 1px;
+    background: #d3dee2;
+}
+
+.qa__panel-wrap .qa__panel-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    cursor: pointer;
+    text-transform: none;
+    color: black;
+    background: white;
+    margin-bottom: 1px;
+    border-radius: 0;
+    box-sizing:border-box;
+}
+
+.qa__panel-wrap .qa__panel-button:hover {
+    background: #f3f6f7;
+}
+
+.qa__panel-wrap .qa__panel-button.active {
+    background: #0071bd;
+    color: white;
+}
+
+.qa__action-item-wrap {
+    padding: 10px 10px 60px 10px;
+}
+
+.qa__action-item-head {
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #d3dee2;
+}
+
+.qa__action-name {
+    display: inline-block;
+    font-size: 24px;
+    vertical-align: middle;
+    padding-left: 10px;
+}
+.qa__no-actions-message {
+    padding-bottom: 130px;
+}
+
+.qa__preloader {
+    display: none;
+    position: absolute;
+    z-index: 100;
+    height: 100%;
+    width: 100%;
+}
+
+.qa__preloader.active {
+    display: block;
+}

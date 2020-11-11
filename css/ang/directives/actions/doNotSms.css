@@ -1,0 +1,24 @@
+/*
+    Uses on doNotSms directive;
+    Prefix-alias: nosms = doNotSms
+*/
+
+.nosms__steep-title {
+    font-size: 20px;
+    vertical-align: middle;
+    padding-bottom: 10px;
+}
+
+.nosms__steep-description {
+    padding-bottom: 10px;
+}
+
+.nosms__steep-buttons {
+    padding-top: 20px;
+}
+
+.nosms__contacts-wrap {
+    max-width: 300px;
+    border-left: 1px solid #e8eef0;
+    border-right: 1px solid #e8eef0;
+}

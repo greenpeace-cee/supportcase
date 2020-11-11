@@ -50,3 +50,19 @@
 .crm-container .mp__manage-panel .crm-submit-buttons {
     padding: 20px 0 0 0;
 }
+
+.crm-container .button__cancel {
+    background: #fff;
+    border: solid 1px #4d4d69;
+    color: #363342 !important;
+    cursor: pointer;
+}
+
+.crm-container .button__cancel:hover {
+    background: #f3f6f7;
+}
+
+.crm-container input.input__text {
+    height: 30px;
+    box-sizing: border-box;
+}

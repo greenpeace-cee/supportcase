@@ -4,6 +4,10 @@
     Prefix-alias: ci = Case Info
 */
 
+.ci__case-info {
+    padding-bottom: 5px;
+}
+
 .ci__block-wrap {
     display: flex;
     flex-wrap: wrap;

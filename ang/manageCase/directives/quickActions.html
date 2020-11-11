@@ -1,0 +1,62 @@
+<div class="qa__quick-actions">
+	<div class="crm-accordion-wrapper collapsed">
+		<div class="crm-accordion-header crm-master-accordion-header">Quick actions</div>
+		<div class="crm-accordion-body">
+			<div class="qa__block-wrap">
+				<div class="qa__panel-wrap">
+					<button class="qa__panel-button"
+						ng-class="{'active' : ctrl.model['activeAction'] == 'doNotSms'}"
+						ng-click="runQuickAction('doNotSms');">
+						Set "do not sms" to related phone number.
+					</button>
+					<button class="qa__panel-button"
+						ng-class="{'active' : ctrl.model['activeAction'] == 'exampleAction'}"
+						ng-click="runQuickAction('exampleAction');">
+						Example action.
+					</button>
+				</div>
+				<div class="qa__actions-wrap">
+
+					<div class="qa__preloader">
+						<div class="crm-container">
+							<div class="dataTables_processing"></div>
+						</div>
+					</div>
+
+					<div ng-switch="ctrl.model['activeAction']" class="qa__action-wrap">
+
+						<div ng-switch-when="doNotSms">
+							<div class="qa__action-item-wrap">
+								<div class="qa__action-item-head">
+									<button class="button__cancel" ng-click="closeAction();">Cancel</button>
+									<div class="qa__action-name">Set "do not sms" to related phone number.</div>
+								</div>
+								<div class="qa__action-item-body">
+									<do-not-sms model='ctrl.model'></do-not-sms>
+								</div>
+							</div>
+						</div>
+
+						<div ng-switch-when="exampleAction">
+							<div class="qa__action-item-wrap">
+								<div class="qa__action-item-head">
+									<button class="button__cancel" ng-click="closeAction();">Cancel</button>
+									<div class="qa__action-name">Example action</div>
+								</div>
+								<div class="qa__action-item-body">
+									<example-action model='ctrl.model'></example-action>
+								</div>
+							</div>
+						</div>
+
+						<div ng-switch-default>
+							<div class="qa__action-item-wrap">
+								<div class="qa__no-actions-message">Please chose quick action.</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

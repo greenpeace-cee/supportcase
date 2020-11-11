@@ -556,4 +556,140 @@
         };
     });
 
+    angular.module(moduleName).directive("quickActions", function() {
+        return {
+            restrict: "E",
+            templateUrl: "~/manageCase/directives/quickActions.html",
+            scope: {model: "="},
+            bindToController: true,
+            controllerAs: "ctrl",
+            controller: function($scope, $window, $element) {
+                $scope.ctrl.model['activeAction'] = false;
+                $scope.runQuickAction = function(actionName) {
+                    $scope.ctrl.model['activeAction'] = actionName;
+                };
+                $scope.closeAction = function() {
+                    $scope.ctrl.model['activeAction'] = false;
+                };
+                $scope.$on('$destroy', function() {
+                    $scope.closeAction();
+                });
+                $scope.showPreloader = function() {
+                    $($element).find('.qa__preloader').addClass('active');
+                };
+                $scope.hidePreloader = function() {
+                    $($element).find('.qa__preloader').removeClass('active');
+                };
+            }
+        };
+    });
+
+    angular.module(moduleName).directive("exampleAction", function() {
+        return {
+            restrict: "E",
+            templateUrl: "~/manageCase/directives/actions/exampleAction.html",
+            scope: {model: "="},
+            bindToController: true,
+            controllerAs: "ctrl",
+            controller: function($scope, $window, $element) {
+                $scope.closeAction = $scope.$parent.closeAction;
+                $scope.showPreloader = $scope.$parent.showPreloader;
+                $scope.hidePreloader = $scope.$parent.hidePreloader;
+            }
+        };
+    });
+
+    angular.module(moduleName).directive("doNotSms", function() {
+        return {
+            restrict: "E",
+            templateUrl: "~/manageCase/directives/actions/doNotSms.html",
+            scope: {model: "="},
+            bindToController: true,
+            controllerAs: "ctrl",
+            controller: function($scope, $window, $element) {
+                $scope.closeAction = $scope.$parent.closeAction;
+                $scope.showPreloader = $scope.$parent.showPreloader;
+                $scope.hidePreloader = $scope.$parent.hidePreloader;
+
+                $scope.searchPhoneNumber = '';
+                $scope.foundContacts = false;
+                $scope.selectedContacts = {'ids': [], 'data': {}};
+                $scope.successContacts = [];
+
+                $scope.runSteep = function(steepName) {
+                    if (steepName === 'confirmPhoneNumber') {
+                        if ($scope.searchPhoneNumber === '') {
+                            $scope.searchPhoneNumber = $scope.ctrl.model['phone_number_for_do_not_sms_action'];
+                        }
+                    } else if (steepName === 'selectContacts') {
+                        $scope.searchPhoneNumber = $($element).find('.nosms__search-phone-number-input').val();
+                        $scope.findContactsByNumber();
+                    } else if (steepName === 'confirmSelectedContacts') {
+                        $scope.selectedContacts = $scope.getSelectedContacts();
+                    } else if (steepName === 'showSuccessMessage') {
+                        $scope.applyNoSmsToContacts();
+                    }
+
+                    $scope.steepName = steepName;
+                };
+
+                $scope.findContactsByNumber = function() {
+                    $scope.showPreloader();
+                    CRM.api3('SupportcaseQuickAction', 'find_contacts_by_number', {
+                        'phone_number' : $scope.searchPhoneNumber
+                    }).then(function(result) {
+                        if (result.is_error === 1) {
+                            console.error('find_contacts_by_number get error:');
+                            console.error(result.error_message);
+                        } else {
+                            $scope.foundContacts = result.values;
+                            $scope.$apply();
+                        }
+                        $scope.hidePreloader();
+                    }, function(error) {});
+                };
+
+                $scope.getSelectedContacts = function() {
+                    var selectedContacts = {'ids': [], 'data': []};
+                    var contactRows = $($element).find('.nosms__contacts-wrap .nosms__row');
+
+                    for (let i = 0; i < contactRows.length; i++) {
+                        var row = $(contactRows[i]);
+                        var checkbox = row.find('input.nosms__checkbox[type="checkbox"]');
+                        if (checkbox.prop("checked")) {
+                            selectedContacts['ids'].push(row.data('contact-id'));
+                            selectedContacts['data'].push($scope.foundContacts[row.data('contact-id')]);
+                        }
+                    }
+
+                    return selectedContacts;
+                };
+
+                $scope.applyNoSmsToContacts = function() {
+                    $scope.showPreloader();
+                    CRM.api3('SupportcaseQuickAction', 'apply_no_sms', {
+                        'contact_ids' : $scope.selectedContacts.ids
+                    }).then(function(result) {
+                        if (result.is_error === 1) {
+                            console.error('apply_no_sms get error:');
+                            console.error(result.error_message);
+                        } else {
+                            $scope.successContacts = result.values;
+                            $scope.$apply();
+                        }
+                        $scope.hidePreloader();
+                    }, function(error) {});
+                };
+
+                $scope.handleMainCheckbox = function($event) {
+                    $($element)
+                        .find('.nosms__contacts-wrap .nosms__row input.nosms__checkbox[type="checkbox"]')
+                        .prop("checked", $($event.target).prop("checked"));
+                };
+
+                $scope.runSteep('confirmPhoneNumber');
+            }
+        };
+    });
+
 })(angular, CRM.$, CRM._);
