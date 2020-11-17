@@ -89,6 +89,8 @@
                     var dialog = $(e.target);
                     dialog.dialog('option', {
                         width: '90%',
+                        height: '600',
+                        resizable: false,
                     });
                     dialog.trigger('dialogresize');
                 });
