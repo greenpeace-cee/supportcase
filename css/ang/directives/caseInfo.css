@@ -18,7 +18,7 @@
 
 .ci__case-info-item-wrap {
     flex-flow: column wrap;
-    width: 170px;
+    width: 200px;
     box-sizing: border-box;
     vertical-align: top;
     margin: 2px;

@@ -77,6 +77,9 @@
 
             var style = document.createElement('style');
             style.innerHTML = 'body.crm-menubar-visible.crm-menubar-over-cms-menu.crm-menubar-wrapped {padding-top: 0px !important;}';
+            style.innerHTML += '@media (min-width: 768px) {';
+            style.innerHTML += 'body.crm-menubar-visible.crm-menubar-over-cms-menu {padding-top: 0px !important;}';
+            style.innerHTML += '}';
             document.head.appendChild(style);
             setTimeout(function () {
                 var body = document.getElementsByTagName('body');

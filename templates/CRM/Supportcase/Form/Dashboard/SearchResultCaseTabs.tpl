@@ -85,6 +85,12 @@
                         var supportCaseAngularJsWrap = $('.support-case-angular-js-wrap');
                         window.isCrurrentPopupAngularManageCase = (supportCaseAngularJsWrap.length >= 1);
                     }, 500);
+
+                    var dialog = $(e.target);
+                    dialog.dialog('option', {
+                        width: '90%',
+                    });
+                    dialog.trigger('dialogresize');
                 });
 
                 window.isDialogcloseExtended = true;
