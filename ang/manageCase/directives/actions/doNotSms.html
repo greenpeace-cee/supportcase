@@ -1,44 +1,45 @@
-<div ng-switch="steepName" class="nosms__do-not-sms">
+<div ng-switch="info['steepName']" class="nosms__do-not-sms">
 
-	<div class="nosms__steep" ng-switch-when="confirmPhoneNumber">
+	<div class="nosms__steep" ng-switch-when="confirmNumberSteep">
 		<div class="nosms__steep-title">1. Confirm phone number.</div>
 		<div class="nosms__steep-description">The number will be use to find contacts with this number.</div>
 		<div class="nosms__steep-body">
 			<div class="nosms__steep-logic">
-				<input class="input__text nosms__search-phone-number-input crm-form-text" type="text" value="{{searchPhoneNumber}}">
+				<input maxlength="25" class="input__text nosms__search-phone-number-input crm-form-text" type="text" ng-model="info.phoneNumber">
 			</div>
 			<div class="nosms__steep-buttons">
-				<button class="nosms__next-steep-button" ng-click="runSteep('selectContacts')">Next</button>
+				<button class="nosms__next-steep-button" ng-disabled="info.phoneNumber.length === 0" ng-click="runSteep('selectContactsSteep')">Next</button>
 			</div>
 		</div>
 	</div>
 
-	<div class="nosms__steep" ng-switch-when="selectContacts">
+	<div class="nosms__steep" ng-switch-when="selectContactsSteep">
 		<div class="nosms__steep-title">2. Select contacts.</div>
-		<div class="nosms__steep-description">To those selected contacts will be checked "do not sms" checkbox.</div>
+		<div class="nosms__steep-description" ng-if="info['contacts'].length > 0" >To those selected contacts will be checked "do not sms" checkbox.</div>
 		<div class="nosms__steep-body">
 			<div class="nosms__steep-logic">
-				<div ng-if="foundContacts != false">
-					<p>Result of searching by phone number(<strong>{{searchPhoneNumber}}</strong>):</p>
+				<div ng-if="info['contacts'].length > 0">
+					<p>Result of searching by phone number(<strong>{{info['phoneNumber']}}</strong>):</p>
 					<div class="nosms__contacts-wrap">
 						<table class="crm-search-results">
 							<thead>
 								<tr>
 									<th class="nosms__column-head">
 										<div class="nosms__checkbox-wrap">
-											<input ng-click="handleMainCheckbox($event)" class="nosms__checkbox nosms__checkbox-main" checked="checked" type="checkbox"/>
+											<input ng-click="handleMainCheckbox($event)" class="nosms__checkbox nosms__checkbox-main" ng-checked="isSelectedAllContacts()" type="checkbox"/>
 										</div>
 									</th>
 									<th class="nosms__column-head">id</th>
 									<th class="nosms__column-head">Display name</th>
+									<th class="nosms__column-head">Do not sms</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="contact in foundContacts" class="nosms__row" data-contact-id="{{contact.id}}">
+								<tr ng-repeat="contact in info['contacts']" class="nosms__row" data-contact-id="{{contact.id}}">
 									<td>
 										<div class="nosms__column">
 											<div class="nosms__checkbox-wrap">
-												<input class="nosms__checkbox" checked="checked" type="checkbox"/>
+												<input class="nosms__checkbox" ng-model="contact['is_selected']" type="checkbox"/>
 											</div>
 										</div>
 									</td>
@@ -54,45 +55,52 @@
 											</span>
 										</div>
 									</td>
+									<td>
+										<div class="nosms__column">
+											<span>
+												{{contact.is_do_not_sms == true ? 'yes' : 'no'}}
+											</span>
+										</div>
+									</td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
 				</div>
-				<div ng-if="foundContacts == false">
-					<p>Cannot find any contact with phone number(<strong>{{searchPhoneNumber}}</strong>).</p>
+				<div ng-if="info['contacts'].length == 0">
+					<p>Cannot find any contact with phone number(<strong>{{info['phoneNumber']}}</strong>).</p>
 				</div>
 			</div>
 			<div class="nosms__steep-buttons">
-				<button class="nosms__next-steep-button" ng-click="runSteep('confirmSelectedContacts')">Next</button>
-				<button class="button__cancel" ng-click="runSteep('confirmPhoneNumber')">Back</button>
+				<button class="nosms__next-steep-button" ng-disabled="!isSelectedMinimumOneContacts()" ng-click="runSteep('confirmSelectedContactsSteep')">Next</button>
+				<button class="button__cancel" ng-click="runSteep('confirmNumberSteep')">Back</button>
 			</div>
 		</div>
 	</div>
 
-	<div class="nosms__steep" ng-switch-when="confirmSelectedContacts">
+	<div class="nosms__steep" ng-switch-when="confirmSelectedContactsSteep">
 		<div class="nosms__steep-title">3. Are you sure?</div>
 		<div class="nosms__steep-description">To {{selectedContacts.length}} contacts will be checked "do not sms" checkbox:</div>
 		<div class="nosms__steep-body">
 			<div class="nosms__steep-logic">
-				<ul ng-repeat="contact in selectedContacts['data']">
-					<li><a href="{{contact.link}}" target="_blank">{{contact.display_name}}</a></li>
+				<ul ng-repeat="contact in info['contacts']">
+					<li ng-if="contact['is_selected']"><a href="{{contact.link}}" target="_blank">{{contact.display_name}}</a></li>
 				</ul>
 			</div>
 			<div class="nosms__steep-buttons">
-				<button class="nosms__next-steep-button" ng-click="runSteep('showSuccessMessage')">Confirm</button>
-				<button class="button__cancel" ng-click="runSteep('selectContacts')">Back</button>
+				<button class="nosms__next-steep-button" ng-click="runSteep('showSuccessMessageSteep')">Confirm</button>
+				<button class="button__cancel" ng-click="runSteep('selectContactsSteep')">Back</button>
 			</div>
 		</div>
 	</div>
 
-	<div class="nosms__steep" ng-switch-when="showSuccessMessage">
+	<div class="nosms__steep" ng-switch-when="showSuccessMessageSteep">
 		<div class="nosms__steep-title">4. Success.</div>
 		<div class="nosms__steep-description">Contacts have checked "do not sms" checkbox:</div>
 		<div class="nosms__steep-body">
 			<div class="nosms__steep-logic">
-				<ul ng-repeat="contact in successContacts">
-					<li><a href="{{contact.link}}" target="_blank">{{contact.display_name}}</a></li>
+				<ul ng-repeat="contact in info['contacts']">
+					<li ng-if="contact['is_selected']"><a href="{{contact.link}}" target="_blank">{{contact.display_name}}</a></li>
 				</ul>
 			</div>
 			<div class="nosms__steep-buttons">

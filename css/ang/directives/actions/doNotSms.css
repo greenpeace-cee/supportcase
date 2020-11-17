@@ -18,7 +18,11 @@
 }
 
 .nosms__contacts-wrap {
-    max-width: 300px;
+    max-width: 450px;
     border-left: 1px solid #e8eef0;
     border-right: 1px solid #e8eef0;
+}
+
+.crm-container .nosms__next-steep-button:disabled {
+    background-color: #c1c1c1;
 }

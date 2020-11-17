@@ -10,7 +10,7 @@
 function civicrm_api3_supportcase_quick_action_find_contacts_by_number($params) {
   $phones = civicrm_api3('Phone', 'get', [
     'sequential' => 1,
-    'return' => ["contact_id", "contact_id.display_name"],
+    'return' => ["contact_id", "contact_id.display_name", 'contact_id.do_not_sms'],
     'phone_numeric' => $params['phone_number'],
     'options' => ['limit' => 0],
   ]);
@@ -18,9 +18,10 @@ function civicrm_api3_supportcase_quick_action_find_contacts_by_number($params) 
   $preparedContacts = [];
   if (!empty($phones['values'])) {
     foreach ($phones['values'] as $phone) {
-      $preparedContacts[$phone['contact_id']] = [
+      $preparedContacts[] = [
         'id' => $phone['contact_id'],
         'display_name' => $phone['contact_id.display_name'],
+        'is_do_not_sms' => $phone['contact_id.do_not_sms'],
         'link' => CRM_Utils_System::url('civicrm/contact/view/', [
           'reset' => '1',
           'cid' => $phone['contact_id'],

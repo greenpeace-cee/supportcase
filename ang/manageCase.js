@@ -610,84 +610,93 @@
                 $scope.closeAction = $scope.$parent.closeAction;
                 $scope.showPreloader = $scope.$parent.showPreloader;
                 $scope.hidePreloader = $scope.$parent.hidePreloader;
+                $scope.info = {
+                    'steepName' : 'confirmNumberSteep',
+                    'phoneNumber' : $scope.ctrl.model['phone_number_for_do_not_sms_action'],
+                    'contacts' : [],
+                };
 
-                $scope.searchPhoneNumber = '';
-                $scope.foundContacts = false;
-                $scope.selectedContacts = {'ids': [], 'data': {}};
-                $scope.successContacts = [];
-
-                $scope.runSteep = function(steepName) {
-                    if (steepName === 'confirmPhoneNumber') {
-                        if ($scope.searchPhoneNumber === '') {
-                            $scope.searchPhoneNumber = $scope.ctrl.model['phone_number_for_do_not_sms_action'];
-                        }
-                    } else if (steepName === 'selectContacts') {
-                        $scope.searchPhoneNumber = $($element).find('.nosms__search-phone-number-input').val();
+                $scope.runSteep = function(nextSteepName) {
+                    if (nextSteepName === 'selectContactsSteep' && $scope.info.steepName === 'confirmNumberSteep') {
                         $scope.findContactsByNumber();
-                    } else if (steepName === 'confirmSelectedContacts') {
-                        $scope.selectedContacts = $scope.getSelectedContacts();
-                    } else if (steepName === 'showSuccessMessage') {
+                    } else if (nextSteepName === 'showSuccessMessageSteep') {
                         $scope.applyNoSmsToContacts();
                     }
 
-                    $scope.steepName = steepName;
+                    $scope.info.steepName = nextSteepName;
                 };
 
                 $scope.findContactsByNumber = function() {
                     $scope.showPreloader();
                     CRM.api3('SupportcaseQuickAction', 'find_contacts_by_number', {
-                        'phone_number' : $scope.searchPhoneNumber
+                        'phone_number' : $scope.info.phoneNumber
                     }).then(function(result) {
                         if (result.is_error === 1) {
                             console.error('find_contacts_by_number get error:');
                             console.error(result.error_message);
                         } else {
-                            $scope.foundContacts = result.values;
+                            $scope.info.contacts = result.values.map(function(contact) {
+                                return {
+                                   'id' : contact['id'],
+                                   'display_name' : contact['display_name'],
+                                   'link' : contact['link'],
+                                   'is_do_not_sms' : contact['is_do_not_sms'],
+                                   'is_selected' : true,
+                                };
+                            });
                             $scope.$apply();
                         }
                         $scope.hidePreloader();
                     }, function(error) {});
                 };
 
-                $scope.getSelectedContacts = function() {
-                    var selectedContacts = {'ids': [], 'data': []};
-                    var contactRows = $($element).find('.nosms__contacts-wrap .nosms__row');
-
-                    for (let i = 0; i < contactRows.length; i++) {
-                        var row = $(contactRows[i]);
-                        var checkbox = row.find('input.nosms__checkbox[type="checkbox"]');
-                        if (checkbox.prop("checked")) {
-                            selectedContacts['ids'].push(row.data('contact-id'));
-                            selectedContacts['data'].push($scope.foundContacts[row.data('contact-id')]);
+                $scope.applyNoSmsToContacts = function() {
+                    $scope.showPreloader();
+                    var selectedContactIds = [];
+                    for (var i = 0; i < $scope.info.contacts.length; i++) {
+                        if ($scope.info.contacts[i]['is_selected'] === true) {
+                            selectedContactIds.push($scope.info.contacts[i]['id']);
                         }
                     }
 
-                    return selectedContacts;
-                };
-
-                $scope.applyNoSmsToContacts = function() {
-                    $scope.showPreloader();
                     CRM.api3('SupportcaseQuickAction', 'apply_no_sms', {
-                        'contact_ids' : $scope.selectedContacts.ids
+                        'contact_ids' : selectedContactIds
                     }).then(function(result) {
                         if (result.is_error === 1) {
                             console.error('apply_no_sms get error:');
                             console.error(result.error_message);
-                        } else {
-                            $scope.successContacts = result.values;
-                            $scope.$apply();
+                            CRM.status(result.error_message, 'error');
                         }
                         $scope.hidePreloader();
                     }, function(error) {});
                 };
 
                 $scope.handleMainCheckbox = function($event) {
-                    $($element)
-                        .find('.nosms__contacts-wrap .nosms__row input.nosms__checkbox[type="checkbox"]')
-                        .prop("checked", $($event.target).prop("checked"));
+                    var isCheckedMainCheckbox = $($event.target).prop("checked");
+                    for (var i = 0; i < $scope.info.contacts.length; i++) {
+                        $scope.info.contacts[i]['is_selected'] = isCheckedMainCheckbox;
+                    }
                 };
 
-                $scope.runSteep('confirmPhoneNumber');
+                $scope.isSelectedMinimumOneContacts = function() {
+                    for (var i = 0; i < $scope.info.contacts.length; i++) {
+                        if ($scope.info.contacts[i]['is_selected'] === true) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                };
+
+                $scope.isSelectedAllContacts = function() {
+                    for (var i = 0; i < $scope.info.contacts.length; i++) {
+                        if ($scope.info.contacts[i]['is_selected'] === false) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                };
             }
         };
     });
