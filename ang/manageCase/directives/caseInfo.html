@@ -1,6 +1,9 @@
 <div class="ci__case-info">
 	<div class="crm-accordion-wrapper">
-		<div class="crm-accordion-header crm-master-accordion-header">{{ts('Case #%0', [ctrl.model['id']])}}</div>
+		<div class="crm-accordion-header crm-master-accordion-header ci__accordion-header">
+			<span>{{ts('Case #%0', [ctrl.model['id']])}}</span>
+			<span ng-if="ctrl.model['is_deleted'] == 1">(<i title="This case in the trash" class="supportcase-ico fa-trash" aria-hidden="true"></i>This case is in the trash)</span>
+		</div>
 		<div class="crm-accordion-body">
 			<div class="ci__block-wrap">
 

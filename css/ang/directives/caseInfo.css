@@ -172,3 +172,7 @@
 .ci__case-info-help-message {
     margin-bottom: 5px;
 }
+
+.ci__accordion-header span i {
+    color: white;
+}
