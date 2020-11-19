@@ -11,13 +11,18 @@ function civicrm_api3_supportcase_quick_action_find_contacts_by_number($params) 
   $phones = civicrm_api3('Phone', 'get', [
     'sequential' => 1,
     'return' => ["contact_id", "contact_id.display_name", 'contact_id.do_not_sms'],
-    'phone_numeric' => $params['phone_number'],
+    'phone_numeric' => preg_replace('/[^\d]/', '', $params['phone_number']),
+    'contact_id.is_deleted' => FALSE,
     'options' => ['limit' => 0],
   ]);
 
   $preparedContacts = [];
   if (!empty($phones['values'])) {
     foreach ($phones['values'] as $phone) {
+      // dedupe by contact_id - only return once
+      if (array_search($phone['contact_id'], array_column($preparedContacts, 'id')) !== FALSE) {
+        continue;
+      }
       $preparedContacts[] = [
         'id' => $phone['contact_id'],
         'display_name' => $phone['contact_id.display_name'],

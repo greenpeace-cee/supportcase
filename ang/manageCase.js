@@ -614,19 +614,19 @@
                 $scope.showPreloader = $scope.$parent.showPreloader;
                 $scope.hidePreloader = $scope.$parent.hidePreloader;
                 $scope.info = {
-                    'steepName' : 'confirmNumberSteep',
+                    'stepName' : 'confirmNumberStep',
                     'phoneNumber' : $scope.ctrl.model['phone_number_for_do_not_sms_action'],
                     'contacts' : [],
                 };
 
-                $scope.runSteep = function(nextSteepName) {
-                    if (nextSteepName === 'selectContactsSteep' && $scope.info.steepName === 'confirmNumberSteep') {
+                $scope.runStep = function(nextStepName) {
+                    if (nextStepName === 'selectContactsStep' && $scope.info.stepName === 'confirmNumberStep') {
                         $scope.findContactsByNumber();
-                    } else if (nextSteepName === 'showSuccessMessageSteep') {
+                    } else if (nextStepName === 'showSuccessMessageStep') {
                         $scope.applyNoSmsToContacts();
                     }
 
-                    $scope.info.steepName = nextSteepName;
+                    $scope.info.stepName = nextStepName;
                 };
 
                 $scope.findContactsByNumber = function() {
@@ -700,6 +700,11 @@
 
                     return true;
                 };
+
+                if ($scope.ctrl.model['phone_number_for_do_not_sms_action'] != '') {
+                  // skip confirmNumberStep if phone is preset
+                  $scope.runStep('selectContactsStep');
+                }
             }
         };
     });
