@@ -3,26 +3,26 @@
     Prefix-alias: nosms = doNotSms
 */
 
-.nosms__steep-title {
+.nosms__step-title {
     font-size: 20px;
     vertical-align: middle;
     padding-bottom: 10px;
 }
 
-.nosms__steep-description {
+.nosms__step-description {
     padding-bottom: 10px;
 }
 
-.nosms__steep-buttons {
+.nosms__step-buttons {
     padding-top: 20px;
 }
 
 .nosms__contacts-wrap {
-    max-width: 450px;
+    max-width: 650px;
     border-left: 1px solid #e8eef0;
     border-right: 1px solid #e8eef0;
 }
 
-.crm-container .nosms__next-steep-button:disabled {
+.crm-container .nosms__next-step-button:disabled {
     background-color: #c1c1c1;
 }

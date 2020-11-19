@@ -1,25 +1,25 @@
-<div ng-switch="info['steepName']" class="nosms__do-not-sms">
+<div ng-switch="info['stepName']" class="nosms__do-not-sms">
 
-	<div class="nosms__steep" ng-switch-when="confirmNumberSteep">
-		<div class="nosms__steep-title">1. Confirm phone number.</div>
-		<div class="nosms__steep-description">The number will be use to find contacts with this number.</div>
-		<div class="nosms__steep-body">
-			<div class="nosms__steep-logic">
+	<div class="nosms__step" ng-switch-when="confirmNumberStep">
+		<div class="nosms__step-title">Enter phone number</div>
+		<div class="nosms__step-description">The number will be use to find matching contacts.</div>
+		<div class="nosms__step-body">
+			<div class="nosms__step-logic">
 				<input maxlength="25" class="input__text nosms__search-phone-number-input crm-form-text" type="text" ng-model="info.phoneNumber">
 			</div>
-			<div class="nosms__steep-buttons">
-				<button class="nosms__next-steep-button" ng-disabled="info.phoneNumber.length === 0" ng-click="runSteep('selectContactsSteep')">Next</button>
+			<div class="nosms__step-buttons">
+				<button class="nosms__next-step-button" ng-disabled="info.phoneNumber.length === 0" ng-click="runStep('selectContactsStep')">Next</button>
 			</div>
 		</div>
 	</div>
 
-	<div class="nosms__steep" ng-switch-when="selectContactsSteep">
-		<div class="nosms__steep-title">2. Select contacts.</div>
-		<div class="nosms__steep-description" ng-if="info['contacts'].length > 0" >To those selected contacts will be checked "do not sms" checkbox.</div>
-		<div class="nosms__steep-body">
-			<div class="nosms__steep-logic">
+	<div class="nosms__step" ng-switch-when="selectContactsStep">
+		<div class="nosms__step-title">Select contacts</div>
+		<div class="nosms__step-description" ng-if="info['contacts'].length > 0" >Confirm all contacts for which "Do not SMS" should be set</div>
+		<div class="nosms__step-body">
+			<div class="nosms__step-logic">
 				<div ng-if="info['contacts'].length > 0">
-					<p>Result of searching by phone number(<strong>{{info['phoneNumber']}}</strong>):</p>
+					<p>Contacts matching <strong>{{info['phoneNumber']}}</strong>:</p>
 					<div class="nosms__contacts-wrap">
 						<table class="crm-search-results">
 							<thead>
@@ -29,9 +29,9 @@
 											<input ng-click="handleMainCheckbox($event)" class="nosms__checkbox nosms__checkbox-main" ng-checked="isSelectedAllContacts()" type="checkbox"/>
 										</div>
 									</th>
-									<th class="nosms__column-head">id</th>
-									<th class="nosms__column-head">Display name</th>
-									<th class="nosms__column-head">Do not sms</th>
+									<th class="nosms__column-head">Contact ID</th>
+									<th class="nosms__column-head">Display Name</th>
+									<th class="nosms__column-head">Do not SMS (current value)</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -68,43 +68,27 @@
 					</div>
 				</div>
 				<div ng-if="info['contacts'].length == 0">
-					<p>Cannot find any contact with phone number(<strong>{{info['phoneNumber']}}</strong>).</p>
+					<p>Cannot find any contacts with phone number <strong>{{info['phoneNumber']}}</strong>.</p>
 				</div>
 			</div>
-			<div class="nosms__steep-buttons">
-				<button class="nosms__next-steep-button" ng-disabled="!isSelectedMinimumOneContacts()" ng-click="runSteep('confirmSelectedContactsSteep')">Next</button>
-				<button class="button__cancel" ng-click="runSteep('confirmNumberSteep')">Back</button>
+			<div class="nosms__step-buttons">
+        <button class="nosms__next-step-button" ng-click="runStep('showSuccessMessageStep')">Confirm</button>
+				<button class="button__cancel" ng-click="runStep('confirmNumberStep')">Back</button>
 			</div>
 		</div>
 	</div>
 
-	<div class="nosms__steep" ng-switch-when="confirmSelectedContactsSteep">
-		<div class="nosms__steep-title">3. Are you sure?</div>
-		<div class="nosms__steep-description">To {{selectedContacts.length}} contacts will be checked "do not sms" checkbox:</div>
-		<div class="nosms__steep-body">
-			<div class="nosms__steep-logic">
+	<div class="nosms__step" ng-switch-when="showSuccessMessageStep">
+		<div class="nosms__step-title">Success</div>
+		<div class="nosms__step-description">"Do not SMS" was set for these contacts:</div>
+		<div class="nosms__step-body">
+			<div class="nosms__step-logic">
 				<ul ng-repeat="contact in info['contacts']">
 					<li ng-if="contact['is_selected']"><a href="{{contact.link}}" target="_blank">{{contact.display_name}}</a></li>
 				</ul>
 			</div>
-			<div class="nosms__steep-buttons">
-				<button class="nosms__next-steep-button" ng-click="runSteep('showSuccessMessageSteep')">Confirm</button>
-				<button class="button__cancel" ng-click="runSteep('selectContactsSteep')">Back</button>
-			</div>
-		</div>
-	</div>
-
-	<div class="nosms__steep" ng-switch-when="showSuccessMessageSteep">
-		<div class="nosms__steep-title">4. Success.</div>
-		<div class="nosms__steep-description">Contacts have checked "do not sms" checkbox:</div>
-		<div class="nosms__steep-body">
-			<div class="nosms__steep-logic">
-				<ul ng-repeat="contact in info['contacts']">
-					<li ng-if="contact['is_selected']"><a href="{{contact.link}}" target="_blank">{{contact.display_name}}</a></li>
-				</ul>
-			</div>
-			<div class="nosms__steep-buttons">
-				<button class="nosms__next-steep-button" ng-click="closeAction()">Close action</button>
+			<div class="nosms__step-buttons">
+				<button class="nosms__next-step-button" ng-click="closeAction()">Close</button>
 			</div>
 		</div>
 	</div>

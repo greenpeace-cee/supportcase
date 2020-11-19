@@ -7,7 +7,7 @@
 					<button class="qa__panel-button"
 						ng-class="{'active' : ctrl.model['activeAction'] == 'doNotSms'}"
 						ng-click="runQuickAction('doNotSms');">
-						Set "do not sms" to related phone number.
+						Do not SMS
 					</button>
 					<button class="qa__panel-button"
 						ng-class="{'active' : ctrl.model['activeAction'] == 'exampleAction'}"
@@ -29,7 +29,7 @@
 							<div class="qa__action-item-wrap">
 								<div class="qa__action-item-head">
 									<button class="button__cancel" ng-click="closeAction();">Cancel</button>
-									<div class="qa__action-name">Set "do not sms" to related phone number.</div>
+									<div class="qa__action-name">Do not SMS</div>
 								</div>
 								<div class="qa__action-item-body">
 									<do-not-sms model='ctrl.model'></do-not-sms>
@@ -51,7 +51,7 @@
 
 						<div ng-switch-default>
 							<div class="qa__action-item-wrap">
-								<div class="qa__no-actions-message">Please chose quick action.</div>
+								<div class="qa__no-actions-message">Please choose a quick action from the left.</div>
 							</div>
 						</div>
 					</div>
