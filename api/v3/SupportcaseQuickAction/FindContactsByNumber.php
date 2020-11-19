@@ -11,7 +11,7 @@ function civicrm_api3_supportcase_quick_action_find_contacts_by_number($params) 
   $phones = civicrm_api3('Phone', 'get', [
     'sequential' => 1,
     'return' => ["contact_id", "contact_id.display_name", 'contact_id.do_not_sms'],
-    'phone_numeric' => $params['phone_number'],
+    'phone_numeric' => preg_replace('/[^\d]/', '', $params['phone_number']),
     'options' => ['limit' => 0],
   ]);
 
