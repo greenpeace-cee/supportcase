@@ -176,3 +176,7 @@
 .ci__accordion-header span i {
     color: white;
 }
+
+.com__empty-result {
+    padding: 20px 10px;
+}

@@ -21,7 +21,7 @@ function civicrm_api3_supportcase_manage_case_get_sms_activities($params) {
       'is_deleted' => "0",
       'options' => ['limit' => 0],
       'case_id' => $params['case_id'],
-      'activity_type_id' => "SMS",
+      'activity_type_id' => ['IN' => ["SMS", "Inbound SMS"]],
     ]);
   } catch (CiviCRM_API3_Exception $e) {
     $activities = [];

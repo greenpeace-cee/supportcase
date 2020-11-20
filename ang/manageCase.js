@@ -395,7 +395,7 @@
             scope: {model: "="},
             bindToController: true,
             controllerAs: "ctrl",
-            controller: function($scope) {
+            controller: function($scope, $element) {
                 $scope.smsActivities = [];
                 $scope.ts = CRM.ts();
                 this.$onInit = function() {
@@ -408,6 +408,11 @@
                             console.error(result.error_message);
                         } else {
                             $scope.smsActivities = result.values;
+                            if (result.values["length"] > 0) {
+                                var mainElement = $($element);
+                                mainElement.find('.crm-accordion-wrapper').removeClass('collapsed');
+                                mainElement.find('.crm-accordion-body').show();
+                            }
                             $scope.$apply();
                         }
                     }, function(error) {});
