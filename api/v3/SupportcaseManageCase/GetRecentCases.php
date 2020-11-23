@@ -18,7 +18,7 @@ function civicrm_api3_supportcase_manage_case_get_recent_cases($params) {
 
   $cases = civicrm_api3('Case', 'get', [
     'sequential' => 1,
-    'return' => ["id", "subject", "status_id", "start_date"],
+    'return' => ["id", "subject", "status_id", "status_id.label", "start_date"],
     'case_type_id' => "support_case",
     'client_id' => $params['client_id'],
     'is_deleted' => 0,
