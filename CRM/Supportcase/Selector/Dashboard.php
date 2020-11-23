@@ -418,7 +418,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
       //it shows at 'most recent communication' column
       $mostRecentCommunicationData = $this->getRecentCommunication($result->case_id);
       $row['case_recent_activity_id'] = $mostRecentCommunicationData['activity_id'];
-      $row['case_recent_activity_date'] = $mostRecentCommunicationData['activity_date_time'];
+      $row['case_recent_activity_date'] = $mostRecentCommunicationData['activity_created_date'];
       $row['case_recent_activity_type_label'] = $mostRecentCommunicationData['activity_type_label'];
 
       $rows[$result->case_id] = $row;
@@ -475,7 +475,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
   private function getRecentCommunication($caseId) {
     $recentCommunication = [
       'activity_id' => '',
-      'activity_date_time' => '',
+      'activity_created_date' => '',
       'activity_type_label' => '',
     ];
 
@@ -485,9 +485,9 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
         'activity_type_id' => ['IN' => CRM_Supportcase_Utils_Setting::get('supportcase_available_activity_type_names')],
         'is_deleted' => "0",
         'sequential' => 1,
-        'return' => ["id","subject","activity_date_time", 'activity_type_id', 'activity_type_id.label'],
+        'return' => ["id","subject","created_date", 'activity_type_id', 'activity_type_id.label'],
         'options' => [
-          'sort' => "activity_date_time DESC",
+          'sort' => "created_date DESC",
           'limit' => 1
         ],
       ]);
@@ -497,7 +497,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
 
     if (!empty($recentActivity['values'][0])) {
       $recentCommunication['activity_id'] = $recentActivity['values'][0]['id'];
-      $recentCommunication['activity_date_time'] = $recentActivity['values'][0]['activity_date_time'];
+      $recentCommunication['activity_created_date'] = $recentActivity['values'][0]['created_date'];
       $recentCommunication['activity_type_label'] = $recentActivity['values'][0]['activity_type_id.label'];
     }
 
