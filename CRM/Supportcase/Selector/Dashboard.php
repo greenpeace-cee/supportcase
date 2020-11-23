@@ -392,11 +392,6 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
         $result->case_id
       );
 
-      //TODO fix it without replacing
-      $searchUrl = 'civicrm/a/#/supportcase/manage-case';
-      $manageCaseUrl = CRM_Utils_System::url('civicrm/a/', NULL, TRUE, 'supportcase/manage-case/' . $result->case_id);
-      $row['action'] = str_replace($searchUrl, $manageCaseUrl, $row['action']);
-
       $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ? $result->contact_sub_type : $result->contact_type);
 
       //adding case manager to case selector.CRM-4510.
