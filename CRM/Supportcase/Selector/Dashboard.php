@@ -415,6 +415,12 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
       $row['is_locked_by_self'] = FALSE;
       $row['lock_message'] = '';
 
+      //it shows at 'most recent communication' column
+      $mostRecentCommunicationData = $this->getRecentCommunication($result->case_id);
+      $row['case_recent_activity_id'] = $mostRecentCommunicationData['activity_id'];
+      $row['case_recent_activity_date'] = $mostRecentCommunicationData['activity_date_time'];
+      $row['case_recent_activity_type_label'] = $mostRecentCommunicationData['activity_type_label'];
+
       $rows[$result->case_id] = $row;
     }
 
@@ -430,33 +436,6 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
         $rows[$lockedCase['case_id']]['is_case_locked'] = $lockedCase['is_case_locked'];
         $rows[$lockedCase['case_id']]['is_locked_by_self'] = $lockedCase['is_locked_by_self'];
         $rows[$lockedCase['case_id']]['lock_message'] = $lockedCase['lock_message'];
-      }
-    }
-
-    //retrieve the scheduled & recent Activity type and date for selector
-    if (!empty($scheduledInfo)) {
-      $userID = CRM_Core_Session::getLoggedInContactID();
-      $caseIds = implode(',', $scheduledInfo['case_id']);
-      $contactIds = implode(',', $scheduledInfo['contact_id']);
-      $condition = CRM_Core_DAO::composeQuery(" 
-        civicrm_case_contact.contact_id IN(%1)
-        AND civicrm_case.id IN(%2)
-        AND civicrm_case.is_deleted = %3 ", [
-        1 => [$contactIds , 'CommaSeparatedIntegers'],
-        2 => [$caseIds , 'CommaSeparatedIntegers'],
-        3 => [$scheduledInfo['case_deleted'] , 'Integer'],
-      ]);
-
-      $recentQuery = CRM_Case_BAO_Case::getCaseActivityQuery('recent', $userID, $condition);
-      $activityTypes = $this->getAvailableActivityTypes();
-
-      $dao = CRM_Core_DAO::executeQuery($recentQuery);
-      while ($dao->fetch()) {
-        if (!empty($activityTypes[$dao->activity_type_id]) && !empty($dao->activity_id)) {
-          $rows[$dao->case_id]['case_recent_activity_date'] = $dao->activity_date_time;
-          $rows[$dao->case_id]['case_recent_activity_type'] = $activityTypes[$dao->activity_type_id];
-          $rows[$dao->case_id]['case_recent_activity_id'] = $dao->activity_id;
-        }
       }
     }
 
@@ -487,29 +466,42 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
   }
 
   /**
-   * Gets list of available activity type (value => label)
+   * Get most recent communication by case id
+   * (it is activity)
    *
+   * @param $caseId
    * @return array
    */
-  public function getAvailableActivityTypes() {
-    $availableActivityTypes = CRM_Supportcase_Utils_Setting::get('supportcase_available_activity_type_names');
+  private function getRecentCommunication($caseId) {
+    $recentCommunication = [
+      'activity_id' => '',
+      'activity_date_time' => '',
+      'activity_type_label' => '',
+    ];
 
-    $dao = CRM_Core_DAO::executeQuery("
-      SELECT civicrm_option_value.label AS option_label, civicrm_option_value.value AS option_value
-      FROM civicrm_option_value
-      LEFT JOIN civicrm_option_group ON civicrm_option_value.option_group_id = civicrm_option_group.id
-      WHERE civicrm_option_group.name = 'activity_type' 
-        AND civicrm_option_value.is_active = 1 
-        AND civicrm_option_value.name IN('" . implode("' , '", $availableActivityTypes) . "')
-      ORDER BY civicrm_option_value.weight
-    ");
-
-    $activityTypes = [];
-    while ($dao->fetch()) {
-      $activityTypes[$dao->option_value] = $dao->option_label;
+    try {
+      $recentActivity = civicrm_api3('Activity', 'get', [
+        'case_id' => $caseId,
+        'activity_type_id' => ['IN' => CRM_Supportcase_Utils_Setting::get('supportcase_available_activity_type_names')],
+        'is_deleted' => "0",
+        'sequential' => 1,
+        'return' => ["id","subject","activity_date_time", 'activity_type_id', 'activity_type_id.label'],
+        'options' => [
+          'sort' => "activity_date_time DESC",
+          'limit' => 1
+        ],
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      return $recentCommunication;
     }
 
-    return $activityTypes;
+    if (!empty($recentActivity['values'][0])) {
+      $recentCommunication['activity_id'] = $recentActivity['values'][0]['id'];
+      $recentCommunication['activity_date_time'] = $recentActivity['values'][0]['activity_date_time'];
+      $recentCommunication['activity_type_label'] = $recentActivity['values'][0]['activity_type_id.label'];
+    }
+
+    return $recentCommunication;
   }
 
   /**

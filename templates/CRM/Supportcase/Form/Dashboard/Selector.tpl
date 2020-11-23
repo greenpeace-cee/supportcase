@@ -82,11 +82,11 @@
             <span>{$row.case_status}</span>
           </td>
           <td>
-            {if $row.case_recent_activity_type}
+            {if $row.case_recent_activity_id}
               <a href="{crmURL p='civicrm/supportcase/tooltip-activity-view' q="id=`$row.case_recent_activity_id`&snippet=4"}" class="crm-summary-link">
-                <div>
-                  {$row.case_recent_activity_type} on {$row.case_recent_activity_date|crmDate}
-                </div>
+                <span>
+                  {$row.case_recent_activity_type_label} on {$row.case_recent_activity_date|crmDate}
+                </span>
               </a>
             {else}
               ---
