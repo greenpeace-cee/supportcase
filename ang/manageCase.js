@@ -305,6 +305,7 @@
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope, $element) {
+                $scope.formatDate = CRM.utils.formatDate;
                 $scope.setFieldFromModel = function() {$scope.startDate = $scope.ctrl.model['start_date'];};
                 $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
                 $scope.updateInputValue = function() {
@@ -397,6 +398,7 @@
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope, $element) {
+                $scope.formatDate = CRM.utils.formatDate;
                 $scope.smsActivities = [];
                 $scope.ts = CRM.ts();
                 this.$onInit = function() {
@@ -430,6 +432,7 @@
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope) {
+                $scope.formatDate = CRM.utils.formatDate;
                 $scope.activities = [];
                 $scope.ts = CRM.ts();
                 this.$onInit = function() {
@@ -458,6 +461,7 @@
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope) {
+                $scope.formatDate = CRM.utils.formatDate;
                 $scope.ts = CRM.ts();
                 $scope.recentCases = [];
                 $scope.updateRecentCases = function() {
