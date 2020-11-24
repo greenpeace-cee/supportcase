@@ -55,6 +55,7 @@
             }
 
             $('#header').hide();
+            $('body').css('background', 'white');
             $('#civicrm-menu-nav').hide();
             $('#page-title').hide();
             $('#content > .section .tabs').hide();
