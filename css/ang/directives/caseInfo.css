@@ -34,7 +34,7 @@
 }
 
 .ci__case-info-item-content {
-
+    word-wrap: break-word;
 }
 
 .ci__case-info-header {
