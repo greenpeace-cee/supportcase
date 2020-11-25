@@ -24,7 +24,7 @@
 							<tbody>
 							<tr ng-repeat="activity in smsActivities" class="crm-entity">
 								<td>
-									<div class="com__column com__column-created-date">{{formatDate(activity.created_date)}}</div>
+									<div class="com__column com__column-created-date">{{formatDateAndTime(activity.created_date, true)}}</div>
 								</td>
 								<td>
 									<div class="com__column com__column-subject">{{activity.subject}}</div>

@@ -19,7 +19,7 @@
 					<tbody>
 						<tr ng-repeat="activity in activities" value="{{option.value}}" class="crm-entity">
 							<td>
-								<div class="act__column act__column-created-date">{{formatDate(activity.created_date)}}</div>
+								<div class="act__column act__column-created-date">{{formatDateAndTime(activity.created_date, true)}}</div>
 							</td>
 							<td>
 								<div class="act__column act__column-subject">{{activity.subject}}</div>

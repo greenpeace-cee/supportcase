@@ -119,6 +119,34 @@
             }, function(error) {});
         };
 
+        $scope.formatDateAndTime = function(standardCiviDate, isShowTime) {
+            if (standardCiviDate === undefined || typeof standardCiviDate !== 'string') {
+                return '';
+            }
+            var time = '';
+            if (isShowTime) {
+                time = $scope.formatTime(standardCiviDate);
+            }
+
+            return CRM.utils.formatDate(standardCiviDate) + ' ' + time;
+        };
+
+        $scope.formatTime = function(standardCiviDate) {
+            var date = new Date(standardCiviDate);
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            var fixedMinutes = minutes < 10 ? '0' + minutes : minutes;
+
+            if (CRM.config.timeIs24Hr) {
+                return  hours + ':' + fixedMinutes;
+            } else {
+                var amPm = hours >= 12 ? 'pm' : 'am';
+                var amPmHours = hours % 12;
+                amPmHours = (amPmHours === 0) ? amPmHours : 12;
+                return amPmHours + ':' + fixedMinutes + ' ' + amPm;
+            }
+        };
+
         $scope.$on('$destroy', function() {
             $interval.cancel($scope.lockTimer);
             $scope.lockTimer = undefined;
@@ -139,6 +167,7 @@
             controllerAs: "ctrl",
             controller: function($scope) {
                 $scope.ts = CRM.ts();
+                $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
 
                 $scope.showHelpInfo =  function(title, helpId, fileLocation) {
                     CRM.help(title, {
@@ -305,7 +334,7 @@
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope, $element) {
-                $scope.formatDate = CRM.utils.formatDate;
+                $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
                 $scope.setFieldFromModel = function() {$scope.startDate = $scope.ctrl.model['start_date'];};
                 $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
                 $scope.updateInputValue = function() {
@@ -398,7 +427,7 @@
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope, $element) {
-                $scope.formatDate = CRM.utils.formatDate;
+                $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
                 $scope.smsActivities = [];
                 $scope.ts = CRM.ts();
                 this.$onInit = function() {
@@ -432,7 +461,7 @@
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope) {
-                $scope.formatDate = CRM.utils.formatDate;
+                $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
                 $scope.activities = [];
                 $scope.ts = CRM.ts();
                 this.$onInit = function() {
@@ -461,7 +490,7 @@
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope) {
-                $scope.formatDate = CRM.utils.formatDate;
+                $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
                 $scope.ts = CRM.ts();
                 $scope.recentCases = [];
                 $scope.updateRecentCases = function() {
