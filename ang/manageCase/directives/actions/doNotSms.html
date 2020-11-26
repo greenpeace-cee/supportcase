@@ -15,11 +15,10 @@
 
 	<div class="nosms__step" ng-switch-when="selectContactsStep">
 		<div class="nosms__step-title">Select contacts</div>
-		<div class="nosms__step-description" ng-if="info['contacts'].length > 0" >Confirm all contacts for which "Do not SMS" should be set</div>
+		<div class="nosms__step-description" ng-if="info['contacts'].length > 0" >Confirm all contacts matching <strong>{{info['phoneNumber']}}</strong> for which "Do not SMS" should be set:</div>
 		<div class="nosms__step-body">
 			<div class="nosms__step-logic">
 				<div ng-if="info['contacts'].length > 0">
-					<p>Contacts matching <strong>{{info['phoneNumber']}}</strong>:</p>
 					<div class="nosms__contacts-wrap">
 						<table class="crm-search-results">
 							<thead>
