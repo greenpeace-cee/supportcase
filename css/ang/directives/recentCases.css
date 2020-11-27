@@ -10,3 +10,7 @@
 .rc__recent-cases {
     margin-top: 5px;
 }
+
+.rc__column-subject {
+    max-width: 400px;
+}

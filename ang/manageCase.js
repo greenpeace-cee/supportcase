@@ -496,7 +496,7 @@
                 $scope.updateRecentCases = function() {
                     CRM.api3('SupportcaseManageCase', 'get_recent_cases', {
                         "client_id": $scope.ctrl.model['recent_case_for_contact']['contact_id'],
-                        "limit_per_page": 100,
+                        "limit_per_page": 0,
                         "page_number": 1
                     }).then(function(result) {
                         if (result.is_error === 1) {
