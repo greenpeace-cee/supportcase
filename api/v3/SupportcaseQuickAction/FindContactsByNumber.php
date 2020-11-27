@@ -30,7 +30,7 @@ function civicrm_api3_supportcase_quick_action_find_contacts_by_number($params) 
         'link' => CRM_Utils_System::url('civicrm/contact/view/', [
           'reset' => '1',
           'cid' => $phone['contact_id'],
-        ]),
+        ], FALSE, NULL, FALSE),
       ];
     }
   }

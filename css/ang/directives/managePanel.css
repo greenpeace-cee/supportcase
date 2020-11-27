@@ -6,3 +6,7 @@
 .mp__button {
     cursor: pointer;
 }
+
+.mp__button .ui-icon {
+  margin: 0;
+}
