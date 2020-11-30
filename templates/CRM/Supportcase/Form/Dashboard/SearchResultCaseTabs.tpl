@@ -84,15 +84,18 @@
                     setTimeout(function () {
                         var supportCaseAngularJsWrap = $('.support-case-angular-js-wrap');
                         window.isCrurrentPopupAngularManageCase = (supportCaseAngularJsWrap.length >= 1);
-                    }, 500);
 
-                    var dialog = $(e.target);
-                    dialog.dialog('option', {
-                        width: '90%',
-                        height: '600',
-                        resizable: false,
-                    });
-                    dialog.trigger('dialogresize');
+                        var dialog = $(e.target);
+                        if (supportCaseAngularJsWrap.length > 0) {
+                            dialog.dialog('option', {
+                                width: '90%',
+                                height: '600',
+                                resizable: false,
+                            });
+                            dialog.trigger('dialogresize');
+                            console.log('-----yes-----');
+                        }
+                    }, 500);
                 });
 
                 window.isDialogcloseExtended = true;
