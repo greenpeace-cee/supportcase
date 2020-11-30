@@ -418,7 +418,8 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
       //it shows at 'most recent communication' column
       $mostRecentCommunicationData = $this->getRecentCommunication($result->case_id);
       $row['case_recent_activity_id'] = $mostRecentCommunicationData['activity_id'];
-      $row['case_recent_activity_date'] = $mostRecentCommunicationData['activity_created_date'];
+      $row['case_recent_activity_date'] = $mostRecentCommunicationData['activity_date_time'];
+      $row['case_recent_activity_details'] = $mostRecentCommunicationData['activity_details'];
       $row['case_recent_activity_type_label'] = $mostRecentCommunicationData['activity_type_label'];
 
       $rows[$result->case_id] = $row;
@@ -475,7 +476,8 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
   private function getRecentCommunication($caseId) {
     $recentCommunication = [
       'activity_id' => '',
-      'activity_created_date' => '',
+      'activity_date_time' => '',
+      'activity_details' => '',
       'activity_type_label' => '',
     ];
 
@@ -485,9 +487,16 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
         'activity_type_id' => ['IN' => CRM_Supportcase_Utils_Setting::get('supportcase_available_activity_type_names')],
         'is_deleted' => "0",
         'sequential' => 1,
-        'return' => ["id","subject","created_date", 'activity_type_id', 'activity_type_id.label'],
+        'return' => [
+          'id',
+          'subject',
+          'details',
+          'activity_date_time',
+          'activity_type_id',
+          'activity_type_id.label'
+        ],
         'options' => [
-          'sort' => "created_date DESC",
+          'sort' => "activity_date_time DESC",
           'limit' => 1
         ],
       ]);
@@ -497,7 +506,8 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
 
     if (!empty($recentActivity['values'][0])) {
       $recentCommunication['activity_id'] = $recentActivity['values'][0]['id'];
-      $recentCommunication['activity_created_date'] = $recentActivity['values'][0]['created_date'];
+      $recentCommunication['activity_date_time'] = $recentActivity['values'][0]['activity_date_time'];
+      $recentCommunication['activity_details'] = $recentActivity['values'][0]['details'];
       $recentCommunication['activity_type_label'] = $recentActivity['values'][0]['activity_type_id.label'];
     }
 
@@ -529,7 +539,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
         $managerRoleQuery = "
           SELECT civicrm_contact.id as casemanager_id, civicrm_contact.sort_name as casemanager
           FROM civicrm_contact
-          LEFT JOIN civicrm_relationship ON (civicrm_relationship.contact_id_b = civicrm_contact.id 
+          LEFT JOIN civicrm_relationship ON (civicrm_relationship.contact_id_b = civicrm_contact.id
           AND civicrm_relationship.relationship_type_id = %1) AND civicrm_relationship.is_active
           LEFT JOIN civicrm_case ON civicrm_case.id = civicrm_relationship.case_id
           WHERE civicrm_case.id = %2 AND is_active = 1";
@@ -538,7 +548,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
         $managerRoleQuery = "
           SELECT civicrm_contact.id as casemanager_id, civicrm_contact.sort_name as casemanager
           FROM civicrm_contact
-          LEFT JOIN civicrm_relationship ON (civicrm_relationship.contact_id_a = civicrm_contact.id 
+          LEFT JOIN civicrm_relationship ON (civicrm_relationship.contact_id_a = civicrm_contact.id
           AND civicrm_relationship.relationship_type_id = %1) AND civicrm_relationship.is_active
           LEFT JOIN civicrm_case ON civicrm_case.id = civicrm_relationship.case_id
           WHERE civicrm_case.id = %2 AND is_active = 1";
@@ -548,7 +558,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
         1 => [substr($managerRoleId, 0, -4), 'Integer'],
         2 => [$caseId, 'Integer'],
       ]);
-      
+
       if ($dao->fetch()) {
         $managerData['case_manager_link'] = sprintf(
           '<a href="%s">%s</a>',
@@ -603,6 +613,11 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
           'direction' => CRM_Utils_Sort::DONTCARE,
         ],
         [
+          'name' => ts('Most Recent Communication'),
+          'sort' => 'case_recent_activity_date',
+          'direction' => CRM_Utils_Sort::ASCENDING,
+        ],
+        [
           'name' => ts('Tags'),
           'direction' => CRM_Utils_Sort::DONTCARE,
         ],
@@ -610,11 +625,6 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
           'name' => ts('Status'),
           'sort' => 'case_status',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ],
-        [
-          'name' => ts('Most Recent Communication'),
-          'sort' => 'case_recent_activity_date',
-          'direction' => CRM_Utils_Sort::ASCENDING,
         ],
         ['name' => ts('Actions')],
       ];

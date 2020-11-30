@@ -267,3 +267,24 @@
 .supportcase__result-table-wrap {
     margin-bottom: 20px;
 }
+
+.supportcase__recent-communication-details {
+    margin: 0;
+    line-height: 1.1;
+}
+
+.supportcase__recent-communication-details:before {
+  content: "\201C";
+}
+
+.supportcase__recent-communication-details:after {
+  content: "\201D";
+}
+
+.supportcase__recent-communication-meta {
+    font-size: 11px;
+}
+
+.supportcase__recent-communication-meta:before {
+    content: "\2014 \00A0";
+}

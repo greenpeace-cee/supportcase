@@ -65,6 +65,18 @@
           <td class="supportcase__case-subject-column-wrap">
             <span>{$row.case_subject}</span>
           </td>
+          <td class="supportcase__recent-communication-column-wrap">
+            {if $row.case_recent_activity_id}
+              <a href="{crmURL p='civicrm/supportcase/tooltip-activity-view' q="id=`$row.case_recent_activity_id`&snippet=4"}" class="crm-summary-link">
+                <blockquote class="supportcase__recent-communication-details">
+                  {$row.case_recent_activity_details|strip_tags:false|truncate:160|purify}
+                </blockquote>
+                <cite class="supportcase__recent-communication-meta">{$row.case_recent_activity_type_label} on {$row.case_recent_activity_date|crmDate}</cite>
+              </a>
+            {else}
+              ---
+            {/if}
+          </td>
           <td class="{$row.class} crm-summary-row">
             <div class="supportcase__case-tags-wrap">
               {if $row.case_tags}
@@ -80,17 +92,6 @@
           </td>
           <td class="{$row.class} crm-case-status_{$row.case_status}">
             <span>{$row.case_status}</span>
-          </td>
-          <td>
-            {if $row.case_recent_activity_id}
-              <a href="{crmURL p='civicrm/supportcase/tooltip-activity-view' q="id=`$row.case_recent_activity_id`&snippet=4"}" class="crm-summary-link">
-                <span>
-                  {$row.case_recent_activity_type_label} on {$row.case_recent_activity_date|crmDate}
-                </span>
-              </a>
-            {else}
-              ---
-            {/if}
           </td>
           <td>{$row.action|replace:'xx':$row.case_id}{$row.moreActions|replace:'xx':$row.case_id}</td>
         {/foreach}
