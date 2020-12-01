@@ -575,7 +575,7 @@
                     $scope.doAction('status_id', $scope.ctrl.model['settings']['case_status_ids']['ongoing'],function () {
                         $scope.ctrl.model['status_id'] = $scope.ctrl.model['settings']['case_status_ids']['ongoing'];
                         $scope.$apply();
-                        CRM.status('Case iis made ongoing. Case status is updated.');
+                        CRM.status('Case is made ongoing. Case status is updated.');
                     });
                 };
 
