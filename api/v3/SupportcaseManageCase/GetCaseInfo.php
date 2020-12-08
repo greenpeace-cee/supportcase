@@ -35,29 +35,21 @@ function civicrm_api3_supportcase_manage_case_get_case_info($params) {
     }
   }
 
-  $recentCaseForContact = [];
+  $recentCaseForContactId = '';
   $clientIds = [];
-  $clientsInfo = [];
+  $managerIds = [];
   if (!empty($case['contacts'])) {
     foreach ($case['contacts'] as $contact) {
       if ($contact['role'] == 'Client') {
-        $clientsInfo[$contact['contact_id']] = [
-          'display_name' => $contact['sort_name'],
-          'contact_id' => $contact['contact_id'],
-          'email' => $contact['email'],
-          'birth_date' => $contact['birth_date'],
-          'tags' => CRM_Supportcase_Utils_Tags::getTags($contact['contact_id'], 'civicrm_contact'),
-          'is_has_bpk' => false,//TODO in future
-          'link' => CRM_Utils_System::url('civicrm/contact/view/', [
-            'reset' => '1',
-            'cid' => $contact['contact_id'],
-          ]),
-        ];
-        if (empty($recentCaseForContact)) {
-          $recentCaseForContact = $clientsInfo[$contact['contact_id']];
-        }
         $clientIds[] = $contact['contact_id'];
       }
+      if ($contact['role'] == 'Case Coordinator is') {
+        $managerIds[] = $contact['contact_id'];
+      }
+    }
+
+    if (!empty($clientIds[0])) {
+      $recentCaseForContactId = $clientIds[0];
     }
   }
 
@@ -80,13 +72,13 @@ function civicrm_api3_supportcase_manage_case_get_case_info($params) {
   $caseInfo = [
     'id' => $case['id'],
     'subject' => $case['subject'],
-    'clients' => $clientsInfo,
     'client_ids' => $clientIds,
+    'managers_ids' => $managerIds,
     'start_date' => $case['start_date'],
     'status_id' => $case['status_id'],
     'available_statuses' => $availableStatuses,
     "is_case_locked" => $isCaseLocked,
-    "recent_case_for_contact" => $recentCaseForContact,
+    "recent_case_for_contact_id" => $recentCaseForContactId,
     "is_locked_by_self" => $isLockedBySelf,
     "locked_by_contact_id" => $lockedByContactId,
     "lock_message" => $lockMessage,

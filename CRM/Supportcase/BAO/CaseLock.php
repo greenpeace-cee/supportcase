@@ -115,6 +115,13 @@ class CRM_Supportcase_BAO_CaseLock extends CRM_Supportcase_DAO_CaseLock {
     return CRM_Core_DAO::executeQuery($query->toSQL())->fetchAll();
   }
 
+  /**
+   * Gets lock status info to each case id
+   *
+   * @param $caseIds
+   * @return array
+   * @throws Exception
+   */
   public static function getCasesLockStatus($caseIds) {
     if (empty($caseIds)) {
       return [];

@@ -12,44 +12,8 @@
 	<div class="ci__case-info-view-mode">
 		<div class="ci__case-info-item-content">
 			<div class="ci__clients-wrap">
-				<div class="ci__client client_{{client.contact_id}}" ng-repeat="client in ctrl.model['clients']">
-					<div class="ci__client-header" title="Show details" ng-click="toggleClientDescription('client_' + client.contact_id)">
-						<div class="ci__client-header-ico"></div>
-						<div class="ci__client-header-label" >{{client.display_name}}</div>
-					</div>
-					<div class="ci__client-body">
-						<div class="ci__client-field-item">
-							<span class="ci__client-field-item-label">email:</span>
-							<span class="ci__client-field-item-value">{{client.email}}</span>
-						</div>
-						<div class="ci__client-field-item">
-							<span class="ci__client-field-item-label">link:</span>
-							<span class="ci__client-field-item-value">
-								<a href="{{client.link}}" target="_blank">{{client.display_name}}</a>
-							</span>
-						</div>
-						<div class="ci__client-field-item">
-							<span class="ci__client-field-item-label">Birth date:</span>
-							<span class="ci__client-field-item-value">{{client.birth_date}}</span>
-						</div>
-						<div class="ci__client-field-item">
-							<span class="ci__client-field-item-label">Has bpk:</span>
-							<span class="ci__client-field-item-value">{{client.is_has_bpk}}</span>
-						</div>
-						<div class="ci__client-field-item">
-							<span class="ci__client-field-item-label">Tags:</span>
-							<span class="ci__client-field-item-value">
-								<div class="ci__tags-wrap">
-									<div ng-repeat="tag in client.tags" class="crm-tag-item ci__tag"
-										 style="{{generateStyles(tag['color'])}}"
-										 title="{{tag['description']}}">
-										{{tag['name']}}
-									</div>
-									<div class="clear"></div>
-								</div>
-							</span>
-						</div>
-					</div>
+				<div ng-repeat="clientContactId in ctrl.model['client_ids']">
+					<contact-info model="clientContactId"></contact-info>
 				</div>
 			</div>
 		</div>

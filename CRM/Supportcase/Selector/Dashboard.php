@@ -393,19 +393,9 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
       );
 
       $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ? $result->contact_sub_type : $result->contact_type);
-
-      //adding case manager to case selector.CRM-4510.
       $caseType = CRM_Case_BAO_Case::getCaseType($result->case_id, 'name');
-      $caseManagerContactData = self::getCaseManagerContact($caseType, $result->case_id);
-      $row['casemanager'] = $caseManagerContactData['case_manager_link'];
-      $row['case_manager_contact_id'] = $caseManagerContactData['case_manager_contact_id'];
-
-      if (isset($result->case_status_id) && array_key_exists($result->case_status_id, $caseStatus)) {
-        $row['class'] = "status-urgent";
-      } else {
-        $row['class'] = "status-normal";
-      }
-
+      $row['case_manager_contact_ids'] = CRM_Supportcase_Utils_CaseManager::getCaseManagerContactIds($caseType, $result->case_id);
+      $row['class'] = (isset($result->case_status_id) && array_key_exists($result->case_status_id, $caseStatus)) ? "status-urgent" : "status-normal";
       $row['case_tags'] = $this->getCaseTags($result->case_id);
       $row['category'] = (!empty($categoryCustomFieldName)) ? $result->$categoryCustomFieldName: '';
       $row['is_case_deleted'] = $result->case_deleted == '1';
@@ -512,64 +502,6 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
     }
 
     return $recentCommunication;
-  }
-
-  /**
-   * Get case manger contact which is assigned a case role of case manager.
-   * Returns contact id and html link on that contact id
-   *
-   * @param int $caseType
-   * @param int $caseId
-   *
-   * @return array
-   */
-  public static function getCaseManagerContact($caseType, $caseId) {
-    if (!$caseType || !$caseId) {
-      return NULL;
-    }
-
-    $managerData = [
-      'case_manager_link' => '---',
-      'case_manager_contact_id' => '',
-    ];
-    $managerRoleId = (new CRM_Case_XMLProcessor_Process())->getCaseManagerRoleId($caseType);
-
-    if (!empty($managerRoleId)) {
-      if (substr($managerRoleId, -4) == '_a_b') {
-        $managerRoleQuery = "
-          SELECT civicrm_contact.id as casemanager_id, civicrm_contact.sort_name as casemanager
-          FROM civicrm_contact
-          LEFT JOIN civicrm_relationship ON (civicrm_relationship.contact_id_b = civicrm_contact.id
-          AND civicrm_relationship.relationship_type_id = %1) AND civicrm_relationship.is_active
-          LEFT JOIN civicrm_case ON civicrm_case.id = civicrm_relationship.case_id
-          WHERE civicrm_case.id = %2 AND is_active = 1";
-      }
-      if (substr($managerRoleId, -4) == '_b_a') {
-        $managerRoleQuery = "
-          SELECT civicrm_contact.id as casemanager_id, civicrm_contact.sort_name as casemanager
-          FROM civicrm_contact
-          LEFT JOIN civicrm_relationship ON (civicrm_relationship.contact_id_a = civicrm_contact.id
-          AND civicrm_relationship.relationship_type_id = %1) AND civicrm_relationship.is_active
-          LEFT JOIN civicrm_case ON civicrm_case.id = civicrm_relationship.case_id
-          WHERE civicrm_case.id = %2 AND is_active = 1";
-      }
-
-      $dao = CRM_Core_DAO::executeQuery($managerRoleQuery, [
-        1 => [substr($managerRoleId, 0, -4), 'Integer'],
-        2 => [$caseId, 'Integer'],
-      ]);
-
-      if ($dao->fetch()) {
-        $managerData['case_manager_link'] = sprintf(
-          '<a href="%s">%s</a>',
-          CRM_Utils_System::url('civicrm/contact/view', ['cid' => $dao->casemanager_id]),
-          $dao->casemanager
-        );
-        $managerData['case_manager_contact_id'] = $dao->casemanager_id;
-      }
-    }
-
-    return $managerData;
   }
 
   /**

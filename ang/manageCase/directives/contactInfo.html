@@ -1,0 +1,55 @@
+<div class="contact-info__wrap">
+	<div ng-if="isLoading" class="contact-info__preloader">
+		<div class="contact-info__preloader-ico-wrap">
+			<span class="contact-info__preloader-ico">
+				<span class="ui-button-icon ui-icon fa-spinner"></span>
+			</span>
+		</div>
+		<div class="contact-info__preloader-text">loading contact (id={{ctrl.model}})</div>
+	</div>
+	<div ng-if="!isLoading" class="contact-info__loaded-content">
+		<div class="contact-info__accordion-wrap" ng-class="{'opened' : isOpenDescription}">
+			<div class="contact-info__accordion-header" title="Show details" ng-click="toggleDescription()">
+				<div class="contact-info__accordion-header-ico"></div>
+				<div class="contact-info__accordion-header-label" >{{contact.display_name}}</div>
+			</div>
+			<div class="contact-info__accordion-body">
+				<div class="contact-info__contact-item">
+					<span class="contact-info__contact-item-label">id:</span>
+					<span class="contact-info__contact-item-value">{{contact.contact_id}}</span>
+				</div>
+				<div class="contact-info__contact-item">
+					<span class="contact-info__contact-item-label">email:</span>
+					<span class="contact-info__contact-item-value">{{contact.email}}</span>
+				</div>
+				<div class="contact-info__contact-item">
+					<span class="contact-info__contact-item-label">link:</span>
+					<span class="contact-info__contact-item-value">
+					<a href="{{contact.link}}" target="_blank">{{contact.display_name}}</a>
+				</span>
+				</div>
+				<div class="contact-info__contact-item">
+					<span class="contact-info__contact-item-label">Birth date:</span>
+					<span class="contact-info__contact-item-value">{{contact.birth_date}}</span>
+				</div>
+				<div class="contact-info__contact-item">
+					<span class="contact-info__contact-item-label">Has bpk:</span>
+					<span class="contact-info__contact-item-value">{{contact.is_has_bpk}}</span>
+				</div>
+				<div class="contact-info__contact-item">
+					<span class="contact-info__contact-item-label">Tags:</span>
+					<div class="contact-info__contact-item-value">
+						<div class="contact-info__tags-wrap">
+							<div ng-repeat="tag in contact.tags" class="crm-tag-item contact-info__tag-item"
+								 style="{{generateStyles(tag['color'])}}"
+								 title="{{tag['description']}}">
+								{{tag['name']}}
+							</div>
+							<div class="clear"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -320,8 +320,41 @@
                 };
 
                 $scope.setFieldFromModel();
-                $scope.toggleClientDescription = function(clientClassName) {$('.ci__client.' + clientClassName).toggleClass('opened');};
                 setTimeout(function() {$($element).find(".ci__case-info-edit-mode input").css($scope.$parent.getInputStyles()).crmEntityRef();}, 0);
+            }
+        };
+    });
+
+    angular.module(moduleName).directive("contactInfo", function() {
+        return {
+            restrict: "E",
+            templateUrl: "~/manageCase/directives/contactInfo.html",
+            scope: {model: "="},
+            bindToController: true,
+            controllerAs: "ctrl",
+            controller: function($scope) {
+                $scope.generateStyles = $scope.$parent.generateStyles;
+                $scope.contact = [];
+                $scope.isLoading = true;
+                $scope.isOpenDescription = false;
+                this.$onInit = function() {
+                    CRM.api3('SupportcaseManageCase', 'get_contact_info', {
+                        "sequential": 1,
+                        "contact_id": $scope.ctrl.model,
+                    }).then(function(result) {
+                        if (result.is_error === 1) {
+                            console.error('"get_contact_info" action get error:');
+                            console.error(result.error_message);
+                        } else {
+                            $scope.contact = result['values'][0];
+                            $scope.isLoading = false;
+                            $scope.$apply();
+                        }
+                    }, function(error) {});
+                };
+                $scope.toggleDescription = function() {
+                    $scope.isOpenDescription = !$scope.isOpenDescription;
+                };
             }
         };
     });
@@ -495,7 +528,7 @@
                 $scope.recentCases = [];
                 $scope.updateRecentCases = function() {
                     CRM.api3('SupportcaseManageCase', 'get_recent_cases', {
-                        "client_id": $scope.ctrl.model['recent_case_for_contact']['contact_id'],
+                        "client_id": $scope.ctrl.model['recent_case_for_contact_id'],
                         "limit_per_page": 0,
                         "page_number": 1
                     }).then(function(result) {

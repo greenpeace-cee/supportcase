@@ -20,6 +20,7 @@ return [
     8 => 'css/ang/directives/quickAction.css',
     9 => 'css/ang/directives/actions/exampleAction.css',
     10 => 'css/ang/directives/actions/doNotSms.css',
+    11 => 'css/ang/directives/contactInfo.css',
   ],
   'partials' => [
     0 => 'ang/manageCase',

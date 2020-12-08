@@ -53,7 +53,7 @@ class CRM_Supportcase_Utils_CasesHandler {
       $isUrgentCase = (isset($case['case_status']) && $case['case_status'] == 'Urgent');
 
       //my cases tab
-      if ($currentContactId == $case['case_manager_contact_id']) {
+      if (in_array($currentContactId, $case['case_manager_contact_ids'])) {
         $myCaseTabName = 'my_cases_tab';
         $case['classes'][] = $myCaseTabName;
         $this->updateTabCaseCounter($myCaseTabName);
