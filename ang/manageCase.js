@@ -735,7 +735,8 @@
                     }
 
                     CRM.api3('SupportcaseQuickAction', 'apply_no_sms', {
-                        'contact_ids' : selectedContactIds
+                        'contact_ids' : selectedContactIds,
+                        "case_id": $scope.ctrl.model['id'],
                     }).then(function(result) {
                         if (result.is_error === 1) {
                             console.error('apply_no_sms get error:');

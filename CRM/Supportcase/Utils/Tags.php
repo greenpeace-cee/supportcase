@@ -103,6 +103,28 @@ class CRM_Supportcase_Utils_Tags {
   }
 
   /**
+   * Get tag id by name
+   *
+   * @param $tagName
+   * @return bool
+   */
+  public static function getTagId($tagName) {
+    if (empty($tagName)) {
+      return false;
+    }
+
+    try {
+      $tag = civicrm_api3('Tag', 'getsingle', [
+        'name' => $tagName,
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      return false;
+    }
+
+    return (int) $tag['id'];
+  }
+
+  /**
    * Remove all tags related to the entity
    *
    * @param $entityId

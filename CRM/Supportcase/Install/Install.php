@@ -15,6 +15,8 @@ class CRM_Supportcase_Install_Install {
     (new CRM_Supportcase_Install_Entity_CaseType())->createAll();
     (new CRM_Supportcase_Install_Entity_CustomGroup())->createAll();
     (new CRM_Supportcase_Install_Entity_CustomField())->createAll();
+    (new CRM_Supportcase_Install_Entity_TagSet())->createAll();
+    (new CRM_Supportcase_Install_Entity_Tag())->createAll();
   }
 
   /**
