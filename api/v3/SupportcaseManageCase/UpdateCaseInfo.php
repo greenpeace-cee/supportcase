@@ -59,6 +59,47 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
     }
   }
 
+  //handles new_case_manager_ids
+  if (isset($params['new_case_manager_ids'])) {
+    if (!empty($params['new_case_manager_ids'])) {
+      foreach ($params['new_case_manager_ids'] as $managerContactId) {
+        try {
+          civicrm_api3('Contact', 'getsingle', [
+            'id' => $managerContactId,
+          ]);
+        } catch (CiviCRM_API3_Exception $e) {
+          throw new api_Exception('Manager contact(id = ' . $managerContactId . ') does not exist', 'manager_contact_id_does_not_exist');
+        }
+      }
+
+      $currentManagerIds = [];
+      foreach ($case['contacts'] as $contact) {
+        if ($contact['role'] == 'Case Coordinator is') {
+          $currentManagerIds[] = $contact['contact_id'];
+        }
+      }
+
+      $newManagerIds = $params['new_case_manager_ids'];
+      $neededToSetManagerIds = array_diff($newManagerIds,$currentManagerIds);
+      $neededToUnsetManagerIds = array_diff($currentManagerIds, $newManagerIds);
+
+      $clientContactId = '';
+      foreach ($case['client_id'] as $clientId) {
+        $clientContactId = $clientId;
+      }
+
+      foreach ($neededToSetManagerIds as $managerContactId) {
+        CRM_Supportcase_Utils_CaseManager::setManager($managerContactId, $clientContactId, $params['case_id']);
+      }
+
+      foreach ($neededToUnsetManagerIds as $managerContactId) {
+        CRM_Supportcase_Utils_CaseManager::unsetManager($managerContactId, $clientContactId,  $params['case_id']);
+      }
+    } else {
+      throw new api_Exception('Manager cannot be empty.', 'manager_cannot_be_empty');
+    }
+  }
+
   //handles new_case_client_id:
   if (isset($params['new_case_client_id'])) {
     if (!empty($params['new_case_client_id'])) {
@@ -154,6 +195,12 @@ function _civicrm_api3_supportcase_manage_case_update_case_info_spec(&$params) {
     'api.required' => 0,
     'type' => CRM_Utils_Type::T_INT,
     'title' => 'New case client id',
+  ];
+  $params['new_case_manager_ids'] = [
+    'name' => 'new_case_manager_ids',
+    'api.required' => 0,
+    'type' => CRM_Utils_Type::T_INT,
+    'title' => 'New case manager ids',
   ];
   $params['is_deleted'] = [
     'name' => 'is_deleted',

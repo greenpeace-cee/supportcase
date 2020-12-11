@@ -325,6 +325,37 @@
         };
     });
 
+    angular.module(moduleName).directive("caseManagers", function() {
+        return {
+            restrict: "E",
+            templateUrl: "~/manageCase/directives/caseInfo/caseManagers.html",
+            scope: {model: "="},
+            bindToController: true,
+            controllerAs: "ctrl",
+            controller: function($scope, $window, $element) {
+                $scope.generateStyles = $scope.$parent.generateStyles;
+                $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
+                $scope.setFieldFromModel = function() {$scope.managerIds = $scope.ctrl.model['managers_ids'];};
+                $scope.editConfirm = function() {
+                    if (!angular.isArray($scope.managerIds)) {
+                        $scope.managerIds = $scope.managerIds.split(",");
+                    }
+                    $scope.$parent.editConfirm('new_case_manager_ids', $scope.managerIds, $element, function(result) {
+                        console.log($scope.managerIds);
+                        $scope.ctrl.model['managers_ids'] = $scope.managerIds;
+                        $scope.$apply();
+                        CRM.status(ts('Managers are updated.'));
+                    });
+                };
+
+                $scope.setFieldFromModel();
+                var inputStyles =  $scope.$parent.getInputStyles();
+                inputStyles['height'] = 'auto';
+                setTimeout(function() {$($element).find(".ci__case-info-edit-mode input").css(inputStyles).crmEntityRef();}, 0);
+            }
+        };
+    });
+
     angular.module(moduleName).directive("contactInfo", function() {
         return {
             restrict: "E",
