@@ -14,7 +14,7 @@ class CRM_Supportcase_Install_Entity_Tag extends CRM_Supportcase_Install_Entity_
    *
    * @var string
    */
-  const DO_NOT_SMS = 'do not sms';
+  const DO_NOT_SMS = 'SMS Opt-Out';
 
   /**
    * Params to check entity existence
@@ -33,7 +33,7 @@ class CRM_Supportcase_Install_Entity_Tag extends CRM_Supportcase_Install_Entity_
       [
         'name' => self::DO_NOT_SMS,
         'parent_id' => CRM_Supportcase_Install_Entity_TagSet::ACTIONS_TAGS,
-        "description" => "Case is used 'Do not SMS' action",
+        "description" => "Contact has opted out from receiving SMS",
         "is_reserved" => 1,
       ],
     ];

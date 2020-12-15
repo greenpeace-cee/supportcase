@@ -14,7 +14,7 @@ class CRM_Supportcase_Install_Entity_TagSet extends CRM_Supportcase_Install_Enti
    *
    * @var string
    */
-  const ACTIONS_TAGS = 'Support case action tags';
+  const ACTIONS_TAGS = 'Support Topics';
 
   /**
    * Params to check entity existence
@@ -32,7 +32,7 @@ class CRM_Supportcase_Install_Entity_TagSet extends CRM_Supportcase_Install_Enti
     return [
       [
         'name' => self::ACTIONS_TAGS,
-        "description" => "Tag set for support case actions",
+        "description" => "Tag Set for Support Case Topics",
         "is_tagset" => "1",
         "is_reserved" => 1,
         "used_for" => "Cases",
