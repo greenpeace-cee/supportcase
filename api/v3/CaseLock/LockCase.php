@@ -24,6 +24,8 @@ function civicrm_api3_case_lock_lock_case($params) {
     throw new api_Exception('The case is locked by another user.', 'case_locked_by_another_user');
   }
 
+  CRM_Supportcase_BAO_CaseLock::removeCaseLocks($params['case_id'], $contactId);
+
   $lockCase = CRM_Supportcase_BAO_CaseLock::lockCase($params['case_id'], $contactId);
 
   return civicrm_api3_create_success($lockCase);

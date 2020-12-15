@@ -43,12 +43,12 @@
                   <i title="This case needs urgent attention" class="supportcase__case-ico supportcase__case-ico-urgent crm-i fa-exclamation-circle" aria-hidden="true"></i>
                 {/if}
 
-                {if $row.is_case_locked}
-                  <i title="{$row.lock_message}" class="supportcase__case-ico crm-i supportcase__case-ico-lock {if $row.is_locked_by_self}fa-unlock{else}fa-lock{/if}" aria-hidden="true"></i>
-                {/if}
-
                 {if $row.is_case_deleted}
                   <i title="This case in the trash" class="supportcase__case-ico supportcase__case-ico-grey crm-i fa-trash" aria-hidden="true"></i>
+                {/if}
+
+                {if $row.is_case_locked}
+                  <i title="Unlock case. {$row.lock_message}" data-case-id="{$row.case_id}" class="supportcase__case-ico crm-i supportcase__unlock-button supportcase__case-ico-lock {if $row.is_locked_by_self}fa-unlock{else}fa-lock{/if}" aria-hidden="true"></i>
                 {/if}
               </div>
             </div>

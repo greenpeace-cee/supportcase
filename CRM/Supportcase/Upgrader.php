@@ -65,9 +65,16 @@ class CRM_Supportcase_Upgrader extends CRM_Supportcase_Upgrader_Base {
   }
 
   public function upgrade_0001() {
-    $this->ctx->log->info('Applying update 0001');
+    $this->ctx->log->info('Applying update 0001. Install new tag and tag set.');
     (new CRM_Supportcase_Install_Entity_TagSet())->createAll();
     (new CRM_Supportcase_Install_Entity_Tag())->createAll();
+
+    return TRUE;
+  }
+
+  public function upgrade_0002() {
+    $this->ctx->log->info('Applying update 0002. Install new Job.');
+    (new CRM_Supportcase_Install_Entity_Job())->createAll();
 
     return TRUE;
   }

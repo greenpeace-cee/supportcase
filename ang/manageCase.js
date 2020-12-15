@@ -36,6 +36,8 @@
         $scope.ts = CRM.ts();
         $scope.caseInfo = {};
         $scope.isError = false;
+        $scope.caseLockId = undefined;
+        $scope.isCaseUnlocked = false;
         $scope.errorMessage = '';
         $scope.isCaseLocked = false;
         $scope.handleCaseInfoResponse = function() {
@@ -104,8 +106,27 @@
             }
 
             $scope.lockTimer = $interval(function() {
-                $scope.lockCase();
+                $scope.renewCaseLock();
             }, $scope.getMangeCaseUpdateLockTime());
+        };
+        $scope.renewCaseLock = function() {
+            if ($scope.isCaseUnlocked) {
+                return;
+            }
+
+            CRM.api3('CaseLock', 'renew_case_lock', {
+                "case_lock_id": $scope.caseLockId
+            }).then(function(result) {
+                if (result.is_error === 1) {
+                    if (result.error_code === "case_lock_does_not_exist") {
+                        $scope.isCaseUnlocked = true;
+                        $scope.$apply();
+                    } else {
+                        console.error('renew_case_lock get error:');
+                        console.error(result.error_message);
+                    }
+                }
+            }, function(error) {});
         };
 
         $scope.lockCase = function() {
@@ -116,6 +137,12 @@
             CRM.api3('CaseLock', 'lock_case', {
                 "case_id": $scope.caseInfo.id
             }).then(function(result) {
+                if (result.is_error === 1) {
+                    console.error('lock_case get error:');
+                    console.error(result.error_message);
+                } else {
+                    $scope.caseLockId = result.values[0]['id'];
+                }
             }, function(error) {});
         };
 
@@ -772,7 +799,6 @@
                         if (result.is_error === 1) {
                             console.error('apply_no_sms get error:');
                             console.error(result.error_message);
-                            CRM.status(result.error_message, 'error');
                         }
                         $scope.hidePreloader();
                     }, function(error) {});

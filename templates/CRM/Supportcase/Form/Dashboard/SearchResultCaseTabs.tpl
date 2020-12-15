@@ -93,7 +93,6 @@
                                 resizable: false,
                             });
                             dialog.trigger('dialogresize');
-                            console.log('-----yes-----');
                         }
                     }, 500);
                 });
@@ -207,6 +206,7 @@
                     return;
                 }
 
+                initUnlocking();
                 setInterval(updateCaseLocking, lockReloadTime);
                 window.isSupportCaseLockerLoaded = true;
             }
@@ -229,12 +229,48 @@
                         $('.supportcase__case-row .supportcase__case-row-icons .supportcase__case-ico-lock').remove();
                         result.values.map(caseLock => {
                             var icoClass = (caseLock.is_locked_by_self) ? 'fa-unlock' : 'fa-lock';
-                            var icoHtml = '<i title="' + caseLock.lock_message + '" class="supportcase__case-ico crm-i supportcase__case-ico-lock ' + icoClass + '" aria-hidden="true"></i>';
+                            var classes = 'supportcase__unlock-button supportcase__case-ico crm-i supportcase__case-ico-lock ' + icoClass;
+                            var icoHtml = '<i title="Unlock case. ' + caseLock.lock_message + '" data-case-id="' + caseLock.case_id + '" class="' + classes + '" aria-hidden="true"></i>';
                             var caseElement = $('.supportcase__case-row[data-case-id="' + caseLock.case_id + '"]');
                             caseElement.find('.supportcase__case-row-icons').append(icoHtml);
+                            caseElement.find('.supportcase__case-row-icons .supportcase__unlock-button[data-case-id="' + caseLock.case_id + '"]').click(function () {
+                                unlockCase(this.getAttribute('data-case-id'));
+                            });
                         });
                     }
                 }, function(error) {});
+            }
+
+            function initUnlocking() {
+                var unlockButtons = $('.supportcase__unlock-button');
+                if (unlockButtons.length  === 0) {
+                    return;
+                }
+
+                unlockButtons.click(function() {
+                    unlockCase(this.getAttribute('data-case-id'));
+                });
+            }
+
+            function unlockCase(caseId) {
+                CRM.confirm({
+                    title: 'Unlock case',
+                    width: '600',
+                    message: 'Case with id = ' + caseId + ' will be unlocked.',
+                    options: {yes: "Unlock case", no: "Cancel"},
+                }).on('crmConfirm:yes', function () {
+                    CRM.api3('CaseLock', 'unlock_case', {
+                        "case_id": caseId
+                    }).then(function(result) {
+                        if (result.is_error === 1) {
+                            console.error('unlock_case get error:');
+                            console.error(result.error_message);
+                        } else {
+                            CRM.status('Case id = ' + caseId + ' is unlocked.');
+                            $('.supportcase__unlock-button[data-case-id="' + caseId + '"]').remove();
+                        }
+                    }, function(error) {});
+                });
             }
 
         });

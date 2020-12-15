@@ -194,4 +194,14 @@ class CRM_Supportcase_Utils_Setting {
     return 1000;
   }
 
+  /**
+   * CaseLock row live time
+   * Use on api3: CaseLock->clean_old
+   * When CaseLock has 'lock_expire_at' less than (current timestamp - this setting)
+   * then this row will be removed.
+   */
+  public static function getCaseLockRowLiveTime() {
+    return 60 * 60 * 24 * 3;// value in second
+  }
+
 }

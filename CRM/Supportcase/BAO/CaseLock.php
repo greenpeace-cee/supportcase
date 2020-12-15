@@ -67,7 +67,7 @@ class CRM_Supportcase_BAO_CaseLock extends CRM_Supportcase_DAO_CaseLock {
     $query = CRM_Utils_SQL_Select::from(CRM_Supportcase_DAO_CaseLock::getTableName());
 
     if ($returnValue == 'rows') {
-      $query->select('id, contact_id, case_id, expire_at');
+      $query->select('id, contact_id, case_id, lock_expire_at, lock_message');
     } else if ($returnValue == 'count') {
       $query->select('COUNT(id)');
     }
@@ -140,15 +140,7 @@ class CRM_Supportcase_BAO_CaseLock extends CRM_Supportcase_DAO_CaseLock {
     ]);
 
     while ($result->fetch()) {
-      $isLockedBySelf = CRM_Core_Session::getLoggedInContactID() == $result->contact_id;
-      $lockStatuses[] = [
-        'is_locked_by_self' => $isLockedBySelf,
-        'is_case_locked' => $result->is_case_locked == 1,
-        'case_id' => $result->case_id,
-        'contact_id' => $result->contact_id,
-        'lock_message' => $isLockedBySelf ? CRM_Supportcase_Utils_Setting::getLockedCaseBySelfMessage() : $result->lock_message,
-        'lock_expire_at' => $result->lock_expire_at,
-      ];
+      $lockStatuses[] = self::formatCaseLock($result);
     }
 
     return $lockStatuses;
@@ -173,6 +165,64 @@ class CRM_Supportcase_BAO_CaseLock extends CRM_Supportcase_DAO_CaseLock {
     ]);
 
     return $preparedSelectSql;
+  }
+
+  /**
+   * Is lock case exist
+   * Checks by id
+   *
+   * @param $caseLockId
+   * @return string
+   * @throws Exception
+   */
+  public static function isCaseLockExist($caseLockId) {
+    if (empty($caseLockId)) {
+      return false;
+    }
+
+    $caseLock = new self();
+    $caseLock->id = $caseLockId;
+    $caseLockExistence = $caseLock->find(TRUE);
+
+    return !empty($caseLockExistence);
+  }
+
+  /**
+   * Renews lock case
+   *
+   * @param $caseLockId
+   * @return array
+   * @throws Exception
+   */
+  public static function renewLockCase($caseLockId) {
+    $dateTime = new DateTime();
+    $timestamp = $dateTime->getTimestamp();
+
+    $newCaseLock = new self();
+    $newCaseLock->id = $caseLockId;
+    $newCaseLock->lock_expire_at = $timestamp + CRM_Supportcase_Utils_Setting::getCaseLocTime();
+    $newCaseLock->save();
+
+    return [self::formatCaseLock($newCaseLock)];
+  }
+
+  /**
+   * Format case lock object
+   *
+   * @param $caseLockObject
+   * @return array
+   */
+  public static function formatCaseLock($caseLockObject) {
+    $isLockedBySelf = CRM_Core_Session::getLoggedInContactID() == $caseLockObject->contact_id;
+    return [
+      'id' => $caseLockObject->id,
+      'is_locked_by_self' => $isLockedBySelf,
+      'is_case_locked' => true,
+      'case_id' => $caseLockObject->case_id,
+      'contact_id' => $caseLockObject->contact_id,
+      'lock_message' => $isLockedBySelf ? CRM_Supportcase_Utils_Setting::getLockedCaseBySelfMessage() : $caseLockObject->lock_message,
+      'lock_expire_at' => $caseLockObject->lock_expire_at,
+    ];
   }
 
   /**
@@ -209,40 +259,67 @@ class CRM_Supportcase_BAO_CaseLock extends CRM_Supportcase_DAO_CaseLock {
    * @param $caseId
    * @param $contactId
    * @return array
-   * @throws CRM_Core_Exception
+   * @throws Exception
    */
   public static function lockCase($caseId, $contactId) {
     $dateTime = new DateTime();
     $timestamp = $dateTime->getTimestamp();
     $contactDisplayName = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $contactId, 'display_name');
 
-    $caseLock = new self();
-    $caseLock->case_id = $caseId;
-    $caseLock->contact_id = $contactId;
-    $caseLockExistence = $caseLock->find(TRUE);
-
     $newCaseLock = new self();
-    if (!empty($caseLockExistence)) {
-      $newCaseLock->id = $caseLock->id;
-    }
     $newCaseLock->case_id = $caseId;
     $newCaseLock->contact_id = $contactId;
     $newCaseLock->lock_expire_at = $timestamp + CRM_Supportcase_Utils_Setting::getCaseLocTime();
     $newCaseLock->lock_message = ts('Case is locked by %1.', [1 => $contactDisplayName]);
     $newCaseLock->save();
 
-    $isLockedBySelf = CRM_Core_Session::getLoggedInContactID() == $newCaseLock->contact_id;
+    return [self::formatCaseLock($newCaseLock)];
+  }
 
-    return [
-      [
-        'is_locked_by_self' => $isLockedBySelf,
-        'is_case_locked' => true,
-        'case_id' => $newCaseLock->case_id,
-        'contact_id' => $newCaseLock->contact_id,
-        'lock_message' => $isLockedBySelf ? CRM_Supportcase_Utils_Setting::getLockedCaseBySelfMessage() : $newCaseLock->lock_message,
-        'lock_expire_at' => $newCaseLock->lock_expire_at,
-      ]
-    ];
+  /**
+   * Removes all case locks by case id and contact id
+   *
+   * @param $caseId
+   * @param $contactId
+   */
+  public static function removeCaseLocks($caseId, $contactId) {
+    $caseLocks = self::getAll([
+      'contact_id' => $contactId,
+      'case_id' => $caseId,
+    ]);
+
+    foreach ($caseLocks as $caseLock) {
+      self::del($caseLock['id']);
+    }
+  }
+
+  /**
+   * Removes old case locks rows in table
+   */
+  public static function cleanOld() {
+    $dateTime = new DateTime();
+    $timestamp = $dateTime->getTimestamp();
+
+    $query = '
+      DELETE FROM civicrm_supportcase_case_lock 
+      WHERE lock_expire_at < %1;
+    ';
+
+    CRM_Core_DAO::singleValueQuery($query, [
+      1 => [$timestamp - CRM_Supportcase_Utils_Setting::getCaseLockRowLiveTime(), 'Integer']
+    ]);
+  }
+
+  /**
+   * Unlocks case
+   * Removes all case lock related to the case id
+   *
+   * @param $caseId
+   */
+  public static function unlockCase($caseId) {
+    CRM_Core_DAO::singleValueQuery('DELETE FROM civicrm_supportcase_case_lock WHERE case_id = %1;', [
+      1 => [$caseId, 'Integer']
+    ]);
   }
 
 }
