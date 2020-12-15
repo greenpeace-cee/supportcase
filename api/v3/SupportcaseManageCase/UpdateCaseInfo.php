@@ -45,6 +45,8 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
   if (isset($params['status_id'])) {
     if (!empty($params['status_id'])) {
       $updateCaseParams['status_id'] = $params['status_id'];
+      //to trigger creating activity in at.greenpeace.casetools extension
+      $updateCaseParams['track_status_change'] = 1;
     } else {
       throw new api_Exception('Status cannot be empty.', 'status_id_cannot_be_empty');
     }
