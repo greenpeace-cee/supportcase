@@ -63,7 +63,7 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
 
   //handles new_case_manager_ids
   if (isset($params['new_case_manager_ids'])) {
-    if (!empty($params['new_case_manager_ids'])) {
+    if (is_array($params['new_case_manager_ids'])) {
       foreach ($params['new_case_manager_ids'] as $managerContactId) {
         try {
           civicrm_api3('Contact', 'getsingle', [
@@ -98,7 +98,7 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
         CRM_Supportcase_Utils_CaseManager::unsetManager($managerContactId, $clientContactId,  $params['case_id']);
       }
     } else {
-      throw new api_Exception('Manager cannot be empty.', 'manager_cannot_be_empty');
+      throw new api_Exception('Managers field value have to be array.', 'managers_have_to_be_array');
     }
   }
 

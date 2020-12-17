@@ -364,11 +364,10 @@
                 $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
                 $scope.setFieldFromModel = function() {$scope.managerIds = $scope.ctrl.model['managers_ids'];};
                 $scope.editConfirm = function() {
-                    if (!angular.isArray($scope.managerIds)) {
-                        $scope.managerIds = $scope.managerIds.split(",");
+                    if (typeof $scope.managerIds === 'string') {
+                        $scope.managerIds = ($scope.managerIds.length === 0) ? [] : $scope.managerIds.split(",");
                     }
                     $scope.$parent.editConfirm('new_case_manager_ids', $scope.managerIds, $element, function(result) {
-                        console.log($scope.managerIds);
                         $scope.ctrl.model['managers_ids'] = $scope.managerIds;
                         $scope.$apply();
                         CRM.status(ts('Managers are updated.'));
