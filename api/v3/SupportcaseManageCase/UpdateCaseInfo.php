@@ -61,45 +61,14 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
     }
   }
 
-  //handles new_case_manager_ids
-  if (isset($params['new_case_manager_ids'])) {
-    if (is_array($params['new_case_manager_ids'])) {
-      foreach ($params['new_case_manager_ids'] as $managerContactId) {
-        try {
-          civicrm_api3('Contact', 'getsingle', [
-            'id' => $managerContactId,
-          ]);
-        } catch (CiviCRM_API3_Exception $e) {
-          throw new api_Exception('Manager contact(id = ' . $managerContactId . ') does not exist', 'manager_contact_id_does_not_exist');
-        }
-      }
-
-      $currentManagerIds = [];
-      foreach ($case['contacts'] as $contact) {
-        if ($contact['role'] == 'Case Coordinator is') {
-          $currentManagerIds[] = $contact['contact_id'];
-        }
-      }
-
-      $newManagerIds = $params['new_case_manager_ids'];
-      $neededToSetManagerIds = array_diff($newManagerIds,$currentManagerIds);
-      $neededToUnsetManagerIds = array_diff($currentManagerIds, $newManagerIds);
-
-      $clientContactId = '';
-      foreach ($case['client_id'] as $clientId) {
-        $clientContactId = $clientId;
-      }
-
-      foreach ($neededToSetManagerIds as $managerContactId) {
-        CRM_Supportcase_Utils_CaseManager::setManager($managerContactId, $clientContactId, $params['case_id']);
-      }
-
-      foreach ($neededToUnsetManagerIds as $managerContactId) {
-        CRM_Supportcase_Utils_CaseManager::unsetManager($managerContactId, $clientContactId,  $params['case_id']);
-      }
-    } else {
-      throw new api_Exception('Managers field value have to be array.', 'managers_have_to_be_array');
+  //handles new_case_manager_ids:
+  if (isset($params['new_case_manager_ids'] )) {
+    if (!CRM_Supportcase_Utils_Setting::isCaseToolsExtensionEnable()) {
+      throw new api_Exception('Cannot update case managers. Please install "at.greenpeace.casetools" extension.', 'cannot_update_case_managers');
     }
+
+    $updateCaseParams['new_case_manager_ids'] = $params['new_case_manager_ids'];
+    $updateCaseParams['track_managers_change'] = 1;
   }
 
   //handles new_case_client_id:

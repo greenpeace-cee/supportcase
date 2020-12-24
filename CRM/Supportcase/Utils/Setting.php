@@ -10,11 +10,11 @@ class CRM_Supportcase_Utils_Setting {
   private static $mainCaseTypeId = NULL;
 
   /**
-   * Cache for relationship type info which use for case managers
+   * Cache is checking if extensions is enabled
    *
    * @var array
    */
-  private static $caseManagerRelationshipTypeInfo = [];
+  private static $isEnableExtensions = [];
 
   /**
    * Gets Supportcase setting by name
@@ -55,61 +55,6 @@ class CRM_Supportcase_Utils_Setting {
     }
 
     return self::$mainCaseTypeId;
-  }
-
-  /**
-   * Gets relationship type id which use for case managers
-   * @param $caseType
-   * @return int|null
-   */
-  public static function getCaseManagerRelationshipTypeInfo($caseType) {
-    if (empty($caseType)) {
-      return NULL;
-    }
-
-    if (!key_exists($caseType, self::$caseManagerRelationshipTypeInfo)) {
-      $managerRoleData = (new CRM_Case_XMLProcessor_Process())->getCaseManagerRoleId($caseType);
-      if (empty($managerRoleData)) {
-        self::$caseManagerRelationshipTypeInfo[$caseType] = NULL;
-        return self::$caseManagerRelationshipTypeInfo[$caseType];
-      }
-
-      $managerRelationshipDirection = substr($managerRoleData, -4);
-      $info = [
-        'case_type' => $caseType,
-        'manager_relationship_type_id' => substr($managerRoleData, 0, -4),
-        'manager_relationship_direction' => $managerRelationshipDirection,
-        'manager_relationship_type' => [],
-        'manager_column_name' => ($managerRelationshipDirection == '_a_b') ? 'contact_id_b' : 'contact_id_a',
-        'client_column_name' => ($managerRelationshipDirection == '_a_b') ? 'contact_id_a' : 'contact_id_b',
-      ];
-
-      try {
-        $relationshipType = civicrm_api3('RelationshipType', 'getsingle', [
-          'id' => $info['manager_relationship_type_id'],
-          "return" => [
-            "id",
-            "name_a_b",
-            "label_a_b",
-            "name_b_a",
-            "label_b_a",
-            "description",
-            "contact_type_a",
-            "contact_type_b",
-            "is_reserved",
-            "is_active",
-          ],
-        ]);
-      } catch (CiviCRM_API3_Exception $e) {
-        self::$caseManagerRelationshipTypeInfo[$caseType] = NULL;
-        return self::$caseManagerRelationshipTypeInfo[$caseType];
-      }
-
-      $info['manager_relationship_type'] = $relationshipType;
-      self::$caseManagerRelationshipTypeInfo[$caseType] = $info;
-    }
-
-    return self::$caseManagerRelationshipTypeInfo[$caseType];
   }
 
   /**
@@ -202,6 +147,62 @@ class CRM_Supportcase_Utils_Setting {
    */
   public static function getCaseLockRowLiveTime() {
     return 60 * 60 * 24 * 3;// value in second
+  }
+
+  /**
+ * Is extension enabled
+ * check inc cache
+ *
+ * @param $extensionName
+ * @return bool
+ */
+  public static function isExtensionEnable($extensionName) {
+    if (empty($extensionName)) {
+      return FALSE;
+    }
+
+    if (!isset(self::$isEnableExtensions[$extensionName])) {
+      self::$isEnableExtensions[$extensionName] = self::isExtensionEnableDatabaseCheck($extensionName);
+    }
+
+    return self::$isEnableExtensions[$extensionName];
+  }
+
+  /**
+   * Is extension enabled
+   * check in database
+   *
+   * @param $extensionName
+   * @return bool
+   */
+  private static function isExtensionEnableDatabaseCheck($extensionName) {
+    if (empty($extensionName)) {
+      return FALSE;
+    }
+
+    try {
+      $extensionStatus = civicrm_api3('Extension', 'getsingle', [
+        'return' => "status",
+        'full_name' => $extensionName,
+      ]);
+    } catch (Exception $e) {
+      return FALSE;
+    }
+
+    if ($extensionStatus['status'] == 'installed') {
+      return TRUE;
+    }
+
+    return FALSE;
+  }
+
+  /**
+   * Is "at.greenpeace.casetools" enabled
+   *
+   * @return bool
+   */
+  public static function isCaseToolsExtensionEnable() {
+    return self::isExtensionEnable('at.greenpeace.casetools');
   }
 
 }

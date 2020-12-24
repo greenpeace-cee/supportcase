@@ -393,8 +393,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
       );
 
       $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ? $result->contact_sub_type : $result->contact_type);
-      $caseType = CRM_Case_BAO_Case::getCaseType($result->case_id, 'name');
-      $row['case_manager_contact_ids'] = CRM_Supportcase_Utils_CaseManager::getCaseManagerContactIds($caseType, $result->case_id);
+      $row['case_manager_contact_ids'] = CRM_Supportcase_Utils_CaseManager::getCaseManagerContactIds($result->case_id);
       $row['class'] = (isset($result->case_status_id) && array_key_exists($result->case_status_id, $caseStatus)) ? "status-urgent" : "status-normal";
       $row['case_tags'] = $this->getCaseTags($result->case_id);
       $row['category'] = (!empty($categoryCustomFieldName)) ? $result->$categoryCustomFieldName: '';
