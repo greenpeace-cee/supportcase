@@ -108,6 +108,8 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
   //handles tags_ids:
   if (isset($params['tags_ids']) && is_array($params['tags_ids'])) {
     CRM_Supportcase_Utils_Tags::setTagIdsToEntity($params['case_id'], $params['tags_ids'], 'civicrm_case');
+    //to trigger creating activity in at.greenpeace.casetools extension
+    $updateCaseParams['track_tags_change'] = 1;
   }
 
   if (!empty($updateCaseParams)) {
