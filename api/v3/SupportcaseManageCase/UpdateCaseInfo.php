@@ -107,8 +107,11 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
 
   //handles tags_ids:
   if (isset($params['tags_ids']) && is_array($params['tags_ids'])) {
-    CRM_Supportcase_Utils_Tags::setTagIdsToEntity($params['case_id'], $params['tags_ids'], 'civicrm_case');
-    //to trigger creating activity in at.greenpeace.casetools extension
+    if (!CRM_Supportcase_Utils_Setting::isCaseToolsExtensionEnable()) {
+      throw new api_Exception('Cannot update case tags. Please install "at.greenpeace.casetools" extension.', 'cannot_update_case_tags');
+    }
+
+    $updateCaseParams['tags_ids'] = $params['tags_ids'];
     $updateCaseParams['track_tags_change'] = 1;
   }
 
