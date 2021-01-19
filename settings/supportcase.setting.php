@@ -4,6 +4,17 @@
 * Settings metadata file
 */
 return [
+  'supportcase_subscription_group_ids' => [
+    'group_name' => 'SupportcaseConfig',
+    'group' => 'SupportcaseConfig',
+    'name' => 'supportcase_subscription_group_ids',
+    'type' => 'Array',
+    'default' => [],
+    'add' => '4.7',
+    'is_domain' => 1,
+    'is_contact' => 0,
+    'description' => 'List of subscription groups ids',
+  ],
   'supportcase_available_activity_type_names' => [
     'group_name' => 'SupportcaseConfig',
     'group' => 'SupportcaseConfig',
