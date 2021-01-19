@@ -10,6 +10,11 @@
 						Do not SMS
 					</button>
 					<button class="qa__panel-button"
+						ng-class="{'active' : ctrl.model['activeAction'] == 'manageEmailSubscriptions'}"
+						ng-click="runQuickAction('manageEmailSubscriptions');">
+						Manage Email Subscriptions
+					</button>
+					<button class="qa__panel-button"
 						ng-class="{'active' : ctrl.model['activeAction'] == 'exampleAction'}"
 						ng-click="runQuickAction('exampleAction');">
 						Example action.
@@ -33,6 +38,18 @@
 								</div>
 								<div class="qa__action-item-body">
 									<do-not-sms model='ctrl.model'></do-not-sms>
+								</div>
+							</div>
+						</div>
+
+						<div ng-switch-when="manageEmailSubscriptions">
+							<div class="qa__action-item-wrap">
+								<div class="qa__action-item-head">
+									<button class="button__cancel" ng-click="closeAction();">Cancel</button>
+									<div class="qa__action-name">Manage Email Subscriptions</div>
+								</div>
+								<div class="qa__action-item-body">
+									<manage-email-subscriptions model='ctrl.model'></manage-email-subscriptions>
 								</div>
 							</div>
 						</div>

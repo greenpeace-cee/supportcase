@@ -1,0 +1,8 @@
+/*
+    Uses on manageEmailSubscriptions directive;
+    Prefix-alias: mes = manageEmailSubscriptions
+*/
+
+.mes__unsubscribe-all-groups {
+    padding-top: 20px;
+}

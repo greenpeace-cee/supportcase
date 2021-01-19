@@ -205,4 +205,31 @@ class CRM_Supportcase_Utils_Setting {
     return self::isExtensionEnable('at.greenpeace.casetools');
   }
 
+  /**
+   * Gets groups data which is used like a subscription.
+   * Used on angular page(Manage case -> actions -> manage email subscriptions)
+   *
+   * @return array
+   */
+  public static function getSubscriptionsGroups() {
+    $groupIds = CRM_Supportcase_Utils_Setting::get('supportcase_subscription_group_ids');
+    if (empty($groupIds)) {
+      return [];
+    }
+
+    try {
+      $groups = civicrm_api3('Group', 'get', [
+        'sequential' => 1,
+        'options' => ['limit' => 0],
+        'id' => ['IN' => $groupIds],
+        'is_active' => 1,
+        'return' => ["id", "description", "title", "name"],
+      ]);
+    } catch (Exception $e) {
+      return [];
+    }
+
+    return !empty($groups['values']) ? $groups['values'] : [];
+  }
+
 }

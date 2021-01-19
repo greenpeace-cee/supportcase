@@ -838,4 +838,93 @@
         };
     });
 
+    angular.module(moduleName).directive("manageEmailSubscriptions", function() {
+        return {
+            restrict: "E",
+            templateUrl: "~/manageCase/directives/actions/manageEmailSubscriptions.html",
+            scope: {model: "="},
+            bindToController: true,
+            controllerAs: "ctrl",
+            controller: function($scope, $window, $element) {
+                $scope.closeAction = $scope.$parent.closeAction;
+                $scope.showPreloader = $scope.$parent.showPreloader;
+                $scope.hidePreloader = $scope.$parent.hidePreloader;
+                $scope.info = {
+                    'stepName' : 'confirmEmailStep',
+                    'email' : '',
+                    'contacts' : [],
+                    'availableGroups' : [],
+                };
+
+                $scope.runStep = function(nextStepName) {
+                    if (nextStepName === 'selectSubscriptionsStep' && $scope.info.stepName === 'confirmEmailStep') {
+                        $scope.findContactsByEmail();
+                    } else if (nextStepName === 'showSuccessMessageStep') {
+                        $scope.applyGroups();
+                    }
+
+                    $scope.info.stepName = nextStepName;
+                };
+
+                $scope.isContactInGroup = function(contactId, groupId) {
+                    for (var i = 0; i < $scope.info.contacts.length; i++) {
+                        if ($scope.info.contacts[i]['id'] == contactId) {
+                            if ($scope.info.contacts[i]['groups'].indexOf(groupId) !== -1) {
+                                return true;
+                            }
+                        }
+                    }
+
+                    return false;
+                };
+
+                $scope.unCheckAllGroups = function() {
+                    $($element).find(".mes__group-checkbox").val($scope.statusId).removeAttr("checked");
+                };
+
+                $scope.findContactsByEmail = function() {
+                    $scope.showPreloader();
+                    CRM.api3('SupportcaseQuickAction', 'find_contacts_by_email', {
+                        'email' : $scope.info.email
+                    }).then(function(result) {
+                        if (result.is_error === 1) {
+                            console.error('find_contacts_by_email get error:');
+                            console.error(result.error_message);
+                        } else {
+                            $scope.info.contacts = result.values['contacts'];
+                            $scope.info.availableGroups = result.values['available_groups'];
+                            $scope.$apply();
+                        }
+                        $scope.hidePreloader();
+                    }, function(error) {});
+                };
+
+                $scope.applyGroups = function() {
+                    $scope.showPreloader();
+                    var groups = [];
+
+                    $($element).find(".mes__group-checkbox").each(function() {
+                        var checkbox = $(this);
+                        groups.push({
+                            "contact_id" : checkbox.data('contact-id'),
+                            "group_id" : checkbox.data('group-id'),
+                            "is_contact_in_group" : checkbox.prop("checked"),
+                        });
+                    });
+
+                    CRM.api3('SupportcaseQuickAction', 'apply_groups', {
+                        'groups_data' : groups,
+                        "case_id": $scope.ctrl.model['id'],
+                    }).then(function(result) {
+                        if (result.is_error === 1) {
+                            console.error('apply_groups get error:');
+                            console.error(result.error_message);
+                        }
+                        $scope.hidePreloader();
+                    }, function(error) {});
+                };
+            }
+        };
+    });
+
 })(angular, CRM.$, CRM._);

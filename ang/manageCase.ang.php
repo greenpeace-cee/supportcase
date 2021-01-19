@@ -19,8 +19,11 @@ return [
     7 => 'css/ang/directives/communication.css',
     8 => 'css/ang/directives/quickAction.css',
     9 => 'css/ang/directives/actions/exampleAction.css',
-    10 => 'css/ang/directives/actions/doNotSms.css',
-    11 => 'css/ang/directives/contactInfo.css',
+    10 => 'css/ang/directives/contactInfo.css',
+    //actions styles:
+    11 => 'css/ang/directives/actions/actionGeneral.css',
+    12 => 'css/ang/directives/actions/doNotSms.css',
+    13 => 'css/ang/directives/actions/manageEmailSubscriptions.css',
   ],
   'partials' => [
     0 => 'ang/manageCase',

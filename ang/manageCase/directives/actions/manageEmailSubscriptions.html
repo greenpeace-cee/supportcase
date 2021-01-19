@@ -1,0 +1,77 @@
+<div class="act__wrap">
+	<div ng-switch="info['stepName']" class="mes__manage-subscriptions">
+
+		<div class="act__step" ng-switch-when="confirmEmailStep">
+			<div class="act__step-title">Enter email</div>
+			<div class="act__step-description">The email will be use to find matching contacts and their subscriptions.</div>
+			<div class="act__step-body">
+				<div class="act__step-logic">
+					<input maxlength="40" class="input__text crm-form-text" type="email" ng-model="info.email">
+				</div>
+				<div class="act__step-buttons">
+					<button class="act__next-step-button" ng-disabled="info.email.length === 0" ng-click="runStep('selectSubscriptionsStep')">Next</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="act__step" ng-switch-when="selectSubscriptionsStep">
+			<div class="act__step-title">Select contacts</div>
+			<div class="act__step-description" ng-if="info['contacts'].length > 0" >There list of contacts which is matched with <strong>"{{info['email']}}"</strong> email. You can mange their subscriptions.</div>
+			<div class="act__step-body">
+				<div class="act__step-logic">
+					<div ng-if="info['contacts'].length > 0">
+						<div class="act__table act__table-middle-width">
+							<table class="crm-search-results">
+								<thead>
+									<tr>
+										<th class="act__column-head">Contact</th>
+										<th ng-repeat="group in info['availableGroups']" title="{{group.description}}(id={{group.id}})" class="act__column-head">{{group.title}}</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="contact in info['contacts']" class="act__row" data-contact-id="{{contact.id}}">
+										<td>
+											<div class="act__column">
+												<span>
+													<a href="{{contact.link}}" target="_blank">{{contact.display_name}}[id = {{contact.id}}]</a>
+												</span>
+											</div>
+										</td>
+										<td ng-repeat="group in info['availableGroups']">
+											<div class="act__column">
+												<div>
+													<input class="mes__group-checkbox" data-group-id="{{group.id}}" data-contact-id="{{contact.id}}" ng-checked="isContactInGroup(contact.id, group.id)" type="checkbox"/>
+												</div>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="mes__unsubscribe-all-groups" >
+							<button ng-click="unCheckAllGroups()">Unsubscribe all</button>
+						</div>
+					</div>
+					<div ng-if="info['contacts'].length == 0">
+						<p>Cannot find any contacts contacts which is matched with <strong>"{{info['email']}}"</strong> email.</p>
+					</div>
+				</div>
+				<div class="act__step-buttons">
+					<button class="act__next-step-button" ng-click="runStep('showSuccessMessageStep')">Confirm</button>
+					<button class="button__cancel" ng-click="runStep('confirmEmailStep')">Back</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="act__step" ng-switch-when="showSuccessMessageStep">
+			<div class="act__step-title">Success</div>
+			<div class="act__step-description">Subscriptions is updated.</div>
+			<div class="act__step-body">
+				<div class="act__step-buttons">
+					<button class="act__next-step-button" ng-click="closeAction()">Close</button>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
