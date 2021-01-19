@@ -86,11 +86,4 @@ class CRM_Supportcase_Upgrader extends CRM_Supportcase_Upgrader_Base {
     return TRUE;
   }
 
-  public function upgrade_0004() {
-    $this->ctx->log->info('Applying update 0004. Clear DB cache to update extension\'s settings.');
-    CRM_Core_Config::clearDBCache();
-
-    return TRUE;
-  }
-
 }
