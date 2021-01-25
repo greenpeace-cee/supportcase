@@ -6,7 +6,7 @@
 			<div class="act__step-description">The email will be use to find matching contacts and their subscriptions.</div>
 			<div class="act__step-body">
 				<div class="act__step-logic">
-					<input maxlength="40" class="input__text crm-form-text" type="email" ng-model="info.email">
+					<input maxlength="40" class="input__text crm-form-text" type="text" ng-model="info.email">
 				</div>
 				<div class="act__step-buttons">
 					<button class="act__next-step-button" ng-disabled="info.email.length === 0" ng-click="runStep('selectSubscriptionsStep')">Next</button>
@@ -32,9 +32,7 @@
 									<tr ng-repeat="contact in info['contacts']" class="act__row" data-contact-id="{{contact.id}}">
 										<td>
 											<div class="act__column">
-												<span>
-													<a href="{{contact.link}}" target="_blank">{{contact.display_name}}[id = {{contact.id}}]</a>
-												</span>
+												<contact-info model="contact.id"></contact-info>
 											</div>
 										</td>
 										<td ng-repeat="group in info['availableGroups']">

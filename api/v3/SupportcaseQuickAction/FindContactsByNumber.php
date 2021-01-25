@@ -10,7 +10,7 @@
 function civicrm_api3_supportcase_quick_action_find_contacts_by_number($params) {
   $phones = civicrm_api3('Phone', 'get', [
     'sequential' => 1,
-    'return' => ["contact_id", "contact_id.display_name", 'contact_id.do_not_sms'],
+    'return' => ["contact_id", 'contact_id.do_not_sms'],
     'phone_numeric' => preg_replace('/[^\d]/', '', $params['phone_number']),
     'contact_id.is_deleted' => FALSE,
     'options' => ['limit' => 0],
@@ -25,12 +25,7 @@ function civicrm_api3_supportcase_quick_action_find_contacts_by_number($params) 
       }
       $preparedContacts[] = [
         'id' => $phone['contact_id'],
-        'display_name' => $phone['contact_id.display_name'],
         'is_do_not_sms' => $phone['contact_id.do_not_sms'],
-        'link' => CRM_Utils_System::url('civicrm/contact/view/', [
-          'reset' => '1',
-          'cid' => $phone['contact_id'],
-        ], FALSE, NULL, FALSE),
       ];
     }
   }

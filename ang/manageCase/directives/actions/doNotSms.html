@@ -50,9 +50,7 @@
 										</td>
 										<td>
 											<div class="act__column">
-												<span>
-													<a href="{{contact.link}}" target="_blank">{{contact.display_name}}</a>
-												</span>
+												<contact-info model="contact.id"></contact-info>
 											</div>
 										</td>
 										<td>
@@ -84,7 +82,9 @@
 			<div class="act__tep-body">
 				<div class="act__step-logic">
 					<ul ng-repeat="contact in info['contacts']">
-						<li ng-if="contact['is_selected']"><a href="{{contact.link}}" target="_blank">{{contact.display_name}}</a></li>
+						<li ng-if="contact['is_selected']">
+							<contact-info model="contact['id']"></contact-info>
+						</li>
 					</ul>
 				</div>
 				<div class="act__step-buttons">

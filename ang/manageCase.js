@@ -214,15 +214,6 @@
                     return '';
                 };
 
-                $scope.generateStyles = function(tagColor) {
-                    var style = "";
-                    if (tagColor !== null && tagColor !== undefined) {
-                        style = "background-color: " + tagColor + " ; color: " + CRM.utils.colorContrast(tagColor) + ";";
-                    }
-
-                    return style;
-                };
-
                 $scope.getInputStyles = function() {
                     return {
                         'width' : '100%',
@@ -331,7 +322,6 @@
             controllerAs: "ctrl",
             controller: function($scope, $window, $element) {
                 $scope.showHelpInfo = $scope.$parent.showHelpInfo;
-                $scope.generateStyles = $scope.$parent.generateStyles;
                 $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
                 $scope.setFieldFromModel = function() {$scope.clientId = $scope.ctrl.model['client_ids'][0];};
                 $scope.editConfirm = function() {
@@ -360,7 +350,6 @@
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope, $window, $element) {
-                $scope.generateStyles = $scope.$parent.generateStyles;
                 $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
                 $scope.setFieldFromModel = function() {$scope.managerIds = $scope.ctrl.model['managers_ids'];};
                 $scope.editConfirm = function() {
@@ -390,10 +379,17 @@
             bindToController: true,
             controllerAs: "ctrl",
             controller: function($scope) {
-                $scope.generateStyles = $scope.$parent.generateStyles;
                 $scope.contact = [];
                 $scope.isLoading = true;
                 $scope.isOpenDescription = false;
+                $scope.generateStyles = function(tagColor) {
+                    var style = "";
+                    if (tagColor !== null && tagColor !== undefined) {
+                        style = "background-color: " + tagColor + " ; color: " + CRM.utils.colorContrast(tagColor) + ";";
+                    }
+
+                    return style;
+                };
                 this.$onInit = function() {
                     CRM.api3('SupportcaseManageCase', 'get_contact_info', {
                         "sequential": 1,
@@ -484,8 +480,15 @@
             controllerAs: "ctrl",
             controller: function($scope, $element) {
                 $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
-                $scope.generateStyles = $scope.$parent.generateStyles;
                 $scope.setFieldFromModel = function() {$scope.caseTags = $scope.ctrl.model['tags_ids'];};
+                $scope.generateStyles = function(tagColor) {
+                    var style = "";
+                    if (tagColor !== null && tagColor !== undefined) {
+                        style = "background-color: " + tagColor + " ; color: " + CRM.utils.colorContrast(tagColor) + ";";
+                    }
+
+                    return style;
+                };
                 $scope.updateInputValue = function() {
                     $scope.setFieldFromModel();
                     setTimeout(function() {

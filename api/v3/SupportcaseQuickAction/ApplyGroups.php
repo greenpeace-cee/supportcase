@@ -41,10 +41,16 @@ function civicrm_api3_supportcase_quick_action_apply_groups($params) {
     CRM_Supportcase_Utils_Group::updateContactGroup($groupData['contact_id'], $groupData['group_id'], $groupData['is_contact_in_group']);
   }
 
-  $tbdTagId = CRM_Supportcase_Utils_Tags::getTagId(CRM_Supportcase_Install_Entity_Tag::TBD);
-  if (!empty($tbdTagId)) {
-    $entityIds = [$params['case_id']];
-    CRM_Core_BAO_EntityTag::addEntitiesToTag($entityIds, $tbdTagId, 'civicrm_case', FALSE);
+  if (CRM_Supportcase_Utils_Setting::isCaseToolsExtensionEnable()) {
+    $tbdTagId = CRM_Supportcase_Utils_Tags::getTagId(CRM_Supportcase_Install_Entity_Tag::TBD);
+    if (!empty($tbdTagId)) {
+      civicrm_api3('Case', 'create', [
+        'id' => $params['case_id'],
+        'tags_ids' => [$tbdTagId],
+        'track_tags_change' => 1,
+        'is_only_add_tags' => 1,
+      ]);
+    }
   }
 
   return civicrm_api3_create_success(['message' => 'Groups is updated.']);

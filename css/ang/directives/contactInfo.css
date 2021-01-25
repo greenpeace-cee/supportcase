@@ -24,7 +24,6 @@
 
 .contact-info__accordion-header:hover {
     color: black;
-    /*background: #f6f6f6;*/
 }
 
 .contact-info__accordion-wrap.opened .contact-info__accordion-header {
@@ -100,6 +99,7 @@
     line-height: 10px;
     transform: translate(-50%, -50%);
 }
+
 .contact-info__preloader-ico .ui-button-icon {
     margin-top: 0;
 }

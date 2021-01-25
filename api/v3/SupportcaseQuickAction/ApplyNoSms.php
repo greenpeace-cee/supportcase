@@ -16,17 +16,23 @@ function civicrm_api3_supportcase_quick_action_apply_no_sms($params) {
     throw new api_Exception('Case does not exist.', 'case_does_not_exist');
   }
 
-  $doNotSmsTagId = CRM_Supportcase_Utils_Tags::getTagId(CRM_Supportcase_Install_Entity_Tag::DO_NOT_SMS);
-  if (!empty($doNotSmsTagId)) {
-    $entityIds = [$params['case_id']];
-    CRM_Core_BAO_EntityTag::addEntitiesToTag($entityIds, $doNotSmsTagId, 'civicrm_case', FALSE);
-  }
-
   foreach ($params['contact_ids'] as $contactId) {
     civicrm_api3('Contact', 'create', [
       'id' => $contactId,
       'do_not_sms' => 1,
     ]);
+  }
+
+  if (CRM_Supportcase_Utils_Setting::isCaseToolsExtensionEnable()) {
+    $doNotSmsTagId = CRM_Supportcase_Utils_Tags::getTagId(CRM_Supportcase_Install_Entity_Tag::DO_NOT_SMS);
+    if (!empty($doNotSmsTagId)) {
+      civicrm_api3('Case', 'create', [
+        'id' => $params['case_id'],
+        'tags_ids' => [$doNotSmsTagId],
+        'track_tags_change' => 1,
+        'is_only_add_tags' => 1,
+      ]);
+    }
   }
 
   return civicrm_api3_create_success(['message' => '"do not sms" is checked to selected contacts. To case has added "do not sms" tag.']);
