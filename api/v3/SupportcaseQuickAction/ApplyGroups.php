@@ -37,6 +37,14 @@ function civicrm_api3_supportcase_quick_action_apply_groups($params) {
     }
   }
 
+  foreach ($params['opt_out_data'] as $optOutData) {
+    try {
+      civicrm_api3('Contact', 'getsingle', ['id' => $optOutData['contact_id']]);
+    } catch (CiviCRM_API3_Exception $e) {
+      throw new api_Exception('Contact does not exist.', 'contact_does_not_exist');
+    }
+  }
+
   foreach ($params['groups_data'] as $groupData) {
     CRM_Supportcase_Utils_Group::updateContactGroup($groupData['contact_id'], $groupData['group_id'], $groupData['is_contact_in_group']);
   }
@@ -51,6 +59,13 @@ function civicrm_api3_supportcase_quick_action_apply_groups($params) {
         'is_only_add_tags' => 1,
       ]);
     }
+  }
+
+  foreach ($params['opt_out_data'] as $optOutData) {
+    civicrm_api3('Contact', 'create', [
+      'contact_id' => $optOutData['contact_id'],
+      'is_opt_out' => (bool) $optOutData['is_opt_out'],
+    ]);
   }
 
   return civicrm_api3_create_success(['message' => 'Groups is updated.']);
@@ -69,6 +84,12 @@ function _civicrm_api3_supportcase_quick_action_apply_groups_spec(&$params) {
     'api.required' => 0,
     'type' => CRM_Utils_Type::T_STRING,
     'title' => 'Groups data',
+  ];
+  $params['opt_out_data'] = [
+    'name' => 'opt_out_data',
+    'api.required' => 0,
+    'type' => CRM_Utils_Type::T_STRING,
+    'title' => 'Contact opt out data',
   ];
   $params['case_id'] = [
     'name' => 'case_id',

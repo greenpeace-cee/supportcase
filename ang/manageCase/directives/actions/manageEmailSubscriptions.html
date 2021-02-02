@@ -16,29 +16,38 @@
 
 		<div class="act__step" ng-switch-when="selectSubscriptionsStep">
 			<div class="act__step-title">Select contacts</div>
-			<div class="act__step-description" ng-if="info['contacts'].length > 0" >There list of contacts which is matched with <strong>"{{info['email']}}"</strong> email. You can mange their subscriptions.</div>
+			<div class="act__step-description" ng-if="info['tableData'].length > 0" >There list of contacts which is matched with <strong>"{{info['email']}}"</strong> email. You can mange their subscriptions.</div>
 			<div class="act__step-body">
 				<div class="act__step-logic">
-					<div ng-if="info['contacts'].length > 0">
+
+					<div ng-if="info['tableData'].length > 0">
 						<div class="act__table act__table-middle-width">
 							<table class="crm-search-results">
 								<thead>
 									<tr>
-										<th class="act__column-head">Contact</th>
-										<th ng-repeat="group in info['availableGroups']" title="{{group.description}}(id={{group.id}})" class="act__column-head">{{group.title}}</th>
+										<th ng-repeat="tableHeader in info['tableHeaders']" class="act__column-head" title="{{tableHeader.description}}" >
+											{{tableHeader.label}}
+										</th>
 									</tr>
 								</thead>
 								<tbody>
-									<tr ng-repeat="contact in info['contacts']" class="act__row" data-contact-id="{{contact.id}}">
-										<td>
-											<div class="act__column">
-												<contact-info model="contact.id"></contact-info>
+									<tr ng-repeat="tableRow in info['tableData']" class="act__row" data-contact-id="{{tableRow.contact_id}}">
+										<td ng-repeat="tableHeader in info['tableHeaders']">
+											<div ng-if="tableHeader.is_dynamic_header">
+												<input ng-model="tableRow[(tableHeader.table_data_key)]" class="mes__group-checkbox" data-contact-id="{{contact.id}}" ng-model="tableRow['contact_is_opt_out']" type="checkbox"/>
 											</div>
-										</td>
-										<td ng-repeat="group in info['availableGroups']">
-											<div class="act__column">
-												<div>
-													<input class="mes__group-checkbox" data-group-id="{{group.id}}" data-contact-id="{{contact.id}}" ng-checked="isContactInGroup(contact.id, group.id)" type="checkbox"/>
+
+											<div ng-if="!tableHeader.is_dynamic_header">
+												<div class="act__column" ng-if="tableHeader.table_data_key == 'contact_id'">
+													<contact-info model="tableRow['contact_id']"></contact-info>
+												</div>
+
+												<div class="act__column" ng-if="tableHeader.table_data_key == 'contact_is_opt_out'">
+													<label class="mes__bulk-opt-out-block">
+														<input class="mes__bulk-opt-out-checkbox" ng-model="tableRow['contact_is_opt_out']" type="checkbox"/>
+														<span ng-if="!tableRow['contact_is_opt_out']" class="mp__button mp__button-blue mes__bulk-opt-out-button">Set Bulk Opt-Out</span>
+														<span ng-if="tableRow['contact_is_opt_out']" ng-click="unCheckAllGroupsToContact(tableRow['contact_id'])" class="mp__button mp__button-blue mes__bulk-opt-out-button">Remove Bulk Opt-Out</span>
+													</label>
 												</div>
 											</div>
 										</td>
@@ -50,7 +59,9 @@
 							<button ng-click="unCheckAllGroups()">Unsubscribe all</button>
 						</div>
 					</div>
-					<div ng-if="info['contacts'].length == 0">
+
+
+					<div ng-if="info['tableData'].length == 0">
 						<p>Cannot find any contacts contacts which is matched with <strong>"{{info['email']}}"</strong> email.</p>
 					</div>
 				</div>

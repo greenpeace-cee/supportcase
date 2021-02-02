@@ -855,8 +855,9 @@
                 $scope.info = {
                     'stepName' : 'confirmEmailStep',
                     'email' : '',
-                    'contacts' : [],
                     'availableGroups' : [],
+                    'tableData' : [],
+                    'tableHeaders' : [],
                 };
 
                 $scope.runStep = function(nextStepName) {
@@ -869,12 +870,22 @@
                     $scope.info.stepName = nextStepName;
                 };
 
-                $scope.isContactInGroup = function(contactId, groupId) {
-                    for (var i = 0; i < $scope.info.contacts.length; i++) {
-                        if ($scope.info.contacts[i]['id'] == contactId) {
-                            if ($scope.info.contacts[i]['groups'].indexOf(groupId) !== -1) {
-                                return true;
-                            }
+                $scope.unCheckAllGroupsToContact = function(contactId) {
+                    var contactIndex = $scope.findContactIndex(contactId);
+                    if (contactIndex === false) {
+                        return;
+                    }
+
+                    for (var i = 0; i < $scope.info.availableGroups.length; i++) {
+                        var groupKey = $scope.info.availableGroups[i]['name'];
+                        $scope.info.tableData[contactIndex][groupKey] = false;
+                    }
+                };
+
+                $scope.findContactIndex = function(contactId) {
+                    for (var i = 0; i < $scope.info.tableData.length; i++) {
+                        if ($scope.info.tableData[i]['contact_id'] == contactId) {
+                            return i;
                         }
                     }
 
@@ -882,7 +893,12 @@
                 };
 
                 $scope.unCheckAllGroups = function() {
-                    $($element).find(".mes__group-checkbox").val($scope.statusId).removeAttr("checked");
+                    for (var i = 0; i < $scope.info.tableData.length; i++) {
+                        for (var j = 0; j < $scope.info.availableGroups.length; j++) {
+                            var groupKey = $scope.info.availableGroups[j]['name'];
+                            $scope.info.tableData[i][groupKey] = false;
+                        }
+                    }
                 };
 
                 $scope.findContactsByEmail = function() {
@@ -894,7 +910,8 @@
                             console.error('find_contacts_by_email get error:');
                             console.error(result.error_message);
                         } else {
-                            $scope.info.contacts = result.values['contacts'];
+                            $scope.info.tableHeaders = result.values['table_headers'];
+                            $scope.info.tableData = result.values['table_data'];
                             $scope.info.availableGroups = result.values['available_groups'];
                             $scope.$apply();
                         }
@@ -902,21 +919,40 @@
                     }, function(error) {});
                 };
 
+                $scope.prepareOptOutData = function() {
+                    var data = [];
+                    for (var i = 0; i < $scope.info.tableData.length; i++) {
+                        data.push({
+                            "contact_id" : $scope.info.tableData[i]['contact_id'],
+                            "is_opt_out" : $scope.info.tableData[i]['contact_is_opt_out'],
+                        });
+                    }
+
+                    return data;
+                };
+
+                $scope.prepareGroupsData = function() {
+                    var data = [];
+                    for (var i = 0; i < $scope.info.tableData.length; i++) {
+                        for (var j = 0; j < $scope.info.availableGroups.length; j++) {
+                            var groupKey = $scope.info.availableGroups[j]['name'];
+                            data.push({
+                                "contact_id" : $scope.info.tableData[i]['contact_id'],
+                                "group_id" : $scope.info.availableGroups[j]['id'],
+                                "is_contact_in_group" : $scope.info.tableData[i][groupKey],
+                            });
+                        }
+                    }
+
+                    return data;
+                };
+
                 $scope.applyGroups = function() {
                     $scope.showPreloader();
-                    var groups = [];
-
-                    $($element).find(".mes__group-checkbox").each(function() {
-                        var checkbox = $(this);
-                        groups.push({
-                            "contact_id" : checkbox.data('contact-id'),
-                            "group_id" : checkbox.data('group-id'),
-                            "is_contact_in_group" : checkbox.prop("checked"),
-                        });
-                    });
 
                     CRM.api3('SupportcaseQuickAction', 'apply_groups', {
-                        'groups_data' : groups,
+                        'groups_data' : $scope.prepareGroupsData(),
+                        'opt_out_data' : $scope.prepareOptOutData(),
                         "case_id": $scope.ctrl.model['id'],
                     }).then(function(result) {
                         if (result.is_error === 1) {

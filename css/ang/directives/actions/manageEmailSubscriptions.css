@@ -6,3 +6,18 @@
 .mes__unsubscribe-all-groups {
     padding-top: 20px;
 }
+
+div.crm-container label.mes__bulk-opt-out-block {
+    width: 150px;
+    display: block;
+    vertical-align: middle;
+}
+
+.mes__bulk-opt-out-button {
+    max-width: 90px;
+    margin-left: 10px;
+}
+
+.mes__bulk-opt-out-checkbox {
+    display: inline-block;
+}

@@ -7,6 +7,20 @@
     cursor: pointer;
 }
 
+.mp__button-blue  {
+    background: #0071bd;
+    border: 0;
+    border-radius: 2px;
+    color: #fff;
+    font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 1;
+    padding: 11px 12px;
+    text-shadow: none;
+    text-transform: uppercase;
+    vertical-align: middle;
+    display: inline-block;
+}
+
 .mp__button .ui-icon {
   margin: 0;
 }
