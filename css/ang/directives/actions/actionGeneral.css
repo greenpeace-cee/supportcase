@@ -55,3 +55,7 @@
 .act__column-head {
 
 }
+
+.act__column-head.act__column-head-contact {
+    width: 250px;
+}

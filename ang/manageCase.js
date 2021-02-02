@@ -378,7 +378,7 @@
             scope: {model: "="},
             bindToController: true,
             controllerAs: "ctrl",
-            controller: function($scope) {
+            controller: function($scope, $element) {
                 $scope.contact = [];
                 $scope.isLoading = true;
                 $scope.isOpenDescription = false;
@@ -407,6 +407,7 @@
                 };
                 $scope.toggleDescription = function() {
                     $scope.isOpenDescription = !$scope.isOpenDescription;
+                    $($element).find(".contact-info__accordion-body").slideToggle('fast');
                 };
             }
         };

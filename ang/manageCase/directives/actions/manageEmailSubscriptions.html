@@ -25,7 +25,7 @@
 							<table class="crm-search-results">
 								<thead>
 									<tr>
-										<th ng-repeat="tableHeader in info['tableHeaders']" class="act__column-head" title="{{tableHeader.description}}" >
+										<th ng-repeat="tableHeader in info['tableHeaders']" class="act__column-head" ng-class="{'act__column-head-contact' : tableHeader.table_data_key == 'contact_id'}" title="{{tableHeader.description}}" >
 											{{tableHeader.label}}
 										</th>
 									</tr>

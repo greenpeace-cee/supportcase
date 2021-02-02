@@ -16,6 +16,7 @@
 
 .contact-info__accordion-body {
     display: none;
+    padding: 5px;
 }
 
 .contact-info__wrap {
@@ -29,11 +30,6 @@
 .contact-info__accordion-wrap.opened .contact-info__accordion-header {
     color: black;
     background: #f6f6f6;
-}
-
-.contact-info__accordion-wrap.opened .contact-info__accordion-body {
-    display: block;
-    padding: 5px;
 }
 
 .contact-info__accordion-wrap.opened .contact-info__accordion-header-ico {
