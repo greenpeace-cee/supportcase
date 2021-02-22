@@ -60,7 +60,30 @@
             <a title="{ts}Show Activities{/ts}" class="supportcase__show-case-activity-button crm-expand-row" href="{crmURL p='civicrm/case/details' q="caseId=`$row.case_id`&cid=`$row.contact_id`"}"></a>
           </td>
           <td class="supportcase__case-client-column-wrap">
-            <a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}" title="{ts}View Contact Details{/ts}" target="_blank">{$row.sort_name}</a>{if $row.phone}<br /><span class="description">{$row.phone}</span>{/if}
+            <div class="supportcase__case-contact-item">
+              <a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}" title="{ts}View Contact Details{/ts}" target="_blank">
+                <span class="supportcase__case-contact-item-line" >{$row.sort_name}</span>
+              </a>
+              <span class="supportcase__case-contact-item-line" >
+                {if $row.phone}
+                  <span class="description">{$row.phone}</span>
+                {/if}
+              </span>
+            </div>
+          </td>
+          <td class="supportcase__case-assignee-column-wrap">
+            {foreach from=$row.case_manager_contacts item='manager_contact'}
+              <div class="supportcase__case-contact-item">
+                <a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$manager_contact.id`"}" title="{ts}View Contact Details{/ts}" target="_blank">
+                  <span class="supportcase__case-contact-item-line" >{$manager_contact.sort_name}</span>
+                </a>
+                <span class="supportcase__case-contact-item-line" >
+                  {if $manager_contact.phone}
+                    <span class="description">{$manager_contact.phone}</span>
+                  {/if}
+                </span>
+              </div>
+            {/foreach}
           </td>
           <td class="supportcase__case-subject-column-wrap">
             <span>{$row.case_subject}</span>

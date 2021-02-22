@@ -154,7 +154,7 @@
 }
 
 .crm-container .supportcase__result-block .supportcase__case-subject-column-wrap {
-    width: 300px;
+    width: 220px;
     line-height: 18px;
 }
 
@@ -163,7 +163,7 @@
 }
 
 .supportcase__case-client-column-wrap {
-    width: 250px;
+    width: 210px;
 }
 
 .supportcase__case-id-column-wrap {
@@ -297,4 +297,17 @@
 
 .supportcase__recent-communication-meta:before {
     content: "\2014 \00A0";
+}
+
+.supportcase__case-assignee-column-wrap {
+    width: 210px;
+}
+
+.supportcase__case-contact-item {
+    padding-bottom: 5px;
+    line-height: 20px;
+}
+
+.supportcase__case-contact-item-line {
+    display: block;
 }

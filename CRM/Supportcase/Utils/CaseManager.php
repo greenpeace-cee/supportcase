@@ -29,6 +29,4 @@ class CRM_Supportcase_Utils_CaseManager {
     return $managersIds;
   }
 
-
-
 }

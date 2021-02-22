@@ -392,8 +392,11 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
         $result->case_id
       );
 
+      $caseManagerContactIds = CRM_Supportcase_Utils_CaseManager::getCaseManagerContactIds($result->case_id);
+
       $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ? $result->contact_sub_type : $result->contact_type);
-      $row['case_manager_contact_ids'] = CRM_Supportcase_Utils_CaseManager::getCaseManagerContactIds($result->case_id);
+      $row['case_manager_contact_ids'] = $caseManagerContactIds;
+      $row['case_manager_contacts'] = $this->getContactsInfo($caseManagerContactIds);
       $row['class'] = (isset($result->case_status_id) && array_key_exists($result->case_status_id, $caseStatus)) ? "status-urgent" : "status-normal";
       $row['case_tags'] = $this->getCaseTags($result->case_id);
       $row['category'] = (!empty($categoryCustomFieldName)) ? $result->$categoryCustomFieldName: '';
@@ -430,6 +433,27 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
     }
 
     return $rows;
+  }
+
+  /**
+   * Gets contacts info by ids
+   *
+   * @param $contactIds
+   *
+   * @return array
+   */
+  private function getContactsInfo($contactIds) {
+    try {
+      $contacts = civicrm_api3('Contact', 'get', [
+        'sequential' => 1,
+        'return' => ["phone", "display_name", "sort_name", "contact_id"],
+        'id' => ['IN' => $contactIds],
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      return [];
+    }
+
+    return !empty($contacts['values']) ? $contacts['values'] : [];
   }
 
   /**
@@ -537,6 +561,10 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
         [
           'name' => ts('Client'),
           'sort' => 'sort_name',
+          'direction' => CRM_Utils_Sort::DONTCARE,
+        ],
+        [
+          'name' => ts('Managers'),
           'direction' => CRM_Utils_Sort::DONTCARE,
         ],
         [
