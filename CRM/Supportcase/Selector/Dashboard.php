@@ -49,6 +49,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
     'contact_id',
     'contact_type',
     'sort_name',
+    'phone',
     'display_name',
     'case_id',
     'case_subject',
