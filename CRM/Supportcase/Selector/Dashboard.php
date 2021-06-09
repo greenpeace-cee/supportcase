@@ -574,7 +574,6 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
         ],
         [
           'name' => ts('Most Recent Communication'),
-          'sort' => 'case_recent_activity_date',
           'direction' => CRM_Utils_Sort::ASCENDING,
         ],
         [

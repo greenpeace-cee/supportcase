@@ -7,7 +7,7 @@
 	</div>
 
 	<div class="ci__case-info-view-mode">
-		<div class="ci__case-info-item-content">{{getEntityLabel(ctrl.model['available_statuses'], ctrl.model['status_id'])}}</div>
+		<div class="ci__case-info-item-content">{{getEntityLabel(model['available_statuses'], model['status_id'])}}</div>
 	</div>
 
 	<div class="ci__case-info-edit-mode">
@@ -15,7 +15,7 @@
 
 		<div class="crm-section">
 			<select ng-model="statusId" name="statusField" id="statusField" class="crm-form-select" >
-				<option ng-repeat="option in ctrl.model['available_statuses']" value="{{option.value}}">{{option.label}}</option>
+				<option ng-repeat="option in model['available_statuses']" value="{{option.value}}">{{option.label}}</option>
 			</select>
 		</div>
 

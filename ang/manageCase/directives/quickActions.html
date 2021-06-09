@@ -5,17 +5,17 @@
 			<div class="qa__block-wrap">
 				<div class="qa__panel-wrap">
 					<button class="qa__panel-button"
-						ng-class="{'active' : ctrl.model['activeAction'] == 'doNotSms'}"
+						ng-class="{'active' : model['activeAction'] == 'doNotSms'}"
 						ng-click="runQuickAction('doNotSms');">
 						Do not SMS
 					</button>
 					<button class="qa__panel-button"
-						ng-class="{'active' : ctrl.model['activeAction'] == 'manageEmailSubscriptions'}"
+						ng-class="{'active' : model['activeAction'] == 'manageEmailSubscriptions'}"
 						ng-click="runQuickAction('manageEmailSubscriptions');">
 						Manage Email Subscriptions
 					</button>
 					<button class="qa__panel-button"
-						ng-class="{'active' : ctrl.model['activeAction'] == 'exampleAction'}"
+						ng-class="{'active' : model['activeAction'] == 'exampleAction'}"
 						ng-click="runQuickAction('exampleAction');">
 						Example action.
 					</button>
@@ -28,7 +28,7 @@
 						</div>
 					</div>
 
-					<div ng-switch="ctrl.model['activeAction']" class="qa__action-wrap">
+					<div ng-switch="model['activeAction']" class="qa__action-wrap">
 
 						<div ng-switch-when="doNotSms">
 							<div class="qa__action-item-wrap">
@@ -37,7 +37,7 @@
 									<div class="qa__action-name">Do not SMS</div>
 								</div>
 								<div class="qa__action-item-body">
-									<do-not-sms model='ctrl.model'></do-not-sms>
+									<do-not-sms model='model'></do-not-sms>
 								</div>
 							</div>
 						</div>
@@ -49,7 +49,7 @@
 									<div class="qa__action-name">Manage Email Subscriptions</div>
 								</div>
 								<div class="qa__action-item-body">
-									<manage-email-subscriptions model='ctrl.model'></manage-email-subscriptions>
+									<manage-email-subscriptions model='model'></manage-email-subscriptions>
 								</div>
 							</div>
 						</div>
@@ -61,7 +61,7 @@
 									<div class="qa__action-name">Example action</div>
 								</div>
 								<div class="qa__action-item-body">
-									<example-action model='ctrl.model'></example-action>
+									<example-action model='model'></example-action>
 								</div>
 							</div>
 						</div>

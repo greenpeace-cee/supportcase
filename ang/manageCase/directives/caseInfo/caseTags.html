@@ -9,10 +9,10 @@
 	<div class="ci__case-info-view-mode">
 		<div class="ci__case-info-item-content">
 			<div class="ci__tags-wrap">
-				<div ng-repeat="tagId in ctrl.model['tags_ids']" class="crm-tag-item ci__tag"
-					 style="{{generateStyles(ctrl.model['available_tags'][tagId]['color'])}}"
-					 title="{{ctrl.model['available_tags'][tagId]['description']}}">
-					{{ctrl.model['available_tags'][tagId]['name']}}
+				<div ng-repeat="tagId in model['tags_ids']" class="crm-tag-item ci__tag"
+					 style="{{generateStyles(model['available_tags'][tagId]['color'])}}"
+					 title="{{model['available_tags'][tagId]['description']}}">
+					{{model['available_tags'][tagId]['name']}}
 				</div>
 				<div class="clear"></div>
 			</div>
@@ -24,7 +24,7 @@
 
 		<div class="crm-section">
 			<select ng-model="caseTags" style="width:100%;" multiple name="tagsField" id="tagsField" class="crm-form-select">
-				<option ng-repeat="option in ctrl.model['available_tags']" value="{{option.id}}">{{option.name}}</option>
+				<option ng-repeat="option in model['available_tags']" value="{{option.id}}">{{option.name}}</option>
 			</select>
 		</div>
 

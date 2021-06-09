@@ -190,8 +190,6 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/caseInfo.html",
             scope: {model: "="},
-            bindToController: true,
-            controllerAs: "ctrl",
             controller: function($scope) {
                 $scope.ts = CRM.ts();
                 $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
@@ -243,7 +241,7 @@
                 };
 
                 $scope.editConfirm = function(apiFieldName, apiFieldValue, directiveElement, successCallback) {
-                    var apiParams = {"case_id": $scope.ctrl.model['id']};
+                    var apiParams = {"case_id": $scope.model['id']};
                     apiParams[apiFieldName] = apiFieldValue;
 
                     CRM.api3('SupportcaseManageCase', 'update_case_info', apiParams).then(function(result) {
@@ -264,14 +262,12 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/caseInfo/caseSubject.html",
             scope: {model: "="},
-            bindToController: true,
-            controllerAs: "ctrl",
             controller: function($scope, $element) {
                 $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
-                $scope.setFieldFromModel = function() {$scope.subject = $scope.ctrl.model['subject'];};
+                $scope.setFieldFromModel = function() {$scope.subject = $scope.model['subject'];};
                 $scope.editConfirm = function() {
                     $scope.$parent.editConfirm('subject', $scope.subject, $element, function(result) {
-                        $scope.ctrl.model['subject'] = $scope.subject;
+                        $scope.model['subject'] = $scope.subject;
                         $scope.$apply();
                         CRM.status(ts('Subject updated.'));
                     });
@@ -287,11 +283,9 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/caseInfo/caseStatus.html",
             scope: {model: "="},
-            bindToController: true,
-            controllerAs: "ctrl",
             controller: function($scope, $element) {
                 $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
-                $scope.setFieldFromModel = function() {$scope.statusId = $scope.ctrl.model['status_id'];};
+                $scope.setFieldFromModel = function() {$scope.statusId = $scope.model['status_id'];};
                 $scope.updateInputValue = function() {
                     $scope.setFieldFromModel();
                     setTimeout(function() {
@@ -301,7 +295,7 @@
                 $scope.getEntityLabel = $scope.$parent.getEntityLabel;
                 $scope.editConfirm = function() {
                     $scope.$parent.editConfirm('status_id', $scope.statusId, $element, function(result) {
-                        $scope.ctrl.model['status_id'] = $scope.statusId;
+                        $scope.model['status_id'] = $scope.statusId;
                         $scope.$apply();
                         CRM.status(ts('Status updated.'));
                     });
@@ -318,16 +312,14 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/caseInfo/caseClients.html",
             scope: {model: "="},
-            bindToController: true,
-            controllerAs: "ctrl",
             controller: function($scope, $window, $element) {
                 $scope.showHelpInfo = $scope.$parent.showHelpInfo;
                 $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
-                $scope.setFieldFromModel = function() {$scope.clientId = $scope.ctrl.model['client_ids'][0];};
+                $scope.setFieldFromModel = function() {$scope.clientId = $scope.model['client_ids'][0];};
                 $scope.editConfirm = function() {
                     $scope.$parent.editConfirm('new_case_client_id', $scope.clientId, $element, function(result) {
                         var message = '<ul>';
-                        message += '<li>Case(id=' + $scope.ctrl.model['id'] + ') have been moved to the trash.</li>';
+                        message += '<li>Case(id=' + $scope.model['id'] + ') have been moved to the trash.</li>';
                         message += '<li>Created the same case(with the same activities and tags) with new client.</li>';
                         message += '<li>You have been redirected to this new case(id=' + result.values.case.id + ').</li>';
                         message += '</ul>';
@@ -347,17 +339,15 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/caseInfo/caseManagers.html",
             scope: {model: "="},
-            bindToController: true,
-            controllerAs: "ctrl",
             controller: function($scope, $window, $element) {
                 $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
-                $scope.setFieldFromModel = function() {$scope.managerIds = $scope.ctrl.model['managers_ids'];};
+                $scope.setFieldFromModel = function() {$scope.managerIds = $scope.model['managers_ids'];};
                 $scope.editConfirm = function() {
                     if (typeof $scope.managerIds === 'string') {
                         $scope.managerIds = ($scope.managerIds.length === 0) ? [] : $scope.managerIds.split(",");
                     }
                     $scope.$parent.editConfirm('new_case_manager_ids', $scope.managerIds, $element, function(result) {
-                        $scope.ctrl.model['managers_ids'] = $scope.managerIds;
+                        $scope.model['managers_ids'] = $scope.managerIds;
                         $scope.$apply();
                         CRM.status(ts('Managers are updated.'));
                     });
@@ -376,8 +366,6 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/contactInfo.html",
             scope: {model: "="},
-            bindToController: true,
-            controllerAs: "ctrl",
             controller: function($scope, $element) {
                 $scope.contact = [];
                 $scope.isLoading = true;
@@ -393,7 +381,7 @@
                 this.$onInit = function() {
                     CRM.api3('SupportcaseManageCase', 'get_contact_info', {
                         "sequential": 1,
-                        "contact_id": $scope.ctrl.model,
+                        "contact_id": $scope.model,
                     }).then(function(result) {
                         if (result.is_error === 1) {
                             console.error('"get_contact_info" action get error:');
@@ -418,11 +406,9 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/caseInfo/caseStartDate.html",
             scope: {model: "="},
-            bindToController: true,
-            controllerAs: "ctrl",
             controller: function($scope, $element) {
                 $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
-                $scope.setFieldFromModel = function() {$scope.startDate = $scope.ctrl.model['start_date'];};
+                $scope.setFieldFromModel = function() {$scope.startDate = $scope.model['start_date'];};
                 $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
                 $scope.updateInputValue = function() {
                     $scope.setFieldFromModel();
@@ -432,7 +418,7 @@
                 };
                 $scope.editConfirm = function() {
                     $scope.$parent.editConfirm('start_date', $scope.startDate, $element, function(result) {
-                        $scope.ctrl.model['start_date'] = $scope.startDate;
+                        $scope.model['start_date'] = $scope.startDate;
                         $scope.$apply();
                         CRM.status(ts('Start date updated.'));
                     });
@@ -446,8 +432,6 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/caseInfo/caseCategory.html",
             scope: {model: "="},
-            bindToController: true,
-            controllerAs: "ctrl",
             controller: function($scope, $element) {
                 $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
                 $scope.updateInputValue = function() {
@@ -457,10 +441,10 @@
                     }, 0);
                 };
                 $scope.getEntityLabel = $scope.$parent.getEntityLabel;
-                $scope.setFieldFromModel = function() {$scope.categoryId = $scope.ctrl.model['category_id'];};
+                $scope.setFieldFromModel = function() {$scope.categoryId = $scope.model['category_id'];};
                 $scope.editConfirm = function() {
                     $scope.$parent.editConfirm('category_id', $scope.categoryId, $element, function(result) {
-                        $scope.ctrl.model['category_id'] = $scope.categoryId;
+                        $scope.model['category_id'] = $scope.categoryId;
                         $scope.$apply();
                         CRM.status(ts('Category updated.'));
                     });
@@ -477,11 +461,9 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/caseInfo/caseTags.html",
             scope: {model: "="},
-            bindToController: true,
-            controllerAs: "ctrl",
             controller: function($scope, $element) {
                 $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
-                $scope.setFieldFromModel = function() {$scope.caseTags = $scope.ctrl.model['tags_ids'];};
+                $scope.setFieldFromModel = function() {$scope.caseTags = $scope.model['tags_ids'];};
                 $scope.generateStyles = function(tagColor) {
                     var style = "";
                     if (tagColor !== null && tagColor !== undefined) {
@@ -499,7 +481,7 @@
                 $scope.editConfirm = function() {
                     var tagsIds = ($scope.caseTags === undefined) ? [] : $scope.caseTags;
                     $scope.$parent.editConfirm('tags_ids', tagsIds, $element, function(result) {
-                        $scope.ctrl.model['tags_ids'] = $scope.caseTags;
+                        $scope.model['tags_ids'] = $scope.caseTags;
                         CRM.status(ts('Tags updated.'));
                         $scope.$apply();
                     });
@@ -518,8 +500,6 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/communication.html",
             scope: {model: "="},
-            bindToController: true,
-            controllerAs: "ctrl",
             controller: function($scope, $element) {
                 $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
                 $scope.smsActivities = [];
@@ -527,7 +507,7 @@
                 this.$onInit = function() {
                     CRM.api3('SupportcaseManageCase', 'get_sms_activities', {
                         "sequential": 1,
-                        "case_id": $scope.ctrl.model['id'],
+                        "case_id": $scope.model['id'],
                     }).then(function(result) {
                         if (result.is_error === 1) {
                             console.error('Activity get error:');
@@ -552,8 +532,6 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/activities.html",
             scope: {model: "="},
-            bindToController: true,
-            controllerAs: "ctrl",
             controller: function($scope) {
                 $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
                 $scope.activities = [];
@@ -561,7 +539,7 @@
                 this.$onInit = function() {
                     CRM.api3('SupportcaseManageCase', 'get_activities', {
                         "sequential": 1,
-                        "case_id": $scope.ctrl.model['id'],
+                        "case_id": $scope.model['id'],
                     }).then(function(result) {
                         if (result.is_error === 1) {
                             console.error('Activity get error:');
@@ -581,15 +559,13 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/recentCases.html",
             scope: {model: "="},
-            bindToController: true,
-            controllerAs: "ctrl",
             controller: function($scope) {
                 $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
                 $scope.ts = CRM.ts();
                 $scope.recentCases = [];
                 $scope.updateRecentCases = function() {
                     CRM.api3('SupportcaseManageCase', 'get_recent_cases', {
-                        "client_id": $scope.ctrl.model['recent_case_for_contact_id'],
+                        "client_id": $scope.model['recent_case_for_contact_id'],
                         "limit_per_page": 0,
                         "page_number": 1
                     }).then(function(result) {
@@ -613,15 +589,13 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/managePanel.html",
             scope: {model: "="},
-            bindToController: true,
-            controllerAs: "ctrl",
             controller: function($scope, $window, $element) {
                 $scope.showError = function(errorMessage) {
                     $($element).find('.mp__error-wrap').empty().append('<div class="crm-error">' + errorMessage + '</div>');
                 };
 
                 $scope.doAction = function(apiFieldName, apiFieldValue, successCallback) {
-                    var apiParams = {"case_id": $scope.ctrl.model['id']};
+                    var apiParams = {"case_id": $scope.model['id']};
                     apiParams[apiFieldName] = apiFieldValue;
 
                     CRM.api3('SupportcaseManageCase', 'update_case_info', apiParams).then(function(result) {
@@ -634,40 +608,40 @@
                 };
 
                 $scope.isCaseHasStatus = function(statusName) {
-                   return $scope.ctrl.model['settings']['case_status_ids'][statusName] === $scope.ctrl.model['status_id'];
+                   return $scope.model['settings']['case_status_ids'][statusName] === $scope.model['status_id'];
                 };
 
                 $scope.isCaseDeleted = function() {
-                   return $scope.ctrl.model['is_deleted'] == '1';
+                   return $scope.model['is_deleted'] == '1';
                 };
 
                 $scope.resolveCase = function() {
-                    $scope.doAction('status_id', $scope.ctrl.model['settings']['case_status_ids']['resolve'], function () {
-                        $scope.ctrl.model['status_id'] = $scope.ctrl.model['settings']['case_status_ids']['resolve'];
+                    $scope.doAction('status_id', $scope.model['settings']['case_status_ids']['resolve'], function () {
+                        $scope.model['status_id'] = $scope.model['settings']['case_status_ids']['resolve'];
                         $scope.$apply();
                         CRM.status('Case is resolved. Case status is updated.');
                     });
                 };
 
                 $scope.reportSpamCase = function() {
-                    $scope.doAction('status_id', $scope.ctrl.model['settings']['case_status_ids']['spam'],function () {
-                        $scope.ctrl.model['status_id'] = $scope.ctrl.model['settings']['case_status_ids']['spam'];
+                    $scope.doAction('status_id', $scope.model['settings']['case_status_ids']['spam'],function () {
+                        $scope.model['status_id'] = $scope.model['settings']['case_status_ids']['spam'];
                         $scope.$apply();
                         CRM.status('Case is marked as spam. Case status is updated.');
                     });
                 };
 
                 $scope.makeCaseUrgent = function() {
-                    $scope.doAction('status_id', $scope.ctrl.model['settings']['case_status_ids']['urgent'],function () {
-                        $scope.ctrl.model['status_id'] = $scope.ctrl.model['settings']['case_status_ids']['urgent'];
+                    $scope.doAction('status_id', $scope.model['settings']['case_status_ids']['urgent'],function () {
+                        $scope.model['status_id'] = $scope.model['settings']['case_status_ids']['urgent'];
                         $scope.$apply();
                         CRM.status('Case is made urgent. Case status is updated.');
                     });
                 };
 
                 $scope.makeCaseOngoing = function() {
-                    $scope.doAction('status_id', $scope.ctrl.model['settings']['case_status_ids']['ongoing'],function () {
-                        $scope.ctrl.model['status_id'] = $scope.ctrl.model['settings']['case_status_ids']['ongoing'];
+                    $scope.doAction('status_id', $scope.model['settings']['case_status_ids']['ongoing'],function () {
+                        $scope.model['status_id'] = $scope.model['settings']['case_status_ids']['ongoing'];
                         $scope.$apply();
                         CRM.status('Case is made ongoing. Case status is updated.');
                     });
@@ -675,7 +649,7 @@
 
                 $scope.moveToTrashCase = function() {
                     $scope.doAction('is_deleted', '1',function () {
-                        $scope.ctrl.model['is_deleted'] = 1;
+                        $scope.model['is_deleted'] = 1;
                         $scope.$apply();
                         CRM.status('Case is deleted.');
                     });
@@ -683,7 +657,7 @@
 
                 $scope.restoreCase = function() {
                     $scope.doAction('is_deleted', '0',function () {
-                        $scope.ctrl.model['is_deleted'] = 0;
+                        $scope.model['is_deleted'] = 0;
                         $scope.$apply();
                         CRM.status('Case is restored.');
                     });
@@ -697,15 +671,13 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/quickActions.html",
             scope: {model: "="},
-            bindToController: true,
-            controllerAs: "ctrl",
             controller: function($scope, $window, $element) {
-                $scope.ctrl.model['activeAction'] = false;
+                $scope.model['activeAction'] = false;
                 $scope.runQuickAction = function(actionName) {
-                    $scope.ctrl.model['activeAction'] = actionName;
+                    $scope.model['activeAction'] = actionName;
                 };
                 $scope.closeAction = function() {
-                    $scope.ctrl.model['activeAction'] = false;
+                    $scope.model['activeAction'] = false;
                 };
                 $scope.$on('$destroy', function() {
                     $scope.closeAction();
@@ -725,8 +697,6 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/actions/exampleAction.html",
             scope: {model: "="},
-            bindToController: true,
-            controllerAs: "ctrl",
             controller: function($scope, $window, $element) {
                 $scope.closeAction = $scope.$parent.closeAction;
                 $scope.showPreloader = $scope.$parent.showPreloader;
@@ -740,15 +710,13 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/actions/doNotSms.html",
             scope: {model: "="},
-            bindToController: true,
-            controllerAs: "ctrl",
             controller: function($scope, $window, $element) {
                 $scope.closeAction = $scope.$parent.closeAction;
                 $scope.showPreloader = $scope.$parent.showPreloader;
                 $scope.hidePreloader = $scope.$parent.hidePreloader;
                 $scope.info = {
                     'stepName' : 'confirmNumberStep',
-                    'phoneNumber' : $scope.ctrl.model['phone_number_for_do_not_sms_action'],
+                    'phoneNumber' : $scope.model['phone_number_for_do_not_sms_action'],
                     'contacts' : [],
                 };
 
@@ -797,7 +765,7 @@
 
                     CRM.api3('SupportcaseQuickAction', 'apply_no_sms', {
                         'contact_ids' : selectedContactIds,
-                        "case_id": $scope.ctrl.model['id'],
+                        "case_id": $scope.model['id'],
                     }).then(function(result) {
                         if (result.is_error === 1) {
                             console.error('apply_no_sms get error:');
@@ -834,7 +802,7 @@
                     return true;
                 };
 
-                if ($scope.ctrl.model['phone_number_for_do_not_sms_action'] != '') {
+                if ($scope.model['phone_number_for_do_not_sms_action'] != '') {
                   // skip confirmNumberStep if phone is preset
                   $scope.runStep('selectContactsStep');
                 }
@@ -847,8 +815,6 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/actions/manageEmailSubscriptions.html",
             scope: {model: "="},
-            bindToController: true,
-            controllerAs: "ctrl",
             controller: function($scope, $window, $element) {
                 $scope.closeAction = $scope.$parent.closeAction;
                 $scope.showPreloader = $scope.$parent.showPreloader;
@@ -954,7 +920,7 @@
                     CRM.api3('SupportcaseQuickAction', 'apply_groups', {
                         'groups_data' : $scope.prepareGroupsData(),
                         'opt_out_data' : $scope.prepareOptOutData(),
-                        "case_id": $scope.ctrl.model['id'],
+                        "case_id": $scope.model['id'],
                     }).then(function(result) {
                         if (result.is_error === 1) {
                             console.error('apply_groups get error:');
