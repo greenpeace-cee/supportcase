@@ -236,6 +236,7 @@ class CRM_Supportcase_Utils_Setting {
    * @return array
    */
   public static function getAvailableActivityTypeIds() {
+
     $activityTypeNames = CRM_Supportcase_Utils_Setting::get('supportcase_available_activity_type_names');
     $activityTypeIds = [];
 
@@ -252,7 +253,7 @@ class CRM_Supportcase_Utils_Setting {
 
     if (!empty($optionValues['values'])) {
       foreach ($optionValues['values'] as $activityType) {
-        $activityTypeIds[] = (int) $activityType['id'];
+        $activityTypeIds[] = (int) $activityType['value'];
       }
     }
 
