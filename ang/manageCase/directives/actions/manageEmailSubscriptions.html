@@ -15,8 +15,8 @@
 		</div>
 
 		<div class="act__step" ng-switch-when="selectSubscriptionsStep">
-			<div class="act__step-title">Select contacts</div>
-			<div class="act__step-description" ng-if="info['tableData'].length > 0" >There list of contacts which is matched with <strong>"{{info['email']}}"</strong> email. You can mange their subscriptions.</div>
+			<div class="act__step-title">Update Subscriptions</div>
+			<div class="act__step-description" ng-if="info['tableData'].length > 0" >Manage email subscriptions of all contacts with email <strong>{{info['email']}}</strong>:</div>
 			<div class="act__step-body">
 				<div class="act__step-logic">
 
@@ -45,8 +45,6 @@
 												<div class="act__column" ng-if="tableHeader.table_data_key == 'contact_is_opt_out'">
 													<label class="mes__bulk-opt-out-block">
 														<input class="mes__bulk-opt-out-checkbox" ng-model="tableRow['contact_is_opt_out']" type="checkbox"/>
-														<span ng-if="!tableRow['contact_is_opt_out']" class="mp__button mp__button-blue mes__bulk-opt-out-button">Set Bulk Opt-Out</span>
-														<span ng-if="tableRow['contact_is_opt_out']" ng-click="unCheckAllGroupsToContact(tableRow['contact_id'])" class="mp__button mp__button-blue mes__bulk-opt-out-button">Remove Bulk Opt-Out</span>
 													</label>
 												</div>
 											</div>
@@ -56,13 +54,11 @@
 							</table>
 						</div>
 						<div class="mes__unsubscribe-all-groups" >
-							<button ng-click="unCheckAllGroups()">Unsubscribe all</button>
+							<button ng-click="unCheckAllGroups()">Remove all groups</button>
 						</div>
 					</div>
-
-
 					<div ng-if="info['tableData'].length == 0">
-						<p>Cannot find any contacts contacts which is matched with <strong>"{{info['email']}}"</strong> email.</p>
+						<p>Cannot find any contacts contacts matching <strong>"{{info['email']}}"</strong>.</p>
 					</div>
 				</div>
 				<div class="act__step-buttons">
@@ -74,7 +70,7 @@
 
 		<div class="act__step" ng-switch-when="showSuccessMessageStep">
 			<div class="act__step-title">Success</div>
-			<div class="act__step-description">Subscriptions is updated.</div>
+			<div class="act__step-description">Subscriptions were updated.</div>
 			<div class="act__step-body">
 				<div class="act__step-buttons">
 					<button class="act__next-step-button" ng-click="closeAction()">Close</button>

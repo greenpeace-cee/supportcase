@@ -57,4 +57,19 @@ class CRM_Supportcase_Utils_Case {
     return $phoneNumber;
   }
 
+  /**
+   * @todo HACK
+   * @param $caseId
+   */
+  public static function findEmailInActivities($caseId) {
+    $case = civicrm_api3('Case', 'getsingle', [
+      'id' => $caseId,
+    ]);
+    $firstClient = reset($case['client_id']);
+    return civicrm_api3('Contact', 'getvalue', [
+      'return' => 'email',
+      'id' => $firstClient,
+    ]);
+  }
+
 }

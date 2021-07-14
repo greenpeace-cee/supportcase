@@ -77,11 +77,6 @@
                 <a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$manager_contact.id`"}" title="{ts}View Contact Details{/ts}" target="_blank">
                   <span class="supportcase__case-contact-item-line" >{$manager_contact.sort_name}</span>
                 </a>
-                <span class="supportcase__case-contact-item-line" >
-                  {if $manager_contact.phone}
-                    <span class="description">{$manager_contact.phone}</span>
-                  {/if}
-                </span>
               </div>
             {/foreach}
           </td>
