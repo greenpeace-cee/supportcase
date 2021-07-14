@@ -447,6 +447,13 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
       $row['is_locked_by_self'] = FALSE;
       $row['lock_message'] = '';
 
+      // TODO: reimplement/fix
+      /*$mostRecentCommunicationData = $this->getRecentCommunication($result->case_id);
+      $row['case_recent_activity_id'] = $mostRecentCommunicationData['activity_id'];
+      $row['case_recent_activity_date'] = $mostRecentCommunicationData['activity_date_time'];
+      $row['case_recent_activity_details'] = trim(CRM_Utils_String::stripAlternatives($mostRecentCommunicationData['activity_details']));
+      $row['case_recent_activity_type_label'] = $mostRecentCommunicationData['activity_type_label'];*/
+
       $rows[$result->case_id] = $row;
     }
 

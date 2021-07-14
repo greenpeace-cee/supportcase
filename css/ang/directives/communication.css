@@ -22,3 +22,75 @@
 .com__column-details {
     max-width: 200px;
 }
+
+.com__meta td {
+  padding: 4px 10px !important;
+}
+
+.com__meta td:first-child {
+  font-weight: bold;
+}
+
+.com__meta_action {
+  text-align: right;
+}
+
+.com__meta_action button {
+  height: 18px;
+  padding: 3px 12px;
+}
+
+.com__meta_action .ui-button-icon {
+  margin: 0;
+}
+
+.com__message {
+  white-space: pre-line;
+}
+
+.com__message, .com__reply {
+  border-bottom: none !important;
+}
+
+.com__reply .cke_contents {
+  height: 340px !important;
+}
+
+.com__gap {
+  height: 5px;
+}
+
+.com__message-buttons td {
+  padding-top: 0 !important;
+}
+
+.com__message-buttons .ui-button-icon {
+  margin: 0;
+}
+
+.com__communication button {
+  cursor: pointer;
+}
+
+.com__attachments {
+  display: inline !important;
+  list-style: none !important;
+  margin: 0 !important;
+}
+
+.com__attachments li {
+  display: inline !important;
+  padding-right: 10px;
+}
+
+.com__email_date {
+  text-align: right;
+}
+
+.com__templates {
+  float: right;
+  position: relative;
+  right: 15px;
+  top: 5px;
+  margin-left: 15px;
+}

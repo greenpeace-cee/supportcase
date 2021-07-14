@@ -31,14 +31,14 @@ function civicrm_api3_supportcase_quick_action_find_contacts_by_email($params) {
   foreach ($availableGroups as $group) {
     $headers[] = [
       'label' => $group['title'],
-      'description' => $group['description'] . ' It is group of contacts(id=' . $group['id'] . ').',
+      'description' => "Newsletter group '{$group['title']}'",
       'table_data_key' => $group['name'],
       'is_dynamic_header' => true,
     ];
   }
   $headers[] = [
-    'label' => 'No Bulk Email?',
-    'description' => 'No Bulk Email?',
+    'label' => 'NO BULK EMAILS (User Opt Out)',
+    'description' => 'Opt-out from all bulk emails',
     'table_data_key' => 'contact_is_opt_out',
     'is_dynamic_header' => false,
   ];

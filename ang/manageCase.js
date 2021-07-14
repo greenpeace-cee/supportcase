@@ -503,6 +503,9 @@
             controller: function($scope, $element) {
                 $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
                 $scope.smsActivities = [];
+                $scope.emailActivities = [];
+                $scope.isReplyId = null;
+                $scope.replyMode = null;
                 $scope.ts = CRM.ts();
                 this.$onInit = function() {
                     CRM.api3('SupportcaseManageCase', 'get_sms_activities', {
@@ -522,9 +525,169 @@
                             $scope.$apply();
                         }
                     }, function(error) {});
+
+                    $scope.getEmails();
                 };
+
+                $scope.reply = function(activity_id) {
+                  $scope.currentReplyId = activity_id;
+                  $scope.replyMode = 'reply';
+                  $scope.emailSelect(CRM.$("input[name='to']"), null);
+                };
+
+                $scope.forward = function() {
+                  $scope.currentReplyId = activity_id;
+                  $scope.replyMode = 'forward';
+                  $scope.emailSelect(CRM.$("input[name='to']"), null);
+                };
+
+                $scope.cancel = function() {
+                  $scope.currentReplyId = null;
+                  $scope.replyMode = null;
+                };
+
+                $scope.send = function(to_contact_id, to_email, from_contact_id, from_email, subject, body) {
+                  CRM.api3('SupportcaseManageCase', 'send_email', {
+                    "to_contact_id": to_contact_id,
+                    "to_email": to_email,
+                    "from_contact_id": from_contact_id,
+                    "from_email": from_email,
+                    "subject": subject,
+                    "body": body,
+                    "case_id": $scope.model['id'],
+                  }).then(function(result) {
+                    if (result.is_error === 1) {
+                      console.error('Error sending email:');
+                      console.error(result.error_message);
+                    } else {
+                      CRM.status('Email to ' + to_email + ' sent!');
+                      $scope.getEmails();
+                      $scope.isReplyMode = false;
+                    }
+                  }, function(error) {});
+                };
+
+                $scope.getEmails = function() {
+                    CRM.api3('SupportcaseManageCase', 'get_email_activities', {
+                      "sequential": 1,
+                      "case_id": $scope.model['id'],
+                    }).then(function(result) {
+                      if (result.is_error === 1) {
+                        console.error('Activity get error:');
+                        console.error(result.error_message);
+                      } else {
+                        $scope.emailActivities = result.values;
+                        if (result.values["length"] > 0) {
+                          var mainElement = $($element);
+                          mainElement.find('.crm-accordion-wrapper').removeClass('collapsed');
+                          mainElement.find('.crm-accordion-body').show();
+                        }
+                        $scope.$apply();
+                      }
+                    }, function(error) {});
+                }
+
+                $scope.emailSelect = function(el, prepopulate) {
+                  $(el).data('api-entity', 'contact').css({width: '40em', 'max-width': '90%'}).crmSelect2({
+                    minimumInputLength: 1,
+                    multiple: true,
+                    ajax: {
+                      url: '/civicrm/ajax/checkemail?id=1',
+                      data: function(term) {
+                        return {
+                          name: term
+                        };
+                      },
+                      results: function(response) {
+                        return {
+                          results: response
+                        };
+                      }
+                    }
+                  }).select2('data', prepopulate);
+                }
             }
         };
+    });
+
+    angular.module(moduleName).directive("mailutilsTemplate", function() {
+      return {
+        require: '^crmUiIdScope',
+        scope: {
+          onSelect: '@'
+        },
+        template: '<input type="text" class="crmMailingToken" />',
+        link: function(scope, element, attrs, crmUiIdCtrl) {
+          var templates = [
+            {
+              text: 'Spendenabsetzbarkeit',
+              children: [
+                {
+                  id: '{contact.email_greeting}\n\nWir haben Ihre Daten für die Spendeneinmeldung beim Finanzamt soeben erfasst. Ihre Spenden werden bis zum nächsten Monatsersten beim Finanzamt gemeldet.',
+                  text: 'Daten erfasst'
+                },
+                {
+                  id: "",
+                  text: 'Daten falsch'
+                }
+              ]
+            },
+            {
+              text: 'Newsletter',
+              children: [
+                {
+                  id: '',
+                  text: 'Abmeldung'
+                },
+                {
+                  id: "",
+                  text: 'Beschwerde'
+                }
+              ]
+            },
+            {
+              text: 'Verträge',
+              children: [
+                {
+                  id: '',
+                  text: 'Stornobestätigung'
+                },
+                {
+                  id: "",
+                  text: 'IBAN-Änderung'
+                }
+              ]
+            },
+            {
+              text: 'Headers/Footers',
+              children: [
+                {
+                  id: 'I am <strong>header</strong>',
+                  text: 'Default Header'
+                },
+                {
+                  id: "Mit freundlichen Grüßen\nGreenpeace in Zentral- und Osteuropa",
+                  text: 'Default Footer'
+                }
+              ]
+            }
+          ];
+          console.log(CRM.crmMailing.mailTokens);
+          $(element).addClass('crm-action-menu fa-code').crmSelect2({
+            width: "12em",
+            dropdownAutoWidth: true,
+            data: templates,
+            placeholder: ts('Templates')
+          });
+          $(element).on('select2-selecting', function(e) {
+            e.preventDefault();
+            $(element).select2('close').select2('val', '');
+            scope.$parent.$eval(attrs.onSelect, {
+              token: {name: e.val}
+            });
+          });
+        }
+      };
     });
 
     angular.module(moduleName).directive("activities", function() {
@@ -619,7 +782,7 @@
                     $scope.doAction('status_id', $scope.model['settings']['case_status_ids']['resolve'], function () {
                         $scope.model['status_id'] = $scope.model['settings']['case_status_ids']['resolve'];
                         $scope.$apply();
-                        CRM.status('Case is resolved. Case status is updated.');
+                        CRM.status('Case was resolved.');
                     });
                 };
 
@@ -627,7 +790,7 @@
                     $scope.doAction('status_id', $scope.model['settings']['case_status_ids']['spam'],function () {
                         $scope.model['status_id'] = $scope.model['settings']['case_status_ids']['spam'];
                         $scope.$apply();
-                        CRM.status('Case is marked as spam. Case status is updated.');
+                        CRM.status('Case was marked as spam.');
                     });
                 };
 
@@ -635,7 +798,7 @@
                     $scope.doAction('status_id', $scope.model['settings']['case_status_ids']['urgent'],function () {
                         $scope.model['status_id'] = $scope.model['settings']['case_status_ids']['urgent'];
                         $scope.$apply();
-                        CRM.status('Case is made urgent. Case status is updated.');
+                        CRM.status('Case was made urgent.');
                     });
                 };
 
@@ -643,7 +806,7 @@
                     $scope.doAction('status_id', $scope.model['settings']['case_status_ids']['ongoing'],function () {
                         $scope.model['status_id'] = $scope.model['settings']['case_status_ids']['ongoing'];
                         $scope.$apply();
-                        CRM.status('Case is made ongoing. Case status is updated.');
+                        CRM.status('Case was made ongoing.');
                     });
                 };
 
@@ -651,7 +814,7 @@
                     $scope.doAction('is_deleted', '1',function () {
                         $scope.model['is_deleted'] = 1;
                         $scope.$apply();
-                        CRM.status('Case is deleted.');
+                        CRM.status('Case was deleted.');
                     });
                 };
 
@@ -659,7 +822,7 @@
                     $scope.doAction('is_deleted', '0',function () {
                         $scope.model['is_deleted'] = 0;
                         $scope.$apply();
-                        CRM.status('Case is restored.');
+                        CRM.status('Case was restored.');
                     });
                 };
             }
@@ -821,7 +984,8 @@
                 $scope.hidePreloader = $scope.$parent.hidePreloader;
                 $scope.info = {
                     'stepName' : 'confirmEmailStep',
-                    'email' : '',
+                    'email' : $scope.model['email_for_manage_email_subscriptions'],
+                    'contacts' : [],
                     'availableGroups' : [],
                     'tableData' : [],
                     'tableHeaders' : [],
@@ -877,6 +1041,7 @@
                             console.error('find_contacts_by_email get error:');
                             console.error(result.error_message);
                         } else {
+                          console.log(result);
                             $scope.info.tableHeaders = result.values['table_headers'];
                             $scope.info.tableData = result.values['table_data'];
                             $scope.info.availableGroups = result.values['available_groups'];
@@ -929,6 +1094,10 @@
                         $scope.hidePreloader();
                     }, function(error) {});
                 };
+
+              if ($scope.model['email_for_manage_email_subscriptions'] != '') {
+                $scope.runStep('selectSubscriptionsStep');
+              }
             }
         };
     });
