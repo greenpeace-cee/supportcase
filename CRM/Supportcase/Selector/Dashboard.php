@@ -56,6 +56,10 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
     'case_status_id',
     'case_status',
     'case_role',
+    'case_recent_activity_date',
+    'case_recent_activity_id',
+    'case_recent_activity_details',
+    'case_recent_activity_type_id',
   ];
 
   /**
@@ -187,6 +191,37 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
       ]);
       $this->addNewWhere($where);
     }
+
+    // this code uses to show and sort "Most Recent Communication" column
+    $innerSelect = '
+      SELECT inner_case_activity.activity_id
+      FROM civicrm_case_activity as inner_case_activity
+      LEFT JOIN civicrm_activity AS inner_activity ON (inner_activity.id = inner_case_activity.activity_id)
+      WHERE inner_case_activity.case_id = civicrm_case.id
+        AND inner_activity.is_deleted = "0"
+        AND inner_activity.activity_type_id IN(%1)
+        AND inner_activity.activity_date_time = (
+          SELECT MAX(inner_inner_activity.activity_date_time)
+          FROM civicrm_case_activity as inner_inner_case_activity
+          LEFT JOIN civicrm_activity AS inner_inner_activity ON (inner_inner_activity.id = inner_inner_case_activity.activity_id)
+          WHERE inner_inner_case_activity.case_id = civicrm_case.id
+            AND inner_inner_activity.is_deleted = "0"
+            AND inner_inner_activity.activity_type_id IN(%1)
+        )
+    ';
+
+    $innerSelectPrepared = CRM_Core_DAO::composeQuery($innerSelect, [
+      1 => [implode(',', CRM_Supportcase_Utils_Setting::getAvailableActivityTypeIds()) , 'CommaSeparatedIntegers'],
+    ]);
+
+    $whereTable = "\n LEFT JOIN civicrm_activity AS communication_activity ON (communication_activity.id  IN(" . $innerSelectPrepared . ")) ";
+    $this->_query->_whereTables['communication_activity'] = $whereTable;
+    $this->_query->_tables['communication_activity'] = $whereTable;
+
+    $this->_query->_select[] = 'communication_activity.activity_date_time as case_recent_activity_date ';
+    $this->_query->_select[] = 'communication_activity.id as case_recent_activity_id ';
+    $this->_query->_select[] = 'communication_activity.details as case_recent_activity_details ';
+    $this->_query->_select[] = 'communication_activity.activity_type_id as case_recent_activity_type_id ';
   }
 
   /**
@@ -403,17 +438,21 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
       $row['category'] = (!empty($categoryCustomFieldName)) ? $result->$categoryCustomFieldName: '';
       $row['is_case_deleted'] = $result->case_deleted == '1';
 
+      if (isset($row['case_recent_activity_id'])) {
+        $row['case_recent_activity_type_label'] = CRM_Supportcase_Utils_ActivityType::getLabelById($row['case_recent_activity_type_id']);
+      }
+
       //default locking values:
       $row['is_case_locked'] = FALSE;
       $row['is_locked_by_self'] = FALSE;
       $row['lock_message'] = '';
 
-      //it shows at 'most recent communication' column
-      $mostRecentCommunicationData = $this->getRecentCommunication($result->case_id);
+      // TODO: reimplement/fix
+      /*$mostRecentCommunicationData = $this->getRecentCommunication($result->case_id);
       $row['case_recent_activity_id'] = $mostRecentCommunicationData['activity_id'];
       $row['case_recent_activity_date'] = $mostRecentCommunicationData['activity_date_time'];
-      $row['case_recent_activity_details'] = $mostRecentCommunicationData['activity_details'];
-      $row['case_recent_activity_type_label'] = $mostRecentCommunicationData['activity_type_label'];
+      $row['case_recent_activity_details'] = trim(CRM_Utils_String::stripAlternatives($mostRecentCommunicationData['activity_details']));
+      $row['case_recent_activity_type_label'] = $mostRecentCommunicationData['activity_type_label'];*/
 
       $rows[$result->case_id] = $row;
     }
@@ -481,54 +520,6 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
   }
 
   /**
-   * Get most recent communication by case id
-   * (it is activity)
-   *
-   * @param $caseId
-   * @return array
-   */
-  private function getRecentCommunication($caseId) {
-    $recentCommunication = [
-      'activity_id' => '',
-      'activity_date_time' => '',
-      'activity_details' => '',
-      'activity_type_label' => '',
-    ];
-
-    try {
-      $recentActivity = civicrm_api3('Activity', 'get', [
-        'case_id' => $caseId,
-        'activity_type_id' => ['IN' => CRM_Supportcase_Utils_Setting::get('supportcase_available_activity_type_names')],
-        'is_deleted' => "0",
-        'sequential' => 1,
-        'return' => [
-          'id',
-          'subject',
-          'details',
-          'activity_date_time',
-          'activity_type_id',
-          'activity_type_id.label'
-        ],
-        'options' => [
-          'sort' => "activity_date_time DESC",
-          'limit' => 1
-        ],
-      ]);
-    } catch (CiviCRM_API3_Exception $e) {
-      return $recentCommunication;
-    }
-
-    if (!empty($recentActivity['values'][0])) {
-      $recentCommunication['activity_id'] = $recentActivity['values'][0]['id'];
-      $recentCommunication['activity_date_time'] = $recentActivity['values'][0]['activity_date_time'];
-      $recentCommunication['activity_details'] = $recentActivity['values'][0]['details'];
-      $recentCommunication['activity_type_label'] = $recentActivity['values'][0]['activity_type_id.label'];
-    }
-
-    return $recentCommunication;
-  }
-
-  /**
    * @inheritDoc
    */
   public function getQill() {
@@ -574,6 +565,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
         ],
         [
           'name' => ts('Most Recent Communication'),
+          'sort' => 'case_recent_activity_date',
           'direction' => CRM_Utils_Sort::ASCENDING,
         ],
         [

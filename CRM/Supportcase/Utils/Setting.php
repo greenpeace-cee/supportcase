@@ -232,4 +232,31 @@ class CRM_Supportcase_Utils_Setting {
     return !empty($groups['values']) ? $groups['values'] : [];
   }
 
+  /**
+   * @return array
+   */
+  public static function getAvailableActivityTypeIds() {
+    $activityTypeNames = CRM_Supportcase_Utils_Setting::get('supportcase_available_activity_type_names');
+    $activityTypeIds = [];
+
+    try {
+      $optionValues = civicrm_api3('OptionValue', 'get', [
+        'sequential' => 1,
+        'options' => ['limit' => 0],
+        'option_group_id' => "activity_type",
+        'name' => ['IN' => $activityTypeNames],
+      ]);
+    } catch (Exception $e) {
+      return $activityTypeIds;
+    }
+
+    if (!empty($optionValues['values'])) {
+      foreach ($optionValues['values'] as $activityType) {
+        $activityTypeIds[] = (int) $activityType['value'];
+      }
+    }
+
+    return $activityTypeIds;
+  }
+
 }
