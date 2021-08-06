@@ -98,7 +98,16 @@
                 <td crm-ui-id-scope colspan="3">
                   <div>
                     <div>
-                      <input type="text" name="to" id="to">
+                      <div class="crm-section">
+                        <input class="com__recipients-input crm-form-select"
+                               placeholder="- none -"
+                               data-select-params='{"multiple":true}'
+                               data-api-params='{"params":{}}'
+                               data-api-entity="SupportcaseEmail"
+                               type="text"
+                               ng-model="recipients"
+                        />
+                      </div>
                     </div>
                     <div class="com__templates">
                       <input mailutils-template on-select="$broadcast('insert:reply', token.name)" tabindex="-1" style="z-index:1">

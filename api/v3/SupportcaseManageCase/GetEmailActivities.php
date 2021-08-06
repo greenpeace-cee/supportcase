@@ -19,7 +19,7 @@ function civicrm_api3_supportcase_manage_case_get_email_activities($params) {
   try {
     $activities = civicrm_api3('Activity', 'get', [
       'is_deleted' => '0',
-      'options' => ['limit' => 0],
+      'options' => ['limit' => 0],//TODO: check if needs limit 0
       'case_id' => $params['case_id'],
       'activity_type_id' => ['IN' => ['Email', 'Inbound Email']],
       'api.Attachment.get' => [],
@@ -37,10 +37,20 @@ function civicrm_api3_supportcase_manage_case_get_email_activities($params) {
         'id' => $activity['source_contact_id'],
         'return' => ['id', 'email', 'display_name'],
       ]);
-      $to = civicrm_api3('Contact', 'getsingle', [
-        'id' => $activity['target_contact_id'][0],
-        'return' => ['id', 'email', 'display_name'],
-      ]);
+
+      try {
+        $to = civicrm_api3('Contact', 'getsingle', [
+          'id' => $activity['target_contact_id'][0],
+          'return' => ['id', 'email', 'display_name'],
+        ]);
+      } catch (CiviCRM_API3_Exception $e) {
+        $to = [
+          'id' => null,
+          'display_name' => null,
+          'email' => null,
+        ];
+      }
+
       $preparedActivity = [
         'id' => $activity['id'],
         'activity_type_id' => $activity['activity_type_id'],

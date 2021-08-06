@@ -504,6 +504,7 @@
                 $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
                 $scope.smsActivities = [];
                 $scope.emailActivities = [];
+                $scope.recipients = '';
                 $scope.isReplyId = null;
                 $scope.replyMode = null;
                 $scope.ts = CRM.ts();
@@ -529,10 +530,23 @@
                     $scope.getEmails();
                 };
 
+                $scope.initRecipientEntityRef = function() {
+                    setTimeout(function() {
+                        var input = $($element).find(".com__recipients-input");
+                        input.crmEntityRef('destroy');
+                        input.css({
+                            'width' : '100%',
+                            'max-width' : '300px',
+                            'box-sizing' : 'border-box',
+                        }).crmEntityRef();
+                    }, 0);
+                };
+
                 $scope.reply = function(activity_id) {
-                  $scope.currentReplyId = activity_id;
-                  $scope.replyMode = 'reply';
-                  $scope.emailSelect(CRM.$("input[name='to']"), null);
+                    $scope.initRecipientEntityRef();
+                    $scope.currentReplyId = activity_id;
+                    $scope.replyMode = 'reply';
+                    $scope.emailSelect(CRM.$("input[name='to']"), null);
                 };
 
                 $scope.forward = function() {
@@ -610,84 +624,39 @@
         };
     });
 
-    angular.module(moduleName).directive("mailutilsTemplate", function() {
-      return {
-        require: '^crmUiIdScope',
-        scope: {
-          onSelect: '@'
-        },
-        template: '<input type="text" class="crmMailingToken" />',
-        link: function(scope, element, attrs, crmUiIdCtrl) {
-          var templates = [
-            {
-              text: 'Spendenabsetzbarkeit',
-              children: [
-                {
-                  id: '{contact.email_greeting}\n\nWir haben Ihre Daten für die Spendeneinmeldung beim Finanzamt soeben erfasst. Ihre Spenden werden bis zum nächsten Monatsersten beim Finanzamt gemeldet.',
-                  text: 'Daten erfasst'
-                },
-                {
-                  id: "",
-                  text: 'Daten falsch'
-                }
-              ]
+    angular.module(moduleName).directive("mailutilsTemplate", function () {
+        return {
+            require: '^crmUiIdScope',
+            scope: {
+                onSelect: '@'
             },
-            {
-              text: 'Newsletter',
-              children: [
-                {
-                  id: '',
-                  text: 'Abmeldung'
-                },
-                {
-                  id: "",
-                  text: 'Beschwerde'
-                }
-              ]
-            },
-            {
-              text: 'Verträge',
-              children: [
-                {
-                  id: '',
-                  text: 'Stornobestätigung'
-                },
-                {
-                  id: "",
-                  text: 'IBAN-Änderung'
-                }
-              ]
-            },
-            {
-              text: 'Headers/Footers',
-              children: [
-                {
-                  id: 'I am <strong>header</strong>',
-                  text: 'Default Header'
-                },
-                {
-                  id: "Mit freundlichen Grüßen\nGreenpeace in Zentral- und Osteuropa",
-                  text: 'Default Footer'
-                }
-              ]
+            template: '<input type="text" class="crmMailingToken" />',
+            link: function (scope, element, attrs, crmUiIdCtrl) {
+                CRM.api3('SupportcaseManageCase', 'get_prepared_mail_template_options').then(function(result) {
+                    if (result.is_error === 1) {
+                        console.error('SupportcaseManageCase->get_prepared_mail_template_options error:');
+                        console.error(result.error_message);
+                    } else {
+                        $(element).addClass('crm-action-menu fa-code').crmSelect2({
+                            width: "12em",
+                            dropdownAutoWidth: true,
+                            data: result['values'],
+                            placeholder: ts('Templates')
+                        });
+                        $(element).on('select2-selecting', function (e) {
+                            e.preventDefault();
+                            $(element).select2('close').select2('val', '');
+                            scope.$parent.$eval(attrs.onSelect, {
+                                token: {name: e.val}
+                            });
+                        });
+                    }
+                }, function(error) {
+                    console.error('SupportcaseManageCase->get_prepared_mail_template_options error:');
+                    console.error(error);
+                });
             }
-          ];
-          console.log(CRM.crmMailing.mailTokens);
-          $(element).addClass('crm-action-menu fa-code').crmSelect2({
-            width: "12em",
-            dropdownAutoWidth: true,
-            data: templates,
-            placeholder: ts('Templates')
-          });
-          $(element).on('select2-selecting', function(e) {
-            e.preventDefault();
-            $(element).select2('close').select2('val', '');
-            scope.$parent.$eval(attrs.onSelect, {
-              token: {name: e.val}
-            });
-          });
-        }
-      };
+        };
     });
 
     angular.module(moduleName).directive("activities", function() {
