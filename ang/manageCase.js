@@ -504,7 +504,7 @@
                 $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
                 $scope.smsActivities = [];
                 $scope.emailActivities = [];
-                $scope.recipients = '';
+                $scope.recipients = {};
                 $scope.isReplyId = null;
                 $scope.replyMode = null;
                 $scope.ts = CRM.ts();
@@ -531,6 +531,10 @@
                 };
 
                 $scope.initRecipientEntityRef = function() {
+                    for (var i = 0; i < $scope.emailActivities.length; i++) {
+                        $scope.recipients[$scope.emailActivities[i]['id']] = '';
+                    }
+
                     setTimeout(function() {
                         var input = $($element).find(".com__recipients-input");
                         input.crmEntityRef('destroy');
