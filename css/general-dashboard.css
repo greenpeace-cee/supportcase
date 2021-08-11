@@ -311,3 +311,7 @@
 .supportcase__case-contact-item-line {
     display: block;
 }
+
+.supportcase__search-buttons {
+    display: flex;
+}
