@@ -13,7 +13,7 @@
 						<span>No messages</span>
 					</div>
 					<div ng-if="smsActivities.length > 0"  class="com__table">
-						<table class="crm-search-results">
+						<table class="crm-search-results supportcase__table">
 							<thead>
 								<tr>
 									<th class="com__column-head">Date</th>
@@ -30,121 +30,113 @@
 									<div class="com__column com__column-subject">{{activity.subject}}</div>
 								</td>
 								<td>
-									<div class="com__column com__column-details">{{activity.details}}</div>
+									<div class="com__column com__column-details">
+                                      <show-more-text full-text="activity.details" max-text-length="100"></show-more-text>
+                                    </div>
 								</td>
 							</tr>
 							</tbody>
 						</table>
 					</div>
-          <div ng-if="emailActivities.length > 0"  class="com__table com__email">
-            <table ng-repeat="activity in emailActivities" class="crm-entity" class="crm-search-results">
-              <tbody>
-              <tr ng-show="!$first" class="com__gap">
-                <td colspan="3">
-                  &nbsp;
-                </td>
-              </tr>
-              <tr class="com__meta" ng-show="currentReplyId != activity.id">
-                <td>
-                  From:
-                </td>
-                <td>
-                  {{activity.from_name}} <{{activity.from_email}}>
-                </td>
-                <td class="com__meta_action">
-                  <button ng-click="reply(activity.id)" ng-show="currentReplyId != activity.id">
-                    <span class="ui-button-icon ui-icon fa-reply"></span><span class="ui-button-icon-space"> </span>Reply
-                  </button>
-                  <button ng-click="forward()" ng-show="currentReplyId != activity.id">
-                    <span class="ui-button-icon ui-icon fa-share"></span><span class="ui-button-icon-space"> </span>Forward
-                  </button>
-                </td>
-              </tr>
-              <tr class="com__meta" ng-show="currentReplyId != activity.id">
-                <td>
-                  Subject:
-                </td>
-                <td>
-                  {{activity.subject}}
-                </td>
-                <td class="com__email_date">
-                  {{formatDateAndTime(activity.activity_date_time, true)}}
-                </td>
-              </tr>
-              <tr class="com__meta" ng-show="currentReplyId != activity.id">
-                <td>
-                  To:
-                </td>
-                <td colspan="2">
-                  {{activity.to_name}} <{{activity.to_email}}>
-                </td>
-              </tr>
-              <tr class="com__meta" ng-show="currentReplyId != activity.id && activity.attachments.length > 0">
-                <td>Attachments:</td>
-                <td colspan="2">
-                  <ul class="com__attachments">
-                    <li ng-repeat="attachment in activity.attachments">
-                      <a href="{{attachment.url}}">
-                        <i class="crm-i {{attachment.icon}}"></i> {{attachment.name}}
-                      </a>
-                    </li>
-                  </ul>
-                </td>
-              </tr>
-              <tr class="com__message" ng-show="currentReplyId != activity.id">
-                <td colspan="3">{{activity.details}}</td>
-              </tr>
-              <tr class="com__reply"  ng-show="currentReplyId == activity.id">
-                <td crm-ui-id-scope colspan="3">
-                  <div>
-                    <div>
-                      <div class="crm-section">
-                        <input class="com__recipients-input crm-form-select"
-                               placeholder="- none -"
-                               data-select-params='{"multiple":true}'
-                               data-api-params='{"params":{}}'
-                               data-api-entity="SupportcaseEmail"
-                               type="text"
-                               ng-model="recipients[activity.id]"
-                        />
-                      </div>
+                    <div ng-if="emailActivities.length > 0" class="com__table com__email">
+                        <table ng-repeat="activity in emailActivities" class="crm-entity supportcase__table" class="crm-search-results">
+                            <tbody>
+                            <tr ng-show="!$first" class="com__gap">
+                                <td colspan="3">&nbsp;</td>
+                            </tr>
+                            <tr class="com__meta supportcase__table-grey-row" ng-show="currentReplyId != activity.id">
+                                <td>From:</td>
+                                <td>{{activity.from_name}} <{{activity.from_email}}></td>
+                                <td class="com__meta_action">
+                                    <button class="supportcase__button b--height-little" ng-click="reply(activity.id)" ng-show="currentReplyId != activity.id">
+                                        <span class="ui-button-icon ui-icon fa-reply"></span>
+                                        <span class="ui-button-icon-space"> </span>
+                                        <span>Reply</span>
+                                    </button>
+                                    <button class="supportcase__button b--height-little" ng-click="forward()" ng-show="currentReplyId != activity.id">
+                                        <span class="ui-button-icon ui-icon fa-share"></span>
+                                        <span class="ui-button-icon-space"> </span>
+                                        <span>Forward</span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="com__meta supportcase__table-grey-row" ng-show="currentReplyId != activity.id">
+                                <td>Subject:</td>
+                                <td>{{activity.subject}}</td>
+                                <td class="com__email_date">
+                                    {{formatDateAndTime(activity.activity_date_time, true)}}
+                                </td>
+                            </tr>
+                            <tr class="com__meta supportcase__table-grey-row" ng-show="currentReplyId != activity.id">
+                                <td>To:</td>
+                                <td colspan="2">{{activity.to_name}} <{{activity.to_email}}></td>
+                            </tr>
+                            <tr class="com__meta supportcase__table-grey-row" ng-show="currentReplyId != activity.id && activity.attachments.length > 0">
+                                <td>Attachments:</td>
+                                <td colspan="2">
+                                    <ul class="com__attachments">
+                                        <li ng-repeat="attachment in activity.attachments">
+                                            <a href="{{attachment.url}}">
+                                                <i class="crm-i {{attachment.icon}}"></i> {{attachment.name}}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr class="com__message" ng-show="currentReplyId != activity.id">
+                                <td colspan="3">{{activity.details}}</td>
+                            </tr>
+                            <tr class="com__reply" ng-show="currentReplyId == activity.id">
+                                <td crm-ui-id-scope colspan="3">
+                                    <div>
+                                        <div>
+                                            <div class="crm-section">
+                                                <input class="com__recipients-input crm-form-select"
+                                                       placeholder="- none -"
+                                                       data-select-params='{"multiple":true}'
+                                                       data-api-params='{"params":{}}'
+                                                       data-api-entity="SupportcaseEmail"
+                                                       type="text"
+                                                       ng-model="recipients[activity.id]"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="com__templates">
+                                            <input mailutils-template on-select="$broadcast('insert:reply', token.name)" tabindex="-1" style="z-index:1">
+                                        </div>
+                                        <div>
+                                            <textarea crm-ui-id="email-reply-{{activity.id}}" crm-ui-richtext crm-ui-insert-rx="insert:reply"
+                                                      name="reply" ng-model="activity.reply" style="height: 500px" data-preset="civimail"></textarea>
+                                        </div>
+                                        <input type="file">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="com__message-buttons">
+                                <td colspan="3">
+                                    <button class="supportcase__button b--height-medium" ng-click="reply(activity.id)" ng-show="currentReplyId != activity.id">
+                                        <span class="ui-button-icon ui-icon fa-reply"></span>
+                                        <span class="ui-button-icon-space"> </span>
+                                        <span>Reply</span>
+                                    </button>
+                                    <button class="supportcase__button b--height-medium" ng-click="forward(activity.id)" ng-show="currentReplyId != activity.id">
+                                        <span class="ui-button-icon ui-icon fa-share"></span>
+                                        <span class="ui-button-icon-space"> </span>
+                                        <span>Forward</span>
+                                    </button>
+                                    <button class="supportcase__button b--height-medium" ng-click="send(activity.from_contact_id, activity.from_email, activity.to_contact_id, activity.to_email, activity.subject, activity.reply)"
+                                            ng-show="currentReplyId == activity.id">
+                                        <span class="ui-button-icon ui-icon fa-paper-plane-o"></span>
+                                        <span class="ui-button-icon-space"> </span>
+                                        <span>Send</span>
+                                    </button>
+                                    <button class="supportcase__button b--height-medium button__cancel" ng-click="cancel()" ng-show="currentReplyId == activity.id">Cancel</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="com__templates">
-                      <input mailutils-template on-select="$broadcast('insert:reply', token.name)" tabindex="-1" style="z-index:1">
-                    </div>
-                    <div>
-                      <textarea
-                        crm-ui-id="email-reply-{{activity.id}}"
-                        crm-ui-richtext
-                        crm-ui-insert-rx="insert:reply"
-                        name="reply"
-                        ng-model="activity.reply"
-                        style="height: 500px"
-                        data-preset="civimail"
-                      ></textarea>
-                    </div>
-                    <input type="file">
-                  </div>
-                </td>
-              </tr>
-              <tr class="com__message-buttons">
-                <td colspan="3">
-                  <button ng-click="reply(activity.id)" ng-show="currentReplyId != activity.id">
-                    <span class="ui-button-icon ui-icon fa-reply"></span><span class="ui-button-icon-space"> </span>Reply
-                  </button>
-                  <button ng-click="forward(activity.id)" ng-show="currentReplyId != activity.id">
-                    <span class="ui-button-icon ui-icon fa-share"></span><span class="ui-button-icon-space"> </span>Forward
-                  </button>
-                  <button ng-click="send(activity.from_contact_id, activity.from_email, activity.to_contact_id, activity.to_email, activity.subject, activity.reply)" ng-show="currentReplyId == activity.id">
-                    <span class="ui-button-icon ui-icon fa-paper-plane-o"></span><span class="ui-button-icon-space"> </span>Send
-                  </button>
-                  <button class="button__cancel" ng-click="cancel()" ng-show="currentReplyId == activity.id">Cancel</button>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-				</div>
+                </div>
 			</div>
 		</div>
 	</div>

@@ -4,27 +4,27 @@
 			<div class="mp__buttons-wrap">
 				<div ng-if="!isCaseDeleted();">
 
-					<button ng-if="!isCaseHasStatus('resolve');" class="mp__button crm-form-submit" ng-click="resolveCase();">
+					<button ng-if="!isCaseHasStatus('resolve');" class="mp__button crm-form-submit supportcase__button b--height-big" ng-click="resolveCase();">
 						<span class="ui-button-icon ui-icon fa-check"></span>
 						<span class="ui-button-icon-space"> </span>
 						Resolve
 					</button>
-					<button ng-if="!isCaseHasStatus('ongoing');" class="mp__button crm-form-submit" ng-click="makeCaseOngoing();">
+					<button ng-if="!isCaseHasStatus('ongoing');" class="mp__button crm-form-submit supportcase__button b--height-big" ng-click="makeCaseOngoing();">
 						<span class="ui-button-icon ui-icon fa-refresh"></span>
 						<span class="ui-button-icon-space"> </span>
 						Ongoing
 					</button>
-					<button ng-if="!isCaseHasStatus('urgent');" class="mp__button crm-form-submit" ng-click="makeCaseUrgent();">
+					<button ng-if="!isCaseHasStatus('urgent');" class="mp__button crm-form-submit supportcase__button b--height-big" ng-click="makeCaseUrgent();">
 						<span class="ui-button-icon ui-icon fa-exclamation-circle"></span>
 						<span class="ui-button-icon-space"> </span>
 						Urgent
 					</button>
-					<button ng-if="!isCaseHasStatus('spam');" class="mp__button crm-form-submit" ng-click="reportSpamCase();">
+					<button ng-if="!isCaseHasStatus('spam');" class="mp__button crm-form-submit supportcase__button b--height-big" ng-click="reportSpamCase();">
 						<span class="ui-button-icon ui-icon fa-flag"></span>
 						<span class="ui-button-icon-space"> </span>
 						Report Spam
 					</button>
-					<button class="mp__button crm-form-submit" ng-click="moveToTrashCase();">
+					<button class="mp__button crm-form-submit supportcase__button b--height-big" ng-click="moveToTrashCase();">
 						<span class="ui-button-icon ui-icon fa-trash"></span>
 						<span class="ui-button-icon-space"> </span>
 						Delete case

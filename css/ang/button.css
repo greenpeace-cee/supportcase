@@ -1,0 +1,16 @@
+
+.supportcase__button {
+    cursor: pointer;
+}
+
+.supportcase__button.b--height-medium {
+    padding: 5px 12px !important;
+}
+
+.supportcase__button.b--height-big {
+    padding: 11px 12px !important;
+}
+
+.supportcase__button.b--height-little {
+    padding: 2px 5px !important;
+}

@@ -1,0 +1,15 @@
+<div class="smt__show-more-text">
+  <div ng-if="isNeedToShowButtons">
+    <div ng-if="isShowLess">
+      <span>{{shortText}}</span>
+      <a class="smt__button" ng-click="toggleMode()">show more</a>
+    </div>
+
+    <div ng-if="!isShowLess">
+      <span>{{fullText}}</span>
+      <a class="smt__button" ng-if="!isShowLess" ng-click="toggleMode()">show less</a>
+    </div>
+  </div>
+
+  <div ng-if="!isNeedToShowButtons"><span>{{fullText}}</span></div>
+</div>

@@ -1075,4 +1075,30 @@
         };
     });
 
+    angular.module(moduleName).directive("showMoreText", function() {
+        return {
+            restrict: "E",
+            templateUrl: "~/manageCase/directives/showMoreText.html",
+            scope: {
+                fullText: "<fullText",
+                maxTextLength: "<maxTextLength",
+            },
+            controller: function($scope) {
+                if ($scope.fullText.length > $scope.maxTextLength) {
+                    $scope.isShowLess = true;
+                    $scope.isNeedToShowButtons = true;
+                    $scope.shortText = $scope.fullText.substring(0, $scope.maxTextLength);
+                    $scope.shortText += ' ...';
+                } else {
+                    $scope.isShowLess = false;
+                    $scope.isNeedToShowButtons = false;
+                }
+
+                $scope.toggleMode = function() {
+                    $scope.isShowLess = !$scope.isShowLess;
+                };
+            }
+        };
+    });
+
 })(angular, CRM.$, CRM._);

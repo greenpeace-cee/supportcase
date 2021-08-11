@@ -35,11 +35,6 @@
   text-align: right;
 }
 
-.com__meta_action button {
-  height: 18px;
-  padding: 3px 12px;
-}
-
 .com__meta_action .ui-button-icon {
   margin: 0;
 }
@@ -58,6 +53,10 @@
 
 .com__gap {
   height: 5px;
+}
+
+.com__message-buttons > td {
+  padding-left: 0 !important;
 }
 
 .com__message-buttons td {

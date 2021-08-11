@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Search mailing group/email/contact by input
+ * Search mailing emails/contacts by input
  *
  * @param array $params
  *

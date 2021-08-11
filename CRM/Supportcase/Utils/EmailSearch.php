@@ -15,9 +15,7 @@ class CRM_Supportcase_Utils_EmailSearch {
     }
 
     $searchResult = array_merge($searchResult, self::searchByStringEmails($searchString));
-    $searchResult = array_merge($searchResult, self::searchByStringGroups($searchString));
     $searchResult = array_merge($searchResult, self::searchByStringContacts($searchString));
-
 
     return $searchResult;
   }
@@ -51,33 +49,6 @@ class CRM_Supportcase_Utils_EmailSearch {
     return $searchResult;
   }
 
-  /**
-   * @return array
-   */
-  public static function searchByStringGroups($searchString) {
-    $searchResult = [];
-
-    try {
-      $groups = civicrm_api3('Group', 'get', [
-          'sequential' => 1,
-          'return' => ["title", "id"],
-          'options' => ['limit' => 0],
-          "is_hidden" =>  "0",
-          "is_active" =>  "1",
-          'title' => ['LIKE' => "%" . $searchString . "%"],
-      ]);
-    } catch (CiviCRM_API3_Exception $e) {
-      return $searchResult;
-    }
-
-    if (!empty($groups['values'])) {
-      foreach ($groups['values'] as $group) {
-        $searchResult[] = self::prepareGroupResponse($group);
-      }
-    }
-
-    return $searchResult;
-  }
   /**
    * @return array
    */
