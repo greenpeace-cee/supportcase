@@ -232,4 +232,23 @@ class CRM_Supportcase_Utils_Setting {
     return !empty($groups['values']) ? $groups['values'] : [];
   }
 
+  /**
+   * Iframe height with 'Manage Case' angular page
+   *
+   * @return int
+   */
+  public static function getAngularIframeHeight() {
+    return 3000;// value in pixels
+  }
+
+  /**
+   * Iframe height with 'Manage Case' angular page
+   * which is opened in modal window
+   *
+   * @return int
+   */
+  public static function getAngularIframeHeightInModal() {
+    return 650;// value in pixels
+  }
+
 }

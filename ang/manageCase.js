@@ -6,15 +6,15 @@
     angular.module(moduleName).config([
         "$routeProvider",
         function($routeProvider) {
-            $routeProvider.when("/supportcase/manage-case/:caseId?/:viewType?", {
+            $routeProvider.when("/supportcase/manage-case/:caseId?/:scrollableBlockHeight?", {
                 controller: "manageCaseCtrl",
                 templateUrl: "~/manageCase/manageCase.html",
                 resolve: {
                     caseId: function($route) {
                         return angular.isDefined($route.current.params.caseId) ? $route.current.params.caseId : false;
                     },
-                    isLoadedInIframe: function($route) {
-                        return angular.isDefined($route.current.params.viewType) && $route.current.params.viewType == 'in-iframe';
+                    scrollableBlockHeight: function($route) {
+                        return angular.isDefined($route.current.params.scrollableBlockHeight) ? $route.current.params.scrollableBlockHeight : false;
                     },
                     apiCalls: function($route, crmApi) {
                         var reqs = {};
@@ -32,7 +32,7 @@
         }
     ]);
 
-    angular.module(moduleName).controller("manageCaseCtrl", function($scope, crmApi, apiCalls, caseId, isLoadedInIframe, $interval) {
+    angular.module(moduleName).controller("manageCaseCtrl", function($scope, crmApi, apiCalls, caseId, scrollableBlockHeight, $interval) {
         $scope.ts = CRM.ts();
         $scope.caseInfo = {};
         $scope.isError = false;
@@ -40,6 +40,14 @@
         $scope.isCaseUnlocked = false;
         $scope.errorMessage = '';
         $scope.isCaseLocked = false;
+        if (scrollableBlockHeight !== false) {
+            setTimeout(function() {
+                CRM.$('.mc__scrollable-block')
+                    .css('overflow-y', 'scroll')
+                    .css('height', scrollableBlockHeight + 'px');
+            }, 0);
+        }
+
         $scope.handleCaseInfoResponse = function() {
             if (apiCalls.caseInfoResponse.is_error == 1) {
                 $scope.isError = true;
@@ -48,48 +56,6 @@
                 $scope.caseInfo = apiCalls.caseInfoResponse.values;
                 $scope.isCaseLocked = $scope.caseInfo['is_case_locked'] && !$scope.caseInfo['is_locked_by_self'];
             }
-        };
-
-        //TODO: handle iframe in another way without js, try to fix issues when add param 'snippet = 1' to angular page
-        $scope.handleIframe = function() {
-            if (!isLoadedInIframe) {
-                return;
-            }
-
-            $('#header').hide();
-            $('body').css('background', 'white');
-            $('#civicrm-menu-nav').hide();
-            $('#page-title').hide();
-            $('#content > .section .tabs').hide();
-            $('#breadcrumb').hide();
-            $('#civicrm-footer').hide();
-            $('#footer-wrapper').hide();
-            $('#access.footer').hide();
-            $('.column.sidebar').hide();
-            $('#sidebar-first').hide();
-            $('#branding').hide();
-            $('#toolbar').hide();
-            $('#main').css('width', '100%');
-            $('#main').css('margin', 0);
-            $('#content').css('width', '100%');
-            $('#content').css('margin', 0);
-            var page = $('#page');
-            page.css('margin-right', 0);
-            page.css('margin-left', 0);
-            page.css('padding', 0);
-
-            var style = document.createElement('style');
-            style.innerHTML = 'body.crm-menubar-visible.crm-menubar-over-cms-menu.crm-menubar-wrapped {padding-top: 0px !important;}';
-            style.innerHTML += '@media (min-width: 768px) {';
-            style.innerHTML += 'body.crm-menubar-visible.crm-menubar-over-cms-menu {padding-top: 0px !important;}';
-            style.innerHTML += '}';
-            document.head.appendChild(style);
-            setTimeout(function () {
-                var body = document.getElementsByTagName('body');
-                if (body.length >= 1) {
-                    body[0].style.paddingTop = '0';
-                }
-            }, 200);
         };
 
         $scope.getMangeCaseUpdateLockTime = function() {
@@ -179,7 +145,6 @@
             $scope.lockTimer = undefined;
         });
 
-        $scope.handleIframe();
         $scope.handleCaseInfoResponse();
         $scope.initLockTimer();
         $scope.lockCase();
