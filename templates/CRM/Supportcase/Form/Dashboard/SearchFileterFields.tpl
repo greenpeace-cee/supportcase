@@ -1,6 +1,6 @@
 <div class="supportcase__dashboard-search-filters-wrap">
     <div class="crm-block crm-form-block">
-        <div class="crm-accordion-wrapper crm-contribution_search_form-accordion">
+        <div class="spc__accordion crm-accordion-wrapper crm-contribution_search_form-accordion">
             <div class="crm-accordion-header crm-master-accordion-header">
                 {ts}Filter{/ts}
             </div>
@@ -55,7 +55,7 @@
                                     <tr>
                                         <td colspan="3">
                                             <div class="supportcase__case-tags-filter-wrap">
-                                                <div class="crm-accordion-wrapper {if $isTagsFilterEmpty}collapsed{/if}">
+                                                <div class="spc__accordion crm-accordion-wrapper {if $isTagsFilterEmpty}collapsed{/if}">
                                                     <div class="crm-accordion-header">{ts}Tags:{/ts}</div>
                                                     <div class="crm-accordion-body">
                                                         <div class="supportcase__case-tags-filter">
@@ -75,12 +75,12 @@
                                 {$form.buttons.html}
                             </div>
                             <div class="crm-submit-buttons reset-advanced-search">
-                                <a href="{crmURL p='civicrm/supportcase' q='reset=1'}" class="crm-hover-button" title="{ts}Clear all search criteria{/ts}">
+                                <a href="{crmURL p='civicrm/supportcase' q='reset=1'}" class="crm-hover-button spc__button spc--height-big" title="{ts}Clear all search criteria{/ts}">
                                     <i class="crm-i fa-undo"></i>&nbsp;{ts}Reset Form{/ts}
                                 </a>
                             </div>
 
-                            <button class="supportcase__toggle-filter-button button" id="toggleFilterButton">
+                            <button class="spc__button spc--height-big supportcase__toggle-filter-button button" id="toggleFilterButton">
                               <span class="supportcase__toggle-filter-button-case-id-text">Search by Case ID</span>
                               <span class="supportcase__toggle-filter-button-params-text">Advanced Search</span>
                             </button>

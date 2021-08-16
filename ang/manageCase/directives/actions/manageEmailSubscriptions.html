@@ -9,7 +9,7 @@
 					<input maxlength="40" class="input__text crm-form-text" type="text" ng-model="info.email">
 				</div>
 				<div class="act__step-buttons">
-					<button class="act__next-step-button supportcase__button b--height-medium" ng-disabled="info.email.length === 0" ng-click="runStep('selectSubscriptionsStep')">Next</button>
+					<button class="act__next-step-button spc__button spc--height-medium" ng-disabled="info.email.length === 0" ng-click="runStep('selectSubscriptionsStep')">Next</button>
 				</div>
 			</div>
 		</div>
@@ -54,7 +54,7 @@
 							</table>
 						</div>
 						<div class="mes__unsubscribe-all-groups" >
-							<button class="supportcase__button b--height-medium" ng-click="unCheckAllGroups()">Remove all groups</button>
+							<button class="spc__button spc--height-medium" ng-click="unCheckAllGroups()">Remove all groups</button>
 						</div>
 					</div>
 					<div ng-if="info['tableData'].length == 0">
@@ -62,8 +62,8 @@
 					</div>
 				</div>
 				<div class="act__step-buttons">
-					<button class="act__next-step-button supportcase__button b--height-medium" ng-click="runStep('showSuccessMessageStep')">Confirm</button>
-					<button class="button__cancel supportcase__button b--height-medium" ng-click="runStep('confirmEmailStep')">Back</button>
+					<button class="act__next-step-button spc__button spc--height-medium" ng-click="runStep('showSuccessMessageStep')">Confirm</button>
+					<button class="button__cancel spc__button spc--height-medium" ng-click="runStep('confirmEmailStep')">Back</button>
 				</div>
 			</div>
 		</div>
@@ -73,7 +73,7 @@
 			<div class="act__step-description">Subscriptions were updated.</div>
 			<div class="act__step-body">
 				<div class="act__step-buttons">
-					<button class="act__next-step-button supportcase__button b--height-medium" ng-click="closeAction()">Close</button>
+					<button class="act__next-step-button spc__button spc--height-medium" ng-click="closeAction()">Close</button>
 				</div>
 			</div>
 		</div>

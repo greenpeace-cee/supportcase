@@ -11,7 +11,7 @@ return [
   'css' => [
     0 => 'css/ang/hideCiviUi.css',
     1 => 'css/ang/general.css',
-    2 => 'css/ang/button.css',
+    2 => 'css/ang/element.css',
     3 => 'css/ang/manageCase.css',
     4 => 'css/ang/directives/caseInfo.css',
     5 => 'css/ang/directives/communication.css',

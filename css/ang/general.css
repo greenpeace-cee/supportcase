@@ -59,22 +59,6 @@
     box-sizing: border-box;
 }
 
-.supportcase-manage-case-module-wrap table.supportcase__table > thead > tr > th {
-    background: whitesmoke !important;
-}
-
-.supportcase-manage-case-module-wrap table.supportcase__table > thead > tr {
-    border-bottom: none !important;
-}
-
-.supportcase-manage-case-module-wrap table.supportcase__table > tbody > tr:last-child {
-    border-bottom: none !important;
-}
-
-.supportcase-manage-case-module-wrap table.supportcase__table > tbody > tr.supportcase__table-grey-row {
-    background: whitesmoke !important;
-}
-
 #page-wrapper, #footer-wrapper {
     background: white !important;
 }

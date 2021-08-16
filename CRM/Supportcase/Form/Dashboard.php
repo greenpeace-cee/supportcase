@@ -124,6 +124,7 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $tasks = CRM_Supportcase_Task::permissionedTaskTitles(CRM_Core_Permission::getPermission(), []);
     $this->addTaskMenu($tasks);
 
+    CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/ang/element.css');
     CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/general-dashboard.css');
     if (function_exists('_shoreditch_isActive') && _shoreditch_isActive()) {
       CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/with-shoreditch-dashboard.css');

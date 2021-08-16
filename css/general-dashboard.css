@@ -63,6 +63,11 @@
     display: inline-block;
 }
 
+.supportcase__search-buttons .supportcase__search-button-submit > button {
+    padding: 11px 12px !important;
+    min-width: 0 !important;
+}
+
 .supportcase__case-tags-wrap {
     max-width: 300px;
 }
@@ -314,4 +319,5 @@
 
 .supportcase__search-buttons {
     display: flex;
+    align-items: center;
 }

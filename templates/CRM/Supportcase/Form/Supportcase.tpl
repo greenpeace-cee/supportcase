@@ -87,7 +87,7 @@
       {/foreach}
     </div>
   {/if}
-  <div id="communication" class="crm-accordion-wrapper">
+  <div id="communication" class="spc__accordion crm-accordion-wrapper">
     <div class="crm-accordion-header">
       {ts}Communication{/ts}
     </div><!-- /.crm-accordion-header -->

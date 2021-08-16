@@ -20,7 +20,7 @@
 }
 
 .com__column-details {
-    max-width: 200px;
+    max-width: 600px;
 }
 
 .com__meta td {
@@ -56,7 +56,7 @@
 }
 
 .com__message-buttons > td {
-  padding-left: 0 !important;
+  padding-left: 20px !important;
 }
 
 .com__message-buttons td {
@@ -92,4 +92,10 @@
   right: 15px;
   top: 5px;
   margin-left: 15px;
+}
+
+.com__email-item-accordion-head {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
 }

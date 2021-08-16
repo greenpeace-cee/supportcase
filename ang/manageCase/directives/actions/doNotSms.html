@@ -9,7 +9,7 @@
 					<input maxlength="25" class="input__text crm-form-text" type="text" ng-model="info.phoneNumber">
 				</div>
 				<div class="act__step-buttons">
-					<button class="act__next-step-button supportcase__button b--height-medium" ng-disabled="info.phoneNumber.length === 0" ng-click="runStep('selectContactsStep')">Next</button>
+					<button class="act__next-step-button spc__button spc--height-medium" ng-disabled="info.phoneNumber.length === 0" ng-click="runStep('selectContactsStep')">Next</button>
 				</div>
 			</div>
 		</div>
@@ -21,7 +21,7 @@
 				<div class="act__step-logic">
 					<div ng-if="info['contacts'].length > 0">
 						<div class="act__table act__table-middle-width">
-							<table class="crm-search-results supportcase__table">
+							<table class="crm-search-results spc__table">
 								<thead>
 									<tr>
 										<th class="act__column-head">
@@ -70,8 +70,8 @@
 					</div>
 				</div>
 				<div class="act__step-buttons">
-					<button class="act__next-step-button supportcase__button b--height-medium" ng-disabled="!isSelectedMinimumOneContacts()" ng-click="runStep('showSuccessMessageStep')">Confirm</button>
-					<button class="button__cancel supportcase__button b--height-medium" ng-click="runStep('confirmNumberStep')">Back</button>
+					<button class="act__next-step-button spc__button spc--height-medium" ng-disabled="!isSelectedMinimumOneContacts()" ng-click="runStep('showSuccessMessageStep')">Confirm</button>
+					<button class="button__cancel spc__button spc--height-medium" ng-click="runStep('confirmNumberStep')">Back</button>
 				</div>
 			</div>
 		</div>
@@ -88,7 +88,7 @@
 					</ul>
 				</div>
 				<div class="act__step-buttons">
-					<button class="act__next-step-button supportcase__button b--height-medium" ng-click="closeAction()">Close</button>
+					<button class="act__next-step-button spc__button spc--height-medium" ng-click="closeAction()">Close</button>
 				</div>
 			</div>
 		</div>

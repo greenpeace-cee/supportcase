@@ -1,0 +1,116 @@
+/*
+    Custom elements constructor.
+    The goal is make in all extension similar elements.
+
+    spc__[element name] - main class.
+    spc--[modifier name] - modifier which uses with main class. Uses only with main class.
+
+    Example: <div class="crm-accordion-wrapper spc__accordion spc--header-white spc--size-little">
+    Example: <button class="spc__button spc--height-medium">button</button>
+*/
+
+/*
+   Accordion:
+*/
+
+.spc__accordion > .crm-accordion-header {
+    display: flex;
+}
+
+.spc__accordion.spc--header-grey .crm-accordion-header {
+    background: #f6f6f6 !important;
+    color: #585858 !important;
+}
+
+.spc__accordion.spc--header-grey .crm-accordion-header::before {
+    color: #484848 !important;
+}
+
+.spc__accordion.spc--header-white .crm-accordion-header {
+    background: white !important;
+    color: #585858 !important;
+}
+
+.spc__accordion.spc--header-white .crm-accordion-header::before {
+    color: #484848 !important;
+}
+
+.spc__accordion.spc--size-little .crm-accordion-header {
+    font-size: 13px !important;
+}
+
+.spc__accordion.spc--size-little .crm-accordion-header::before {
+    padding-right: 0 !important;
+}
+
+.spc__accordion-body-wrap {
+    margin: 0 0 0 20px;
+}
+
+.spc__accordion-body-wrap.spc--body-border {
+    border: 1px solid rgb(211, 222, 226);
+}
+
+.spc__accordion.collapsed.spc--collapsed-head-border-bottom {
+    border-bottom: 1px solid #d3dee2;
+}
+
+.spc__accordion.collapsed.spc--collapsed-head-border-bottom:last-child {
+    border-bottom: none;
+}
+/*
+   End accordion:
+*/
+
+/*
+   Button:
+*/
+.spc__button {
+    cursor: pointer;
+    box-sizing: border-box !important;
+}
+
+.spc__button.spc--height-medium {
+    padding: 5px 12px !important;
+}
+
+.spc__button.spc--height-big {
+    padding: 11px 12px !important;
+}
+
+.spc__button.spc--height-little {
+    padding: 2px 5px !important;
+}
+/*
+   End button:
+*/
+
+/*
+   Table:
+*/
+.spc__table > thead > tr > th {
+    background: whitesmoke !important;
+}
+
+.spc__table > thead > tr > th {
+    background: whitesmoke !important;
+}
+
+.spc__table > thead > tr {
+    border-bottom: none !important;
+}
+
+.spc__table > tbody > tr:last-child {
+    border-bottom: none !important;
+}
+
+.spc__table > tbody > tr.spc--table-grey-row {
+    background: whitesmoke !important;
+}
+
+.spc__table.spc--head-little > thead > tr > th {
+    padding: 3px 20px !important;
+}
+/*
+   End table:
+*/
