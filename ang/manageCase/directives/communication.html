@@ -188,16 +188,6 @@
                                                                 <span>Send</span>
                                                             </button>
                                                             <button class="spc__button spc--height-medium button__cancel" ng-click="cancel()" ng-show="currentReplyId == activity.id">Cancel</button>
-                                                            <button class="spc__button spc--height-medium" ng-click="toggleReadEmail(activity.id, true)" ng-show="!activity.isRead && currentReplyId != activity.id">
-                                                                <span class="ui-button-icon ui-icon fa-eye"></span>
-                                                                <span class="ui-button-icon-space"> </span>
-                                                                <span>Mark as read</span>
-                                                            </button>
-                                                            <button class="spc__button spc--height-medium" ng-click="toggleReadEmail(activity.id, false)" ng-show="activity.isRead && currentReplyId != activity.id">
-                                                                <span class="ui-button-icon ui-icon fa-eye-slash"></span>
-                                                                <span class="ui-button-icon-space"> </span>
-                                                                <span>Mark as unread</span>
-                                                            </button>
                                                         </td>
                                                     </tr>
                                                     </tbody>
