@@ -123,8 +123,10 @@
                                                             </ul>
                                                         </td>
                                                     </tr>
-                                                    <tr class="com__message" ng-show="currentReplyId != activity.id">
-                                                        <td colspan="3">{{activity.details}}</td>
+                                                    <tr class="com__message" ng-if="currentReplyId != activity.id">
+                                                        <td colspan="3">
+                                                            <div ng-bind-html="activity.details_resolved"></div>
+                                                        </td>
                                                     </tr>
                                                     <tr class="com__reply" ng-if="currentReplyId == activity.id">
                                                         <td crm-ui-id-scope colspan="3" class="spc--padding-0">

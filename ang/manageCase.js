@@ -531,7 +531,7 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/communication.html",
             scope: {model: "="},
-            controller: function($scope, $element, cookieService) {
+            controller: function($scope, $element, cookieService, $sce) {
                 $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
                 $scope.smsActivities = [];
                 $scope.emailActivities = [];
@@ -631,6 +631,7 @@
                                     'from' : '',
                                     'to' : '',
                                 };
+                                result.values[i]['details_resolved'] = $sce.trustAsHtml(result.values[i]['details']);
                             }
 
                             $scope.emailActivities = result.values;

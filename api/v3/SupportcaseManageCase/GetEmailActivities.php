@@ -62,7 +62,7 @@ function civicrm_api3_supportcase_manage_case_get_email_activities($params) {
         'to_email' => $to['email'],
         'subject' => $activity['subject'],
         'activity_date_time' => $activity['activity_date_time'],
-        'details' => trim(CRM_Utils_String::stripAlternatives($activity['details'])),
+        'details' => trim(CRM_Utils_String::purifyHTML(nl2br(CRM_Utils_String::stripAlternatives($activity['details'])))),
         'reply' => _civicrm_api3_supportcase_manage_case_get_email_activities_format_quote($activity, $from),
         'attachments' => [],
       ];
