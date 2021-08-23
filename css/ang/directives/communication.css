@@ -51,12 +51,17 @@
   height: 340px !important;
 }
 
+.com__reply input[type="file"] {
+  padding-left: 0;
+  margin: 5px 0 10px 0;
+}
+
 .com__gap {
   height: 5px;
 }
 
 .com__message-buttons > td {
-  padding-left: 20px !important;
+  padding-left: 0 !important;
 }
 
 .com__message-buttons td {

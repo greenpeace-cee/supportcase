@@ -111,6 +111,34 @@
 .spc__table.spc--head-little > thead > tr > th {
     padding: 3px 20px !important;
 }
+
+.spc__table > tbody > tr.spc--padding-0,
+.spc__table > tbody > th.spc--padding-0,
+.spc__table > tbody > tr > td.spc--padding-0,
+.spc__table > tbody > th > td.spc--padding-0
+{
+    padding: 0 !important;
+}
+
+.spc__table > tbody > tr > td.spc--padding-top-0,
+.spc__table > tbody > tr.spc--padding-top-0 {
+    padding-top: 0 !important;
+}
+
+.spc__table > tbody > tr > td.spc--padding-bottom-0,
+.spc__table > tbody > tr.spc--padding-bottom-0 {
+    padding-bottom: 0 !important;
+}
+
+.spc__table > tbody > tr.spc--vertical-align-middle,
+.spc__table > tbody > tr > td.spc--vertical-align-middle {
+    vertical-align: middle;
+}
+
+.spc__table > tbody > tr > td.spc--width-100 {
+    width: 100px;
+}
+
 /*
    End table:
 */
