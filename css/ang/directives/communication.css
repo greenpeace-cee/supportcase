@@ -92,11 +92,13 @@
 }
 
 .com__templates {
-  float: right;
+  position: absolute;
+  left: 436px;
+  top: 73px;
+}
+
+.com__reply-edit-area {
   position: relative;
-  right: 15px;
-  top: 5px;
-  margin-left: 15px;
 }
 
 .com__email-item-accordion-head {

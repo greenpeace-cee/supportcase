@@ -157,11 +157,10 @@
                                                                     </tr>
                                                                     </tbody>
                                                                 </table>
-
-                                                                <div class="com__templates">
-                                                                    <input mailutils-template on-select="$broadcast('insert:reply', token.name)" tabindex="-1" style="z-index:1">
-                                                                </div>
-                                                                <div>
+                                                                <div class="com__reply-edit-area">
+                                                                    <div class="com__templates">
+                                                                        <input mailutils-template on-select="$broadcast('insert:reply', token.name)" tabindex="-1" style="z-index:1">
+                                                                    </div>
                                                                     <textarea crm-ui-id="email-reply-{{activity.id}}" crm-ui-richtext crm-ui-insert-rx="insert:reply"
                                                                         name="reply" ng-model="activity.reply" style="height: 500px" data-preset="civimail"></textarea>
                                                                 </div>
