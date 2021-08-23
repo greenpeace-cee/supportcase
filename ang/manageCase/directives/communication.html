@@ -58,7 +58,7 @@
                         <div class="crm-accordion-body">
                             <div class="spc__accordion-body-wrap">
                                 <div>
-                                    <div ng-repeat="activity in emailActivities" ng-class="{'email-activity-is-read' : activity['isRead']}" class="email-activity crm-accordion-wrapper spc__accordion spc--header-white spc--size-little spc--collapsed-head-border-bottom" >
+                                    <div data-activity-id="{{activity.id}}" ng-repeat="activity in emailActivities" ng-class="{'com__email-activity-is-read' : activity['isRead']}" class="com__email-activity crm-accordion-wrapper spc__accordion spc--header-white spc--size-little spc--collapsed-head-border-bottom" >
                                         <div class="crm-accordion-header crm-master-accordion-header">
                                             <div class="com__email-item-accordion-head">
                                                 <div>From: {{activity.from_name}} <{{activity.from_email}}</div>
@@ -109,7 +109,22 @@
                                                     </tr>
                                                     <tr class="com__meta spc--table-grey-row" ng-show="currentReplyId != activity.id">
                                                         <td class="spc--width-100 spc--padding-bottom-0 spc--padding-top-0 spc--vertical-align-middle">To:</td>
-                                                        <td colspan="2">{{activity.to_name}} <{{activity.to_email}}></td>
+                                                        <td>{{activity.to_name}} <{{activity.to_email}}></td>
+                                                        <td class="com__meta_action">
+                                                            <div class="com__message-toggle-height-to-full">                                                                    <button class=" spc__button spc--height-little" ng-click="toggleHeight(activity.id)">
+                                                                <span class="ui-button-icon ui-icon fa-expand"></span>
+                                                                <span class="ui-button-icon-space"> </span>
+                                                                <span>To full email body</span>
+                                                            </button>
+                                                            </div>
+                                                            <div class="com__message-toggle-height-to-part">
+                                                                <button class=" spc__button spc--height-little" ng-click="toggleHeight(activity.id)">
+                                                                    <span class="ui-button-icon ui-icon fa-compress"></span>
+                                                                    <span class="ui-button-icon-space"> </span>
+                                                                    <span>Show part email body</span>
+                                                                </button>
+                                                            </div>
+                                                        </td>
                                                     </tr>
                                                     <tr class="com__meta spc--table-grey-row" ng-show="currentReplyId != activity.id && activity.attachments.length > 0">
                                                         <td class="spc--width-100 spc--padding-bottom-0 spc--padding-top-0 spc--vertical-align-middle">Attachments:</td>
@@ -124,8 +139,10 @@
                                                         </td>
                                                     </tr>
                                                     <tr class="com__message" ng-if="currentReplyId != activity.id">
-                                                        <td colspan="3">
-                                                            <div ng-bind-html="activity.details_resolved"></div>
+                                                        <td colspan="3" class="spc--padding-0">
+                                                            <div class="com__message-body">
+                                                                <div ng-bind-html="activity.details_resolved"></div>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                     <tr class="com__reply" ng-if="currentReplyId == activity.id">

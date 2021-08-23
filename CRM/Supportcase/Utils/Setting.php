@@ -238,7 +238,7 @@ class CRM_Supportcase_Utils_Setting {
    * @return int
    */
   public static function getAngularIframeHeight() {
-    return 3000;// value in pixels
+    return 4000;// value in pixels
   }
 
   /**

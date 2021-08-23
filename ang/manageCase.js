@@ -548,11 +548,15 @@
                     }
                 };
 
+                $scope.toggleHeight = function(emailActivityId) {
+                    CRM.$($element).find('.com__email-activity[data-activity-id="' + emailActivityId + '"]').toggleClass('com--full-height');
+                };
+
                 $scope.handleEmailCollapsing = function() {
-                    CRM.$($element).find('.email-activity-is-read').addClass('collapsed');
+                    CRM.$($element).find('.com__email-activity-is-read').addClass('collapsed');
 
                     // first email have to be always not collapsed
-                    CRM.$($element).find('.email-activity').first().removeClass('collapsed');
+                    CRM.$($element).find('.com__email-activity').first().removeClass('collapsed');
                 };
 
                 this.$onInit = function() {

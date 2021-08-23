@@ -40,7 +40,42 @@
 }
 
 .com__message {
-  white-space: pre-line;
+  padding: 0 0 0 0;
+}
+
+.com__message-body {
+  padding: 20px;
+  height: 340px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background: white;
+  border-left: 1px solid #e8eef0;
+  border-right: 1px solid #e8eef0;
+  border-bottom: 1px solid #e8eef0;
+  position: relative;
+  margin: 0 0 20px 0;
+}
+
+.com__email-activity .com__message-toggle-height-to-part {
+  display: none;
+}
+
+.com__email-activity .com__message-toggle-height-to-full {
+  display: block;
+}
+
+.com__email-activity.com--full-height .com__message-toggle-height-to-part {
+  display: block;
+}
+
+.com__email-activity.com--full-height .com__message-toggle-height-to-full {
+  display: none;
+}
+
+.com__email-activity.com--full-height .com__message-body {
+  height: auto;
+  overflow-y: auto;
+  overflow-x: auto;
 }
 
 .com__message, .com__reply {
