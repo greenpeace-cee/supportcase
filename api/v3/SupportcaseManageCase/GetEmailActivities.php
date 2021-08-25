@@ -19,12 +19,11 @@ function civicrm_api3_supportcase_manage_case_get_email_activities($params) {
   try {
     $activities = civicrm_api3('Activity', 'get', [
       'is_deleted' => '0',
-      'options' => ['limit' => 0],//TODO: check if needs limit 0
       'case_id' => $params['case_id'],
       'activity_type_id' => ['IN' => ['Email', 'Inbound Email']],
       'api.Attachment.get' => [],
       'return' => ['target_contact_id', 'source_contact_id', 'activity_type_id', 'activity_date_time', 'subject', 'details'],
-      'options' => ['sort' => 'activity_date_time DESC'],
+      'options' => ['sort' => 'activity_date_time DESC', 'limit' => 0],
     ]);
   } catch (CiviCRM_API3_Exception $e) {
     $activities = [];
@@ -55,9 +54,11 @@ function civicrm_api3_supportcase_manage_case_get_email_activities($params) {
         'id' => $activity['id'],
         'activity_type_id' => $activity['activity_type_id'],
         'from_contact_id' => $from['id'],
+        'from_contact_recipient' => CRM_Supportcase_Utils_EmailSearch::prepareValue($from['id'], 'Contact'),
         'from_name' => $from['display_name'],
         'from_email' => $from['email'],
         'to_contact_id' => $to['id'],
+        'to_contact_recipient' => CRM_Supportcase_Utils_EmailSearch::prepareValue($to['id'], 'Contact'),
         'to_name' => $to['display_name'],
         'to_email' => $to['email'],
         'subject' => $activity['subject'],

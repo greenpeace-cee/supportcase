@@ -2,6 +2,11 @@
 
 class CRM_Supportcase_Utils_EmailSearch {
 
+  /**
+   * Value separator
+   *
+   * @var string
+   */
   const SEPARATOR = '_';
 
   /**
@@ -29,7 +34,7 @@ class CRM_Supportcase_Utils_EmailSearch {
     try {
       $emails = civicrm_api3('Email', 'get', [
           'sequential' => 1,
-          'return' => ["email", "id"],
+          'return' => ["email", "id", "contact_id.display_name"],
           'options' => ['limit' => 0],
           "is_primary" => "1",
           "on_hold" => "0",
@@ -58,7 +63,7 @@ class CRM_Supportcase_Utils_EmailSearch {
     try {
       $contacts = civicrm_api3('Contact', 'get', [
           'sequential' => 1,
-          'return' => ["display_name", "id"],
+          'return' => ["display_name", "id", "email"],
           'options' => ['limit' => 0],
           'is_deleted' => "0",
           'display_name' => ['LIKE' => "%" . $searchString . "%"],
@@ -85,7 +90,7 @@ class CRM_Supportcase_Utils_EmailSearch {
     $entityId = $parts[0];
     $entity = $parts[1];
 
-    if (empty($entityId) || (empty($entity) && in_array($entity, ['Contact', 'Group', 'Email']))) {
+    if (empty($entityId) || (empty($entity) && in_array($entity, ['Contact', 'Email']))) {
       return [
         [
           'entity' => 'unknown',
@@ -105,17 +110,10 @@ class CRM_Supportcase_Utils_EmailSearch {
 
     if ($entity == 'Contact') {
       $params['return'][] = 'display_name';
+      $params['return'][] = 'email';
       try {
         $result = civicrm_api3($entity, 'getsingle', $params);
         $searchResult[] = self::prepareContactResponse($result);
-      } catch (CiviCRM_API3_Exception $e) {}
-    }
-
-    if ($entity == 'Group') {
-      $params['return'][] = 'title';
-      try {
-        $result = civicrm_api3($entity, 'getsingle', $params);
-        $searchResult[] = self::prepareGroupResponse($result);
       } catch (CiviCRM_API3_Exception $e) {}
     }
 
@@ -140,19 +138,6 @@ class CRM_Supportcase_Utils_EmailSearch {
   }
 
   /**
-   * @param $group
-   * @return array
-   */
-  private static function prepareGroupResponse($group) {
-    return [
-        'entity' => 'Group',
-        'entity_id' => $group['id'],
-        'label' => 'Group: ' . $group['title'],
-        'id' => $group['id'] . self::SEPARATOR . 'Group',
-    ];
-  }
-
-  /**
    * @param $email
    * @return array
    */
@@ -160,8 +145,8 @@ class CRM_Supportcase_Utils_EmailSearch {
     return [
         'entity' => 'Email',
         'entity_id' => $email['id'],
-        'label' => 'Email: ' . $email['email'],
-        'id' => $email['id'] . self::SEPARATOR . 'Email',
+        'label' => 'Email : ' . $email['contact_id.display_name'] . '<' . $email['email'] . '>',
+        'id' => self::prepareValue($email['id'], 'Email'),
     ];
   }
 
@@ -173,9 +158,22 @@ class CRM_Supportcase_Utils_EmailSearch {
     return [
         'entity' => 'Contact',
         'entity_id' => $contact['id'],
-        'label' => 'Contact: ' . $contact['display_name'],
-        'id' => $contact['id'] . self::SEPARATOR . 'Contact',
+        'label' => 'Contact : ' . $contact['display_name'] . '<' . $contact['email'] . '>',
+        'id' => self::prepareValue($contact['id'], 'Contact'),
     ];
+  }
+
+  /**
+   * @param $entityId
+   * @param $entityName
+   * @return string
+   */
+  public static function prepareValue($entityId, $entityName) {
+    if (empty($entityId) || empty($entityName)) {
+      return '';
+    }
+
+    return $entityId . self::SEPARATOR . $entityName;
   }
 
 }

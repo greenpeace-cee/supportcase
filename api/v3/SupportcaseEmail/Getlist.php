@@ -45,5 +45,12 @@ function _civicrm_api3_supportcase_email_getlist_output($result, $request, $enti
     ];
   }
 
+  // TODO: fix it in another way
+  // this is hack stops endless loop in entity ref inputs
+  // it make javascript error in entity ref inputs and this error stops endless loop
+  if (empty($output)) {
+    throw new api_Exception('Empty output', 'empty');
+  }
+
   return $output;
 }

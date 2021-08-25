@@ -597,7 +597,9 @@
                 };
 
                 $scope.send = function(activity) {
-                    //TODO: connect to cc/from/to inputs
+                    //TODO: fix params and send_email api
+                    console.log('send');
+                    console.log(activity);
                     CRM.api3('SupportcaseManageCase', 'send_email', {
                         "to_contact_id": activity.to_contact_id,
                         "to_email": activity.to_email,
@@ -632,8 +634,8 @@
                                 result.values[i]['isRead'] = (readEmails.includes(result.values[i]['id'].toString()));
                                 result.values[i]['recipients'] = {
                                     'cc' : '',
-                                    'from' : '',
-                                    'to' : '',
+                                    'from' : result.values[i]['from_contact_recipient'],
+                                    'to' : result.values[i]['to_contact_recipient'],
                                 };
                                 result.values[i]['details_resolved'] = $sce.trustAsHtml(result.values[i]['details']);
                             }
@@ -1133,6 +1135,7 @@
             scope: {
                 model: "=",
                 maxWidth: "<maxWidth",
+                isMultiple: "<isMultiple",
             },
             controller: function($scope, $element) {
                 this.$onInit = function() {
