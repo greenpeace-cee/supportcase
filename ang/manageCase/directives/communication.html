@@ -71,7 +71,7 @@
                                                     <tbody>
                                                     <tr class="com__meta spc--table-grey-row" ng-show="currentReplyId != activity.id">
                                                         <td class="spc--width-100 spc--padding-bottom-0 spc--padding-top-0 spc--vertical-align-middle">From:</td>
-                                                        <td>{{activity.from_name}} <{{activity.from_email}}></td>
+                                                        <td>{{activity.from_label}}</td>
                                                         <td class="com__meta_action">
                                                             <button class="spc__button spc--height-little" ng-click="toggleReadEmail(activity.id, true)" ng-show="!activity.isRead">
                                                                 <span class="ui-button-icon ui-icon fa-eye"></span>
@@ -109,7 +109,7 @@
                                                     </tr>
                                                     <tr class="com__meta spc--table-grey-row" ng-show="currentReplyId != activity.id">
                                                         <td class="spc--width-100 spc--padding-bottom-0 spc--padding-top-0 spc--vertical-align-middle">To:</td>
-                                                        <td>{{activity.to_name}} <{{activity.to_email}}></td>
+                                                        <td>{{activity.to_label}}</td>
                                                         <td class="com__meta_action">
                                                             <div class="com__message-toggle-height-to-full">                                                                    <button class=" spc__button spc--height-little" ng-click="toggleHeight(activity.id)">
                                                                 <span class="ui-button-icon ui-icon fa-expand"></span>
