@@ -9,7 +9,7 @@
  */
 function civicrm_api3_supportcase_manage_case_get_email_activities($params) {
   try {
-    $case = civicrm_api3('Case', 'getsingle', [
+    civicrm_api3('Case', 'getsingle', [
       'id' => $params['case_id'],
     ]);
   } catch (CiviCRM_API3_Exception $e) {
@@ -32,41 +32,41 @@ function civicrm_api3_supportcase_manage_case_get_email_activities($params) {
   $preparedActivities = [];
   if (!empty($activities['values'])) {
     foreach ($activities['values'] as $activity) {
-      $from = civicrm_api3('Contact', 'getsingle', [
+      $fromContact = civicrm_api3('Contact', 'getsingle', [
         'id' => $activity['source_contact_id'],
-        'return' => ['id', 'email', 'display_name'],
+        'return' => ['id', 'email', 'display_name', 'email_id'],
       ]);
-
       try {
-        $to = civicrm_api3('Contact', 'getsingle', [
+        $toContact = civicrm_api3('Contact', 'getsingle', [
           'id' => $activity['target_contact_id'][0],
-          'return' => ['id', 'email', 'display_name'],
+          'return' => ['id', 'email', 'display_name', 'email_id'],
         ]);
       } catch (CiviCRM_API3_Exception $e) {
-        $to = [
-          'id' => null,
-          'display_name' => null,
-          'email' => null,
+        $toContact = [
+          'id' => '',
+          'display_name' => '',
+          'email' => '',
+          'email_id' => '',
         ];
       }
 
       $preparedActivity = [
         'id' => $activity['id'],
         'activity_type_id' => $activity['activity_type_id'],
-        'from_contact_id' => $from['id'],
-        'from_contact_recipient' => CRM_Supportcase_Utils_EmailSearch::prepareValue($from['id'], 'Contact'),
-        'from_name' => $from['display_name'],
-        'from_email' => $from['email'],
-        'from_label' => $from['display_name'] . ' <' . $from['email'] . '>',
-        'to_contact_id' => $to['id'],
-        'to_contact_recipient' => CRM_Supportcase_Utils_EmailSearch::prepareValue($to['id'], 'Contact'),
-        'to_name' => $to['display_name'],
-        'to_email' => $to['email'],
-        'to_label' => (empty($to['display_name']) || empty($to['email'])) ? '' : $to['display_name'] . ' <' . $to['email'] . '>',
+        'from_contact_id' => $fromContact['id'],
+        'from_contact_email_id' => $fromContact['email_id'],
+        'from_name' => $fromContact['display_name'],
+        'from_email' => $fromContact['email'],
+        'from_label' => CRM_Supportcase_Utils_EmailSearch::prepareEmailLabel($fromContact['display_name'], $fromContact['email']),
+        'to_contact_id' => $toContact['id'],
+        'to_contact_email_id' => $toContact['email_id'],
+        'to_name' => $toContact['display_name'],
+        'to_email' => $toContact['email'],
+        'to_label' => CRM_Supportcase_Utils_EmailSearch::prepareEmailLabel($toContact['display_name'], $toContact['email']),
         'subject' => $activity['subject'],
         'activity_date_time' => $activity['activity_date_time'],
         'details' => trim(CRM_Utils_String::purifyHTML(nl2br(CRM_Utils_String::stripAlternatives($activity['details'])))),
-        'reply' => _civicrm_api3_supportcase_manage_case_get_email_activities_format_quote($activity, $from),
+        'reply' => _civicrm_api3_supportcase_manage_case_get_email_activities_format_quote($activity, $fromContact),
         'attachments' => [],
       ];
       foreach ($activity['api.Attachment.get']['values'] as $attachment) {

@@ -9,10 +9,17 @@
  */
 function _civicrm_api3_supportcase_email_getlist_spec(&$params) {
   $params['input'] = [
-      'name' => 'input',
-      'api.required' => 1,
-      'type' => CRM_Utils_Type::T_STRING,
-      'title' => 'Search string',
+    'name' => 'input',
+    'api.required' => 1,
+    'type' => CRM_Utils_Type::T_STRING,
+    'title' => 'Search string',
+  ];
+
+  $params['email_id'] = [
+    'name' => 'email_id',
+    'api.required' => 1,
+    'type' => CRM_Utils_Type::T_INT,
+    'title' => 'Search string',
   ];
 }
 
@@ -22,7 +29,7 @@ function _civicrm_api3_supportcase_email_getlist_spec(&$params) {
 function _civicrm_api3_supportcase_email_getlist_params(&$request) {
   $request['params']['options']['limit'] = 0;
   $request['params']['search_string'] = (!empty($request['input'])) ? $request['input'] : '';
-  $request['params']['search_pseudo_id'] = (!empty($request['id'])) ? $request['id'] : '';
+  $request['params']['email_id'] = (!empty($request['id'])) ? $request['id'] : '';
 }
 
 /**
@@ -37,17 +44,18 @@ function _civicrm_api3_supportcase_email_getlist_params(&$request) {
  */
 function _civicrm_api3_supportcase_email_getlist_output($result, $request, $entity, $fields) {
   $output = [];
-  foreach ($result['values'] as $item) {
+  foreach ($result['values'] as $email) {
     $output[] = [
-        'id' => $item['id'],
-        'label' => $item['label'],
+        'id' => $email['email_id'],
+        'label' => $email['label'],
+        'contact_id' => $email['contact_id'],
+        'contact_display_name' => $email['contact_display_name'],
         'description' => []
     ];
   }
 
   // TODO: fix it in another way
-  // this is hack stops endless loop in entity ref inputs
-  // it make javascript error in entity ref inputs and this error stops endless loop
+  // this is hack stops javaScript endless loop in entity ref inputs
   if (empty($output)) {
     throw new api_Exception('Empty output', 'empty');
   }

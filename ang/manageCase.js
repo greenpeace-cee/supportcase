@@ -597,17 +597,14 @@
                 };
 
                 $scope.send = function(activity) {
-                    //TODO: fix params and send_email api
-                    console.log('send');
-                    console.log(activity);
                     CRM.api3('SupportcaseManageCase', 'send_email', {
-                        "to_contact_id": activity.to_contact_id,
-                        "to_email": activity.to_email,
-                        "from_contact_id": activity.from_contact_id,
-                        "from_email": activity.from_email,
-                        "subject": activity.subject,
-                        "body": activity.reply,
                         "case_id": $scope.model['id'],
+                        "subject": activity['subject'],
+                        "body": activity['reply'],
+                        "reply_mode": $scope.replyMode,
+                        'to_email_id': activity['emails']['to'],
+                        'from_email_id': activity['emails']['from'],
+                        'cc_email_ids': activity['emails']['cc'],
                     }).then(function(result) {
                         if (result.is_error === 1) {
                             console.error('Error sending email:');
@@ -632,10 +629,10 @@
                             var readEmails = cookieService.getReadEmails();
                             for (var i = 0; i < result.values.length; i++) {
                                 result.values[i]['isRead'] = (readEmails.includes(result.values[i]['id'].toString()));
-                                result.values[i]['recipients'] = {
+                                result.values[i]['emails'] = {
                                     'cc' : '',
-                                    'from' : result.values[i]['from_contact_recipient'],
-                                    'to' : result.values[i]['to_contact_recipient'],
+                                    'from' : result.values[i]['from_contact_email_id'],
+                                    'to' : result.values[i]['to_contact_email_id'],
                                 };
                                 result.values[i]['details_resolved'] = $sce.trustAsHtml(result.values[i]['details']);
                             }
