@@ -19,8 +19,8 @@ class CRM_Supportcase_Utils_EmailSearch {
         'email' => ['LIKE' => "%" . $searchString . "%"],
         'contact_id.display_name' => ['LIKE' => "%" . $searchString . "%"],
         'options' => [
-            'or' => [["contact_id.display_name", "email"]],
-            'limit' => 0,
+          'or' => [["contact_id.display_name", "email"]],
+          'limit' => 0,
         ],
       ]);
     } catch (CiviCRM_API3_Exception $e) {
@@ -69,11 +69,11 @@ class CRM_Supportcase_Utils_EmailSearch {
    */
   private static function prepareResponse($email) {
     return [
-        'label' => self::prepareEmailLabel($email['contact_id.display_name'], $email['email']),
-        'email' => $email['email'],
-        'contact_display_name' => $email['contact_id.display_name'],
-        'email_id' => $email['id'],
-        'contact_id' => $email['contact_id.id'],
+      'label' => self::prepareEmailLabel($email['contact_id.display_name'], $email['email']),
+      'email' => $email['email'],
+      'contact_display_name' => $email['contact_id.display_name'],
+      'email_id' => $email['id'],
+      'contact_id' => $email['contact_id.id'],
     ];
   }
 

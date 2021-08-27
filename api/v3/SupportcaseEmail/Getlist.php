@@ -46,11 +46,11 @@ function _civicrm_api3_supportcase_email_getlist_output($result, $request, $enti
   $output = [];
   foreach ($result['values'] as $email) {
     $output[] = [
-        'id' => $email['email_id'],
-        'label' => $email['label'],
-        'contact_id' => $email['contact_id'],
-        'contact_display_name' => $email['contact_display_name'],
-        'description' => []
+      'id' => $email['email_id'],
+      'label' => $email['label'],
+      'contact_id' => $email['contact_id'],
+      'contact_display_name' => $email['contact_display_name'],
+      'description' => []
     ];
   }
 
