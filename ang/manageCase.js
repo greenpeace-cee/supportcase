@@ -1134,6 +1134,7 @@
                 model: "=",
                 maxWidth: "<maxWidth",
                 isMultiple: "<isMultiple",
+                isRequired: "<isRequired",
             },
             controller: function($scope, $element) {
                 this.$onInit = function() {

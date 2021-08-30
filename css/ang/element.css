@@ -161,10 +161,10 @@
     color: #464354;
     font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 13px;
-    height: 30px;
-    padding: 2px 10px;
+    height: 32px !important;
     vertical-align: middle;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 3px 0px inset;
+    margin: 0 !important;
 }
 
 .spc__input:focus {
