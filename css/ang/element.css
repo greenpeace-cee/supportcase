@@ -81,6 +81,11 @@
 .spc__button.spc--height-little {
     padding: 2px 5px !important;
 }
+
+.spc__button[disabled="disabled"] {
+    background: grey !important;
+}
+
 /*
    End button:
 */
@@ -169,6 +174,10 @@
 
 .spc__input.spc--width-100-percent {
     width: 100% !important;
+}
+
+.spc__input.ng-invalid, .spc__input.ng-invalid-required {
+    border-color: #cf3458 !important;
 }
 
 /*
