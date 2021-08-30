@@ -581,14 +581,14 @@
                     $scope.getEmails();
                 };
 
-                $scope.reply = function(activityId) {
-                    $scope.currentReplyId = activityId;
+                $scope.reply = function(activity) {
+                    $scope.currentReplyId = activity['id'];
                     $scope.replyMode = 'reply';
                 };
 
-                $scope.forward = function(activityId) {
-                  $scope.currentReplyId = activityId;
-                  $scope.replyMode = 'forward';
+                $scope.forward = function(activity) {
+                    $scope.currentReplyId = activity['id'];
+                    $scope.replyMode = 'forward';
                 };
 
                 $scope.cancel = function() {
@@ -599,7 +599,7 @@
                 $scope.send = function(activity) {
                     CRM.api3('SupportcaseManageCase', 'send_email', {
                         "case_id": $scope.model['id'],
-                        "subject": activity['subject'],
+                        "subject": activity['email_subject'],
                         "body": activity['reply'],
                         "reply_mode": $scope.replyMode,
                         'to_email_id': activity['emails']['to'],
@@ -634,6 +634,7 @@
                                     'from' : result.values[i]['from_contact_email_id'],
                                     'to' : result.values[i]['to_contact_email_id'],
                                 };
+                                result.values[i]['email_subject'] = result.values[i]['subject'];
                                 result.values[i]['details_resolved'] = $sce.trustAsHtml(result.values[i]['details']);
                             }
 

@@ -141,3 +141,7 @@
   width: 100%;
   justify-content: space-between;
 }
+
+.com__edit-subject-input-wrap {
+  max-width: 600px;
+}
