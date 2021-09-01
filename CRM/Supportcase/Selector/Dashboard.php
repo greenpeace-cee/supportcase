@@ -152,6 +152,29 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
     $this->_query->_distinctComponentClause = " civicrm_case.id ";
     $this->_query->_groupByComponentClause = " GROUP BY civicrm_case.id ";
     $this->_caseAllTags = CRM_Supportcase_Utils_Tags::getAvailableTags('civicrm_case');
+    $commActivityTypes = CRM_Supportcase_Utils_Setting::getAvailableActivityTypeIds();
+    if (!empty($commActivityTypes)) {
+      $selectRecentComm = CRM_Core_DAO::composeQuery("(
+      SELECT
+          MAX(activity_date_time)
+      FROM
+          civicrm_case_activity
+      INNER JOIN
+          civicrm_activity case_activity
+      ON
+          civicrm_case_activity.activity_id = case_activity.id AND
+          case_activity.is_current_revision = 1
+          AND case_activity.activity_type_id IN (%1)
+      WHERE
+          civicrm_case_activity.case_id = civicrm_case.id
+      ) AS most_recent_communication", [
+        1 => [implode(',', $commActivityTypes), 'CommaSeparatedIntegers'],
+      ]);
+    }
+    else {
+      $selectRecentComm = 'case_activity.activity_date_time AS most_recent_communication';
+    }
+    $this->_query->_select['most_recent_communication'] = $selectRecentComm;
 
     if ($isSearchByCaseId) {
       return;
@@ -521,7 +544,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
     if (!empty($recentActivity['values'][0])) {
       $recentCommunication['activity_id'] = $recentActivity['values'][0]['id'];
       $recentCommunication['activity_date_time'] = $recentActivity['values'][0]['activity_date_time'];
-      $recentCommunication['activity_details'] = $recentActivity['values'][0]['details'];
+      $recentCommunication['activity_details'] = trim(CRM_Utils_String::stripAlternatives($recentActivity['values'][0]['details'] ?? NULL));
       $recentCommunication['activity_type_label'] = $recentActivity['values'][0]['activity_type_id.label'];
     }
 
@@ -574,7 +597,8 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
         ],
         [
           'name' => ts('Most Recent Communication'),
-          'direction' => CRM_Utils_Sort::ASCENDING,
+          'sort' => 'most_recent_communication',
+          'direction' => CRM_Utils_Sort::DESCENDING,
         ],
         [
           'name' => ts('Tags'),
