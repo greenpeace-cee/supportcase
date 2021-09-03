@@ -12,10 +12,7 @@ class CRM_Supportcase_Utils_EmailSearch {
     try {
       $emails = civicrm_api3('Email', 'get', [
         'sequential' => 1,
-        'return' => ["contact_id.display_name" , 'email', 'contact_id.id', 'contact_id.is_deleted'],
-        'contact_id.is_deleted' => "0",
-        "on_hold" => "0",
-        "is_bulkmail" => "0",
+        'return' => ["contact_id.display_name" , 'email', 'contact_id.id', 'contact_id.is_deleted', 'contact_id.contact_type'],
         'email' => ['LIKE' => "%" . $searchString . "%"],
         'contact_id.display_name' => ['LIKE' => "%" . $searchString . "%"],
         'options' => [
@@ -37,17 +34,17 @@ class CRM_Supportcase_Utils_EmailSearch {
   }
 
   /**
-   * @param $emailId
+   * @param $commaSeparatedEmailIds
    * @return array
    */
-  public static function searchByIds($emailIds) {
+  public static function searchByCommaSeparatedIds($commaSeparatedEmailIds) {
     $preparedEmails = [];
 
     try {
       $emails = civicrm_api3('Email', 'get', [
         'sequential' => 1,
-        'return' => ["contact_id.display_name" , 'email', 'contact_id.id', 'contact_id.is_deleted'],
-        'id' => ['IN' => explode(',', $emailIds)],
+        'return' => ["contact_id.display_name" , 'email', 'contact_id.id', 'contact_id.is_deleted', 'contact_id.contact_type'],
+        'id' => ['IN' => explode(',', $commaSeparatedEmailIds)],
         'options' => ['limit' => 0],
       ]);
     } catch (CiviCRM_API3_Exception $e) {
@@ -68,12 +65,24 @@ class CRM_Supportcase_Utils_EmailSearch {
    * @return array
    */
   private static function prepareResponse($email) {
+    $ico = '';
+    if ($email['contact_id.contact_type'] == 'Individual') {
+      $ico = 'Individual-icon';
+    } elseif ($email['contact_id.contact_type'] == 'Organization') {
+      $ico = 'Organization-icon';
+    } elseif ($email['contact_id.contact_type'] == 'Household') {
+      $ico = 'Household-icon';
+    }
+    
     return [
       'label' => self::prepareEmailLabel($email['contact_id.display_name'], $email['email']),
       'email' => $email['email'],
       'contact_display_name' => $email['contact_id.display_name'],
       'email_id' => $email['id'],
       'contact_id' => $email['contact_id.id'],
+      'icon' => $ico,
+      'label_class' => '',
+      'description' => [],
     ];
   }
 

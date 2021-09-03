@@ -48,16 +48,13 @@ function _civicrm_api3_supportcase_email_getlist_output($result, $request, $enti
     $output[] = [
       'id' => $email['email_id'],
       'label' => $email['label'],
+      'email' => $email['email'],
       'contact_id' => $email['contact_id'],
       'contact_display_name' => $email['contact_display_name'],
-      'description' => []
+      'label_class' => $email['label_class'],
+      'icon' => $email['icon'],
+      'description' => $email['description'],
     ];
-  }
-
-  // TODO: fix it in another way
-  // this is hack stops javaScript endless loop in entity ref inputs
-  if (empty($output)) {
-    throw new api_Exception('Empty output', 'empty');
   }
 
   return $output;

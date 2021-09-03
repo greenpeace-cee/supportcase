@@ -26,17 +26,17 @@ function civicrm_api3_supportcase_manage_case_send_email($params) {
     throw new api_Exception('The case is locked by another user.', 'case_locked_by_another_user');
   }
 
-  $toEmails = CRM_Supportcase_Utils_EmailSearch::searchByIds($params['to_email_id']);
+  $toEmails = CRM_Supportcase_Utils_EmailSearch::searchByCommaSeparatedIds($params['to_email_id']);
   if (empty($toEmails)) {
     throw new api_Exception('Cannot find to email', 'cannot_find_to_email');
   }
 
-  $fromEmails = CRM_Supportcase_Utils_EmailSearch::searchByIds($params['from_email_id']);
+  $fromEmails = CRM_Supportcase_Utils_EmailSearch::searchByCommaSeparatedIds($params['from_email_id']);
   if (empty($fromEmails)) {
     throw new api_Exception('Cannot find from email', 'cannot_find_from_email');
   }
 
-  $ccEmails = CRM_Supportcase_Utils_EmailSearch::searchByIds($params['cc_email_ids']);
+  $ccEmails = CRM_Supportcase_Utils_EmailSearch::searchByCommaSeparatedIds($params['cc_email_ids']);
   $fromEmail = $fromEmails[0];
   $toEmail = $toEmails[0];
   $bodyText = CRM_Utils_String::htmlToText($params['body']);

@@ -1137,16 +1137,156 @@
                 isRequired: "<isRequired",
             },
             controller: function($scope, $element) {
+                $scope.entityName = 'SupportcaseEmail';
+                $scope.newItemPseudoId = '_new_item_';
+                $scope.isAlreadyInitSelect = false;
+
+                $scope.isValidEmail = function(emailString) {
+                    var patern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+                    return !!emailString.match(patern);
+                };
+
                 this.$onInit = function() {
                     setTimeout(function() {
                         var input = $($element).find(".se__select-email-input");
-                        input.crmEntityRef('destroy');
                         input.css({
                             'width' : '100%',
                             'max-width' : $scope.maxWidth + 'px',
                             'box-sizing' : 'border-box',
                         })
-                        input.crmEntityRef();
+
+                        input.select2({
+                            'tokenSeparators': [','],
+                            'closeOnSelect': false,
+                            "multiple" : $scope.isMultiple,
+                            'placeholder': '- none -',
+                            'placeholderOption' : 'first',
+                            'allowClear' : 'true',
+                            'minimumInputLength' : 1,
+                            'formatResult' :  function (row) {
+                                var html = '<div class="crm-select2-row">';
+
+                                html += '<div><div class="crm-select2-row-label '+(row.label_class || '')+'">';
+                                html += (row.icon ? '<i class="crm-i ' + row.icon + '" aria-hidden="true"></i>&nbsp;&nbsp;' : '');
+                                html +=  _.escape(row.label);
+                                html += '</div>';
+
+                                html += '<div class="crm-select2-row-description">';
+                                $.each(row.description || [], function(k, text) {
+                                    html += '<p>' + _.escape(text) + '</p> ';
+                                });
+                                html += '</div></div></div>';
+
+                                return html;
+                            },
+                            'formatSelection' :  function(row) {
+                                var html = '<div>';
+                                html += row.icon ? '<div class="crm-select2-icon"><div class="crm-i ' + row.icon + '"></div></div>' : '';
+                                html +=  _.escape(row.label);
+                                html += '</div>';
+
+                                return html;
+                            },
+                            'escapeMarkup' : _.identity,
+                            'createSearchChoicePosition' : 'bottom',
+                            'createSearchChoice' : function(searchString, selectedValues) {
+                                if (!_.findKey(selectedValues, {label: searchString}) && $scope.isValidEmail(searchString)) {
+                                    return {
+                                        'id' : $scope.newItemPseudoId,
+                                        'term' : searchString,
+                                        'label' : searchString + ' (' + ts('Add new email') + ')',
+                                        'description' : ['Create new Contact with "' + searchString + '" email'],
+                                        'icon' : 'fa-plus-circle',
+                                        'label_class' : 'se__color-blue',
+                                    };
+                                }
+                            },
+                            'ajax': {
+                                'url': CRM.url('civicrm/ajax/rest'),
+                                'dataType': 'json',
+                                'type': 'GET',
+                                'quietMillis' : 300,
+                                'data' : function (searchString, pageNumber) {
+                                    return {
+                                        'entity' : $scope.entityName,
+                                        'action' : 'getlist',
+                                        'json' : JSON.stringify({
+                                            'input' : searchString,
+                                            'page_num' : pageNumber,
+                                        })
+                                    };
+                                },
+                                'results' : function(data) {
+                                    return {more: data.more_results, results: data.values || []};
+                                }
+                            },
+                            'initSelection' : function($select, callback) {
+                                if ($scope.isAlreadyInitSelect) {
+                                    return;
+                                }
+
+                                $scope.isAlreadyInitSelect = true;
+                                var val = $select.val();
+
+                                if (val === '') {
+                                    return;
+                                }
+
+                                var emailIds = val.split(',');
+
+                                if (emailIds.length > 0) {
+                                    CRM.api3($scope.entityName, 'getlist', {id: emailIds.join(',')}).done(function(result) {
+                                        if (result['is_error'] === 0 && result.values.length > 0) {
+                                            callback($scope.isMultiple ? result.values : result.values[0]);
+                                            $select.trigger('change');
+                                        }
+                                    });
+                                }
+                            }
+                        });
+
+                        input.on('select2-selecting', function(e) {
+                            if (e.val === $scope.newItemPseudoId) {
+                                var emailName = e.choice.term;
+                                CRM.api3($scope.entityName, 'create_new_contact_email', {email: emailName}).done(function(result) {
+                                    var val = input.select2('val');
+                                    var data = input.select2('data');
+
+                                    if (result['is_error'] === 0) {
+                                        var item = {
+                                            id: result.values.email_id,
+                                            label: result.values.label,
+                                            icon: result.values.icon,
+                                            label_class: result.values.label_class,
+                                            description: result.values.description,
+                                        };
+
+                                        if (val === $scope.newItemPseudoId) {
+                                            input.select2('data', item, true);
+                                        } else if ($.isArray(val) && $.inArray($scope.newItemPseudoId, val) > -1) {
+                                            _.remove(data, {id: $scope.newItemPseudoId});
+                                            data.push(item);
+                                            input.select2('data', data, true);
+                                        }
+                                    } else {
+                                        CRM.alert(
+                                            ts('Error message: ') + result['error_message'],
+                                            ts('Error. Cannot create new contact email.') ,
+                                            'error',
+                                            {expires: 5000}
+                                        );
+
+                                        if (val === $scope.newItemPseudoId) {
+                                            input.select2('data', {}, true);
+                                        } else if ($.isArray(val) && $.inArray($scope.newItemPseudoId, val) > -1) {
+                                            _.remove(data, {id: $scope.newItemPseudoId});
+                                            input.select2('data', data, true);
+                                        }
+                                    }
+                                });
+                            }
+                        });
                     }, 0);
                 };
             }

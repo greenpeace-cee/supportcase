@@ -15,13 +15,13 @@ function  civicrm_api3_supportcase_email_get($params) {
   } elseif (!empty($params['email_id'])) {
     if (is_array($params['email_id'])) {
       foreach ($params['email_id'] as $emailId) {
-        $searchItems = CRM_Supportcase_Utils_EmailSearch::searchByIds($emailId);
+        $searchItems = CRM_Supportcase_Utils_EmailSearch::searchByCommaSeparatedIds($emailId);
         foreach ($searchItems as $item) {
           $searchResult[] = $item;
         }
       }
     } else {
-      $searchResult = CRM_Supportcase_Utils_EmailSearch::searchByIds($params['email_id']);;
+      $searchResult = CRM_Supportcase_Utils_EmailSearch::searchByCommaSeparatedIds($params['email_id']);;
     }
   }
 

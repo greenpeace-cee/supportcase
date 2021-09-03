@@ -23,10 +23,12 @@ return [
     11 => 'css/ang/directives/actions/exampleAction.css',
     12 => 'css/ang/directives/contactInfo.css',
     13 => 'css/ang/directives/showMoreText.css',
+    14 => 'css/ang/directives/selectEmail.css',
+
     //actions styles:
-    14 => 'css/ang/directives/actions/actionGeneral.css',
-    15 => 'css/ang/directives/actions/doNotSms.css',
-    16 => 'css/ang/directives/actions/manageEmailSubscriptions.css',
+    15 => 'css/ang/directives/actions/actionGeneral.css',
+    16 => 'css/ang/directives/actions/doNotSms.css',
+    17 => 'css/ang/directives/actions/manageEmailSubscriptions.css',
   ],
   'partials' => [
     0 => 'ang/manageCase',
