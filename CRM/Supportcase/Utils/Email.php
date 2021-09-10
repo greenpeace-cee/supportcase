@@ -26,8 +26,19 @@ class CRM_Supportcase_Utils_Email {
    * @return bool
    */
   public static function isLocationTypeExist($locationTypeName) {
-    //TODO implement it
-    return false;
+    if (empty($locationTypeName)) {
+      return false;
+    }
+
+    try {
+      $locationType = civicrm_api3('LocationType', 'getsingle', [
+          'name' => $locationTypeName,
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      return false;
+    }
+
+    return !empty($locationType['id']);
   }
 
 }
