@@ -43,20 +43,15 @@
     margin-bottom: 0;
 }
 
-.crm-container .button__cancel {
+.crm-container .supportcase-manage-case-module-wrap .button__cancel {
     background: #fff;
     border: solid 1px #4d4d69;
     color: #363342 !important;
     cursor: pointer;
 }
 
-.crm-container .button__cancel:hover {
+.crm-container .supportcase-manage-case-module-wrap .button__cancel:hover {
     background: #f3f6f7;
-}
-
-.crm-container input.input__text {
-    height: 30px;
-    box-sizing: border-box;
 }
 
 #page-wrapper, #footer-wrapper {
