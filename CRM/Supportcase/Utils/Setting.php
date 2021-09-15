@@ -206,6 +206,15 @@ class CRM_Supportcase_Utils_Setting {
   }
 
   /**
+   * Is "at.greenpeace.casetools" enabled
+   *
+   * @return bool
+   */
+  public static function isMailUtilsExtensionEnable() {
+    return self::isExtensionEnable('mailutils');
+  }
+
+  /**
    * Gets groups data which is used like a subscription.
    * Used on angular page(Manage case -> actions -> manage email subscriptions)
    *
