@@ -3,35 +3,47 @@
     which is loaded in iframe
 */
 
-#page-title {
+body.manage-case-page #page-title {
     margin: 0px !important;
 }
 
-#header, #breadcrumb, #main-content, #page-title, .tabs, #footer,
-#content > .section .tabs, #civicrm-menu-nav, #civicrm-footer,
-#footer-wrapper, #access.footer, .column.sidebar, #sidebar-first,
-#branding, #toolbar, #crm-main-content-wrapper > .messages.status  {
+body.manage-case-page #header,
+body.manage-case-page #breadcrumb,
+body.manage-case-page #main-content,
+body.manage-case-page #page-title,
+body.manage-case-page .tabs,
+body.manage-case-page #footer,
+body.manage-case-page #content > .section .tabs,
+body.manage-case-page #civicrm-menu-nav,
+body.manage-case-page #civicrm-footer,
+body.manage-case-page #footer-wrapper,
+body.manage-case-page #access.footer,
+body.manage-case-page .column.sidebar,
+body.manage-case-page #sidebar-first,
+body.manage-case-page #branding,
+body.manage-case-page #toolbar,
+body.manage-case-page #crm-main-content-wrapper > .messages.status  {
     display: none !important;
 }
 
-body {
+body.manage-case-page body {
     background: white !important;
 }
 
-#main, #content {
+body.manage-case-page #main, #content {
     width: 100% !important;
     margin: 0 !important;
 }
 
-#page {
+body.manage-case-page #page {
     margin-right : 0 !important;
     margin-left : 0 !important;
     padding : 0 !important;
 }
-body.crm-menubar-visible.crm-menubar-over-cms-menu.crm-menubar-wrapped {
+body.manage-case-page.crm-menubar-visible.crm-menubar-over-cms-menu.crm-menubar-wrapped {
     padding-top: 0px !important;
 
 }
 @media (min-width: 768px) {
-    body.crm-menubar-visible.crm-menubar-over-cms-menu {padding-top: 0px !important;}
+    body.manage-case-page.crm-menubar-visible.crm-menubar-over-cms-menu {padding-top: 0px !important;}
 }

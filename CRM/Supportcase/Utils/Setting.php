@@ -206,7 +206,7 @@ class CRM_Supportcase_Utils_Setting {
   }
 
   /**
-   * Is "at.greenpeace.casetools" enabled
+   * Is "mailutils" enabled
    *
    * @return bool
    */

@@ -47,6 +47,10 @@
                     .css('height', scrollableBlockHeight + 'px');
             }, 0);
         }
+        //to add ability to use styles only for this page
+        setTimeout(function() {
+            CRM.$('body').addClass('manage-case-page');
+        }, 0);
 
         $scope.handleCaseInfoResponse = function() {
             if (apiCalls.caseInfoResponse.is_error == 1) {
