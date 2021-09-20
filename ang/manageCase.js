@@ -543,6 +543,15 @@
                 $scope.replyMode = null;
                 $scope.ts = CRM.ts();
 
+                $scope.showError = function(errorMessage) {
+                    $scope.cleanErrors();
+                    CRM.$($element).find('.com__errors-wrap').append('<div class="crm-error">' + errorMessage + '</div>');
+                };
+
+                $scope.cleanErrors = function() {
+                    CRM.$($element).find('.com__errors-wrap').empty();
+                };
+
                 $scope.toggleReadEmail = function(emailActivityId, isRead) {
                     cookieService.toggleReadEmail(emailActivityId, isRead);
                     for (var i = 0; i < $scope.emailActivities.length; i++) {
@@ -596,8 +605,9 @@
                 };
 
                 $scope.cancel = function() {
-                  $scope.currentReplyId = null;
-                  $scope.replyMode = null;
+                    $scope.currentReplyId = null;
+                    $scope.replyMode = null;
+                    $scope.cleanErrors();
                 };
 
                 $scope.send = function(activity) {
@@ -613,6 +623,7 @@
                         if (result.is_error === 1) {
                             console.error('Error sending email:');
                             console.error(result.error_message);
+                            $scope.showError(result.error_message);
                         } else {
                             CRM.status('Email to ' + to_email + ' sent!');
                             $scope.getEmails();

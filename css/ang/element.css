@@ -125,6 +125,14 @@
     padding: 0 !important;
 }
 
+.spc__table > tbody > tr.spc--no-border,
+.spc__table > tbody > th.spc--no-border,
+.spc__table > tbody > tr > td.spc--no-border,
+.spc__table > tbody > th > td.spc--no-border
+{
+    border: none !important;
+}
+
 .spc__table > tbody > tr > td.spc--padding-top-0,
 .spc__table > tbody > tr.spc--padding-top-0 {
     padding-top: 0 !important;

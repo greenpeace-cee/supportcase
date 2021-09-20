@@ -53,7 +53,7 @@
   border-right: 1px solid #e8eef0;
   border-bottom: 1px solid #e8eef0;
   position: relative;
-  margin: 0 0 20px 0;
+  margin: 0 0 10px 0;
 }
 
 .com__email-activity .com__message-toggle-height-to-part {
@@ -78,29 +78,22 @@
   overflow-x: auto;
 }
 
-.com__message, .com__reply {
-  border-bottom: none !important;
-}
-
 .com__reply .cke_contents {
   height: 340px !important;
 }
 
 .com__reply input[type="file"] {
   padding-left: 0;
-  margin: 5px 0 10px 0;
+  margin: 5px 0 5px 0;
 }
 
 .com__gap {
   height: 5px;
 }
 
-.com__message-buttons > td {
-  padding-left: 0 !important;
-}
-
-.com__message-buttons td {
-  padding-top: 0 !important;
+.com__message-buttons {
+  margin-top: 5px;
+  margin-bottom: 10px;
 }
 
 .com__message-buttons .ui-button-icon {
@@ -134,6 +127,11 @@
 
 .com__reply-edit-area {
   position: relative;
+  margin-bottom: 5px;
+}
+
+.com__errors-wrap {
+  max-width: 300px;
 }
 
 .com__email-item-accordion-head {
@@ -145,3 +143,14 @@
 .com__edit-subject-input-wrap {
   max-width: 600px;
 }
+
+/*
+    Fix email body styles.
+*/
+.page-civicrm-admin.page-civicrm-a .com__message-body table:not(.form-layout-compressed) tr,
+.page-civicrm-a.page-civicrm-a .com__message-body table:not(.form-layout-compressed) tr,
+.page-civicrm-admin.page-civicrm-a .com__message-body table:not(.form-layout-compressed),
+.page-civicrm-a.page-civicrm-a .com__message-body table:not(.form-layout-compressed) {
+  border: none;
+}
+

@@ -134,14 +134,14 @@
                                                                 </ul>
                                                             </td>
                                                         </tr>
-                                                        <tr class="com__message" ng-if="currentReplyId != activity.id">
+                                                        <tr class="com__message spc--no-border" ng-if="currentReplyId != activity.id">
                                                             <td colspan="3" class="spc--padding-0">
                                                                 <div class="com__message-body">
                                                                     <div ng-bind-html="activity.details_resolved"></div>
                                                                 </div>
                                                             </td>
                                                         </tr>
-                                                        <tr class="com__reply" ng-if="currentReplyId == activity.id">
+                                                        <tr class="com__reply spc--no-border" ng-if="currentReplyId == activity.id">
                                                             <td crm-ui-id-scope colspan="3" class="spc--padding-0">
                                                                 <div>
                                                                     <table class="crm-entity spc__table crm-search-results" >
@@ -193,25 +193,34 @@
                                                                 </div>
                                                             </td>
                                                         </tr>
-                                                        <tr class="com__message-buttons">
-                                                            <td colspan="3">
-                                                                <button class="spc__button spc--height-medium" ng-click="reply(activity)" ng-show="currentReplyId != activity.id">
-                                                                    <span class="ui-button-icon ui-icon fa-reply"></span>
-                                                                    <span class="ui-button-icon-space"> </span>
-                                                                    <span>Reply</span>
-                                                                </button>
-                                                                <button class="spc__button spc--height-medium" ng-click="forward(activity)" ng-show="currentReplyId != activity.id">
-                                                                    <span class="ui-button-icon ui-icon fa-share"></span>
-                                                                    <span class="ui-button-icon-space"> </span>
-                                                                    <span>Forward</span>
-                                                                </button>
-                                                                <button class="spc__button spc--height-medium" ng-disabled="activityEmailForm.$invalid" ng-click="send(activity)"
-                                                                        ng-show="currentReplyId == activity.id">
-                                                                    <span class="ui-button-icon ui-icon fa-paper-plane-o"></span>
-                                                                    <span class="ui-button-icon-space"> </span>
-                                                                    <span>Send</span>
-                                                                </button>
-                                                                <button class="spc__button spc--height-medium button__cancel" ng-click="cancel()" ng-show="currentReplyId == activity.id">Cancel</button>
+
+                                                        <tr class="spc--padding-0 spc--no-border">
+                                                            <td class="spc--padding-0 spc--no-border">
+                                                                <div class="com__errors-wrap"></div>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr class="spc--padding-0 spc--no-border">
+                                                            <td class="spc--padding-0" colspan="3">
+                                                                <div class="com__message-buttons">
+                                                                    <button class="spc__button spc--height-medium" ng-click="reply(activity)" ng-show="currentReplyId != activity.id">
+                                                                        <span class="ui-button-icon ui-icon fa-reply"></span>
+                                                                        <span class="ui-button-icon-space"> </span>
+                                                                        <span>Reply</span>
+                                                                    </button>
+                                                                    <button class="spc__button spc--height-medium" ng-click="forward(activity)" ng-show="currentReplyId != activity.id">
+                                                                        <span class="ui-button-icon ui-icon fa-share"></span>
+                                                                        <span class="ui-button-icon-space"> </span>
+                                                                        <span>Forward</span>
+                                                                    </button>
+                                                                    <button class="spc__button spc--height-medium" ng-disabled="activityEmailForm.$invalid" ng-click="send(activity)"
+                                                                            ng-show="currentReplyId == activity.id">
+                                                                        <span class="ui-button-icon ui-icon fa-paper-plane-o"></span>
+                                                                        <span class="ui-button-icon-space"> </span>
+                                                                        <span>Send</span>
+                                                                    </button>
+                                                                    <button class="spc__button spc--height-medium button__cancel" ng-click="cancel()" ng-show="currentReplyId == activity.id">Cancel</button>
+                                                                </div>
                                                             </td>
                                                         </tr>
                                                         </tbody>
