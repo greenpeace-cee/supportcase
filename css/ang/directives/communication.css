@@ -130,6 +130,17 @@
   margin-bottom: 5px;
 }
 
+.com__reply-edit-area .cke_combo .cke_combo_button:hover,
+.com__reply-edit-area .cke_combo .cke_combo_button {
+  margin: 0 10px 0 10px !important;
+  padding: 0 !important;
+}
+
+.com__reply-edit-area .cke_combo:first-child .cke_combo_button,
+.com__reply-edit-area .cke_combo:first-child .cke_combo_button:hover {
+  margin-left: 0 !important;
+}
+
 .com__errors-wrap {
   max-width: 300px;
 }
