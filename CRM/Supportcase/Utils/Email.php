@@ -18,7 +18,6 @@ class CRM_Supportcase_Utils_Email {
     return !preg_match( $pattern, $stringEmail);
   }
 
-
   /**
    * Checks if location type exist
    *
@@ -39,6 +38,24 @@ class CRM_Supportcase_Utils_Email {
     }
 
     return !empty($locationType['id']);
+  }
+
+  /**
+   * Checks if location type exist
+   *
+   * @param $subject
+   * @return string
+   */
+  public static function normalizeEmailSubject($subject) {
+    if (empty($subject)) {
+      return '';
+    }
+
+    if (!CRM_Supportcase_Utils_Setting::isMailUtilsExtensionEnable()) {
+      return '';
+    }
+
+    return \Civi\Mailutils\SubjectNormalizer::normalize($subject);
   }
 
 }
