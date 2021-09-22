@@ -619,6 +619,7 @@
                         'to_email_id': activity['emails']['to'],
                         'from_email_id': activity['emails']['from'],
                         'cc_email_ids': activity['emails']['cc'],
+                        'email_activity_id': activity['id'],
                     }).then(function(result) {
                         if (result.is_error === 1) {
                             console.error('Error sending email:');
