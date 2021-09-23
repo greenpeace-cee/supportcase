@@ -86,4 +86,11 @@ class CRM_Supportcase_Upgrader extends CRM_Supportcase_Upgrader_Base {
     return TRUE;
   }
 
+  public function upgrade_0004() {
+    $this->ctx->log->info('Applying update 0004. Install new location type.');
+    (new CRM_Supportcase_Install_Entity_LocationType())->createAll();
+
+    return TRUE;
+  }
+
 }

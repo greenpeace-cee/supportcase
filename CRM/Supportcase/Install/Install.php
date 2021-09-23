@@ -18,6 +18,7 @@ class CRM_Supportcase_Install_Install {
     (new CRM_Supportcase_Install_Entity_TagSet())->createAll();
     (new CRM_Supportcase_Install_Entity_Tag())->createAll();
     (new CRM_Supportcase_Install_Entity_Job())->createAll();
+    (new CRM_Supportcase_Install_Entity_LocationType())->createAll();
   }
 
   /**
@@ -31,6 +32,7 @@ class CRM_Supportcase_Install_Install {
     (new CRM_Supportcase_Install_Entity_CustomGroup())->disableAll();
     (new CRM_Supportcase_Install_Entity_CustomField())->disableAll();
     (new CRM_Supportcase_Install_Entity_Job())->disableAll();
+    (new CRM_Supportcase_Install_Entity_LocationType())->disableAll();
   }
 
   /**
@@ -44,6 +46,7 @@ class CRM_Supportcase_Install_Install {
     (new CRM_Supportcase_Install_Entity_CustomGroup())->enableAll();
     (new CRM_Supportcase_Install_Entity_CustomField())->enableAll();
     (new CRM_Supportcase_Install_Entity_Job())->enableAll();
+    (new CRM_Supportcase_Install_Entity_LocationType())->enableAll();
   }
 
   /**

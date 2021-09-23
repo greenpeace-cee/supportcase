@@ -24,7 +24,7 @@ function  civicrm_api3_supportcase_email_create_new_contact_email($params) {
     'id' => $createdContact['id'],
   ]);
 
-  $newEmailLocationType = 'Support';
+  $newEmailLocationType = CRM_Supportcase_Install_Entity_LocationType::SUPPORT;
   if (!CRM_Supportcase_Utils_Email::isLocationTypeExist($newEmailLocationType)) {
     $newEmailLocationType = 'Main';
   }
