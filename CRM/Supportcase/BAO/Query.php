@@ -59,6 +59,38 @@ class CRM_Supportcase_BAO_Query extends CRM_Case_BAO_Query {
 
     $parentNames = CRM_Core_BAO_Tag::getTagSet('civicrm_case');
     CRM_Core_Form_Tag::buildQuickForm($form, $parentNames, 'civicrm_case', NULL, TRUE, FALSE);
+
+    $additionalClasses = [
+      'case_keyword' => ['spc__input'],
+      'case_agents' => ['spc__input', 'spc--multiple-select'],
+      'case_client' => ['spc__input', 'spc--multiple-select'],
+      'case_tags' => ['spc__input', 'spc--multiple-select'],
+      'case_status_id' => ['spc__input', 'spc--multiple-select'],
+      'case_start_date_relative' => ['spc__input', 'spc--single-select'],
+      'case_start_date_low' => ['spc__input'],
+      'case_start_date_high' => ['spc__input'],
+      'case_end_date_relative' => ['spc__input', 'spc--single-select'],
+      'case_end_date_low' => ['spc__input'],
+      'case_end_date_high' => ['spc__input'],
+    ];
+
+    foreach ($additionalClasses as $elementName => $classes) {
+      if ($form->elementExists($elementName)) {
+        self::addClassToElement($form->getElement($elementName), $classes);
+      }
+    }
+  }
+
+  /**
+   * Add new classes to element
+   *
+   * @param $element
+   * @param $classes
+   */
+  private static function addClassToElement($element, $classes) {
+    $elementClasses = $element->getAttribute('class');
+    $newClasses = $elementClasses . ' ' . implode(' ', $classes) . ' ';
+    $element->setAttribute('class', $newClasses);
   }
 
 }

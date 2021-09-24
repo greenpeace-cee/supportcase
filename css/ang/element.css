@@ -218,6 +218,8 @@
 }
 
 .spc__input.spc--single-select .select2-choice,
+.spc__input.spc--single-select .select2-choices,
+.spc__input.spc--multiple-select .select2-choice,
 .spc__input.spc--multiple-select .select2-choices {
     box-shadow: none !important;
 }

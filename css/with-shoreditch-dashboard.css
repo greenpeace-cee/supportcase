@@ -33,6 +33,19 @@
     margin-left: -5px;
 }
 
+.supportcase__case-tags-filter .case-tagset .select2-choices {
+    box-shadow: none !important;
+}
+
+.supportcase__search-block .supportcase__search-filters-wrap .crm-absolute-date-range input {
+    max-width: 100px;
+}
+
+.supportcase__search-block .supportcase__search-filters-wrap .crm-absolute-date-range .crm-error {
+    display: block;
+    margin: 10px 0;
+}
+
 .supportcase__case-tags-filter-wrap {
     margin-top: 6px;
 }

@@ -237,9 +237,9 @@
 }
 
 .supportcase__search-block .supportcase__search-filters-wrap .supportcase__is-case-deleted-search-filter input {
-    width: 20px;
-    height: 20px;
-    margin-top: 6px;
+    width: 30px;
+    height: 30px;
+    margin-top: 0px;
 }
 
 .supportcase__top-pagination-wrap,
