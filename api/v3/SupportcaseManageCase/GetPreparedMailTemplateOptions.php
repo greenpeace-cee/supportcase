@@ -18,6 +18,7 @@ function civicrm_api3_supportcase_manage_case_get_prepared_mail_template_options
     return [];
   }
 
+  $result = [];
   $preparedTemplates = [];
 
   foreach ($mailutilsTemplates as $template) {
