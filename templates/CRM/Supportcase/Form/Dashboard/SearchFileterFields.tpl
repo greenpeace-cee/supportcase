@@ -55,7 +55,7 @@
                                     <tr>
                                         <td colspan="3">
                                             <div class="supportcase__case-tags-filter-wrap">
-                                                <div class="spc__accordion crm-accordion-wrapper {if $isTagsFilterEmpty}collapsed{/if}">
+                                                <div class="spc__accordion spc--header-grey crm-accordion-wrapper {if $isTagsFilterEmpty}collapsed{/if}">
                                                     <div class="crm-accordion-header">{ts}Tags:{/ts}</div>
                                                     <div class="crm-accordion-body">
                                                         <div class="supportcase__case-tags-filter">

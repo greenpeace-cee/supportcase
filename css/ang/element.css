@@ -143,6 +143,16 @@
     padding-bottom: 0 !important;
 }
 
+.spc__table > tbody > tr > td.spc--padding-top-5,
+.spc__table > tbody > tr.spc--padding-top-5 {
+    padding-top: 5px !important;
+}
+
+.spc__table > tbody > tr > td.spc--padding-bottom-5,
+.spc__table > tbody > tr.spc--padding-bottom-5 {
+    padding-bottom: 5px !important;
+}
+
 .spc__table > tbody > tr.spc--vertical-align-middle,
 .spc__table > tbody > tr > td.spc--vertical-align-middle {
     vertical-align: middle;
@@ -157,7 +167,7 @@
 */
 
 /*
-   Input:
+   Inputs:
 */
 .spc__input {
     box-sizing: border-box !important;
@@ -171,17 +181,12 @@
     font-size: 13px;
     height: 30px !important;
     vertical-align: middle;
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 3px 0px inset;
+    box-shadow: none !important;
     margin: 0 !important;
 }
 
-.spc__input.spc--multiple-select {
-    height: auto !important;
-    min-height: 30px !important;
-}
-
 .spc__input:focus {
-    border-color: #66afe9;
+    border-color: #66afe9 !important;
     outline: 0;
 }
 
@@ -189,8 +194,37 @@
     width: 100% !important;
 }
 
-.spc__input.ng-invalid, .spc__input.ng-invalid-required {
+.spc__input.ng-invalid-required:not(.spc--multiple-select, .spc--single-select),
+.spc__input.ng-invalid:not(.spc--multiple-select, .spc--single-select) {
     border-color: #cf3458 !important;
+}
+
+.spc__input.spc--multiple-select {
+    height: auto !important;
+    min-height: 30px !important;
+    border: none !important;
+}
+
+.spc__input.ng-invalid-required.spc--single-select .select2-choices,
+.spc__input.ng-invalid.spc--single-select .select2-choice,
+.spc__input.ng-invalid-required.spc--multiple-select .select2-choices,
+.spc__input.ng-invalid.spc--multiple-select .select2-choice
+{
+    border-color: #cf3458 !important;
+}
+
+.spc__input.spc--single-select {
+    border: none !important;
+}
+
+.spc__input.spc--single-select .select2-choice,
+.spc__input.spc--multiple-select .select2-choices {
+    box-shadow: none !important;
+}
+
+.spc__input.spc--textarea {
+    height: auto !important;
+    min-height: 60px !important;
 }
 
 /*

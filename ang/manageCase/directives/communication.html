@@ -70,7 +70,7 @@
                                                 <div class="spc__accordion-body-wrap">
                                                     <table class="crm-entity spc__table" class="crm-search-results">
                                                         <tbody>
-                                                        <tr class="com__meta spc--table-grey-row" ng-show="currentReplyId != activity.id">
+                                                        <tr class="com__meta spc--table-grey-row spc--no-border" ng-show="currentReplyId != activity.id">
                                                             <td class="spc--width-100 spc--padding-bottom-0 spc--padding-top-0 spc--vertical-align-middle">From:</td>
                                                             <td>{{activity.from_label}}</td>
                                                             <td class="com__meta_action">
@@ -96,14 +96,14 @@
                                                                 </button>
                                                             </td>
                                                         </tr>
-                                                        <tr class="com__meta spc--table-grey-row" ng-show="currentReplyId != activity.id">
+                                                        <tr class="com__meta spc--table-grey-row spc--no-border" ng-show="currentReplyId != activity.id">
                                                             <td class="spc--width-100 spc--padding-bottom-0 spc--padding-top-0 spc--vertical-align-middle">Subject:</td>
                                                             <td>{{activity.subject}}</td>
                                                             <td class="com__email_date">
                                                                 {{formatDateAndTime(activity.activity_date_time, true)}}
                                                             </td>
                                                         </tr>
-                                                        <tr class="com__meta spc--table-grey-row" ng-show="currentReplyId != activity.id">
+                                                        <tr class="com__meta spc--table-grey-row spc--no-border" ng-show="currentReplyId != activity.id">
                                                             <td class="spc--width-100 spc--padding-bottom-0 spc--padding-top-0 spc--vertical-align-middle">To:</td>
                                                             <td>{{activity.to_label}}</td>
                                                             <td class="com__meta_action">
@@ -122,7 +122,7 @@
                                                                 </div>
                                                             </td>
                                                         </tr>
-                                                        <tr class="com__meta spc--table-grey-row" ng-show="currentReplyId != activity.id && activity.attachments.length > 0">
+                                                        <tr class="com__meta spc--table-grey-row spc--no-border" ng-show="currentReplyId != activity.id && activity.attachments.length > 0">
                                                             <td class="spc--width-100 spc--padding-bottom-0 spc--padding-top-0 spc--vertical-align-middle">Attachments:</td>
                                                             <td colspan="2">
                                                                 <ul class="com__attachments">
@@ -146,35 +146,35 @@
                                                                 <div>
                                                                     <table class="crm-entity spc__table crm-search-results" >
                                                                         <tbody>
-                                                                        <tr class="com__meta spc--table-grey-row">
-                                                                            <td class="spc--width-100 spc--padding-bottom-0 spc--padding-top-0 spc--vertical-align-middle">From:</td>
-                                                                            <td class="spc--padding-bottom-0 spc--padding-top-0">
+                                                                        <tr class="com__meta spc--table-grey-row spc--no-border">
+                                                                            <td class="spc--width-100 spc--padding-bottom-5 spc--padding-top-5 spc--vertical-align-middle">From:</td>
+                                                                            <td class="spc--padding-bottom-5 spc--padding-top-5">
                                                                                 <div>
                                                                                     <select-email is-required="true" is-multiple="false" max-width="600" model="activity.emails.from"></select-email>
                                                                                 </div>
                                                                             </td>
                                                                         </tr>
-                                                                        <tr class="com__meta spc--table-grey-row">
-                                                                            <td class="spc--width-100 spc--padding-bottom-0 spc--padding-top-0 spc--vertical-align-middle">To:</td>
-                                                                            <td class="spc--padding-bottom-0 spc--padding-top-0">
+                                                                        <tr class="com__meta spc--table-grey-row spc--no-border">
+                                                                            <td class="spc--width-100 spc--padding-bottom-5 spc--padding-top-0 spc--vertical-align-middle">To:</td>
+                                                                            <td class="spc--padding-bottom-5 spc--padding-top-0">
                                                                                 <div>
                                                                                     <select-email is-required="true" is-multiple="false" max-width="600" model="activity.emails.to"></select-email>
                                                                                 </div>
                                                                             </td>
                                                                         </tr>
-                                                                        <tr class="com__meta spc--table-grey-row">
-                                                                            <td class="spc--width-100 spc--padding-bottom-0 spc--padding-top-0 spc--vertical-align-middle">CC:</td>
-                                                                            <td class="spc--padding-bottom-0 spc--padding-top-0">
+                                                                        <tr class="com__meta spc--table-grey-row spc--no-border">
+                                                                            <td class="spc--width-100 spc--padding-bottom-5 spc--padding-top-0 spc--vertical-align-middle">CC:</td>
+                                                                            <td class="spc--padding-bottom-5 spc--padding-top-0">
                                                                                 <div>
                                                                                     <select-email is-required="false" is-multiple="true" max-width="600" model="activity.emails.cc"></select-email>
                                                                                 </div>
                                                                             </td>
                                                                         </tr>
-                                                                        <tr class="com__meta spc--table-grey-row">
-                                                                            <td class="spc--width-100 spc--padding-bottom-0 spc--padding-top-0 spc--vertical-align-middle">
+                                                                        <tr class="com__meta spc--table-grey-row spc--no-border">
+                                                                            <td class="spc--width-100 spc--padding-bottom-5 spc--padding-top-0 spc--vertical-align-middle">
                                                                                 <label for="{{subject + activity.id}}">Subject:</label>
                                                                             </td>
-                                                                            <td class="spc--padding-bottom-0 spc--padding-top-0">
+                                                                            <td class="spc--padding-bottom-5 spc--padding-top-0">
                                                                                 <div class="com__edit-subject-input-wrap">
                                                                                     <input id="{{subject + activity.id}}" name="subject" class="spc__input spc--width-100-percent" ng-model="activity.email_subject" type="text" ng-required="true">
                                                                                 </div>
@@ -184,7 +184,7 @@
                                                                     </table>
                                                                     <div class="com__reply-edit-area">
                                                                         <div class="com__templates">
-                                                                            <input mailutils-template on-select="$broadcast('insert:reply', token.name)" tabindex="-1" style="z-index:1">
+                                                                            <input class="spc__input spc--single-select" mailutils-template on-select="$broadcast('insert:reply', token.name)" tabindex="-1" style="z-index:1">
                                                                         </div>
                                                                         <textarea crm-ui-id="email-reply-{{activity.id}}" crm-ui-richtext crm-ui-insert-rx="insert:reply"
                                                                             name="reply" ng-model="activity.reply" style="height: 500px" data-preset="civimail"></textarea>

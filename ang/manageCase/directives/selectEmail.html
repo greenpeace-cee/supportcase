@@ -1,6 +1,6 @@
 <div class="se__select-email">
     <input class="spc__input se__select-email-input crm-form-select"
-           ng-class="{'spc--multiple-select' : isMultiple}"
+           ng-class="{'spc--multiple-select' : isMultiple, 'spc--single-select' : !isMultiple}"
            type="text"
            ng-model="model"
            ng-required="isRequired"
