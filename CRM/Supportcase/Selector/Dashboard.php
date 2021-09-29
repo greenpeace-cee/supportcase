@@ -328,6 +328,9 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
    *   Total number of rows
    */
   public function getTotalCount($action) {
+    //huck to apply our new tables
+    $this->_query->_simpleFromClause = CRM_Contact_BAO_Query::fromClause($this->_query->_whereTables, NULL, NULL, $this->_query->_primaryLocation, $this->_query->_mode);
+
     return $this->_query->searchQuery(0, 0, NULL,
       TRUE, FALSE,
       FALSE, FALSE,

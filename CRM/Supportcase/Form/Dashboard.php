@@ -58,7 +58,7 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $isDefaultTask = $this->controller->getStateMachine()->getTaskFormName() == 'DefaultTask';
     if ($isDefaultTask) {
       foreach ($defaultValues as $key => $field) {
-        if(preg_match('/^' . self::CB_PREFIX . '/', $key)) {
+        if(preg_match('/^' . CRM_Core_Form::CB_PREFIX . '/', $key)) {
           unset($defaultValues[$key]);
         }
       }
