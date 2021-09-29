@@ -58,7 +58,7 @@ function _civicrm_api3_supportcase_manage_case_send_email_spec(&$params) {
   ];
   $params['cc_email_ids'] = [
     'name' => 'cc_email_ids',
-    'api.required' => 1,
+    'api.required' => 0,
     'type' => CRM_Utils_Type::T_STRING,
     'title' => 'CC email ids',
   ];
