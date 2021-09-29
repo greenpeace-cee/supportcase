@@ -25,6 +25,16 @@ class CRM_Supportcase_Utils_Email {
    * @return bool
    */
   public static function isLocationTypeExist($locationTypeName) {
+    return !empty(self::getLocationType($locationTypeName));
+  }
+
+  /**
+   * Get location type
+   *
+   * @param $locationTypeName
+   * @return array|bool
+   */
+  public static function getLocationType($locationTypeName) {
     if (empty($locationTypeName)) {
       return false;
     }
@@ -37,7 +47,7 @@ class CRM_Supportcase_Utils_Email {
       return false;
     }
 
-    return !empty($locationType['id']);
+    return $locationType;
   }
 
   /**

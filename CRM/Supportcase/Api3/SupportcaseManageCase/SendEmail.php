@@ -9,24 +9,20 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
    * Get results of api
    */
   public function getResult() {
-    //TODO: Do we need to add transaction when some api returns error?
     //TODO: Do we need to create activity by CRM_Activity_BAO_Activity::createEmailActivity?
+    //todo: create a activity
     $mailutilsMessage = $this->createMailutilsMessage();
 
-    $toPartyTypeId = 2;
-    $fromPartyTypeId = 1;
-    $ccPartyTypeId = 3;
-
     foreach ($this->params['email']['toEmails'] as $emailData) {
-      $this->createMailutilsMessageParty($emailData, $mailutilsMessage['id'], $toPartyTypeId);
+      $this->createMailutilsMessageParty($emailData, $mailutilsMessage['id'], CRM_Supportcase_Utils_PartyType::getToPartyTypeId());
     }
 
     foreach ($this->params['email']['fromEmails'] as $emailData) {
-      $this->createMailutilsMessageParty($emailData, $mailutilsMessage['id'], $fromPartyTypeId);
+      $this->createMailutilsMessageParty($emailData, $mailutilsMessage['id'], CRM_Supportcase_Utils_PartyType::getFromPartyTypeId());
     }
 
     foreach ($this->params['email']['ccEmails'] as $emailData) {
-      $this->createMailutilsMessageParty($emailData, $mailutilsMessage['id'], $ccPartyTypeId);
+      $this->createMailutilsMessageParty($emailData, $mailutilsMessage['id'], CRM_Supportcase_Utils_PartyType::getCcPartyTypeId());
     }
 
     try {
@@ -59,9 +55,9 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
         ->addValue('subject', $this->params['email']['subject'])
         ->addValue('body', $this->params['email']['body'])
         ->addValue('mailutils_thread_id', $mailutilsThread['id'])
-        ->addValue('mail_setting_id', '1')//TODO: remove dummy data
-        ->addValue('message_id', 'TODO')//TODO: remove dummy data
-        ->addValue('in_reply_to', 'TODO')//TODO: remove dummy data
+        ->addValue('mail_setting_id', '1')//TODO: remove dummy data/// mail_setting_id id prev
+        ->addValue('message_id', 'TODO')//TODO: remove dummy data // this remove in future
+        ->addValue('in_reply_to', 'TODO')//TODO: remove dummy data /// $mailutilsMessage id prev
         ->addValue('headers', 'TODO')//TODO: remove dummy data
         ->execute()
         ->first();
