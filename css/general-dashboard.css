@@ -36,6 +36,14 @@
     width: 550px;
 }
 
+.supportcase__tooltip-activity-detail {
+    height: 200px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border: 1px solid #d3dee2;
+    background: white;
+}
+
 .supportcase__case-tags-filter .tag-section label {
     display: block;
 }
@@ -99,6 +107,7 @@
 .supportcase__toggle-filter-button {
     display: inline-block;
     cursor: pointer;
+    margin-left: 10px;
 }
 
 .supportcase__search-by-case-id-wrap {
@@ -281,6 +290,10 @@
 
 .supportcase__result-table-wrap {
     margin-bottom: 20px;
+}
+
+.supportcase__result-table-wrap > table {
+    box-shadow: none !important;
 }
 
 .supportcase__recent-communication-details {

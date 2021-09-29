@@ -7,7 +7,7 @@
             <tr>
                 <td colspan="2">
                     <div>
-                        <div class="content">
+                        <div class="content supportcase__tooltip-activity-detail">
                             {$activity.details}
                         </div>
                         <div class="clear"></div>

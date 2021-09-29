@@ -51,13 +51,14 @@
     border: 1px solid rgb(211, 222, 226);
 }
 
+.spc__accordion-body-wrap.spc--padding-right-20 {
+    padding-right: 20px;
+}
+
 .spc__accordion.collapsed.spc--collapsed-head-border-bottom {
     border-bottom: 1px solid #d3dee2;
 }
 
-.spc__accordion.collapsed.spc--collapsed-head-border-bottom:last-child {
-    border-bottom: none;
-}
 /*
    End accordion:
 */
@@ -86,6 +87,17 @@
     background: grey !important;
 }
 
+.spc__button.spc--cancel {
+    background: #fff;
+    border: solid 1px #4d4d69;
+    color: #363342 !important;
+    cursor: pointer;
+}
+
+.spc__button.spc--cancel:hover {
+    background: #f3f6f7;
+}
+
 /*
    End button:
 */
@@ -95,6 +107,14 @@
 */
 .spc__table > thead > tr > th {
     background: whitesmoke !important;
+}
+
+.spc__table.spc--no-border {
+    border: none !important;
+}
+
+.spc__table.spc--no-margin {
+    margin: 0 !important;
 }
 
 .spc__table > thead > tr > th {
@@ -151,6 +171,16 @@
 .spc__table > tbody > tr > td.spc--padding-bottom-5,
 .spc__table > tbody > tr.spc--padding-bottom-5 {
     padding-bottom: 5px !important;
+}
+
+.spc__table > tbody > tr > td.spc--padding-top-10,
+.spc__table > tbody > tr.spc--padding-top-10 {
+    padding-top: 10px !important;
+}
+
+.spc__table > tbody > tr > td.spc--padding-bottom-10,
+.spc__table > tbody > tr.spc--padding-bottom-10 {
+    padding-bottom: 10px !important;
 }
 
 .spc__table > tbody > tr.spc--vertical-align-middle,

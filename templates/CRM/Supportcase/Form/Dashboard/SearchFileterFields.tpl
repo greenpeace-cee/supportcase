@@ -74,16 +74,17 @@
                             <div class="supportcase__search-button-submit">
                                 {$form.buttons.html}
                             </div>
-                            <div class="crm-submit-buttons reset-advanced-search">
-                                <a href="{crmURL p='civicrm/supportcase' q='reset=1'}" class="crm-hover-button spc__button spc--height-big" title="{ts}Clear all search criteria{/ts}">
-                                    <i class="crm-i fa-undo"></i>&nbsp;{ts}Reset Form{/ts}
-                                </a>
-                            </div>
 
                             <button class="spc__button spc--height-big supportcase__toggle-filter-button button" id="toggleFilterButton">
                               <span class="supportcase__toggle-filter-button-case-id-text">Search by Case ID</span>
                               <span class="supportcase__toggle-filter-button-params-text">Advanced Search</span>
                             </button>
+
+                            <div class="crm-submit-buttons reset-advanced-search">
+                                <a href="{crmURL p='civicrm/supportcase' q='reset=1'}" class="spc__button spc--height-big spc--cancel" title="{ts}Clear all search criteria{/ts}">
+                                    <i class="crm-i fa-undo"></i>&nbsp;{ts}Reset Form{/ts}
+                                </a>
+                            </div>
                         </div>
                     </div>
                 {/strip}

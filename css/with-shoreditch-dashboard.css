@@ -37,6 +37,10 @@
     box-shadow: none !important;
 }
 
+.supportcase__result-action-block .select2-choice {
+    box-shadow: none !important;
+}
+
 .supportcase__search-block .supportcase__search-filters-wrap .crm-absolute-date-range input {
     max-width: 100px;
 }
@@ -120,4 +124,12 @@
 
 .crm-container.ui-dialog {
     background: white;
+}
+
+.crm-container a.crm-tooltip-down .crm-tooltip-wrapper::before {
+    top: 0px;
+}
+
+.ui-dialog-content.modal-dialog.crm-ajax-container {
+    padding-top: 0px !important;
 }

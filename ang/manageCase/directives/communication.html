@@ -18,7 +18,7 @@
                             <span>SMS Messages {{'(' + smsActivities['length'] + ')'}}:</span>
                         </div>
                         <div class="crm-accordion-body">
-                            <div class="spc__accordion-body-wrap spc--body-border">
+                            <div class="spc__accordion-body-wrap spc--body-border spc--padding-right-20">
                                 <div>
                                     <table class="crm-search-results spc__table spc--head-little">
                                         <thead>
@@ -56,9 +56,9 @@
                             <span>Email Messages {{'(' + emailActivities['length'] + ')'}}:</span>
                         </div>
                         <div class="crm-accordion-body">
-                            <div class="spc__accordion-body-wrap">
+                            <div class="spc__accordion-body-wrap spc--padding-right-20">
                                 <div>
-                                    <div data-activity-id="{{activity.id}}" ng-repeat="activity in emailActivities" ng-class="{'com__email-activity-is-read' : activity['isRead']}" class="com__email-activity crm-accordion-wrapper spc__accordion spc--header-white spc--size-little spc--collapsed-head-border-bottom" >
+                                    <div data-activity-id="{{activity.id}}" ng-repeat="activity in emailActivities" ng-class="{'com__email-activity-is-read' : activity['isRead']}" class="com__email-activity crm-accordion-wrapper spc__accordion spc--header-white spc--size-little" >
                                         <ng-form name="activityEmailForm">
                                             <div class="crm-accordion-header crm-master-accordion-header">
                                                 <div class="com__email-item-accordion-head">
@@ -67,13 +67,13 @@
                                                 </div>
                                             </div>
                                             <div class="crm-accordion-body">
-                                                <div class="spc__accordion-body-wrap">
-                                                    <table class="crm-entity spc__table" class="crm-search-results">
+                                                <div class="spc__accordion-body-wrap spc--padding-right-20">
+                                                    <table class="crm-entity spc__table spc--no-border" class="crm-search-results">
                                                         <tbody>
-                                                        <tr class="com__meta spc--table-grey-row spc--no-border" ng-show="currentReplyId != activity.id">
-                                                            <td class="spc--width-100 spc--padding-bottom-0 spc--padding-top-0 spc--vertical-align-middle">From:</td>
-                                                            <td>{{activity.from_label}}</td>
-                                                            <td class="com__meta_action">
+                                                        <tr class="com__meta spc--table-grey-row" ng-show="currentReplyId != activity.id">
+                                                            <td class="spc--width-100 spc--padding-bottom-5 spc--padding-top-10 spc--vertical-align-middle">From:</td>
+                                                            <td class="spc--padding-bottom-5 spc--padding-top-10">{{activity.from_label}}</td>
+                                                            <td class="com__meta_action spc--padding-bottom-5 spc--padding-top-10">
                                                                 <button class="spc__button spc--height-little" ng-click="toggleReadEmail(activity.id, true)" ng-show="!activity.isRead">
                                                                     <span class="ui-button-icon ui-icon fa-eye"></span>
                                                                     <span class="ui-button-icon-space"> </span>
@@ -96,17 +96,17 @@
                                                                 </button>
                                                             </td>
                                                         </tr>
-                                                        <tr class="com__meta spc--table-grey-row spc--no-border" ng-show="currentReplyId != activity.id">
-                                                            <td class="spc--width-100 spc--padding-bottom-0 spc--padding-top-0 spc--vertical-align-middle">Subject:</td>
-                                                            <td>{{activity.subject}}</td>
-                                                            <td class="com__email_date">
+                                                        <tr class="com__meta spc--table-grey-row" ng-show="currentReplyId != activity.id">
+                                                            <td class="spc--padding-bottom-5 spc--padding-top-5 spc--width-100 spc--vertical-align-middle">Subject:</td>
+                                                            <td class="spc--padding-bottom-5 spc--padding-top-5">{{activity.subject}}</td>
+                                                            <td class="com__email_date spc--padding-bottom-5 spc--padding-top-5">
                                                                 {{formatDateAndTime(activity.activity_date_time, true)}}
                                                             </td>
                                                         </tr>
-                                                        <tr class="com__meta spc--table-grey-row spc--no-border" ng-show="currentReplyId != activity.id">
-                                                            <td class="spc--width-100 spc--padding-bottom-0 spc--padding-top-0 spc--vertical-align-middle">To:</td>
-                                                            <td>{{activity.to_label}}</td>
-                                                            <td class="com__meta_action">
+                                                        <tr class="com__meta spc--table-grey-row" ng-show="currentReplyId != activity.id">
+                                                            <td class="spc--width-100 spc--padding-bottom-10 spc--padding-top-5 spc--vertical-align-middle">To:</td>
+                                                            <td class="spc--padding-bottom-10 spc--padding-top-5">{{activity.to_label}}</td>
+                                                            <td class="com__meta_action spc--padding-bottom-10 spc--padding-top-5">
                                                                 <div class="com__message-toggle-height-to-full">                                                                    <button class=" spc__button spc--height-little" ng-click="toggleHeight(activity.id)">
                                                                     <span class="ui-button-icon ui-icon fa-expand"></span>
                                                                     <span class="ui-button-icon-space"> </span>
@@ -122,9 +122,9 @@
                                                                 </div>
                                                             </td>
                                                         </tr>
-                                                        <tr class="com__meta spc--table-grey-row spc--no-border" ng-show="currentReplyId != activity.id && activity.attachments.length > 0">
-                                                            <td class="spc--width-100 spc--padding-bottom-0 spc--padding-top-0 spc--vertical-align-middle">Attachments:</td>
-                                                            <td colspan="2">
+                                                        <tr class="com__meta spc--table-grey-row" ng-show="currentReplyId != activity.id && activity.attachments.length > 0">
+                                                            <td class="spc--width-100 spc--padding-bottom-10 spc--padding-top-10 spc--vertical-align-middle">Attachments:</td>
+                                                            <td class="spc--padding-bottom-10 spc--padding-top-10" colspan="2">
                                                                 <ul class="com__attachments">
                                                                     <li ng-repeat="attachment in activity.attachments">
                                                                         <a href="{{attachment.url}}">
@@ -134,7 +134,7 @@
                                                                 </ul>
                                                             </td>
                                                         </tr>
-                                                        <tr class="com__message spc--no-border" ng-if="currentReplyId != activity.id">
+                                                        <tr class="com__message spc--no-border spc--padding-bottom-10 spc--padding-top-10" ng-if="currentReplyId != activity.id">
                                                             <td colspan="3" class="spc--padding-0">
                                                                 <div class="com__message-body">
                                                                     <div ng-bind-html="activity.details_resolved"></div>
@@ -142,13 +142,13 @@
                                                             </td>
                                                         </tr>
                                                         <tr class="com__reply spc--no-border" ng-if="currentReplyId == activity.id">
-                                                            <td crm-ui-id-scope colspan="3" class="spc--padding-0">
+                                                            <td crm-ui-id-scope colspan="3" class="spc--padding-0 spc--padding-bottom-10 spc--padding-top-10">
                                                                 <div>
-                                                                    <table class="crm-entity spc__table crm-search-results" >
+                                                                    <table class="crm-entity com__reply-table spc__table crm-search-results spc--no-margin" >
                                                                         <tbody>
                                                                         <tr class="com__meta spc--table-grey-row spc--no-border">
-                                                                            <td class="spc--width-100 spc--padding-bottom-5 spc--padding-top-5 spc--vertical-align-middle">From:</td>
-                                                                            <td class="spc--padding-bottom-5 spc--padding-top-5">
+                                                                            <td class="spc--width-100 spc--padding-bottom-5 spc--padding-top-10 spc--vertical-align-middle">From:</td>
+                                                                            <td class="spc--padding-bottom-5 spc--padding-top-10">
                                                                                 <div>
                                                                                     <select-email is-required="true" is-multiple="false" max-width="600" model="activity.emails.from"></select-email>
                                                                                 </div>
@@ -171,10 +171,10 @@
                                                                             </td>
                                                                         </tr>
                                                                         <tr class="com__meta spc--table-grey-row spc--no-border">
-                                                                            <td class="spc--width-100 spc--padding-bottom-5 spc--padding-top-0 spc--vertical-align-middle">
+                                                                            <td class="spc--width-100 spc--padding-bottom-10 spc--padding-top-0 spc--vertical-align-middle">
                                                                                 <label for="{{subject + activity.id}}">Subject:</label>
                                                                             </td>
-                                                                            <td class="spc--padding-bottom-5 spc--padding-top-0">
+                                                                            <td class="spc--padding-bottom-10 spc--padding-top-0">
                                                                                 <div class="com__edit-subject-input-wrap">
                                                                                     <input id="{{subject + activity.id}}" name="subject" class="spc__input spc--width-100-percent" ng-model="activity.email_subject" type="text" ng-required="true">
                                                                                 </div>
