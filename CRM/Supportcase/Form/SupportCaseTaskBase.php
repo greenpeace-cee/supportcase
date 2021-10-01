@@ -1,8 +1,5 @@
 <?php
 
-/**
- * This class generates form task actions for CiviCase.
- */
 abstract class CRM_Supportcase_Form_SupportCaseTaskBase extends CRM_Core_Form_Task {
 
   /**
