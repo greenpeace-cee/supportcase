@@ -3,7 +3,7 @@
 /**
  * This class provides the functionality to change category in group of case records.
  */
-class CRM_Supportcase_Form_Task_ChangeCategory extends CRM_Supportcase_Form_TaskBase {
+class CRM_Supportcase_Form_Task_ChangeCategory extends CRM_Supportcase_Form_SupportCaseTaskBase {
 
   public function getTitle() {
     return ts('Change category');
@@ -36,7 +36,7 @@ class CRM_Supportcase_Form_Task_ChangeCategory extends CRM_Supportcase_Form_Task
     $updatedCaseCount = 0;
     $notUpdatedCaseCount = 0;
 
-    foreach ($this->_entityIds as $caseId) {
+    foreach ($this->getSelectedCaseIds() as $caseId) {
       try {
         civicrm_api3('Case', 'create', ['id' => $caseId, $categoryCustomFieldName => $submitValues['case_category']]);
         $updatedCaseCount++;

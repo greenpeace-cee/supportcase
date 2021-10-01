@@ -3,7 +3,7 @@
 /**
  * This class provides the functionality to delete a group of case records.
  */
-class CRM_Supportcase_Form_Task_Delete extends CRM_Supportcase_Form_TaskBase {
+class CRM_Supportcase_Form_Task_Delete extends CRM_Supportcase_Form_SupportCaseTaskBase {
 
   public function getTitle() {
     return ts('Delete cases');
@@ -33,7 +33,7 @@ class CRM_Supportcase_Form_Task_Delete extends CRM_Supportcase_Form_TaskBase {
     $deleted = 0;
     $failed = 0;
 
-    foreach ($this->_entityIds as $caseId) {
+    foreach ($this->getSelectedCaseIds() as $caseId) {
       if (CRM_Case_BAO_Case::deleteCase($caseId, $isMoveToTrash)) {
         $deleted++;
       } else {
