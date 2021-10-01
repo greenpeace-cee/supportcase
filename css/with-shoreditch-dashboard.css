@@ -133,3 +133,28 @@
 .ui-dialog-content.modal-dialog.crm-ajax-container {
     padding-top: 0px !important;
 }
+
+.crm-container .supportcase__result-block .supportcase__tabs {
+    padding-top: 15px;
+}
+
+.supportcase__dashboard-search-filters-wrap > .crm-block {
+    box-shadow: none !important;
+    margin-bottom: 0 !important;
+}
+
+.supportcase__result-block > .crm-content-block {
+    box-shadow: none !important;
+}
+
+.CRM_Supportcase_Form_Dashboard.crm-search-form {
+    box-shadow: 0 3px 20px 0 rgb(88 80 80 / 25%);
+}
+
+.supportcase__tabs-item {
+    background: #eeeeee !important;
+}
+
+.supportcase__tabs-item.ui-tabs-active {
+    background: white !important;
+}
