@@ -110,6 +110,12 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $this->assign('isTagsFilterEmpty', $this->isTagsFilterEmpty());
     $this->assign('lockReloadTimeInSek', CRM_Supportcase_Utils_Setting::getDashboardLockReloadTime());
     $this->assign('isShowPagination', $isShowPagination);
+
+    // to clean old values from previous tasks when user click on 'cancel' button
+    $buttonName = $this->controller->getButtonName();
+    if ($buttonName == '_qf_Dashboard_display') {
+      $this->cleanSelectedCasesAtFormParams();
+    }
   }
 
   /**
@@ -137,20 +143,10 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $this->setFormValues();
     $buttonName = $this->controller->getButtonName();
 
-    // reset old values from previous tasks
+    // to clean old values from previous tasks
     $isGoToTheDashboardAfterTask = is_null($buttonName);
     if ($isGoToTheDashboardAfterTask) {
-      $formValues = $this->controller->get('formValues');
-      $cleanedQueryParams = [];
-
-      foreach ($formValues as $key => $value) {
-        $isSelectCaseParam = substr($key, 0, CRM_Core_Form::CB_PREFIX_LEN) == CRM_Core_Form::CB_PREFIX;
-        if (!$isSelectCaseParam) {
-          $cleanedQueryParams[$key] = $value;
-        }
-      }
-
-      $this->controller->set('formValues', $cleanedQueryParams);
+        $this->cleanSelectedCasesAtFormParams();
     }
 
     // check actionName and if next, then do not repeat a search, since we are going to the next page
@@ -210,6 +206,23 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $values['case_type_id'] = CRM_Supportcase_Utils_Setting::getMainCaseTypeId();
 
     return CRM_Contact_BAO_Query::convertFormValues($values);
+  }
+
+  /**
+   * Cleans old values from previous tasks
+   */
+  protected function cleanSelectedCasesAtFormParams() {
+    $formValues = $this->controller->get('formValues');
+    $cleanedQueryParams = [];
+
+    foreach ($formValues as $key => $value) {
+      $isSelectCaseParam = substr($key, 0, CRM_Core_Form::CB_PREFIX_LEN) == CRM_Core_Form::CB_PREFIX;
+      if (!$isSelectCaseParam) {
+        $cleanedQueryParams[$key] = $value;
+      }
+    }
+
+    $this->controller->set('formValues', $cleanedQueryParams);
   }
 
 }
