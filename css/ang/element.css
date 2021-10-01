@@ -113,6 +113,14 @@
     border: none !important;
 }
 
+.spc__table > tbody > tr td.spc--no-border {
+    border: none !important;
+}
+
+.spc__table > tbody > tr.spc--border-bottom {
+    border-bottom: 1px solid #e8eef0 !important;
+}
+
 .spc__table.spc--no-margin {
     margin: 0 !important;
 }
@@ -125,7 +133,7 @@
     border-bottom: none !important;
 }
 
-.spc__table > tbody > tr:last-child {
+.spc__table > tbody > tr:last-child:not(.spc--border-bottom) {
     border-bottom: none !important;
 }
 

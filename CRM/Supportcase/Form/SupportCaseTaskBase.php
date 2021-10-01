@@ -63,6 +63,7 @@ abstract class CRM_Supportcase_Form_SupportCaseTaskBase extends CRM_Core_Form_Ta
     CRM_Utils_System::setTitle($this->getTitle());
     $this->checkPermission();
     $this->prepareCaseData();
+    CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/ang/element.css');
     CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/case-tasks.css');
     $this->assign('cases', $this->getSelectedCases());
     $this->setRedirectUrl('civicrm/supportcase');

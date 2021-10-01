@@ -3,7 +3,7 @@
         <div id="supportcaseTabContainer" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
             <ul class="supportcase__tabs">
                 {foreach from=$cases.tabs item=tab}
-                    <li class="ui-state-default ui-corner-all crm-tab-button ui-tabs-tab ui-corner-top ui-tab crm-tab-button supportcase__tab-link-wrap"
+                    <li class="supportcase__tabs-item ui-state-default ui-corner-all crm-tab-button ui-tabs-tab ui-corner-top ui-tab crm-tab-button supportcase__tab-link-wrap"
                         data-tab-name="{$tab.name}" data-case-class-selector="{$tab.case_class_selector}">
                         <span title="{ts}{$tab.title}{/ts}" class="ui-tabs-anchor supportcase__tab-link">
                             <span>{ts}{$tab.title}{/ts} [{$tab.count_cases}]</span>

@@ -8,6 +8,12 @@
     padding-left: 2px;
 }
 
+.supportcase__task-selected-cases-id {
+    display: block;
+    line-height: 18px;
+    padding-left: 2px;
+}
+
 .supportcase__task-selected-cases-wrap {
     padding: 10px;
 }
