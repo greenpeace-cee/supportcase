@@ -65,7 +65,7 @@ function civicrm_api3_supportcase_manage_case_get_email_activities($params) {
         'to_label' => CRM_Supportcase_Utils_EmailSearch::prepareEmailLabel($toContact['display_name'], $toContact['email']),
         'subject' => CRM_Supportcase_Utils_Email::normalizeEmailSubject($activity['subject']),
         'activity_date_time' => $activity['activity_date_time'],
-        'details' => trim(CRM_Utils_String::purifyHTML(nl2br(CRM_Utils_String::stripAlternatives($activity['details'])))),
+        'details' => CRM_Utils_String::purifyHTML(nl2br(trim(CRM_Utils_String::stripAlternatives($activity['details'])))),
         'reply' => _civicrm_api3_supportcase_manage_case_get_email_activities_format_quote($activity, $fromContact),
         'attachments' => [],
       ];
