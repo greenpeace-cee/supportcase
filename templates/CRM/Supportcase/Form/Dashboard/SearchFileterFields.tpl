@@ -9,65 +9,73 @@
                     <div class="supportcase__search-block">
 
                         <div class="supportcase__search-by-case-id-wrap">
-                            <table class="supportcase__search-table form-layout">
-                                <tr>
-                                    <td class="crm-case-common-form-block-case_id">
-                                        {$form.case_id.label}<br />
-                                        {$form.case_id.html}
-                                    </td>
-                                </tr>
-                            </table>
+                            <div class="supportcase__search-item-row">
+                                <div class="supportcase__search-item">
+                                    {$form.case_id.label}<br />
+                                    {$form.case_id.html}
+                                </div>
+                            </div>
                         </div>
 
                         <div class="supportcase__search-filters-wrap">
-                            <table class="supportcase__search-table form-layout">
-                                <tr>
-                                    <td class="crm-case-common-form-block-case_keyword">
-                                        {$form.case_keyword.label}<br />
-                                        {$form.case_keyword.html}
-                                    </td>
-                                    <td class="crm-case-common-form-block-case_status_id">
-                                        {$form.case_status_id.label}<br />
-                                        {$form.case_status_id.html}
-                                    </td>
-                                    <td>
-                                        {$form.case_agents.label}<br />
-                                        {$form.case_agents.html}
-                                    </td>
-                                    <td>
-                                        <div class="supportcase__is-case-deleted-search-filter">
-                                            {$form.is_show_deleted_cases.label}<br />
-                                            {$form.is_show_deleted_cases.html}
-                                        </div>
-                                    </td>
-                                </tr>
+                            <div class="supportcase__search-item-row">
+                                <div class="supportcase__search-item">
+                                    {$form.case_keyword.label}<br />
+                                    {$form.case_keyword.html}
+                                </div>
+                                <div class="supportcase__search-item">
+                                    {$form.case_status_id.label}<br />
+                                    {$form.case_status_id.html}
+                                </div>
+                                <div class="supportcase__search-item">
+                                    {$form.case_agents.label}<br />
+                                    {$form.case_agents.html}
+                                </div>
+                                <div class="supportcase__search-item supportcase--column-150-width supportcase__is-case-deleted-search-filter">
+                                    {$form.is_show_deleted_cases.label}<br />
+                                    {$form.is_show_deleted_cases.html}
+                                </div>
+                            </div>
 
-                                <tr>
-                                    {include file="CRM/Core/DatePickerRangeWrapper.tpl" fieldName="case_start_date" colspan="1"}
-                                    {include file="CRM/Core/DatePickerRangeWrapper.tpl" fieldName="case_end_date"  colspan="1"}
-                                    <td>
-                                        {$form.case_client.label}<br />
-                                        {$form.case_client.html}
-                                    </td>
-                                </tr>
+                            <div class="supportcase__search-item-row">
+                                <div class="supportcase__search-item">
+                                    <table class="spc__table spc--no-border supportcase__search-table form-layout">
+                                        <tr class="spc--no-border">
+                                            {include file="CRM/Core/DatePickerRangeWrapper.tpl" fieldName="case_start_date" colspan="1"}
+                                        </tr>
+                                    </table>
+                                </div>
 
+                                <div class="supportcase__search-item">
+                                    <table class="spc__table spc--no-border supportcase__search-table form-layout">
+                                        <tr class="spc--no-border">
+                                            {include file="CRM/Core/DatePickerRangeWrapper.tpl" fieldName="case_end_date"  colspan="1"}
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <div class="supportcase__search-item">
+                                    {$form.case_client.label}<br />
+                                    {$form.case_client.html}
+                                </div>
+                            </div>
+
+                            <div class="supportcase__search-item-row">
                                 {if $tagsetInfo}
-                                    <tr>
-                                        <td colspan="3">
-                                            <div class="supportcase__case-tags-filter-wrap">
-                                                <div class="spc__accordion spc--header-grey crm-accordion-wrapper {if $isTagsFilterEmpty}collapsed{/if}">
-                                                    <div class="crm-accordion-header">{ts}Tags:{/ts}</div>
-                                                    <div class="crm-accordion-body">
-                                                        <div class="supportcase__case-tags-filter">
-                                                            {include file="CRM/common/Tagset.tpl" tagsetType='case'}
-                                                        </div>
+                                    <div class="supportcase__search-item supportcase--column-full-width">
+                                        <div class="supportcase__case-tags-filter-wrap">
+                                            <div class="spc__accordion spc--header-grey crm-accordion-wrapper {if $isTagsFilterEmpty}collapsed{/if}">
+                                                <div class="crm-accordion-header">{ts}Tags:{/ts}</div>
+                                                <div class="crm-accordion-body">
+                                                    <div class="supportcase__case-tags-filter">
+                                                        {include file="CRM/common/Tagset.tpl" tagsetType='case'}
                                                     </div>
                                                 </div>
                                             </div>
-                                        </td>
-                                    </tr>
+                                        </div>
+                                    </div>
                                 {/if}
-                            </table>
+                            </div>
                         </div>
 
                         <div class="supportcase__search-buttons">

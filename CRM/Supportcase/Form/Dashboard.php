@@ -215,11 +215,13 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $formValues = $this->controller->get('formValues');
     $cleanedQueryParams = [];
 
-    foreach ($formValues as $key => $value) {
-      $isSelectCaseParam = substr($key, 0, CRM_Core_Form::CB_PREFIX_LEN) == CRM_Core_Form::CB_PREFIX;
-      if (!$isSelectCaseParam) {
-        $cleanedQueryParams[$key] = $value;
-      }
+    if (!empty($formValues))  {
+        foreach ($formValues as $key => $value) {
+            $isSelectCaseParam = substr($key, 0, CRM_Core_Form::CB_PREFIX_LEN) == CRM_Core_Form::CB_PREFIX;
+            if (!$isSelectCaseParam) {
+                $cleanedQueryParams[$key] = $value;
+            }
+        }
     }
 
     $this->controller->set('formValues', $cleanedQueryParams);

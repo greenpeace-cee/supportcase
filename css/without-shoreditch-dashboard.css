@@ -8,17 +8,13 @@
     max-width: 230px;
 }
 
-.supportcase__search-block .supportcase__search-filters-wrap .crm-case-common-form-block-case_keyword input {
-    height: 28px;
-}
-
 .supportcase__search-buttons {
     margin-top: 15px;
     margin-left: 5px;
 }
 
 .supportcase__case-tags-filter .tag-section {
-    max-width: 320px;
+    width: 300px;
 }
 
 .crm-container .supportcase__result-block .supportcase__tab-link-wrap {

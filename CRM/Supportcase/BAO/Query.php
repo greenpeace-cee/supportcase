@@ -72,6 +72,7 @@ class CRM_Supportcase_BAO_Query extends CRM_Case_BAO_Query {
       'case_end_date_relative' => ['spc__input', 'spc--single-select'],
       'case_end_date_low' => ['spc__input'],
       'case_end_date_high' => ['spc__input'],
+      'case_id' => ['spc__input', 'spc--width-100-percent'],
     ];
 
     foreach ($additionalClasses as $elementName => $classes) {

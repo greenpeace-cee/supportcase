@@ -49,7 +49,7 @@
 }
 
 .supportcase__case-tags-filter .tag-section {
-    max-width: 336px;
+    max-width: 300px;
     width: 100%;
     padding-right: 5px;
     padding-left: 5px;
@@ -60,7 +60,8 @@
 }
 
 .supportcase__case-tags-filter-wrap {
-    max-width: 1040px;
+    width: 100%;
+    max-width: 920px;
 }
 
 .supportcase__search-buttons .crm-submit-buttons.reset-advanced-search {
@@ -112,6 +113,35 @@
 
 .supportcase__search-by-case-id-wrap {
     display: none;
+}
+
+.supportcase__search-item-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: flex-start;
+    gap: 10px;
+    padding-bottom: 10px;
+}
+
+.supportcase__search-item {
+    width: 300px;
+}
+
+.supportcase__search-item.supportcase--column-150-width {
+    width: 150px;
+}
+
+.supportcase__search-item.supportcase--column-full-width {
+    width: 300px;
+}
+
+.supportcase__search-item.supportcase--column-full-width {
+    width: 100%;
+}
+
+.supportcase__search-table td {
+    padding: 0 !important;
 }
 
 .supportcase__search-block.searching-by-case-id .supportcase__search-by-case-id-wrap {
@@ -236,13 +266,6 @@
 
 .supportcase__case-select-row-column {
     width: 70px;
-}
-
-.supportcase__is-case-deleted-search-filter {
-    padding-left: 5px;
-    width: 220px;
-    text-align: left;
-    vertical-align: center;
 }
 
 .supportcase__search-block .supportcase__search-filters-wrap .supportcase__is-case-deleted-search-filter input {
