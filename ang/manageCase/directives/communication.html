@@ -97,17 +97,11 @@
                                                             </td>
                                                         </tr>
                                                         <tr class="com__meta spc--table-grey-row" ng-show="currentReplyId != activity.id">
-                                                            <td class="spc--padding-bottom-5 spc--padding-top-5 spc--width-100 spc--vertical-align-middle">Subject:</td>
-                                                            <td class="spc--padding-bottom-5 spc--padding-top-5">{{activity.subject}}</td>
-                                                            <td class="com__email_date spc--padding-bottom-5 spc--padding-top-5">
-                                                                {{formatDateAndTime(activity.activity_date_time, true)}}
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="com__meta spc--table-grey-row" ng-show="currentReplyId != activity.id">
                                                             <td class="spc--width-100 spc--padding-bottom-10 spc--padding-top-5 spc--vertical-align-middle">To:</td>
                                                             <td class="spc--padding-bottom-10 spc--padding-top-5">{{activity.to_label}}</td>
                                                             <td class="com__meta_action spc--padding-bottom-10 spc--padding-top-5">
-                                                                <div class="com__message-toggle-height-to-full">                                                                    <button class=" spc__button spc--height-little" ng-click="toggleHeight(activity.id)">
+                                                                <div class="com__message-toggle-height-to-full">
+                                                                    <button class=" spc__button spc--height-little" ng-click="toggleHeight(activity.id)">
                                                                     <span class="ui-button-icon ui-icon fa-expand"></span>
                                                                     <span class="ui-button-icon-space"> </span>
                                                                     <span>To full email body</span>
@@ -120,6 +114,13 @@
                                                                         <span>Show part email body</span>
                                                                     </button>
                                                                 </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="com__meta spc--table-grey-row" ng-show="currentReplyId != activity.id">
+                                                            <td class="spc--padding-bottom-5 spc--padding-top-5 spc--width-100 spc--vertical-align-middle">Subject:</td>
+                                                            <td class="spc--padding-bottom-5 spc--padding-top-5">{{activity.subject}}</td>
+                                                            <td class="com__email_date spc--padding-bottom-5 spc--padding-top-5">
+                                                                {{formatDateAndTime(activity.activity_date_time, true)}}
                                                             </td>
                                                         </tr>
                                                         <tr class="com__meta spc--table-grey-row" ng-show="currentReplyId != activity.id && activity.attachments.length > 0">
