@@ -32,9 +32,9 @@ function civicrm_api3_supportcase_manage_case_get_sms_activities($params) {
     foreach ($activities['values'] as $activity) {
       $preparedActivities[] = [
         'id' => $activity['id'],
-        'subject' => $activity['subject'],
+        'subject' => !empty($activity['subject']) ? $activity['subject'] : '',
         'created_date' => $activity['created_date'],
-        'details' => $activity['details'],
+        'details' => !empty($activity['details']) ? $activity['details'] : '',
       ];
     }
   }

@@ -25,55 +25,103 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     $preparedActivities = [];
     if (!empty($activities['values'])) {
       foreach ($activities['values'] as $activity) {
-        $fromContact = civicrm_api3('Contact', 'getsingle', [
-          'id' => $activity['source_contact_id'],
-          'return' => ['id', 'email', 'display_name', 'email_id'],
-        ]);
         try {
-          $toContact = civicrm_api3('Contact', 'getsingle', [
-            'id' => $activity['target_contact_id'][0],
-            'return' => ['id', 'email', 'display_name', 'email_id'],
-          ]);
+          $preparedActivities[] = $this->prepareActivity($activity);
         } catch (CiviCRM_API3_Exception $e) {
-          $toContact = [
-            'id' => '',
-            'display_name' => '',
-            'email' => '',
-            'email_id' => '',
-          ];
+          throw new api_Exception('Error. Cannot get email activity data id=' . $activity['id'], 'error_getting_email_activity_data');
         }
-
-        $preparedActivity = [
-          'id' => $activity['id'],
-          'activity_type_id' => $activity['activity_type_id'],
-          'from_contact_id' => $fromContact['id'],
-          'from_contact_email_id' => $fromContact['email_id'],
-          'from_name' => $fromContact['display_name'],
-          'from_email' => $fromContact['email'],
-          'from_label' => CRM_Supportcase_Utils_EmailSearch::prepareEmailLabel($fromContact['display_name'], $fromContact['email']),
-          'to_contact_id' => $toContact['id'],
-          'to_contact_email_id' => $toContact['email_id'],
-          'to_name' => $toContact['display_name'],
-          'to_email' => $toContact['email'],
-          'to_label' => CRM_Supportcase_Utils_EmailSearch::prepareEmailLabel($toContact['display_name'], $toContact['email']),
-          'subject' => CRM_Supportcase_Utils_Email::normalizeEmailSubject($activity['subject']),
-          'activity_date_time' => $activity['activity_date_time'],
-          'details' => CRM_Utils_String::purifyHTML(nl2br(trim(CRM_Utils_String::stripAlternatives($activity['details'])))),
-          'reply' => $this->prepareReplyBody($activity, $fromContact),
-          'attachments' => [],
-        ];
-        foreach ($activity['api.Attachment.get']['values'] as $attachment) {
-          $preparedActivity['attachments'][] = [
-            'name' => $attachment['name'],
-            'icon' => $attachment['icon'],
-            'url' => $attachment['url'],
-          ];
-        }
-        $preparedActivities[] = $preparedActivity;
       }
     }
 
     return $preparedActivities;
+  }
+
+  /**
+   * @param $activity
+   * @return array
+   */
+  private function prepareActivity($activity) {
+    $fromContact = civicrm_api3('Contact', 'getsingle', [
+      'id' => $activity['source_contact_id'],
+      'return' => ['id', 'email', 'display_name', 'email_id'],
+    ]);
+    try {
+      $toContact = civicrm_api3('Contact', 'getsingle', [
+        'id' => $activity['target_contact_id'][0],
+        'return' => ['id', 'email', 'display_name', 'email_id'],
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      $toContact = [
+        'id' => '',
+        'display_name' => '',
+        'email' => '',
+        'email_id' => '',
+      ];
+    }
+
+    $replyForwardBody = $this->prepareReplyBody($activity, $fromContact);
+    $attachments = [];
+    foreach ($activity['api.Attachment.get']['values'] as $attachment) {
+      $attachments[] = [
+        'name' => $attachment['name'],
+        'icon' => $attachment['icon'],
+        'url' => $attachment['url'],
+      ];
+    }
+
+    return [
+      'id' => $activity['id'],
+      'view_mode' => [
+        'case_id' => $this->params['case_id'],
+        'id' => $activity['id'],
+        'subject' => CRM_Supportcase_Utils_Email::normalizeEmailSubject($activity['subject']),
+        'email_body' => CRM_Utils_String::purifyHTML(nl2br(trim(CRM_Utils_String::stripAlternatives($activity['details'])))),
+        'date_time' => $activity['activity_date_time'],
+        'attachments' => $attachments,
+        'from_contact' => [
+          'id' => $fromContact['id'],
+          'email_id' => $fromContact['email_id'],
+          'display_name' => $fromContact['display_name'],
+          'email' => $fromContact['email'],
+          'email_label' => CRM_Supportcase_Utils_EmailSearch::prepareEmailLabel($fromContact['display_name'], $fromContact['email']),
+        ],
+        'to_contact' => [
+          'id' => $toContact['id'],
+          'email_id' => $toContact['email_id'],
+          'display_name' => $toContact['display_name'],
+          'email' => $toContact['email'],
+          'email_label' => CRM_Supportcase_Utils_EmailSearch::prepareEmailLabel($toContact['display_name'], $toContact['email']),
+        ],
+      ],
+      'reply_mode' => [
+        'id' => $activity['id'],
+        'case_id' => $this->params['case_id'],
+        'subject' => CRM_Supportcase_Utils_Email::normalizeEmailSubject($activity['subject']),// TODO: Generate reply subject
+        'email_body' => $replyForwardBody,
+        'date_time' => $activity['activity_date_time'],
+        'attachments' => [],// attachments always empty for reply mode
+        'mode_name' => CRM_Supportcase_Utils_Email::REPLY_MODE,
+        'emails' => [// here are switched 'to' and 'from' contact at reply mode, it is correct
+          'cc' => '',
+          'from' => $toContact['email_id'],
+          'to' => $fromContact['email_id'],
+        ]
+      ],
+      'forward_mode' => [
+        'id' => $activity['id'],
+        'case_id' => $this->params['case_id'],
+        'subject' => CRM_Supportcase_Utils_Email::normalizeEmailSubject($activity['subject']),// TODO: Generate forward subject
+        'email_body' => $replyForwardBody,
+        'date_time' => $activity['activity_date_time'],
+        'attachments' => $attachments,
+        'mode_name' => CRM_Supportcase_Utils_Email::FORWARD_MODE,
+        'emails' => [// here are switched 'to' and 'from' contact at forward mode, it is correct
+          'cc' => '',
+          'from' => $toContact['email_id'],
+          'to' => $fromContact['email_id'],
+        ]
+      ]
+    ];
   }
 
   /**

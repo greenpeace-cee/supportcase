@@ -37,12 +37,12 @@ function _civicrm_api3_supportcase_manage_case_send_email_spec(&$params) {
     'type' => CRM_Utils_Type::T_TEXT,
     'title' => 'Email body',
   ];
-  //TODO: handle reply_mode field, or remove it
-  $params['reply_mode'] = [
-    'name' => 'reply_mode',
-    'api.required' => 0,
+  $params['mode'] = [
+    'name' => 'mode',
+    'api.required' => 1,
     'type' => CRM_Utils_Type::T_STRING,
-    'title' => 'Reply mode',
+    'title' => 'Mode',
+    'options' => CRM_Supportcase_Utils_Email::getModeOptions(),
   ];
   $params['to_email_id'] = [
     'name' => 'to_email_id',

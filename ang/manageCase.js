@@ -530,18 +530,111 @@
         };
     });
 
-    angular.module(moduleName).directive("communication", function() {
+    angular.module(moduleName).directive("emailCommunication", function() {
         return {
             restrict: "E",
-            templateUrl: "~/manageCase/directives/communication.html",
+            templateUrl: "~/manageCase/directives/communication/email.html",
             scope: {model: "="},
             controller: function($scope, $element, cookieService, $sce) {
                 $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
-                $scope.smsActivities = [];
                 $scope.emailActivities = [];
                 $scope.isReplyId = null;
                 $scope.replyMode = null;
                 $scope.ts = CRM.ts();
+                console.log('emailCommunication');
+                console.log($scope);
+
+                this.$onInit = function() {
+                    $scope.getEmails();
+                };
+
+                $scope.getEmails = function() {
+                    CRM.api3('SupportcaseManageCase', 'get_email_activities', {
+                        "sequential": 1,
+                        "case_id": $scope.model['case_id'],
+                    }).then(function(result) {
+                        if (result.is_error === 1) {
+                            console.error('Activity get error:');
+                            console.error(result.error_message);
+                        } else {
+                            var emailActivities = [];
+                            var readEmails = cookieService.getReadEmails();
+                            for (var i = 0; i < result.values.length; i++) {
+                                emailActivities[i] = Object.assign({}, result.values[i]);
+                                emailActivities[i]['view_mode']['isRead'] = (readEmails.includes(result.values[i]['view_mode']['id'].toString()));
+                                emailActivities[i]['view_mode']['emailBodyResolved'] = $sce.trustAsHtml(result.values[i]['view_mode']['email_body']);
+                            }
+
+                            if (emailActivities.length > 0) {
+                                $scope.model.openMainAccordion();
+                                $scope.model.count = emailActivities.length;
+                            }
+
+                            $scope.emailActivities = emailActivities;
+                            console.log('$scope.emailActivities:');
+                            console.log($scope.emailActivities);
+                            $scope.$apply();
+                            $scope.handleEmailCollapsing();
+                        }
+                    }, function(error) {});
+                }
+
+                $scope.reply = function(activityId) {
+                    $scope.currentReplyId = activityId;
+                    $scope.replyMode = 'reply';
+                };
+
+                $scope.forward = function(activityId) {
+                    console.log(activityId);
+                    $scope.currentReplyId = activityId;
+                    $scope.replyMode = 'forward';
+                };
+
+                $scope.cancel = function() {
+                    $scope.currentReplyId = null;
+                    $scope.replyMode = null;
+                    $scope.cleanErrors();
+                };
+
+                $scope.send = function(activity) {
+                    if (!($scope.replyMode === 'reply' || $scope.replyMode === 'forward')) {
+                        console.error('Unknown reply mode');
+                        $scope.showError('Something went wrong');
+                        return;
+                    }
+
+                    var emailData = {};
+
+                    if ($scope.replyMode === 'reply') {
+                        emailData = activity['reply_mode'];
+                    } else if ($scope.replyMode === 'forward') {
+                        emailData = activity['forward_mode'];
+                    }
+
+                    var data = {
+                        "case_id": $scope.model['case_id'],
+                        "subject": emailData['subject'],
+                        "mode": $scope.replyMode,
+                        'email_activity_id': activity['id'],
+                        "body": emailData['email_body'],
+                        'to_email_id': emailData['emails']['to'],
+                        'from_email_id': emailData['emails']['from'],
+                        'cc_email_ids': emailData['emails']['cc'],
+                        'attachments': emailData['attachments'],
+                    };
+
+                    CRM.api3('SupportcaseManageCase', 'send_email', data).then(function(result) {
+                        if (result.is_error === 1) {
+                            console.error('Error sending email:');
+                            console.error(result.error_message);
+                            $scope.showError(result.error_message);
+                        } else {
+                            CRM.status('Email to ' + to_email + ' sent!');
+                            $scope.getEmails();
+                            $scope.replyMode = null;
+                        }
+                    }, function(error) {});
+                };
 
                 $scope.showError = function(errorMessage) {
                     $scope.cleanErrors();
@@ -555,8 +648,8 @@
                 $scope.toggleReadEmail = function(emailActivityId, isRead) {
                     cookieService.toggleReadEmail(emailActivityId, isRead);
                     for (var i = 0; i < $scope.emailActivities.length; i++) {
-                        if ($scope.emailActivities[i]['id'].toString() === emailActivityId.toString()) {
-                            $scope.emailActivities[i]['isRead'] = isRead;
+                        if ($scope.emailActivities[i]['view_mode']['id'].toString() === emailActivityId.toString()) {
+                            $scope.emailActivities[i]['view_mode']['isRead'] = isRead;
                         }
                     }
                 };
@@ -571,100 +664,64 @@
                     // first email have to be always not collapsed
                     CRM.$($element).find('.com__email-activity').first().removeClass('collapsed');
                 };
+            }
+        };
+    });
+
+    angular.module(moduleName).directive("smsCommunication", function() {
+        return {
+            restrict: "E",
+            templateUrl: "~/manageCase/directives/communication/sms.html",
+            scope: {model: "="},
+            controller: function($scope, $element) {
+                $scope.smsActivities = [];
 
                 this.$onInit = function() {
                     CRM.api3('SupportcaseManageCase', 'get_sms_activities', {
                         "sequential": 1,
-                        "case_id": $scope.model['id'],
+                        "case_id": $scope.model['case_id'],
                     }).then(function(result) {
                         if (result.is_error === 1) {
                             console.error('Activity get error:');
                             console.error(result.error_message);
                         } else {
                             $scope.smsActivities = result.values;
-                            if (result.values["length"] > 0) {
-                                var mainElement = $($element);
-                                mainElement.find('.crm-accordion-wrapper').removeClass('collapsed');
-                                mainElement.find('.crm-accordion-body').show();
+                            if ($scope.smsActivities.length > 0) {
+                                $scope.model.openMainAccordion();
+                                $scope.model.count = $scope.smsActivities.length;
                             }
                             $scope.$apply();
                         }
                     }, function(error) {});
-
-                    $scope.getEmails();
                 };
+            }
+        };
+    });
 
-                $scope.reply = function(activity) {
-                    $scope.currentReplyId = activity['id'];
-                    $scope.replyMode = 'reply';
+    angular.module(moduleName).directive("communication", function() {
+        return {
+            restrict: "E",
+            templateUrl: "~/manageCase/directives/communication.html",
+            scope: {model: "="},
+            controller: function($scope, $element) {
+                $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
+                $scope.ts = CRM.ts();
+
+                $scope.openMainAccordion = function() {
+                    var mainElement = $($element);
+                    mainElement.find('.crm-accordion-wrapper').removeClass('collapsed');
+                    mainElement.find('.crm-accordion-body').show();
                 };
-
-                $scope.forward = function(activity) {
-                    $scope.currentReplyId = activity['id'];
-                    $scope.replyMode = 'forward';
+                $scope.sms = {
+                    'count' : 0,
+                    'case_id' : $scope.model['id'],
+                    'openMainAccordion' : $scope.openMainAccordion,
                 };
-
-                $scope.cancel = function() {
-                    $scope.currentReplyId = null;
-                    $scope.replyMode = null;
-                    $scope.cleanErrors();
+                $scope.email  = {
+                    'count' : 0,
+                    'case_id' : $scope.model['id'],
+                    'openMainAccordion' : $scope.openMainAccordion,
                 };
-
-                $scope.send = function(activity) {
-                    CRM.api3('SupportcaseManageCase', 'send_email', {
-                        "case_id": $scope.model['id'],
-                        "subject": activity['email_subject'],
-                        "body": activity['reply'],
-                        "reply_mode": $scope.replyMode,
-                        'to_email_id': activity['emails']['to'],
-                        'from_email_id': activity['emails']['from'],
-                        'cc_email_ids': activity['emails']['cc'],
-                        'email_activity_id': activity['id'],
-                    }).then(function(result) {
-                        if (result.is_error === 1) {
-                            console.error('Error sending email:');
-                            console.error(result.error_message);
-                            $scope.showError(result.error_message);
-                        } else {
-                            CRM.status('Email to ' + to_email + ' sent!');
-                            $scope.getEmails();
-                            $scope.isReplyMode = false;
-                        }
-                    }, function(error) {});
-                };
-
-                $scope.getEmails = function() {
-                    CRM.api3('SupportcaseManageCase', 'get_email_activities', {
-                      "sequential": 1,
-                      "case_id": $scope.model['id'],
-                    }).then(function(result) {
-                        if (result.is_error === 1) {
-                            console.error('Activity get error:');
-                            console.error(result.error_message);
-                        } else {
-                            var readEmails = cookieService.getReadEmails();
-                            for (var i = 0; i < result.values.length; i++) {
-                                result.values[i]['isRead'] = (readEmails.includes(result.values[i]['id'].toString()));
-                                result.values[i]['emails'] = {
-                                    'cc' : '',
-                                    'from' : result.values[i]['from_contact_email_id'],
-                                    'to' : result.values[i]['to_contact_email_id'],
-                                };
-                                result.values[i]['email_subject'] = result.values[i]['subject'];
-                                result.values[i]['details_resolved'] = $sce.trustAsHtml(result.values[i]['details']);
-                            }
-
-                            $scope.emailActivities = result.values;
-                            if (result.values["length"] > 0) {
-                                var mainElement = $($element);
-                                mainElement.find('.crm-accordion-wrapper').removeClass('collapsed');
-                                mainElement.find('.crm-accordion-body').show();
-                            }
-                            $scope.$apply();
-                            $scope.handleEmailCollapsing();
-                        }
-                    }, function(error) {});
-                }
             }
         };
     });

@@ -3,6 +3,37 @@
 class CRM_Supportcase_Utils_Email {
 
   /**
+   * Forward mode name
+   *
+   * @var string
+   */
+  const FORWARD_MODE = 'forward';
+
+  /**
+   * Reply mode name
+   *
+   * @var string
+   */
+  const REPLY_MODE = 'reply';
+
+  /**
+   * @return array
+   */
+  public static function getModeOptions() {
+    return [
+      self::FORWARD_MODE => 'Forward mode',
+      self::REPLY_MODE => 'Reply mode',
+    ];
+  }
+
+  /**
+   * @return string[]
+   */
+  public static function getAvailableModes() {
+    return array_keys(self::getModeOptions());
+  }
+
+  /**
    * Checks if email is valid
    *
    * @param $stringEmail

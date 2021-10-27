@@ -55,7 +55,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
         ->addValue('subject', $this->params['email']['subject'])
         ->addValue('body', $this->params['email']['body'])
         ->addValue('mailutils_thread_id', $mailutilsThread['id'])
-        ->addValue('mail_setting_id', '1')//TODO: remove dummy data/// mail_setting_id id prev
+        ->addValue('mail_setting_id', '2')//TODO: remove dummy data/// mail_setting_id id prev
         ->addValue('message_id', 'TODO')//TODO: remove dummy data // this remove in future
         ->addValue('in_reply_to', 'TODO')//TODO: remove dummy data /// $mailutilsMessage id prev
         ->addValue('headers', 'TODO')//TODO: remove dummy data
@@ -103,6 +103,10 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
       throw new api_Exception('Cannot send email. Please install "mailutils" extension.', 'can_not_send_email_mailutils_extension_is_required');
     }
 
+    if (empty($params['mode']) || !in_array($params['mode'], [CRM_Supportcase_Utils_Email::FORWARD_MODE, CRM_Supportcase_Utils_Email::REPLY_MODE])) {
+      throw new api_Exception('Error. Invalid mode. Mode can be: "' . implode('" , "', CRM_Supportcase_Utils_Email::getAvailableModes()) . '"', 'error_invalid_mode');
+    }
+
     try {
       $case = civicrm_api3('Case', 'getsingle', [
         'id' => $params['case_id'],
@@ -148,6 +152,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
     return [
       'email' => [
         'toEmails' => $toEmails,
+        'mode' => $params['mode'],
         'fromEmails' => $fromEmails,
         'ccEmails' => $ccEmails,
         'body' => $bodyText,
