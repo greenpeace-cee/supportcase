@@ -59,6 +59,9 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
       ];
     }
 
+    $normalizedSubject = CRM_Supportcase_Utils_Email::normalizeEmailSubject($activity['subject']);
+    $replySubject = CRM_Supportcase_Utils_Email::addSubjectPrefix($normalizedSubject, CRM_Supportcase_Utils_Email::REPLY_MODE);
+    $forwardSubject = CRM_Supportcase_Utils_Email::addSubjectPrefix($normalizedSubject, CRM_Supportcase_Utils_Email::FORWARD_MODE);
     $replyForwardBody = $this->prepareReplyBody($activity, $fromContact);
     $attachments = [];
     foreach ($activity['api.Attachment.get']['values'] as $attachment) {
@@ -74,7 +77,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
       'view_mode' => [
         'case_id' => $this->params['case_id'],
         'id' => $activity['id'],
-        'subject' => CRM_Supportcase_Utils_Email::normalizeEmailSubject($activity['subject']),
+        'subject' => $normalizedSubject,
         'email_body' => CRM_Utils_String::purifyHTML(nl2br(trim(CRM_Utils_String::stripAlternatives($activity['details'])))),
         'date_time' => $activity['activity_date_time'],
         'attachments' => $attachments,
@@ -96,7 +99,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
       'reply_mode' => [
         'id' => $activity['id'],
         'case_id' => $this->params['case_id'],
-        'subject' => CRM_Supportcase_Utils_Email::normalizeEmailSubject($activity['subject']),// TODO: Generate reply subject
+        'subject' => $replySubject,
         'email_body' => $replyForwardBody,
         'date_time' => $activity['activity_date_time'],
         'attachments' => [],// attachments always empty for reply mode
@@ -110,7 +113,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
       'forward_mode' => [
         'id' => $activity['id'],
         'case_id' => $this->params['case_id'],
-        'subject' => CRM_Supportcase_Utils_Email::normalizeEmailSubject($activity['subject']),// TODO: Generate forward subject
+        'subject' => $forwardSubject,
         'email_body' => $replyForwardBody,
         'date_time' => $activity['activity_date_time'],
         'attachments' => $attachments,

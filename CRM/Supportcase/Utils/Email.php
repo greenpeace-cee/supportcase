@@ -99,4 +99,21 @@ class CRM_Supportcase_Utils_Email {
     return \Civi\Mailutils\SubjectNormalizer::normalize($subject);
   }
 
+  /**
+   * @param $subject
+   * @param null $mode
+   * @return string
+   */
+  public static function addSubjectPrefix($subject, $mode = null) {
+    if ($mode === CRM_Supportcase_Utils_Email::FORWARD_MODE) {
+      return "Fwd:{$subject}";
+    }
+
+    if ($mode === CRM_Supportcase_Utils_Email::REPLY_MODE) {
+      return "Re:{$subject}";
+    }
+
+    return $subject;
+  }
+
 }
