@@ -42,19 +42,14 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
    * @return int
    */
   private function createMailutilsMessage() {
-    //TODO: if exist get thread id from previous email
-    try {
-      $mailutilsThread = \Civi\Api4\MailutilsThread::create()->execute()->first();
-    } catch (Exception $e) {
-      throw new api_Exception('Cannot create "MailutilsThread". Error: ' . $e->getMessage(), 'cannot_create_mailutils_thread');
-    }
+    $mailutilsThreadId = $this->getOrCreateMailutilsThreadId($this->params['email']['activity']['id']);
 
     try {
       $mailutilsMessage = \Civi\Api4\MailutilsMessage::create()
         ->addValue('activity_id', $this->params['email']['activity']['id'])
         ->addValue('subject', $this->params['email']['subject'])
         ->addValue('body', $this->params['email']['body'])
-        ->addValue('mailutils_thread_id', $mailutilsThread['id'])
+        ->addValue('mailutils_thread_id', $mailutilsThreadId)
         ->addValue('mail_setting_id', '2')//TODO: remove dummy data/// mail_setting_id id prev
         ->addValue('message_id', 'TODO')//TODO: remove dummy data // this remove in future
         ->addValue('in_reply_to', 'TODO')//TODO: remove dummy data /// $mailutilsMessage id prev
@@ -162,6 +157,41 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
       'case' => $case,
       'caseId' => $params['case_id'],
     ];
+  }
+
+  /**
+   * @return int
+   */
+  private function getOrCreateMailutilsThreadId($activityId) {
+    $mailutilsThreadId = $this->getMailutilsThreadId($activityId);
+    if (empty($mailutilsThreadId)) {
+      try {
+        $mailutilsThread = \Civi\Api4\MailutilsThread::create()->execute()->first();
+      } catch (Exception $e) {
+        throw new api_Exception('Cannot create "MailutilsThread". Error: ' . $e->getMessage(), 'cannot_create_mailutils_thread');
+      }
+
+      $mailutilsThreadId = $mailutilsThread['id'];
+    }
+
+    return $mailutilsThreadId;
+  }
+
+  /**
+   * @param $activityId
+   * @return false|int
+   */
+  private function getMailutilsThreadId($activityId) {
+    $mailutilsMessages = \Civi\Api4\MailutilsMessage::get()
+      ->addSelect('mailutils_thread_id')
+      ->addWhere('activity_id', '=', $activityId)
+      ->setLimit(1)
+      ->execute();
+    foreach ($mailutilsMessages as $mailutilsMessage) {
+      return $mailutilsMessage['mailutils_thread_id'];
+    }
+
+    return false;
   }
 
 }
