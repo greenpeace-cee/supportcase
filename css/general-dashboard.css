@@ -198,26 +198,30 @@
 }
 
 .crm-container .supportcase__result-block .supportcase__case-subject-column-wrap {
-    width: 220px;
+    max-width: 220px;
     line-height: 18px;
 }
 
 .supportcase__view-activities-column-wrap {
-    width: 30px;
+    max-width: 30px;
 }
 
 .supportcase__case-client-column-wrap {
-    width: 210px;
+    max-width: 210px;
+}
+
+.supportcase__recent-communication-column-wrap {
+    max-width: 600px;
 }
 
 .supportcase__case-id-column-wrap {
     font-weight: 600;
     font-size: 15px;
-    width: 70px;
+    max-width: 70px;
 }
 
 .supportcase__case-select-column-wrap {
-    width: 50px;
+    max-width: 50px;
     font-weight: 600;
     font-size: 16px;
 }
