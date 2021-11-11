@@ -46,14 +46,20 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
    * @return int
    */
   private function createActivity() {
+    $toContactIds = [];
+
+    foreach ($this->params['email']['toEmails'] as $emailData) {
+      $toContactIds[] = $emailData['contact_id'];
+    }
+
     try {
       $activity = civicrm_api3('Activity', 'create', [
         'source_contact_id' => $this->params['email']['fromEmails'][0]['contact_id'],
         'activity_type_id' => "Inbound Email",
         'subject' => $this->params['email']['subject'],
         'details' => $this->params['email']['body'],
-        'status_id' => "supportcase_draft_email",
-        'assignee_id' => $this->params['email']['toEmails'][0]['contact_id'],
+        'status_id' => CRM_Supportcase_Utils_ActivityStatus::DRAFT_EMAIL,
+        'target_id' => $toContactIds,
         'case_id' => $this->params['caseId'],
       ]);
     } catch (CiviCRM_API3_Exception $e) {

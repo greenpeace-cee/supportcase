@@ -45,18 +45,27 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
       'id' => $activity['source_contact_id'],
       'return' => ['id', 'email', 'display_name', 'email_id'],
     ]);
-    try {
-      $toContact = civicrm_api3('Contact', 'getsingle', [
-        'id' => $activity['target_contact_id'][0],
-        'return' => ['id', 'email', 'display_name', 'email_id'],
-      ]);
-    } catch (CiviCRM_API3_Exception $e) {
-      $toContact = [
-        'id' => '',
-        'display_name' => '',
-        'email' => '',
-        'email_id' => '',
-      ];
+
+    $toContacts = [];
+    $toContactsEmailIds = [];
+    $toContactsEmailLabels = [];
+    foreach ($activity['target_contact_id'] as $contactId) {
+      try {
+        $toContact = civicrm_api3('Contact', 'getsingle', [
+          'id' => $contactId,
+          'return' => ['id', 'email', 'display_name', 'email_id'],
+        ]);
+
+        $toContactsEmailIds[] = $toContact['id'];
+        $toContactsEmailLabels[] = CRM_Supportcase_Utils_EmailSearch::prepareEmailLabel($toContact['display_name'], $toContact['email']);
+        $toContacts[] = [
+          'id' => $toContact['id'],
+          'email_id' => $toContact['email_id'],
+          'display_name' => $toContact['display_name'],
+          'email' => $toContact['email'],
+          'email_label' => CRM_Supportcase_Utils_EmailSearch::prepareEmailLabel($toContact['display_name'], $toContact['email']),
+        ];
+      } catch (CiviCRM_API3_Exception $e) {}
     }
 
     $attachmentsLimit = CRM_Supportcase_Utils_Setting::getActivityAttachmentLimit();
@@ -90,13 +99,8 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
           'email' => $fromContact['email'],
           'email_label' => CRM_Supportcase_Utils_EmailSearch::prepareEmailLabel($fromContact['display_name'], $fromContact['email']),
         ],
-        'to_contact' => [
-          'id' => $toContact['id'],
-          'email_id' => $toContact['email_id'],
-          'display_name' => $toContact['display_name'],
-          'email' => $toContact['email'],
-          'email_label' => CRM_Supportcase_Utils_EmailSearch::prepareEmailLabel($toContact['display_name'], $toContact['email']),
-        ],
+        'to_contacts' => $toContacts,
+        'to_contacts_email_label' => implode(', ', $toContactsEmailLabels),
       ],
       'reply_mode' => [
         'id' => $activity['id'],
@@ -108,7 +112,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
         'mode_name' => CRM_Supportcase_Utils_Email::REPLY_MODE,
         'emails' => [// here are switched 'to' and 'from' contact at reply mode, it is correct
           'cc' => '',
-          'from' => $toContact['email_id'],
+          'from' => implode(',', $toContactsEmailIds),
           'to' => $fromContact['email_id'],
         ],
         'maxFileSize' => $maxFileSize,
@@ -124,7 +128,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
         'mode_name' => CRM_Supportcase_Utils_Email::FORWARD_MODE,
         'emails' => [// here are switched 'to' and 'from' contact at forward mode, it is correct
           'cc' => '',
-          'from' => $toContact['email_id'],
+          'from' => implode(',', $toContactsEmailIds),
           'to' => $fromContact['email_id'],
         ],
         'maxFileSize' => $maxFileSize,
