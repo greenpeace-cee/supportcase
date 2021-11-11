@@ -1,6 +1,6 @@
 (function(angular, $, _) {
     var moduleName = "manageCase";
-    var moduleDependencies = ["ngRoute"];
+    var moduleDependencies = ["ngRoute", "angularFileUpload"];
     angular.module(moduleName, moduleDependencies);
 
     angular.module(moduleName).config([
@@ -541,8 +541,61 @@
                 $scope.isReplyId = null;
                 $scope.replyMode = null;
                 $scope.ts = CRM.ts();
-                console.log('emailCommunication');
-                console.log($scope);
+
+                $scope.getFiles = function(activityId, mode) {
+                    var preparedData = {
+                        'files' : [],
+                        'dataFiles' : [],
+                    }
+                    var activityKey = undefined;
+
+                    $scope.emailActivities.filter(function(el, key) {
+                        if (el.id === activityId) {
+                            activityKey = key;
+                        }
+                        return el.id === activityId;
+                    });
+
+                    if (activityKey === undefined) {
+                        return preparedData;
+                    }
+
+                    if ($scope.emailActivities[activityKey] === undefined) {
+                        return preparedData;
+                    }
+
+                    if ($scope.emailActivities[activityKey][mode] === undefined) {
+                        return preparedData;
+                    }
+
+                    if ($scope.emailActivities[activityKey][mode]['additionalAttachments'] === undefined) {
+                        return preparedData;
+                    }
+
+                    if ($scope.emailActivities[activityKey][mode]['additionalAttachments']['uploader'] === undefined) {
+                        return preparedData;
+                    }
+
+                    if ($scope.emailActivities[activityKey][mode]['additionalAttachments']['uploader']['queue'] === undefined) {
+                        return preparedData;
+                    }
+
+                    var queueFiles = $scope.emailActivities[activityKey][mode]['additionalAttachments']['uploader']['queue'];
+
+                    if (!(queueFiles['length'] > 0)) {
+                        return preparedData;
+                    }
+
+                    for (var i = 0; queueFiles['length'] > i; i++ ) {
+                        preparedData.files.push(queueFiles[i]['_file']);
+                        preparedData.dataFiles.push({
+                            'name' : queueFiles[i]['_file']['name'],
+                            'description' : queueFiles[i]['crmData']['description']
+                        });
+                    }
+
+                    return preparedData;
+                };
 
                 this.$onInit = function() {
                     $scope.getEmails();
@@ -563,6 +616,8 @@
                                 emailActivities[i] = Object.assign({}, result.values[i]);
                                 emailActivities[i]['view_mode']['isRead'] = (readEmails.includes(result.values[i]['view_mode']['id'].toString()));
                                 emailActivities[i]['view_mode']['emailBodyResolved'] = $sce.trustAsHtml(result.values[i]['view_mode']['email_body']);
+                                emailActivities[i]['forward_mode']['additionalAttachments'] = {};
+                                emailActivities[i]['reply_mode']['additionalAttachments'] = {};
                             }
 
                             if (emailActivities.length > 0) {
@@ -571,8 +626,6 @@
                             }
 
                             $scope.emailActivities = emailActivities;
-                            console.log('$scope.emailActivities:');
-                            console.log($scope.emailActivities);
                             $scope.$apply();
                             $scope.handleEmailCollapsing();
                         }
@@ -585,7 +638,6 @@
                 };
 
                 $scope.forward = function(activityId) {
-                    console.log(activityId);
                     $scope.currentReplyId = activityId;
                     $scope.replyMode = 'forward';
                 };
@@ -604,11 +656,22 @@
                     }
 
                     var emailData = {};
+                    var files = [];
 
                     if ($scope.replyMode === 'reply') {
                         emailData = activity['reply_mode'];
+                        files =  $scope.getFiles(activity['id'], 'reply_mode');
                     } else if ($scope.replyMode === 'forward') {
                         emailData = activity['forward_mode'];
+                        files =  $scope.getFiles(activity['id'], 'forward_mode');
+                    } else {
+                        $scope.showError('Error sending email: Unknown mode.');
+                        return;
+                    }
+
+                    if (files['files'] !== undefined && files['files']['length'] > emailData['attachmentsLimit']) {
+                        $scope.showError('To match attachments. Maximum is ' + emailData['attachmentsLimit'] + '.');
+                        return;
                     }
 
                     var data = {
@@ -620,20 +683,45 @@
                         'to_email_id': emailData['emails']['to'],
                         'from_email_id': emailData['emails']['from'],
                         'cc_email_ids': emailData['emails']['cc'],
-                        'attachments': emailData['attachments'],
+                        'attachments': files['dataFiles'],
                     };
 
-                    CRM.api3('SupportcaseManageCase', 'send_email', data).then(function(result) {
-                        if (result.is_error === 1) {
-                            console.error('Error sending email:');
-                            console.error(result.error_message);
-                            $scope.showError(result.error_message);
-                        } else {
-                            CRM.status('Email to ' + to_email + ' sent!');
-                            $scope.getEmails();
-                            $scope.replyMode = null;
+                    var formData = new FormData();
+                    if (files['files'] !== undefined) {
+                        for (var i = 0; i < files['files']['length']; i++) {
+                            formData.append('attachments[]', files['files'][i]);
                         }
-                    }, function(error) {});
+                    }
+
+                    formData.append('entity', 'SupportcaseManageCase');
+                    formData.append('action', 'send_email');
+                    formData.append('json', JSON.stringify(data));
+
+                    $.ajax({
+                        url : 'http://localhost/index.php?q=civicrm/ajax/rest',//TODO
+                        type : 'POST',
+                        data : formData,
+                        processData: false,  // tell jQuery not to process the data
+                        contentType: false,  // tell jQuery not to set contentType
+                        success : function(response) {
+                            if (typeof response === 'string') {
+                                console.error('Error sending email:');
+                                console.error('Error parsing response.');
+                                $scope.showError('Error sending email: Error parsing response.');
+                                return;
+                            }
+
+                            if (response['is_error'] === 0) {
+                                CRM.status('Email is sent!');
+                                $scope.getEmails();
+                                $scope.replyMode = null;
+                            } else {
+                                console.error('Error sending email:');
+                                console.error(response['error_message']);
+                                $scope.showError(response['error_message']);
+                            }
+                        }
+                    });
                 };
 
                 $scope.showError = function(errorMessage) {
@@ -694,6 +782,17 @@
                         }
                     }, function(error) {});
                 };
+            }
+        };
+    });
+
+    angular.module(moduleName).directive("spcAttachment", function() {
+        return {
+            restrict: "E",
+            templateUrl: "~/manageCase/directives/communication/spcAttachment.html",
+            scope: {model: "="},
+            controller: function($scope, $element, CrmAttachments) {
+                $scope.model = new CrmAttachments({});
             }
         };
     });

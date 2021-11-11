@@ -59,6 +59,8 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
       ];
     }
 
+    $attachmentsLimit = CRM_Supportcase_Utils_Setting::getActivityAttachmentLimit();
+    $maxFileSize = CRM_Supportcase_Utils_Setting::getMaxFilesSize();
     $normalizedSubject = CRM_Supportcase_Utils_Email::normalizeEmailSubject($activity['subject']);
     $replySubject = CRM_Supportcase_Utils_Email::addSubjectPrefix($normalizedSubject, CRM_Supportcase_Utils_Email::REPLY_MODE);
     $forwardSubject = CRM_Supportcase_Utils_Email::addSubjectPrefix($normalizedSubject, CRM_Supportcase_Utils_Email::FORWARD_MODE);
@@ -108,7 +110,9 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
           'cc' => '',
           'from' => $toContact['email_id'],
           'to' => $fromContact['email_id'],
-        ]
+        ],
+        'maxFileSize' => $maxFileSize,
+        'attachmentsLimit' => $attachmentsLimit,
       ],
       'forward_mode' => [
         'id' => $activity['id'],
@@ -122,7 +126,9 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
           'cc' => '',
           'from' => $toContact['email_id'],
           'to' => $fromContact['email_id'],
-        ]
+        ],
+        'maxFileSize' => $maxFileSize,
+        'attachmentsLimit' => $attachmentsLimit,
       ]
     ];
   }

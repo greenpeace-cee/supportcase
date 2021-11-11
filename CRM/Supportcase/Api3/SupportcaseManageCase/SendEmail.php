@@ -9,9 +9,14 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
    * Get results of api
    */
   public function getResult() {
-    //TODO: Do we need to create activity by CRM_Activity_BAO_Activity::createEmailActivity?
-    //todo: create a activity
-    $mailutilsMessage = $this->createMailutilsMessage();
+    $activityId = $this->createActivity();
+    try {
+      $this->attachFiles($activityId);
+    } catch (CiviCRM_API3_Exception $e) {
+      throw new api_Exception('Error saving files: Error: ' . $e->getMessage(), 'error_saving_files');
+    }
+
+    $mailutilsMessage = $this->createMailutilsMessage($activityId);
 
     foreach ($this->params['email']['toEmails'] as $emailData) {
       $this->createMailutilsMessageParty($emailData, $mailutilsMessage['id'], CRM_Supportcase_Utils_PartyType::getToPartyTypeId());
@@ -37,16 +42,79 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
   }
 
   /**
-   * Creates MailutilsMessage entity
-   *
+   * Creates main activity
    * @return int
    */
-  private function createMailutilsMessage() {
-    $mailutilsThreadId = $this->getOrCreateMailutilsThreadId($this->params['email']['activity']['id']);
+  private function createActivity() {
+    try {
+      $activity = civicrm_api3('Activity', 'create', [
+        'source_contact_id' => $this->params['email']['fromEmails'][0]['contact_id'],
+        'activity_type_id' => "Inbound Email",
+        'subject' => $this->params['email']['subject'],
+        'details' => $this->params['email']['body'],
+        'status_id' => "supportcase_draft_email",
+        'assignee_id' => $this->params['email']['toEmails'][0]['contact_id'],
+        'case_id' => $this->params['caseId'],
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      throw new api_Exception('Cannot create Activity. Error: ' . $e->getMessage(), 'cannot_create_mailutils_message');
+    }
+
+    return $activity['id'];
+  }
+
+  /**
+   * @param $activityId
+   * @return array
+   */
+  private function attachFiles($activityId) {
+    $results = [];
+
+    foreach ($_FILES['attachments']['name'] as $key => $name) {
+      $params = [
+        'name' => $_FILES['attachments']['name'][$key],
+        'mime_type' => $_FILES['attachments']['type'][$key],
+        'tmp_name' => $_FILES['attachments']['tmp_name'][$key],
+        'entity_table' => 'civicrm_activity',
+        'entity_id' => $activityId,
+        'description' => '',
+        'version' => 3,
+        'check_permissions' => 1,
+        'content' => '',
+      ];
+
+      CRM_Core_Transaction::create(TRUE)->run(function (CRM_Core_Transaction $tx) use ($params, $key, &$results) {
+        $results[$key] = civicrm_api('Attachment', 'create', $params);
+
+        if ($results[$key]['is_error'] != 1) {
+          $moveResult = civicrm_api('Attachment', 'create', [
+            'id' => $results[$key]['id'],
+            'version' => 3,
+            'options.move-file' => $params['tmp_name'],
+          ]);
+          if ($moveResult['is_error']) {
+            $results[$key] = $moveResult;
+            $tx->rollback();
+          }
+        }
+      });
+    }
+
+    return $results;
+  }
+
+  /**
+   * Creates MailutilsMessage entity
+   *
+   * @param $activityId
+   * @return int
+   */
+  private function createMailutilsMessage($activityId) {
+    $mailutilsThreadId = $this->getOrCreateMailutilsThreadId($activityId);
 
     try {
       $mailutilsMessage = \Civi\Api4\MailutilsMessage::create()
-        ->addValue('activity_id', $this->params['email']['activity']['id'])
+        ->addValue('activity_id', $activityId)
         ->addValue('subject', $this->params['email']['subject'])
         ->addValue('body', $this->params['email']['body'])
         ->addValue('mailutils_thread_id', $mailutilsThreadId)
@@ -109,6 +177,13 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
     } catch (CiviCRM_API3_Exception $e) {
       throw new api_Exception('Case does not exist.', 'case_does_not_exist');
     }
+
+    $attachmentsLimit = CRM_Supportcase_Utils_Setting::getActivityAttachmentLimit();
+    if (!empty($_FILES['attachments']['name']) && count($_FILES['attachments']['name']) > $attachmentsLimit) {
+      throw new api_Exception('To match attachments.Maximum is ' . $attachmentsLimit . '.', 'to_match_attachments');
+    }
+
+    //TODO: check by size? $maxFileSize = CRM_Supportcase_Utils_Setting::getMaxFilesSize();
 
     $contactId = CRM_Core_Session::getLoggedInContactID();
     if (empty($contactId)) {

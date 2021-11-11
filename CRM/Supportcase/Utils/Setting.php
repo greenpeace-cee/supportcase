@@ -284,4 +284,22 @@ class CRM_Supportcase_Utils_Setting {
     return 650;// value in pixels
   }
 
+  /**
+   * @return int
+   */
+  public static function getMaxFilesSize() {
+    $config = CRM_Core_Config::singleton();
+
+    return $config->maxFileSize ? $config->maxFileSize : 3;
+  }
+
+  /**
+   * @return int
+   */
+  public static function getActivityAttachmentLimit() {
+    $config = CRM_Core_Config::singleton();
+
+    return $config->maxAttachments ? $config->maxAttachments : 3;
+  }
+
 }

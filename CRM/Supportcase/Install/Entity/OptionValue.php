@@ -44,6 +44,12 @@ class CRM_Supportcase_Install_Entity_OptionValue extends CRM_Supportcase_Install
         'label' => 'Spam',
         'grouping' => 'Closed',
       ],
+      [
+        'option_group_id' => 'activity_status',
+        'name' => CRM_Supportcase_Utils_ActivityStatus::DRAFT_EMAIL,
+        'label' => 'Draft email',
+        'grouping' => 'Closed',
+      ],
     ];
   }
 

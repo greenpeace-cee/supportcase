@@ -18,11 +18,11 @@
                             </div>
                             <div class="crm-accordion-body">
                                 <div class="spc__accordion-body-wrap spc--padding-right-20">
-                                    <table class="crm-entity spc__table spc--no-border" class="crm-search-results">
+                                    <table class="crm-entity spc__table spc--no-border crm-search-results">
                                         <tbody>
                                         <tr class="com__meta spc--table-grey-row" ng-show="currentReplyId != activity.id">
                                             <td class="spc--width-100 spc--padding-bottom-5 spc--padding-top-10 spc--vertical-align-middle">From:</td>
-                                            <td class="spc--padding-bottom-5 spc--padding-top-10">{{activity.view_mode.from_contact.email_label}}</td>
+                                            <td class="spc--padding-bottom-5 spc--padding-top-10 spc--max-width-500">{{activity.view_mode.from_contact.email_label}}</td>
                                             <td class="com__meta_action spc--padding-bottom-5 spc--padding-top-10">
                                                 <button class="spc__button spc--height-little" ng-click="toggleReadEmail(activity.id, true)" ng-show="!activity.view_mode.isRead">
                                                     <span class="ui-button-icon ui-icon fa-eye"></span>
@@ -48,7 +48,7 @@
                                         </tr>
                                         <tr class="com__meta spc--table-grey-row" ng-show="currentReplyId != activity.id">
                                             <td class="spc--width-100 spc--padding-bottom-10 spc--padding-top-5 spc--vertical-align-middle">To:</td>
-                                            <td class="spc--padding-bottom-10 spc--padding-top-5">{{activity.view_mode.to_contact.email_label}}</td>
+                                            <td class="spc--padding-bottom-10 spc--padding-top-5 spc--max-width-500">{{activity.view_mode.to_contact.email_label}}</td>
                                             <td class="com__meta_action spc--padding-bottom-10 spc--padding-top-5">
                                                 <div class="com__message-toggle-height-to-full">
                                                     <button class=" spc__button spc--height-little" ng-click="toggleHeight(activity.id)">
@@ -68,7 +68,7 @@
                                         </tr>
                                         <tr class="com__meta spc--table-grey-row" ng-show="currentReplyId != activity.id">
                                             <td class="spc--padding-bottom-5 spc--padding-top-5 spc--width-100 spc--vertical-align-middle">Subject:</td>
-                                            <td class="spc--padding-bottom-5 spc--padding-top-5">{{activity.view_mode.subject}}</td>
+                                            <td class="spc--padding-bottom-5 spc--padding-top-5 spc--max-width-500">{{activity.view_mode.subject}}</td>
                                             <td class="com__email_date spc--padding-bottom-5 spc--padding-top-5">
                                                 {{formatDateAndTime(activity.view_mode.date_time, true)}}
                                             </td>
@@ -110,7 +110,7 @@
                                                             <td class="spc--width-100 spc--padding-bottom-5 spc--padding-top-0 spc--vertical-align-middle">To:</td>
                                                             <td class="spc--padding-bottom-5 spc--padding-top-0">
                                                                 <div>
-                                                                    <select-email is-required="true" is-multiple="false" max-width="600" model="activity.reply_mode.emails.to"></select-email>
+                                                                    <select-email is-required="true" is-multiple="true" max-width="600" model="activity.reply_mode.emails.to"></select-email>
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -143,7 +143,7 @@
                                                                   name="reply" ng-model="activity.reply_mode.email_body"
                                                                   style="height: 500px" data-preset="civimail"></textarea>
                                                     </div>
-                                                    <input type="file">
+                                                    <spc-attachment model="activity.reply_mode.additionalAttachments" ></spc-attachment>
                                                 </div>
                                             </td>
                                         </tr>
@@ -165,7 +165,7 @@
                                                             <td class="spc--width-100 spc--padding-bottom-5 spc--padding-top-0 spc--vertical-align-middle">To:</td>
                                                             <td class="spc--padding-bottom-5 spc--padding-top-0">
                                                                 <div>
-                                                                    <select-email is-required="true" is-multiple="false" max-width="600" model="activity.forward_mode.emails.to"></select-email>
+                                                                    <select-email is-required="true" is-multiple="true" max-width="600" model="activity.forward_mode.emails.to"></select-email>
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -181,10 +181,22 @@
                                                             <td class="spc--width-100 spc--padding-bottom-10 spc--padding-top-0 spc--vertical-align-middle">
                                                                 <label for="{{'forward' + subject + activity.forward_mode.id}}">Subject:</label>
                                                             </td>
-                                                            <td class="spc--padding-bottom-10 spc--padding-top-0">
+                                                            <td class="spc--padding-bottom-5 spc--padding-top-0">
                                                                 <div class="com__edit-subject-input-wrap">
                                                                     <input id="{{'forward' + subject + activity.forward_mode.id}}" name="subject" class="spc__input spc--width-100-percent" ng-model="activity.forward_mode.subject" type="text" ng-required="true">
                                                                 </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="com__meta spc--table-grey-row" ng-show="activity.forward_mode.attachments.length > 0">
+                                                            <td class="spc--width-100 spc--padding-bottom-10 spc--padding-top-5 spc--vertical-align-middle">Attachments:</td>
+                                                            <td class="spc--padding-bottom-10 spc--padding-top-5" colspan="2">
+                                                                <ul class="com__attachments">
+                                                                    <li ng-repeat="attachment in activity.view_mode.attachments">
+                                                                        <a href="{{attachment.url}}">
+                                                                            <i class="crm-i {{attachment.icon}}"></i> {{attachment.name}}
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
                                                             </td>
                                                         </tr>
                                                         </tbody>
@@ -196,7 +208,7 @@
                                                         <textarea crm-ui-id="email-forward-{{activity.forward_mode.id}}" crm-ui-richtext crm-ui-insert-rx="insert:reply"
                                                                   name="reply" ng-model="activity.forward_mode.email_body" style="height: 500px" data-preset="civimail"></textarea>
                                                     </div>
-                                                    <input type="file">
+                                                    <spc-attachment model="activity.forward_mode.additionalAttachments" ></spc-attachment>
                                                 </div>
                                             </td>
                                         </tr>
