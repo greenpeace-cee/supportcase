@@ -53,7 +53,7 @@ function _civicrm_api3_supportcase_manage_case_send_email_spec(&$params) {
   $params['from_email_id'] = [
     'name' => 'from_email_id',
     'api.required' => 1,
-    'type' => CRM_Utils_Type::T_INT,
+    'type' => CRM_Utils_Type::T_STRING,
     'title' => 'From email id',
   ];
   $params['cc_email_ids'] = [
