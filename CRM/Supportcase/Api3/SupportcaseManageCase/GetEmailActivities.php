@@ -74,16 +74,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     $replySubject = CRM_Supportcase_Utils_Email::addSubjectPrefix($normalizedSubject, CRM_Supportcase_Utils_Email::REPLY_MODE);
     $forwardSubject = CRM_Supportcase_Utils_Email::addSubjectPrefix($normalizedSubject, CRM_Supportcase_Utils_Email::FORWARD_MODE);
     $replyForwardBody = $this->prepareReplyBody($activity, $fromContact);
-    $attachments = [];
-
-    foreach ($activity['api.Attachment.get']['values'] as $attachment) {
-      $attachments[] = [
-        'file_id' => $attachment['id'],
-        'name' => $attachment['name'],
-        'icon' => $attachment['icon'],
-        'url' => $attachment['url'],
-      ];
-    }
+    $attachments = $this->prepareAttachments($activity);
 
     return [
       'id' => $activity['id'],
@@ -211,6 +202,25 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     return [
       'case_id' => $params['case_id']
     ];
+  }
+
+  /**
+   * @param $activity
+   * @return array
+   */
+  private function prepareAttachments($activity) {
+    $attachments = [];
+
+    foreach ($activity['api.Attachment.get']['values'] as $attachment) {
+      $attachments[] = [
+        'file_id' => $attachment['id'],
+        'name' => $attachment['name'],
+        'icon' => $attachment['icon'],
+        'url' => $attachment['url'],
+      ];
+    }
+
+    return $attachments;
   }
 
 }
