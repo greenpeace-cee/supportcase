@@ -16,6 +16,10 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
       throw new api_Exception('Error saving files: Error: ' . $e->getMessage(), 'error_saving_files');
     }
 
+    if ($this->params['email']['mode'] == 'forward') {
+      CRM_Supportcase_Utils_Activity::copyAttachment($this->params['email']['activity']['id'], $activityId, $this->params['email']['forwardFileIds']);
+    }
+
     $mailutilsMessage = $this->createMailutilsMessage($activityId);
 
     foreach ($this->params['email']['toEmails'] as $emailData) {
@@ -116,17 +120,15 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
    * @return int
    */
   private function createMailutilsMessage($activityId) {
-    $mailutilsThreadId = $this->getOrCreateMailutilsThreadId($activityId);
-
     try {
       $mailutilsMessage = \Civi\Api4\MailutilsMessage::create()
         ->addValue('activity_id', $activityId)
         ->addValue('subject', $this->params['email']['subject'])
         ->addValue('body', $this->params['email']['body'])
-        ->addValue('mailutils_thread_id', $mailutilsThreadId)
-        ->addValue('mail_setting_id', '2')//TODO: remove dummy data/// mail_setting_id id prev
+        ->addValue('mailutils_thread_id', $this->params['email']['mailutilsMessage']['mailutils_thread_id'])
+        ->addValue('mail_setting_id', $this->params['email']['mailutilsMessage']['mail_setting_id'])
+        ->addValue('in_reply_to', $this->params['email']['mailutilsMessage']['id'])
         ->addValue('message_id', 'TODO')//TODO: remove dummy data // this remove in future
-        ->addValue('in_reply_to', 'TODO')//TODO: remove dummy data /// $mailutilsMessage id prev
         ->addValue('headers', 'TODO')//TODO: remove dummy data
         ->execute()
         ->first();
@@ -145,13 +147,13 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
   private function createMailutilsMessageParty($emailData, $mailutilsMessageId, $partyTypeId) {
     try {
       $messageParty = \Civi\Api4\MailutilsMessageParty::create()
-          ->addValue('mailutils_message_id', $mailutilsMessageId)
-          ->addValue('contact_id', $emailData['contact_id'])
-          ->addValue('party_type_id', $partyTypeId)
-          ->addValue('name', CRM_Supportcase_Utils_EmailSearch::prepareEmailLabel($emailData['contact_display_name'], $emailData['email']))
-          ->addValue('email', $emailData['email'])
-          ->execute()
-          ->first();
+        ->addValue('mailutils_message_id', $mailutilsMessageId)
+        ->addValue('contact_id', $emailData['contact_id'])
+        ->addValue('party_type_id', $partyTypeId)
+        ->addValue('name', CRM_Supportcase_Utils_EmailSearch::prepareEmailLabel($emailData['contact_display_name'], $emailData['email']))
+        ->addValue('email', $emailData['email'])
+        ->execute()
+        ->first();
     } catch (Exception $e) {
       throw new api_Exception('Cannot create "MailutilsMessageParty". Error: ' . $e->getMessage(), 'cannot_create_mailutils_message_party');
     }
@@ -225,6 +227,11 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
       throw new api_Exception('Subject have to be less than 255 char', 'subject_to_long');
     }
 
+    $mailutilsMessage = CRM_Supportcase_Utils_Activity::getRelatedMailUtilsMessage($emailActivity['id']);
+    if (empty($mailutilsMessage)) {
+      throw new api_Exception('Cannot find related to activity MailutilsMessage.', 'cannot_find_mailutils_message');
+    }
+
     return [
       'email' => [
         'toEmails' => $toEmails,
@@ -234,45 +241,12 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
         'body' => $bodyText,
         'activity' => $emailActivity,
         'subject' => $params['subject'],
+        'mailutilsMessage' => $mailutilsMessage,
+        'forwardFileIds' => $params['forward_file_ids'],
       ],
       'case' => $case,
       'caseId' => $params['case_id'],
     ];
-  }
-
-  /**
-   * @return int
-   */
-  private function getOrCreateMailutilsThreadId($activityId) {
-    $mailutilsThreadId = $this->getMailutilsThreadId($activityId);
-    if (empty($mailutilsThreadId)) {
-      try {
-        $mailutilsThread = \Civi\Api4\MailutilsThread::create()->execute()->first();
-      } catch (Exception $e) {
-        throw new api_Exception('Cannot create "MailutilsThread". Error: ' . $e->getMessage(), 'cannot_create_mailutils_thread');
-      }
-
-      $mailutilsThreadId = $mailutilsThread['id'];
-    }
-
-    return $mailutilsThreadId;
-  }
-
-  /**
-   * @param $activityId
-   * @return false|int
-   */
-  private function getMailutilsThreadId($activityId) {
-    $mailutilsMessages = \Civi\Api4\MailutilsMessage::get()
-      ->addSelect('mailutils_thread_id')
-      ->addWhere('activity_id', '=', $activityId)
-      ->setLimit(1)
-      ->execute();
-    foreach ($mailutilsMessages as $mailutilsMessage) {
-      return $mailutilsMessage['mailutils_thread_id'];
-    }
-
-    return false;
   }
 
 }

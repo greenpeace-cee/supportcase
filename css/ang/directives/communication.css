@@ -135,6 +135,10 @@
   padding: 0 !important;
 }
 
+.com__attachments.com__attachments-flex {
+  display: flex !important;
+}
+
 .com__attachments li {
   display: inline !important;
   padding-right: 10px;
@@ -168,6 +172,26 @@
 
 .com__errors-wrap {
   max-width: 300px;
+}
+
+.com__attachment-item {
+  display: flex;
+  background: white;
+  border: 1px solid #0071bd;
+}
+
+.com__attachments li.com__attachment-item {
+  display: flex !important;
+  margin-right: 5px;
+  padding: 2px 5px;
+}
+
+.com__attachment-item-link {
+  padding-right: 5px;
+}
+
+.com__attachment-item-delete{
+  cursor: pointer;
 }
 
 .com__email-item-accordion-head {

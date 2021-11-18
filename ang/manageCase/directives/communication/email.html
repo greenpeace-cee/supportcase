@@ -190,11 +190,14 @@
                                                         <tr class="com__meta spc--table-grey-row" ng-show="activity.forward_mode.attachments.length > 0">
                                                             <td class="spc--width-100 spc--padding-bottom-10 spc--padding-top-5 spc--vertical-align-middle">Attachments:</td>
                                                             <td class="spc--padding-bottom-10 spc--padding-top-5" colspan="2">
-                                                                <ul class="com__attachments">
-                                                                    <li ng-repeat="attachment in activity.view_mode.attachments">
-                                                                        <a href="{{attachment.url}}">
-                                                                            <i class="crm-i {{attachment.icon}}"></i> {{attachment.name}}
-                                                                        </a>
+                                                                <ul class="com__attachments com__attachments-flex">
+                                                                    <li class="com__attachment-item" ng-repeat="attachment in activity.forward_mode.attachments">
+                                                                        <div class="com__attachment-item-link">
+                                                                            <a href="{{attachment.url}}">
+                                                                                <i class="crm-i {{attachment.icon}}"></i> {{attachment.name}}
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="com__attachment-item-delete" ng-click="removeForwardAttachment(attachment.file_id, activity.forward_mode)" title="delete">delete</div>
                                                                     </li>
                                                                 </ul>
                                                             </td>

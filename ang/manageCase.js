@@ -648,6 +648,12 @@
                     $scope.cleanErrors();
                 };
 
+                $scope.removeForwardAttachment = function(fileId, activityForwardData) {
+                    activityForwardData['attachments'] = activityForwardData['attachments'].filter(function (item) {
+                        return item['file_id'] !== fileId
+                    });
+                };
+
                 $scope.send = function(activity) {
                     if (!($scope.replyMode === 'reply' || $scope.replyMode === 'forward')) {
                         console.error('Unknown reply mode');
@@ -657,6 +663,7 @@
 
                     var emailData = {};
                     var files = [];
+                    var data = {};
 
                     if ($scope.replyMode === 'reply') {
                         emailData = activity['reply_mode'];
@@ -664,6 +671,11 @@
                     } else if ($scope.replyMode === 'forward') {
                         emailData = activity['forward_mode'];
                         files =  $scope.getFiles(activity['id'], 'forward_mode');
+                        var forwardFileIds = [];
+                        for (var j = 0; j < emailData['attachments'].length; j++) {
+                            forwardFileIds.push(emailData['attachments'][j]['file_id']);
+                        }
+                        data['forward_file_ids'] = forwardFileIds;
                     } else {
                         $scope.showError('Error sending email: Unknown mode.');
                         return;
@@ -674,17 +686,15 @@
                         return;
                     }
 
-                    var data = {
-                        "case_id": $scope.model['case_id'],
-                        "subject": emailData['subject'],
-                        "mode": $scope.replyMode,
-                        'email_activity_id': activity['id'],
-                        "body": emailData['email_body'],
-                        'to_email_id': emailData['emails']['to'],
-                        'from_email_id': emailData['emails']['from'],
-                        'cc_email_ids': emailData['emails']['cc'],
-                        'attachments': files['dataFiles'],
-                    };
+                    data['case_id'] = $scope.model['case_id'];
+                    data['subject'] = emailData['subject'];
+                    data['mode'] = $scope.replyMode;
+                    data['email_activity_id'] = activity['id'];
+                    data['body'] = emailData['email_body'];
+                    data['to_email_id'] = emailData['emails']['to'];
+                    data['from_email_id'] = emailData['emails']['from'];
+                    data['cc_email_ids'] = emailData['emails']['cc'];
+                    data['attachments'] = files['dataFiles'];
 
                     var formData = new FormData();
                     if (files['files'] !== undefined) {
@@ -698,7 +708,7 @@
                     formData.append('json', JSON.stringify(data));
 
                     $.ajax({
-                        url : 'http://localhost/index.php?q=civicrm/ajax/rest',//TODO
+                        url : CRM.url('civicrm/ajax/rest'),
                         type : 'POST',
                         data : formData,
                         processData: false,  // tell jQuery not to process the data

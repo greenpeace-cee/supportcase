@@ -75,8 +75,23 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     $forwardSubject = CRM_Supportcase_Utils_Email::addSubjectPrefix($normalizedSubject, CRM_Supportcase_Utils_Email::FORWARD_MODE);
     $replyForwardBody = $this->prepareReplyBody($activity, $fromContact);
     $attachments = [];
+
     foreach ($activity['api.Attachment.get']['values'] as $attachment) {
+      $fileData = CRM_Supportcase_Utils_File::getFileData('civicrm_activity', $activity['id']);
+      if (empty($fileData)) {
+        continue;
+      }
+
+      if (CRM_Supportcase_Utils_String::isStringContains($fileData['file_uri'], $attachment['path'])) {
+        $fileId = $fileData['file_id'];
+      }
+
+      if (empty($fileId)) {
+        continue;
+      }
+
       $attachments[] = [
+        'file_id' => $fileId,
         'name' => $attachment['name'],
         'icon' => $attachment['icon'],
         'url' => $attachment['url'],
@@ -145,8 +160,8 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
   private function prepareReplyBody($activity, $fromContact) {
     $messageNewLines = "\n \n \n";
     $date = CRM_Utils_Date::customFormat($activity['activity_date_time']);
-    $signature = $this->generateSignature();
-    $message = "{$messageNewLines}{$signature}\n\nOn {$date} {$fromContact['display_name']} wrote:";
+    $mailUtilsRenderedTemplate = $this->getTemplateRelatedToActivity($activity['id']);//TODO: Check if we need render template or only put key of template
+    $message = "{$messageNewLines}{$mailUtilsRenderedTemplate}\n\nOn {$date} {$fromContact['display_name']} wrote:";
     $quote = trim(CRM_Utils_String::stripAlternatives($activity['details']));
     $quote = str_replace("\r", "", $quote);
     $quote = str_replace("\n", "\n> ", $quote);
@@ -157,17 +172,37 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
   }
 
   /**
+   * @param $activityId
    * @return string
    */
-  private function generateSignature() {
-    $signature = "\n Mit freundlichen Grüßen";
-    $signature .= "<hr>";
-    $signature .= "\n Greenpeace in Zentral- und Osteuropa";
-    $signature .= "\n Wiedner Hauptstraße 120-124, 1050 Wien";
-    $signature .= "\n Telefon: +43 (0)1 545 45 80";
-    $signature .= "\n Spendenkonto: IBAN AT24 20111 82221219800";
+  private function getTemplateRelatedToActivity($activityId) {
+    $mailUtilsMessage = CRM_Supportcase_Utils_Activity::getRelatedMailUtilsMessage($activityId);
 
-    return $signature;
+    if (empty($mailUtilsMessage)) {
+      return '';
+    }
+
+    $mailUtilsSetting = CRM_Supportcase_Utils_MailutilsMessage::getRelatedMailUtilsSetting($mailUtilsMessage['mail_setting_id']);
+    if (empty($mailUtilsSetting)) {
+      return '';
+    }
+
+    if (empty($mailUtilsSetting['mailutils_template_id'])) {
+      return '';
+    }
+
+    $mailutilsTemplate = \Civi\Api4\MailutilsTemplate::get()
+      ->addWhere('id', '=', $mailUtilsSetting['mailutils_template_id'])
+      ->setLimit(1)
+      ->execute()
+      ->first();
+
+
+    if (empty($mailutilsTemplate)) {
+      return '';
+    }
+
+    return $mailutilsTemplate['message'];
   }
 
   /**

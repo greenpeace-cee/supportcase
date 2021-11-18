@@ -56,6 +56,12 @@ function _civicrm_api3_supportcase_manage_case_send_email_spec(&$params) {
     'type' => CRM_Utils_Type::T_STRING,
     'title' => 'From email id',
   ];
+  $params['forward_file_ids'] = [
+    'name' => 'forward_file_ids',
+    'api.required' => 1,
+    'type' => CRM_Utils_Type::T_STRING,
+    'title' => 'This files will be copied to new activity',
+  ];
   $params['cc_email_ids'] = [
     'name' => 'cc_email_ids',
     'api.required' => 0,
