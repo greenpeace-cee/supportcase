@@ -77,21 +77,8 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     $attachments = [];
 
     foreach ($activity['api.Attachment.get']['values'] as $attachment) {
-      $fileData = CRM_Supportcase_Utils_File::getFileData('civicrm_activity', $activity['id']);
-      if (empty($fileData)) {
-        continue;
-      }
-
-      if (CRM_Supportcase_Utils_String::isStringContains($fileData['file_uri'], $attachment['path'])) {
-        $fileId = $fileData['file_id'];
-      }
-
-      if (empty($fileId)) {
-        continue;
-      }
-
       $attachments[] = [
-        'file_id' => $fileId,
+        'file_id' => $attachment['id'],
         'name' => $attachment['name'],
         'icon' => $attachment['icon'],
         'url' => $attachment['url'],
