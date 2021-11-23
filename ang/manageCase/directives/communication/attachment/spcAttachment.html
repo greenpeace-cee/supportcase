@@ -1,0 +1,19 @@
+<div class="com__attachments">
+    <div class="com__attachments-item" ng-repeat="attachment in model" ng-class="{'com--attachment-disabled' : isAttachmentsCanBeSelected && !attachment['isAdded'] === true }">
+        <i class="com__attachments-item-file-ico crm-i {{attachment.icon}}"></i>
+        <div class="com__attachments-item-name" title="{{attachment.name}}" >{{attachment.name}}</div>
+        <div class="com__attachments-item-ico-wrap">
+            <a class="com__attachments-item-ico" title="download attachment" href="{{attachment.url}}" >
+                <i class="crm-i fa-download"></i>
+            </a>
+            <div class="com__attachments-item-ico" title="add to email this attachment"
+                 ng-if="isAttachmentsCanBeSelected && attachment['isAdded'] === false" ng-click="toggleAdding(attachment)">
+                <i class="crm-i fa-plus"></i>
+            </div>
+            <div class="com__attachments-item-ico" title="remove from email this attachment"
+                 ng-if="isAttachmentsCanBeSelected && attachment['isAdded'] === true"  ng-click="toggleAdding(attachment)">
+                <i class="crm-i fa-times-circle"></i>
+            </div>
+        </div>
+    </div>
+</div>

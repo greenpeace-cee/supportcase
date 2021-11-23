@@ -71,6 +71,10 @@
     box-sizing: border-box !important;
 }
 
+.spc__button > .ui-button-icon {
+    margin: 0 !important;
+}
+
 .spc__button.spc--height-medium {
     padding: 5px 12px !important;
 }

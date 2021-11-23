@@ -673,7 +673,9 @@
                         files =  $scope.getFiles(activity['id'], 'forward_mode');
                         var forwardFileIds = [];
                         for (var j = 0; j < emailData['attachments'].length; j++) {
-                            forwardFileIds.push(emailData['attachments'][j]['file_id']);
+                            if (emailData['attachments'][j]['isAdded'] === true) {
+                                forwardFileIds.push(emailData['attachments'][j]['file_id']);
+                            }
                         }
                         data['forward_file_ids'] = forwardFileIds;
                     } else {
@@ -796,13 +798,35 @@
         };
     });
 
-    angular.module(moduleName).directive("spcAttachment", function() {
+    angular.module(moduleName).directive("spcAttachmentUploader", function() {
         return {
             restrict: "E",
-            templateUrl: "~/manageCase/directives/communication/spcAttachment.html",
+            templateUrl: "~/manageCase/directives/communication/attachment/spcAttachmentUploader.html",
             scope: {model: "="},
             controller: function($scope, $element, CrmAttachments) {
                 $scope.model = new CrmAttachments({});
+            }
+        };
+    });
+
+    angular.module(moduleName).directive("spcAttachment", function() {
+        return {
+            restrict: "E",
+            templateUrl: "~/manageCase/directives/communication/attachment/spcAttachment.html",
+            scope: {
+                model: "=",
+                isAttachmentsCanBeSelected: "<isAttachmentsCanBeSelected",
+            },
+            controller: function($scope, $element) {
+                this.$onInit = function() {
+                    for (var i = 0; i < $scope['model']['length']; i++) {
+                        $scope['model'][i]['isAdded'] = true;
+                    }
+                };
+
+                $scope.toggleAdding = function(attachment) {
+                    attachment.isAdded = !attachment.isAdded;
+                };
             }
         };
     });
