@@ -42,7 +42,11 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
       throw new api_Exception('Error sending email. Error: ' . $e->getMessage(), 'cannot_send_email');
     }
 
-    return ['message' => 'Email is sent.', 'case' => $this->params['case']];
+    return [
+      'message' => 'Email is sent.',
+      'activity_id' => $activityId,
+      'mailutils_message_id' => $mailutilsMessage['id']
+    ];
   }
 
   /**

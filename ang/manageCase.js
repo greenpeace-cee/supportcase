@@ -601,7 +601,7 @@
                     $scope.getEmails();
                 };
 
-                $scope.getEmails = function() {
+                $scope.getEmails = function(callback) {
                     CRM.api3('SupportcaseManageCase', 'get_email_activities', {
                         "sequential": 1,
                         "case_id": $scope.model['case_id'],
@@ -628,6 +628,9 @@
                             $scope.emailActivities = emailActivities;
                             $scope.$apply();
                             $scope.handleEmailCollapsing();
+                            if (callback !== undefined) {
+                                callback();
+                            }
                         }
                     }, function(error) {});
                 }
@@ -652,6 +655,14 @@
                     activityForwardData['attachments'] = activityForwardData['attachments'].filter(function (item) {
                         return item['file_id'] !== fileId
                     });
+                };
+
+                $scope.getActivityElement = function(activityId) {
+                    return CRM.$($element).find('.com__email-activity[data-activity-id="' + activityId + '"]');
+                };
+
+                $scope.highlightActivity = function(activityId) {
+                    $scope.getActivityElement(activityId).find('.com__email-item-accordion-head').effect("highlight", {}, 6000);
                 };
 
                 $scope.send = function(activity) {
@@ -725,7 +736,10 @@
 
                             if (response['is_error'] === 0) {
                                 CRM.status('Email is sent!');
-                                $scope.getEmails();
+                                var emailActivity = response['values']['activity_id'];
+                                $scope.getEmails(function () {
+                                    $scope.highlightActivity(emailActivity);
+                                });
                                 $scope.replyMode = null;
                             } else {
                                 console.error('Error sending email:');
