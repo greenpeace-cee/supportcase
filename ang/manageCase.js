@@ -646,9 +646,9 @@
                 };
 
                 $scope.cancel = function() {
+                    $scope.cleanErrors($scope.currentReplyId, $scope.replyMode );
                     $scope.currentReplyId = null;
                     $scope.replyMode = null;
-                    $scope.cleanErrors();
                 };
 
                 $scope.removeForwardAttachment = function(fileId, activityForwardData) {
@@ -668,7 +668,6 @@
                 $scope.send = function(activity) {
                     if (!($scope.replyMode === 'reply' || $scope.replyMode === 'forward')) {
                         console.error('Unknown reply mode');
-                        $scope.showError('Something went wrong');
                         return;
                     }
 
@@ -689,13 +688,10 @@
                             }
                         }
                         data['forward_file_ids'] = forwardFileIds;
-                    } else {
-                        $scope.showError('Error sending email: Unknown mode.');
-                        return;
                     }
 
                     if (files['files'] !== undefined && files['files']['length'] > emailData['attachmentsLimit']) {
-                        $scope.showError('To match attachments. Maximum is ' + emailData['attachmentsLimit'] + '.');
+                        $scope.showError('To match attachments. Maximum is ' + emailData['attachmentsLimit'] + '.', activity['id'], $scope.replyMode);
                         return;
                     }
 
@@ -730,7 +726,7 @@
                             if (typeof response === 'string') {
                                 console.error('Error sending email:');
                                 console.error('Error parsing response.');
-                                $scope.showError('Error sending email: Error parsing response.');
+                                $scope.showError('Error sending email: Error parsing response.', activity['id'], $scope.replyMode);
                                 return;
                             }
 
@@ -744,19 +740,25 @@
                             } else {
                                 console.error('Error sending email:');
                                 console.error(response['error_message']);
-                                $scope.showError(response['error_message']);
+                                $scope.showError(response['error_message'], activity['id'], $scope.replyMode);
                             }
+                        },
+                        error: function(data){
+                            var message = 'Error sending email: Server error.'
+                            console.error('Error sending email: Server error.');
+                            console.error(data);
+                            $scope.showError(message, activity['id'], $scope.replyMode);
                         }
                     });
                 };
 
-                $scope.showError = function(errorMessage) {
-                    $scope.cleanErrors();
-                    CRM.$($element).find('.com__errors-wrap').append('<div class="crm-error">' + errorMessage + '</div>');
+                $scope.showError = function(errorMessage, activityId, mode) {
+                    $scope.cleanErrors(activityId, mode);
+                    $scope.getActivityElement(activityId).find('.com__errors-wrap.com__errors-mode-' + mode).append('<div class="crm-error">' + errorMessage + '</div>');
                 };
 
-                $scope.cleanErrors = function() {
-                    CRM.$($element).find('.com__errors-wrap').empty();
+                $scope.cleanErrors = function(activityId, mode) {
+                    $scope.getActivityElement(activityId).find('.com__errors-wrap.com__errors-mode-' + mode).empty();
                 };
 
                 $scope.toggleReadEmail = function(emailActivityId, isRead) {

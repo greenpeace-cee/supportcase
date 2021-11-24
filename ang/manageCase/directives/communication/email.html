@@ -90,7 +90,7 @@
                                                         <div ng-bind-html="activity.view_mode.emailBodyResolved"></div>
                                                     </div>
                                                 </div>
-                                                <div class="com__errors-wrap"></div>
+                                                <div class="com__errors-wrap com__errors-mode-view"></div>
                                                 <div class="com__message-buttons">
                                                     <button class="spc__button spc--height-medium" ng-click="reply(activity.id)">
                                                         <span class="ui-button-icon ui-icon fa-reply"></span>
@@ -174,7 +174,7 @@
 
                                                 <spc-attachment-uploader model="activity.reply_mode.additionalAttachments" ></spc-attachment-uploader>
 
-                                                <div class="com__errors-wrap"></div>
+                                                <div class="com__errors-wrap com__errors-mode-reply"></div>
 
                                                 <div class="com__message-buttons">
                                                     <button class="spc__button spc--height-medium" ng-disabled="activityEmailForm.$invalid" ng-click="send(activity)"
@@ -263,7 +263,7 @@
 
                                                 <spc-attachment-uploader model="activity.forward_mode.additionalAttachments" ></spc-attachment-uploader>
 
-                                                <div class="com__errors-wrap"></div>
+                                                <div class="com__errors-wrap com__errors-mode-forward"></div>
 
                                                 <div class="com__message-buttons">
                                                     <button class="spc__button spc--height-medium" ng-disabled="activityEmailForm.$invalid" ng-click="send(activity)"
