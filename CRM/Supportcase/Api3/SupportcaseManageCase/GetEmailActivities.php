@@ -134,14 +134,19 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     $mainEmailId = CRM_Supportcase_Utils_Email::getEmailId($mainEmail);//TODO what need to do if this email doesn't exist? Or has a couple of values?
 
     $toEmailIds = [];
-    foreach (array_merge($toEmails, $fromEmails) as $emailId => $email) {
+    foreach ($toEmails as $emailId => $email) {
+      if ($email != $mainEmail) {
+        $toEmailIds[] = $emailId;
+      }
+    }
+    foreach ($fromEmails as $emailId => $email) {
       if ($email != $mainEmail) {
         $toEmailIds[] = $emailId;
       }
     }
 
     return [
-      'cc' => '',
+      'cc' => '',//TODO cc
       'from' => $mainEmailId,
       'to' => implode(',', $toEmailIds),
     ];
