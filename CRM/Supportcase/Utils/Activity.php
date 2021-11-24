@@ -62,9 +62,7 @@ class CRM_Supportcase_Utils_Activity {
     }
 
     $mailutilsMessages = \Civi\Api4\MailutilsMessage::get()
-      ->addSelect('id')
-      ->addSelect('mailutils_thread_id')
-      ->addSelect('mail_setting_id')
+      ->addSelect('*')
       ->addWhere('activity_id', '=', $activityId)
       ->setLimit(1)
       ->execute();
@@ -154,6 +152,28 @@ class CRM_Supportcase_Utils_Activity {
       2 => [$toActivityId , 'Integer'],
       3 => [$fileId , 'Integer'],
     ]);
+  }
+
+  /**
+   * Get main email from settings related to this activity
+   *
+   * @param $activityId
+   * @return string
+   */
+  public static function getMainEmail($activityId) {
+    $mailUtilsMessage = CRM_Supportcase_Utils_Activity::getRelatedMailUtilsMessage($activityId);
+
+    if (empty($mailUtilsMessage)) {
+      return '';
+    }
+
+    $mailUtilsSettings = CRM_Supportcase_Utils_MailutilsMessage::getRelatedMailUtilsSetting($mailUtilsMessage['mail_setting_id']);
+
+    if (empty($mailUtilsSettings['smtp_username'])) {
+      return '';
+    }
+
+    return $mailUtilsSettings['smtp_username'];
   }
 
 }

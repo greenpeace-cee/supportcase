@@ -103,11 +103,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
         'date_time' => $activity['activity_date_time'],
         'attachments' => [],// attachments always empty for reply mode
         'mode_name' => CRM_Supportcase_Utils_Email::REPLY_MODE,
-        'emails' => [// here are switched 'to' and 'from' contact at reply mode, it is correct
-          'cc' => '',
-          'from' => implode(',', $toContactsEmailIds),
-          'to' => $fromContact['email_id'],
-        ],
+        'emails' => $this->getPrefillEmails($activity['id'], $fromContact['email_id'], $toContactsEmailIds),
         'maxFileSize' => $maxFileSize,
         'attachmentsLimit' => $attachmentsLimit,
       ],
@@ -119,16 +115,38 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
         'date_time' => $activity['activity_date_time'],
         'attachments' => $attachments,
         'mode_name' => CRM_Supportcase_Utils_Email::FORWARD_MODE,
-        'emails' => [// here are switched 'to' and 'from' contact at forward mode, it is correct
-          'cc' => '',
-          'from' => implode(',', $toContactsEmailIds),
-          'to' => $fromContact['email_id'],
-        ],
+        'emails' => $this->getPrefillEmails($activity['id'], $fromContact['email_id'], $toContactsEmailIds),
         'maxFileSize' => $maxFileSize,
         'attachmentsLimit' => $attachmentsLimit,
       ]
     ];
   }
+
+  /**
+   * @param $activityId
+   * @param $fromContactEmailId
+   * @param $toContactsEmailIds
+   */
+  private function getPrefillEmails($activityId, $fromContactEmailId, $toContactsEmailIds) {
+    $mainEmail =  CRM_Supportcase_Utils_Activity::getMainEmail($activityId);
+    $fromEmails = CRM_Supportcase_Utils_Email::getEmailsByIds([$fromContactEmailId]);
+    $toEmails = CRM_Supportcase_Utils_Email::getEmailsByIds($toContactsEmailIds);
+    $mainEmailId = CRM_Supportcase_Utils_Email::getEmailId($mainEmail);//TODO what need to do if this email doesn't exist? Or has a couple of values?
+
+    $toEmailIds = [];
+    foreach (array_merge($toEmails, $fromEmails) as $emailId => $email) {
+      if ($email != $mainEmail) {
+        $toEmailIds[] = $emailId;
+      }
+    }
+
+    return [
+      'cc' => '',
+      'from' => $mainEmailId,
+      'to' => implode(',', $toEmailIds),
+    ];
+  }
+
 
   /**
    * @param $activity
@@ -138,7 +156,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
   private function prepareReplyBody($activity, $fromContact) {
     $messageNewLines = "\n \n \n";
     $date = CRM_Utils_Date::customFormat($activity['activity_date_time']);
-    $mailUtilsRenderedTemplate = $this->getTemplateRelatedToActivity($activity['id']);//TODO: Check if we need render template or only put key of template
+    $mailUtilsRenderedTemplate = $this->getTemplateRelatedToActivity($activity['id']);
     $message = "{$messageNewLines}{$mailUtilsRenderedTemplate}\n\nOn {$date} {$fromContact['display_name']} wrote:";
     $quote = trim(CRM_Utils_String::stripAlternatives($activity['details']));
     $quote = str_replace("\r", "", $quote);
