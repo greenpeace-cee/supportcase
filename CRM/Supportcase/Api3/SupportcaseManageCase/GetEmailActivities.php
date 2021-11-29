@@ -155,7 +155,6 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     ];
   }
 
-
   /**
    * @param $activity
    * @param $fromContact
@@ -164,7 +163,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
   private function prepareReplyBody($activity, $fromContact) {
     $messageNewLines = "\n \n \n";
     $date = CRM_Utils_Date::customFormat($activity['activity_date_time']);
-    $mailUtilsRenderedTemplate = $this->getTemplateRelatedToActivity($activity['id']);
+    $mailUtilsRenderedTemplate = CRM_Supportcase_Utils_Activity::getRenderedTemplateRelatedToActivity($activity['id']);
     $message = "{$messageNewLines}{$mailUtilsRenderedTemplate}\n\nOn {$date} {$fromContact['display_name']} wrote:";
     $quote = trim(CRM_Utils_String::stripAlternatives($activity['details']));
     $quote = str_replace("\r", "", $quote);
@@ -173,40 +172,6 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     $message = $message . "\n> " . $quote;
 
     return nl2br($message);
-  }
-
-  /**
-   * @param $activityId
-   * @return string
-   */
-  private function getTemplateRelatedToActivity($activityId) {
-    $mailUtilsMessage = CRM_Supportcase_Utils_Activity::getRelatedMailUtilsMessage($activityId);
-
-    if (empty($mailUtilsMessage)) {
-      return '';
-    }
-
-    $mailUtilsSetting = CRM_Supportcase_Utils_MailutilsMessage::getRelatedMailUtilsSetting($mailUtilsMessage['mail_setting_id']);
-    if (empty($mailUtilsSetting)) {
-      return '';
-    }
-
-    if (empty($mailUtilsSetting['mailutils_template_id'])) {
-      return '';
-    }
-
-    $mailutilsTemplate = \Civi\Api4\MailutilsTemplate::get()
-      ->addWhere('id', '=', $mailUtilsSetting['mailutils_template_id'])
-      ->setLimit(1)
-      ->execute()
-      ->first();
-
-
-    if (empty($mailutilsTemplate)) {
-      return '';
-    }
-
-    return $mailutilsTemplate['message'];
   }
 
   /**
