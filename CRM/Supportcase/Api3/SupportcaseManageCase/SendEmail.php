@@ -61,6 +61,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
     }
 
     try {
+      //TODO: save cc in activity
       $activity = civicrm_api3('Activity', 'create', [
         'source_contact_id' => $this->params['email']['fromEmails'][0]['contact_id'],
         'activity_type_id' => "Inbound Email",
@@ -131,8 +132,8 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
         ->addValue('body', $this->params['email']['body'])
         ->addValue('mailutils_thread_id', $this->params['email']['mailutilsMessage']['mailutils_thread_id'])
         ->addValue('mail_setting_id', $this->params['email']['mailutilsMessage']['mail_setting_id'])
-        ->addValue('in_reply_to', $this->params['email']['mailutilsMessage']['id'])
-        ->addValue('message_id', 'TODO')//TODO: remove dummy data // this remove in future
+        ->addValue('in_reply_to', $this->params['email']['mailutilsMessage']['message_id'])
+        ->addValue('message_id', 'TODO')//TODO: remove dummy data // this remove in future//   \ezcMailTools::generateMessageId('cat@greenpeace.org');
         ->addValue('headers', 'TODO')//TODO: remove dummy data
         ->execute()
         ->first();

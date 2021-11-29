@@ -19,7 +19,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
         'options' => ['sort' => 'activity_date_time DESC', 'limit' => 0],
       ]);
     } catch (CiviCRM_API3_Exception $e) {
-      $activities = [];
+      return [];
     }
 
     $preparedActivities = [];
@@ -75,6 +75,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     $forwardSubject = CRM_Supportcase_Utils_Email::addSubjectPrefix($normalizedSubject, CRM_Supportcase_Utils_Email::FORWARD_MODE);
     $replyForwardBody = $this->prepareReplyBody($activity, $fromContact);
     $attachments = $this->prepareAttachments($activity);
+    $ccContactsEmailLabels = [];//TODO
 
     return [
       'id' => $activity['id'],
@@ -93,7 +94,8 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
           'email_label' => CRM_Supportcase_Utils_EmailSearch::prepareEmailLabel($fromContact['display_name'], $fromContact['email']),
         ],
         'to_contacts' => $toContacts,
-        'to_contacts_email_label' => implode(', ', $toContactsEmailLabels),
+        'to_contact_email_labels' => implode(', ', $toContactsEmailLabels),
+        'cc_contact_email_labels' => implode(', ', $ccContactsEmailLabels),
       ],
       'reply_mode' => [
         'id' => $activity['id'],
@@ -128,6 +130,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
    * @param $toContactsEmailIds
    */
   private function getPrefillEmails($activityId, $fromContactEmailId, $toContactsEmailIds) {
+    $mailUtilsMessage = CRM_Supportcase_Utils_Activity::getRelatedMailUtilsMessage($activityId);
     $mainEmail =  CRM_Supportcase_Utils_Activity::getMainEmail($activityId);
     $fromEmails = CRM_Supportcase_Utils_Email::getEmailsByIds([$fromContactEmailId]);
     $toEmails = CRM_Supportcase_Utils_Email::getEmailsByIds($toContactsEmailIds);
@@ -146,7 +149,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     }
 
     return [
-      'cc' => '',//TODO cc
+      'cc' => CRM_Supportcase_Utils_MailutilsMessageParty::getCcEmailIds($mailUtilsMessage['id']),
       'from' => $mainEmailId,
       'to' => implode(',', $toEmailIds),
     ];

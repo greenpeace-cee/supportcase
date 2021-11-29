@@ -143,12 +143,22 @@ class CRM_Supportcase_Utils_Email {
    * @param $email
    * @return int|null
    */
-  public static function getEmailId($email) {
+  public static function getEmailId($email, $contactId = null) {
+    if (empty($email)) {
+      return null;
+    }
+
+    $params = [
+      'sequential' => 1,
+      'email' => $email,
+    ];
+
+    if (!empty($contactId)) {
+      $params['contact_id'] = $contactId;
+    }
+
     try {
-      $emails = civicrm_api3('Email', 'get', [
-        'sequential' => 1,
-        'email' => $email,
-      ]);
+      $emails = civicrm_api3('Email', 'get', $params);
     } catch (CiviCRM_API3_Exception $e) {
       return null;
     }
