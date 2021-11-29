@@ -155,7 +155,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
         ->addValue('mailutils_message_id', $mailutilsMessageId)
         ->addValue('contact_id', $emailData['contact_id'])
         ->addValue('party_type_id', $partyTypeId)
-        ->addValue('name', CRM_Supportcase_Utils_EmailSearch::prepareEmailLabel($emailData['contact_display_name'], $emailData['email']))
+        ->addValue('name', $emailData['contact_display_name'])
         ->addValue('email', $emailData['email'])
         ->execute()
         ->first();
