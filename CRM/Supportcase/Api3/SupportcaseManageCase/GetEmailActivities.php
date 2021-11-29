@@ -25,8 +25,12 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     $preparedActivities = [];
     if (!empty($activities['values'])) {
       foreach ($activities['values'] as $activity) {
+        $mailUtilsMessage = CRM_Supportcase_Utils_Activity::getRelatedMailUtilsMessage($activity['id']);
+        if (empty($mailUtilsMessage)) {
+          throw new api_Exception('Error. Cannot get MailUtilsMessage for activity id=' . $activity['id'], 'error_getting_mailutils_message');
+        }
         try {
-          $preparedActivities[] = $this->prepareActivity($activity);
+          $preparedActivities[] = $this->prepareActivity($activity, $mailUtilsMessage);
         } catch (CiviCRM_API3_Exception $e) {
           throw new api_Exception('Error. Cannot get email activity data id=' . $activity['id'], 'error_getting_email_activity_data');
         }
@@ -40,42 +44,25 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
    * @param $activity
    * @return array
    */
-  private function prepareActivity($activity) {
-    $fromContact = civicrm_api3('Contact', 'getsingle', [
-      'id' => $activity['source_contact_id'],
-      'return' => ['id', 'email', 'display_name', 'email_id'],
-    ]);
-
-    $toContacts = [];
-    $toContactsEmailIds = [];
-    $toContactsEmailLabels = [];
-    foreach ($activity['target_contact_id'] as $contactId) {
-      try {
-        $toContact = civicrm_api3('Contact', 'getsingle', [
-          'id' => $contactId,
-          'return' => ['id', 'email', 'display_name', 'email_id'],
-        ]);
-
-        $toContactsEmailIds[] = $toContact['id'];
-        $toContactsEmailLabels[] = CRM_Supportcase_Utils_EmailSearch::prepareEmailLabel($toContact['display_name'], $toContact['email']);
-        $toContacts[] = [
-          'id' => $toContact['id'],
-          'email_id' => $toContact['email_id'],
-          'display_name' => $toContact['display_name'],
-          'email' => $toContact['email'],
-          'email_label' => CRM_Supportcase_Utils_EmailSearch::prepareEmailLabel($toContact['display_name'], $toContact['email']),
-        ];
-      } catch (CiviCRM_API3_Exception $e) {}
-    }
-
+  private function prepareActivity($activity, $mailUtilsMessage) {
+    $ccPartyTypeId = CRM_Supportcase_Utils_PartyType::getCcPartyTypeId();
+    $toPartyTypeId = CRM_Supportcase_Utils_PartyType::getToPartyTypeId();
+    $fromPartyTypeId = CRM_Supportcase_Utils_PartyType::getFromPartyTypeId();
+    $ccMessageParties = CRM_Supportcase_Utils_MailutilsMessageParty::getMailutilsMessageParties($mailUtilsMessage['id'], $ccPartyTypeId);
+    $toMessageParties = CRM_Supportcase_Utils_MailutilsMessageParty::getMailutilsMessageParties($mailUtilsMessage['id'], $toPartyTypeId);
+    $fromMessageParties = CRM_Supportcase_Utils_MailutilsMessageParty::getMailutilsMessageParties($mailUtilsMessage['id'], $fromPartyTypeId);
+    $ccEmailsData = $this->prepareEmailsData($ccMessageParties);
+    $toEmailsData = $this->prepareEmailsData($toMessageParties);
+    $fromEmailsData = $this->prepareEmailsData($fromMessageParties);
     $attachmentsLimit = CRM_Supportcase_Utils_Setting::getActivityAttachmentLimit();
     $maxFileSize = CRM_Supportcase_Utils_Setting::getMaxFilesSize();
     $normalizedSubject = CRM_Supportcase_Utils_Email::normalizeEmailSubject($activity['subject']);
     $replySubject = CRM_Supportcase_Utils_Email::addSubjectPrefix($normalizedSubject, CRM_Supportcase_Utils_Email::REPLY_MODE);
     $forwardSubject = CRM_Supportcase_Utils_Email::addSubjectPrefix($normalizedSubject, CRM_Supportcase_Utils_Email::FORWARD_MODE);
-    $replyForwardBody = $this->prepareReplyBody($activity, $fromContact);
+    $fromContactDisplayName = !empty($fromEmailsData[0]['contact_display_name']) ? $fromEmailsData[0]['contact_display_name'] : '';
+    $replyForwardBody = $this->prepareReplyBody($activity, $fromContactDisplayName);
     $attachments = $this->prepareAttachments($activity);
-    $ccContactsEmailLabels = [];//TODO
+    $replyForwardPrefillEmails = $this->getPrefillEmails($activity['id'], $ccEmailsData, $toEmailsData, $fromEmailsData);
 
     return [
       'id' => $activity['id'],
@@ -86,16 +73,9 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
         'email_body' => CRM_Utils_String::purifyHTML(nl2br(trim(CRM_Utils_String::stripAlternatives($activity['details'])))),
         'date_time' => $activity['activity_date_time'],
         'attachments' => $attachments,
-        'from_contact' => [
-          'id' => $fromContact['id'],
-          'email_id' => $fromContact['email_id'],
-          'display_name' => $fromContact['display_name'],
-          'email' => $fromContact['email'],
-          'email_label' => CRM_Supportcase_Utils_EmailSearch::prepareEmailLabel($fromContact['display_name'], $fromContact['email']),
-        ],
-        'to_contacts' => $toContacts,
-        'to_contact_email_labels' => implode(', ', $toContactsEmailLabels),
-        'cc_contact_email_labels' => implode(', ', $ccContactsEmailLabels),
+        'from_contact_email_label' => $fromEmailsData['coma_separated_email_labels'],
+        'to_contact_email_label' => $toEmailsData['coma_separated_email_labels'],
+        'cc_contact_email_label' => $ccEmailsData['coma_separated_email_labels'],
       ],
       'reply_mode' => [
         'id' => $activity['id'],
@@ -105,7 +85,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
         'date_time' => $activity['activity_date_time'],
         'attachments' => [],// attachments always empty for reply mode
         'mode_name' => CRM_Supportcase_Utils_Email::REPLY_MODE,
-        'emails' => $this->getPrefillEmails($activity['id'], $fromContact['email_id'], $toContactsEmailIds),
+        'emails' => $replyForwardPrefillEmails,
         'maxFileSize' => $maxFileSize,
         'attachmentsLimit' => $attachmentsLimit,
       ],
@@ -117,7 +97,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
         'date_time' => $activity['activity_date_time'],
         'attachments' => $attachments,
         'mode_name' => CRM_Supportcase_Utils_Email::FORWARD_MODE,
-        'emails' => $this->getPrefillEmails($activity['id'], $fromContact['email_id'], $toContactsEmailIds),
+        'emails' => $replyForwardPrefillEmails,
         'maxFileSize' => $maxFileSize,
         'attachmentsLimit' => $attachmentsLimit,
       ]
@@ -126,30 +106,29 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
 
   /**
    * @param $activityId
-   * @param $fromContactEmailId
-   * @param $toContactsEmailIds
+   * @param $ccEmailsData
+   * @param $toEmailsData
+   * @param $fromEmailsData
+   * @return array
    */
-  private function getPrefillEmails($activityId, $fromContactEmailId, $toContactsEmailIds) {
-    $mailUtilsMessage = CRM_Supportcase_Utils_Activity::getRelatedMailUtilsMessage($activityId);
-    $mainEmail =  CRM_Supportcase_Utils_Activity::getMainEmail($activityId);
-    $fromEmails = CRM_Supportcase_Utils_Email::getEmailsByIds([$fromContactEmailId]);
-    $toEmails = CRM_Supportcase_Utils_Email::getEmailsByIds($toContactsEmailIds);
-    $mainEmailId = CRM_Supportcase_Utils_Email::getEmailId($mainEmail);//TODO what need to do if this email doesn't exist? Or has a couple of values?
-
+  private function getPrefillEmails($activityId, $ccEmailsData, $toEmailsData, $fromEmailsData) {
+    $mainEmailId =  CRM_Supportcase_Utils_Activity::getMainEmailId($activityId);
     $toEmailIds = [];
-    foreach ($toEmails as $emailId => $email) {
-      if ($email != $mainEmail) {
+
+    foreach ($toEmailsData['email_ids'] as $emailId) {
+      if ($emailId != $mainEmailId) {
         $toEmailIds[] = $emailId;
       }
     }
-    foreach ($fromEmails as $emailId => $email) {
-      if ($email != $mainEmail) {
+
+    foreach ($fromEmailsData['email_ids'] as $emailId) {
+      if ($emailId != $mainEmailId) {
         $toEmailIds[] = $emailId;
       }
     }
 
     return [
-      'cc' => CRM_Supportcase_Utils_MailutilsMessageParty::getCcEmailIds($mailUtilsMessage['id']),
+      'cc' => $ccEmailsData['coma_separated_email_ids'],
       'from' => $mainEmailId,
       'to' => implode(',', $toEmailIds),
     ];
@@ -157,14 +136,14 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
 
   /**
    * @param $activity
-   * @param $fromContact
+   * @param $fromContactDisplayName
    * @return string
    */
-  private function prepareReplyBody($activity, $fromContact) {
+  private function prepareReplyBody($activity, $fromContactDisplayName) {
     $messageNewLines = "\n \n \n";
     $date = CRM_Utils_Date::customFormat($activity['activity_date_time']);
     $mailUtilsRenderedTemplate = CRM_Supportcase_Utils_Activity::getRenderedTemplateRelatedToActivity($activity['id']);
-    $message = "{$messageNewLines}{$mailUtilsRenderedTemplate}\n\nOn {$date} {$fromContact['display_name']} wrote:";
+    $message = "{$messageNewLines}{$mailUtilsRenderedTemplate}\n\nOn {$date} {$fromContactDisplayName} wrote:";
     $quote = trim(CRM_Utils_String::stripAlternatives($activity['details']));
     $quote = str_replace("\r", "", $quote);
     $quote = str_replace("\n", "\n> ", $quote);
@@ -212,6 +191,40 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     }
 
     return $attachments;
+  }
+
+  /**
+   * @param $messageParties
+   * @return array
+   */
+  private function prepareEmailsData($messageParties) {
+    $emailLabels = [];
+    $emailIds = [];
+    $emailsData = [];
+    foreach ($messageParties as $messageParty) {
+      $emailData = CRM_Supportcase_Utils_Email::getEmailContactData($messageParty['email'], $messageParty['contact_id']);
+      if (empty($emailData)) {
+        continue;
+      }
+      $emailLabel = CRM_Supportcase_Utils_EmailSearch::prepareEmailLabel($emailData['contact_display_name'], $emailData['email']);
+      $emailLabels[] = $emailLabel;
+      $emailIds[] = $emailData['id'];
+      $emailsData[] = [
+        'id' => $emailData['id'],
+        'label' => $emailLabel,
+        'contact_id' => $emailData['contact_id'],
+        'contact_display_name' => $emailData['contact_display_name'],
+        'email' => $emailData['email'],
+      ];
+    }
+
+    return [
+      'email_labels' => $emailLabels,
+      'coma_separated_email_labels' => implode(', ', $emailLabels),
+      'email_ids' => $emailIds,
+      'coma_separated_email_ids' => implode(',', $emailIds),
+      'emails_data' => $emailsData,
+    ];
   }
 
 }

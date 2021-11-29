@@ -187,4 +187,15 @@ class CRM_Supportcase_Utils_Activity {
     return $mailutilsTemplate['message'];
   }
 
+  /**
+   * @param $activityId
+   * @return int|null
+   */
+  public static function getMainEmailId($activityId) {
+    $mainEmail =  CRM_Supportcase_Utils_Activity::getMainEmail($activityId);
+
+    //TODO get it from from email address
+    return CRM_Supportcase_Utils_Email::getEmailId($mainEmail);
+  }
+
 }

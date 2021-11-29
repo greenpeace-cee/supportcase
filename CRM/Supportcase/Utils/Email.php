@@ -170,4 +170,38 @@ class CRM_Supportcase_Utils_Email {
     return null;
   }
 
+  /**
+   * @param $email
+   * @param $contactId
+   * @return array
+   */
+  public static function getEmailContactData($email, $contactId) {
+    if (empty($email) || empty($contactId)) {
+      return [];
+    }
+
+    try {
+      $emails = civicrm_api3('Email', 'get', [
+        'sequential' => 1,
+        'return' => ["contact_id.display_name", 'email', 'id', 'contact_id'],
+        'email' => $email,
+        'contact_id' => $contactId,
+        'options' => ['limit' => 1],
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      return [];
+    }
+
+    foreach ($emails['values'] as $email) {
+      return [
+        'contact_display_name' => $email["contact_id.display_name"],
+        'email' => $email["email"],
+        'contact_id' => $email["contact_id"],
+        'id' => $email["id"],
+      ];
+    }
+
+    return [];
+  }
+
 }

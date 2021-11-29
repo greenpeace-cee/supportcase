@@ -12,7 +12,7 @@
                         <ng-form name="activityEmailForm">
                             <div class="crm-accordion-header crm-master-accordion-header">
                                 <div class="com__email-item-accordion-head">
-                                    <div>From: {{activity.view_mode.from_contact.email_label}}</div>
+                                    <div>From: {{activity.view_mode.from_contact_email_label}}</div>
                                     <div>{{formatDateAndTime(activity.view_mode.date_time, true)}}</div>
                                 </div>
                             </div>
@@ -27,15 +27,15 @@
                                                     <div class="com__email-info-rows-wrap">
                                                         <div class="com__email-info-row">
                                                             <div class="com__email-info-row-name">From:</div>
-                                                            <div class="com__email-info-row-value">{{activity.view_mode.from_contact.email_label}}</div>
+                                                            <div class="com__email-info-row-value">{{activity.view_mode.from_contact_email_label}}</div>
                                                         </div>
                                                         <div class="com__email-info-row">
                                                             <div class="com__email-info-row-name">To:</div>
-                                                            <div class="com__email-info-row-value">{{activity.view_mode.to_contact_email_labels}}</div>
+                                                            <div class="com__email-info-row-value">{{activity.view_mode.to_contact_email_label}}</div>
                                                         </div>
                                                         <div class="com__email-info-row">
                                                             <div class="com__email-info-row-name">CC:</div>
-                                                            <div class="com__email-info-row-value">{{activity.view_mode.cc_contact_email_labels}}</div>
+                                                            <div class="com__email-info-row-value">{{activity.view_mode.cc_contact_email_label}}</div>
                                                         </div>
                                                         <div class="com__email-info-row">
                                                             <div class="com__email-info-row-name">Subject:</div>
