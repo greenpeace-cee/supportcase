@@ -609,6 +609,7 @@
                         if (result.is_error === 1) {
                             console.error('Activity get error:');
                             console.error(result.error_message);
+                            CRM.status('Error via getting emails', 'error');
                         } else {
                             var emailActivities = [];
                             var readEmails = cookieService.getReadEmails();
