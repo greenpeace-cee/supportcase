@@ -133,7 +133,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
         ->addValue('mailutils_thread_id', $this->params['email']['mailutilsMessage']['mailutils_thread_id'])
         ->addValue('mail_setting_id', $this->params['email']['mailutilsMessage']['mail_setting_id'])
         ->addValue('in_reply_to', $this->params['email']['mailutilsMessage']['message_id'])
-        ->addValue('message_id', 'TODO')//TODO: remove dummy data // this remove in future//   \ezcMailTools::generateMessageId('cat@greenpeace.org');
+        ->addValue('message_id', \ezcMailTools::generateMessageId($this->params['fromEmails'][0]['email']))
         ->addValue('headers', 'TODO')//TODO: remove dummy data
         ->execute()
         ->first();
