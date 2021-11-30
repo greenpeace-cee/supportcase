@@ -118,25 +118,46 @@ class CRM_Supportcase_Utils_Activity {
   }
 
   /**
-   * Get main email from settings related to this activity
+   * Get main email from settings
    *
-   * @param $activityId
-   * @return string
+   * @param $mailUtilsMessageSettingId
+   * @return int|null
    */
-  public static function getMainEmail($activityId) {
-    $mailUtilsMessage = CRM_Supportcase_Utils_Activity::getRelatedMailUtilsMessage($activityId);
-
-    if (empty($mailUtilsMessage)) {
-      return '';
+  public static function getMainEmailId($mailUtilsMessageSettingId) {
+    if (empty($mailUtilsMessageSettingId)) {
+      return null;
     }
 
-    $mailUtilsSettings = CRM_Supportcase_Utils_MailutilsMessage::getRelatedMailUtilsSetting($mailUtilsMessage['mail_setting_id']);
-
-    if (empty($mailUtilsSettings['smtp_username'])) {
-      return '';
+    $mailUtilsSettings = CRM_Supportcase_Utils_MailutilsMessage::getRelatedMailUtilsSetting($mailUtilsMessageSettingId);
+    if (empty($mailUtilsSettings)) {
+      return null;
     }
 
-    return $mailUtilsSettings['smtp_username'];
+    try {
+      $fromEmailAddress = civicrm_api3('OptionValue', 'getsingle', [
+        'sequential' => 1,
+        'option_group_id' => "from_email_address",
+        'value' => $mailUtilsSettings['from_email_address_id'],
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      return null;
+    }
+
+    $email = CRM_Utils_Mail::pluckEmailFromHeader($fromEmailAddress['label']);
+    $fromArray = explode('"', $fromEmailAddress['label']);
+    $contactDisplayName = $fromArray[1] ?? NULL;
+
+    try {
+      $email = civicrm_api3('Email', 'getsingle', [
+        'sequential' => 1,
+        'email' => $email,
+        'contact_id.display_name' => $contactDisplayName,
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      return null;
+    }
+
+    return $email['id'];
   }
 
   /**
@@ -185,17 +206,6 @@ class CRM_Supportcase_Utils_Activity {
     }
 
     return $mailutilsTemplate['message'];
-  }
-
-  /**
-   * @param $activityId
-   * @return int|null
-   */
-  public static function getMainEmailId($activityId) {
-    $mainEmail =  CRM_Supportcase_Utils_Activity::getMainEmail($activityId);
-
-    //TODO get it from from email address
-    return CRM_Supportcase_Utils_Email::getEmailId($mainEmail);
   }
 
 }

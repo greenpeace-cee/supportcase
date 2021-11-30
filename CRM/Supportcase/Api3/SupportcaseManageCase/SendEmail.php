@@ -183,11 +183,10 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
       throw new api_Exception('Error. Invalid mode. Mode can be: "' . implode('" , "', CRM_Supportcase_Utils_Email::getAvailableModes()) . '"', 'error_invalid_mode');
     }
 
-    try {
-      $case = civicrm_api3('Case', 'getsingle', [
-        'id' => $params['case_id'],
-      ]);
-    } catch (CiviCRM_API3_Exception $e) {
+    $case = new CRM_Case_BAO_Case();
+    $case->id = $params['case_id'];
+    $caseExistence = $case->find(TRUE);
+    if (empty($caseExistence)) {
       throw new api_Exception('Case does not exist.', 'case_does_not_exist');
     }
 
@@ -243,13 +242,15 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
         'mode' => $params['mode'],
         'fromEmails' => $fromEmails,
         'ccEmails' => $ccEmails,
-        'body' => $bodyText,
+        'body' => json_encode([
+          'html' => $params['body'],
+          'text' => $bodyText,
+        ]),
         'activity' => $emailActivity,
         'subject' => $params['subject'],
         'mailutilsMessage' => $mailutilsMessage,
         'forwardFileIds' => $params['forward_file_ids'],
       ],
-      'case' => $case,
       'caseId' => $params['case_id'],
     ];
   }

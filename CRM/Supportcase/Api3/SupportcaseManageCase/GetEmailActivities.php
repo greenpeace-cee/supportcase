@@ -29,8 +29,14 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
         if (empty($mailUtilsMessage)) {
           throw new api_Exception('Error. Cannot get MailUtilsMessage for activity id=' . $activity['id'], 'error_getting_mailutils_message');
         }
+
+        $mainEmailId =  CRM_Supportcase_Utils_Activity::getMainEmailId($mailUtilsMessage['mail_setting_id']);
+        if (empty($mainEmailId)) {
+          throw new api_Exception('Error. Cannot get main email for activity id=' . $activity['id'], 'error_getting_main_email');
+        }
+
         try {
-          $preparedActivities[] = $this->prepareActivity($activity, $mailUtilsMessage);
+          $preparedActivities[] = $this->prepareActivity($activity, $mailUtilsMessage, $mainEmailId);
         } catch (CiviCRM_API3_Exception $e) {
           throw new api_Exception('Error. Cannot get email activity data id=' . $activity['id'], 'error_getting_email_activity_data');
         }
@@ -44,7 +50,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
    * @param $activity
    * @return array
    */
-  private function prepareActivity($activity, $mailUtilsMessage) {
+  private function prepareActivity($activity, $mailUtilsMessage, $mainEmailId) {
     $ccPartyTypeId = CRM_Supportcase_Utils_PartyType::getCcPartyTypeId();
     $toPartyTypeId = CRM_Supportcase_Utils_PartyType::getToPartyTypeId();
     $fromPartyTypeId = CRM_Supportcase_Utils_PartyType::getFromPartyTypeId();
@@ -62,7 +68,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     $fromContactDisplayName = !empty($fromEmailsData[0]['contact_display_name']) ? $fromEmailsData[0]['contact_display_name'] : '';
     $replyForwardBody = $this->prepareReplyBody($activity, $fromContactDisplayName);
     $attachments = $this->prepareAttachments($activity);
-    $replyForwardPrefillEmails = $this->getPrefillEmails($activity['id'], $ccEmailsData, $toEmailsData, $fromEmailsData);
+    $replyForwardPrefillEmails = $this->getPrefillEmails($ccEmailsData, $toEmailsData, $fromEmailsData, $mainEmailId);
 
     return [
       'id' => $activity['id'],
@@ -105,14 +111,12 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
   }
 
   /**
-   * @param $activityId
    * @param $ccEmailsData
    * @param $toEmailsData
    * @param $fromEmailsData
    * @return array
    */
-  private function getPrefillEmails($activityId, $ccEmailsData, $toEmailsData, $fromEmailsData) {
-    $mainEmailId =  CRM_Supportcase_Utils_Activity::getMainEmailId($activityId);
+  private function getPrefillEmails($ccEmailsData, $toEmailsData, $fromEmailsData, $mainEmailId) {
     $toEmailIds = [];
 
     foreach ($toEmailsData['email_ids'] as $emailId) {
@@ -170,7 +174,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     }
 
     return [
-      'case_id' => $params['case_id']
+      'case_id' => $params['case_id'],
     ];
   }
 
