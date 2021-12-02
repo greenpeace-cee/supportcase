@@ -133,25 +133,18 @@ class CRM_Supportcase_Utils_Activity {
       return null;
     }
 
-    try {
-      $fromEmailAddress = civicrm_api3('OptionValue', 'getsingle', [
-        'sequential' => 1,
-        'option_group_id' => "from_email_address",
-        'value' => $mailUtilsSettings['from_email_address_id'],
-      ]);
-    } catch (CiviCRM_API3_Exception $e) {
+    $fromEmailLabel = CRM_Supportcase_Utils_OptionValue::getLabelByValue($mailUtilsSettings['from_email_address_id'], 'from_email_address');
+    if (empty($fromEmailLabel)) {
       return null;
     }
 
-    $email = CRM_Utils_Mail::pluckEmailFromHeader($fromEmailAddress['label']);
-    $fromArray = explode('"', $fromEmailAddress['label']);
-    $contactDisplayName = $fromArray[1] ?? NULL;
+    $email = CRM_Utils_Mail::pluckEmailFromHeader($fromEmailLabel);
 
     try {
       $email = civicrm_api3('Email', 'getsingle', [
         'sequential' => 1,
         'email' => $email,
-        'contact_id.display_name' => $contactDisplayName,
+        'options' => ['limit' => 1, 'sort' => "id ASC"],
       ]);
     } catch (CiviCRM_API3_Exception $e) {
       return null;
@@ -206,6 +199,19 @@ class CRM_Supportcase_Utils_Activity {
     }
 
     return $mailutilsTemplate['message'];
+  }
+
+  /**
+   * @param $activityDetails
+   * @return array
+   */
+  public static function getEmailBody($activityDetails) {
+    $emailBody = json_decode($activityDetails, true);
+
+    return [
+      'html' => (!empty($emailBody) && !empty($emailBody['html'])) ? $emailBody['html'] : '',
+      'text' => (!empty($emailBody) && !empty($emailBody['text'])) ? $emailBody['text'] : '',
+    ];
   }
 
 }

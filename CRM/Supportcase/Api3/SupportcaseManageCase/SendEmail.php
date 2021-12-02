@@ -54,21 +54,25 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
    * @return int
    */
   private function createActivity() {
-    $toContactIds = [];
+    $targetContactIds = [];
 
     foreach ($this->params['email']['toEmails'] as $emailData) {
-      $toContactIds[] = $emailData['contact_id'];
+      $targetContactIds[] = $emailData['contact_id'];
+    }
+    foreach ($this->params['email']['ccEmails'] as $emailData) {
+      if (!in_array($emailData['contact_id'], $targetContactIds)) {
+        $targetContactIds[] = $emailData['contact_id'];
+      }
     }
 
     try {
-      //TODO: save cc in activity
       $activity = civicrm_api3('Activity', 'create', [
         'source_contact_id' => $this->params['email']['fromEmails'][0]['contact_id'],
         'activity_type_id' => "Inbound Email",
         'subject' => $this->params['email']['subject'],
         'details' => $this->params['email']['body'],
         'status_id' => CRM_Supportcase_Utils_ActivityStatus::DRAFT_EMAIL,
-        'target_id' => $toContactIds,
+        'target_id' => $targetContactIds,// cc + to contacts - the same logic as in core
         'case_id' => $this->params['caseId'],
       ]);
     } catch (CiviCRM_API3_Exception $e) {
@@ -125,6 +129,9 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
    * @return int
    */
   private function createMailutilsMessage($activityId) {
+    $emailMessageId = \ezcMailTools::generateMessageId($this->params['email']['fromEmails'][0]['email']);
+    $headers = $this->generateHeaders($this->params['email']['mailutilsMessage']['mailutils_thread_id'], $emailMessageId);
+
     try {
       $mailutilsMessage = \Civi\Api4\MailutilsMessage::create()
         ->addValue('activity_id', $activityId)
@@ -133,8 +140,8 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
         ->addValue('mailutils_thread_id', $this->params['email']['mailutilsMessage']['mailutils_thread_id'])
         ->addValue('mail_setting_id', $this->params['email']['mailutilsMessage']['mail_setting_id'])
         ->addValue('in_reply_to', $this->params['email']['mailutilsMessage']['message_id'])
-        ->addValue('message_id', \ezcMailTools::generateMessageId($this->params['fromEmails'][0]['email']))
-        ->addValue('headers', 'TODO')//TODO: remove dummy data
+        ->addValue('message_id', $emailMessageId)
+        ->addValue('headers', $headers)
         ->execute()
         ->first();
     } catch (Exception $e) {
@@ -164,6 +171,33 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
     }
 
     return $messageParty;
+  }
+
+  /**
+   * @param $mailutilsThreadId
+   * @param $emailMessageId
+   * @return string
+   */
+  private function generateHeaders($mailutilsThreadId, $emailMessageId) {
+    $referenceList = [$emailMessageId];
+    if (empty($mailutilsThreadId)) {
+      return json_encode([
+        "References" => implode(' ', $referenceList)
+      ]);
+    }
+
+    $mailutilsMessages = \Civi\Api4\MailutilsMessage::get()
+      ->addSelect('*')
+      ->addWhere('mailutils_thread_id', '=', $mailutilsThreadId)
+      ->setLimit(1)
+      ->execute();
+    foreach ($mailutilsMessages as $item) {
+      $referenceList[] = $item['message_id'];
+    }
+
+    return json_encode([
+      "References" => implode(' ', $referenceList)
+    ]);
   }
 
   /**

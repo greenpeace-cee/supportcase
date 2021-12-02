@@ -69,6 +69,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     $replyForwardBody = $this->prepareReplyBody($activity, $fromContactDisplayName);
     $attachments = $this->prepareAttachments($activity);
     $replyForwardPrefillEmails = $this->getPrefillEmails($ccEmailsData, $toEmailsData, $fromEmailsData, $mainEmailId);
+    $emailBody = CRM_Supportcase_Utils_Activity::getEmailBody($activity['details']);
 
     return [
       'id' => $activity['id'],
@@ -76,7 +77,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
         'case_id' => $this->params['case_id'],
         'id' => $activity['id'],
         'subject' => $normalizedSubject,
-        'email_body' => CRM_Utils_String::purifyHTML(nl2br(trim(CRM_Utils_String::stripAlternatives($activity['details'])))),
+        'email_body' => CRM_Utils_String::purifyHTML(nl2br(trim(CRM_Utils_String::stripAlternatives($emailBody['html'])))),
         'date_time' => $activity['activity_date_time'],
         'attachments' => $attachments,
         'from_contact_email_label' => $fromEmailsData['coma_separated_email_labels'],
@@ -144,11 +145,12 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
    * @return string
    */
   private function prepareReplyBody($activity, $fromContactDisplayName) {
+    $emailBody = CRM_Supportcase_Utils_Activity::getEmailBody($activity['details']);
     $messageNewLines = "\n \n \n";
     $date = CRM_Utils_Date::customFormat($activity['activity_date_time']);
     $mailUtilsRenderedTemplate = CRM_Supportcase_Utils_Activity::getRenderedTemplateRelatedToActivity($activity['id']);
     $message = "{$messageNewLines}{$mailUtilsRenderedTemplate}\n\nOn {$date} {$fromContactDisplayName} wrote:";
-    $quote = trim(CRM_Utils_String::stripAlternatives($activity['details']));
+    $quote = trim(CRM_Utils_String::stripAlternatives($emailBody['html']));
     $quote = str_replace("\r", "", $quote);
     $quote = str_replace("\n", "\n> ", $quote);
     $quote = str_replace('> >', '>>', $quote);
