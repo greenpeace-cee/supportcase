@@ -1,6 +1,6 @@
 <div ng-if="emailActivities.length > 0">
     <div class="crm-accordion-wrapper spc__accordion spc--header-white spc--size-little">
-        <div class="crm-accordion-header crm-master-accordion-header">
+        <div class="crm-accordion-header crm-master-accordion-header" ng-if="smsActivities.length > 0">
             <span>Email Messages {{'(' + emailActivities['length'] + ')'}}:</span>
         </div>
         <div class="crm-accordion-body">
@@ -73,14 +73,14 @@
                                                             <button class=" spc__button spc--height-little" ng-click="toggleHeight(activity.id)">
                                                                 <span class="ui-button-icon ui-icon fa-expand"></span>
                                                                 <span class="ui-button-icon-space"> </span>
-                                                                <span>To full email body</span>
+                                                                <span>Expand Message</span>
                                                             </button>
                                                         </div>
                                                         <div class="com__message-toggle-height-to-part">
                                                             <button class=" spc__button spc--height-little" ng-click="toggleHeight(activity.id)">
                                                                 <span class="ui-button-icon ui-icon fa-compress"></span>
                                                                 <span class="ui-button-icon-space"> </span>
-                                                                <span>Show part email body</span>
+                                                                <span>Collapse Message</span>
                                                             </button>
                                                         </div>
                                                         <div class="com__email-info-panel-date">{{formatDateAndTime(activity.view_mode.date_time, true)}}</div>

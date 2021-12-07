@@ -207,11 +207,19 @@ class CRM_Supportcase_Utils_Activity {
    */
   public static function getEmailBody($activityDetails) {
     $emailBody = json_decode($activityDetails, true);
-
-    return [
-      'html' => (!empty($emailBody) && !empty($emailBody['html'])) ? $emailBody['html'] : '',
-      'text' => (!empty($emailBody) && !empty($emailBody['text'])) ? $emailBody['text'] : '',
-    ];
+    // body can be either JSON, or a multipart email
+    if (is_array($emailBody)) {
+      return [
+        'html' => (!empty($emailBody) && !empty($emailBody['html'])) ? $emailBody['html'] : '',
+        'text' => (!empty($emailBody) && !empty($emailBody['text'])) ? $emailBody['text'] : '',
+      ];
+    }
+    else {
+      return [
+        'html' => CRM_Utils_String::stripAlternatives($activityDetails),
+        'text' => CRM_Utils_String::htmlToText(CRM_Utils_String::stripAlternatives($activityDetails)),
+      ];
+    }
   }
 
 }

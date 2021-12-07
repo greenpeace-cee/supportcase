@@ -146,7 +146,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
    */
   private function prepareReplyBody($activity, $fromContactDisplayName) {
     $emailBody = CRM_Supportcase_Utils_Activity::getEmailBody($activity['details']);
-    $messageNewLines = "\n \n \n";
+    $messageNewLines = "\n\n";
     $date = CRM_Utils_Date::customFormat($activity['activity_date_time']);
     $mailUtilsRenderedTemplate = CRM_Supportcase_Utils_Activity::getRenderedTemplateRelatedToActivity($activity['id']);
     $message = "{$messageNewLines}{$mailUtilsRenderedTemplate}\n\nOn {$date} {$fromContactDisplayName} wrote:";
