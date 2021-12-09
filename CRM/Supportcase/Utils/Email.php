@@ -183,7 +183,7 @@ class CRM_Supportcase_Utils_Email {
     try {
       $emails = civicrm_api3('Email', 'get', [
         'sequential' => 1,
-        'return' => ["contact_id.display_name", 'email', 'id', 'contact_id'],
+        'return' => ["contact_id.display_name", 'email', 'id', 'contact_id', "contact_id.contact_type"],
         'email' => $email,
         'contact_id' => $contactId,
         'options' => ['limit' => 1],
@@ -195,6 +195,7 @@ class CRM_Supportcase_Utils_Email {
     foreach ($emails['values'] as $email) {
       return [
         'contact_display_name' => $email["contact_id.display_name"],
+        'contact_type' => $email["contact_id.contact_type"],
         'email' => $email["email"],
         'contact_id' => $email["contact_id"],
         'id' => $email["id"],

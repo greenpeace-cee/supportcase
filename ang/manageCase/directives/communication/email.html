@@ -12,7 +12,10 @@
                         <ng-form name="activityEmailForm">
                             <div class="crm-accordion-header crm-master-accordion-header">
                                 <div class="com__email-item-accordion-head">
-                                    <div>From: {{activity.view_mode.from_contact_email_label}}</div>
+                                    <div class="com__email-item-accordion-head-from-email">
+                                        <span ng-if="activity.view_mode.head_icon !== ''" class="com__email-item-accordion-head-from-email-ico ui-icon {{activity.view_mode.head_icon}}"></span>
+                                        <div>From: {{activity.view_mode.from_contact_email_label}}</div>
+                                    </div>
                                     <div>{{formatDateAndTime(activity.view_mode.date_time, true)}}</div>
                                 </div>
                             </div>
@@ -27,15 +30,36 @@
                                                     <div class="com__email-info-rows-wrap">
                                                         <div class="com__email-info-row">
                                                             <div class="com__email-info-row-name">From:</div>
-                                                            <div class="com__email-info-row-value">{{activity.view_mode.from_contact_email_label}}</div>
+                                                            <div class="com__email-info-row-value">
+                                                                <div class="com__contact-email-wrap">
+                                                                    <a title="go to the contact '{{emailData.contact_display_name}}'" href="{{emailData.contact_link}}" target="_blank" class="com__contact-email-item" ng-repeat="emailData in activity.view_mode.from_contact_data_emails">
+                                                                        <span class="com__contact-email-item-icon {{emailData.icon}}"></span>
+                                                                        <span class="com__contact-email-item-label">{{emailData.label}}</span>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <div class="com__email-info-row">
                                                             <div class="com__email-info-row-name">To:</div>
-                                                            <div class="com__email-info-row-value">{{activity.view_mode.to_contact_email_label}}</div>
+                                                            <div class="com__email-info-row-value">
+                                                                <div class="com__contact-email-wrap">
+                                                                    <a title="go to the contact '{{emailData.contact_display_name}}'" href="{{emailData.contact_link}}" target="_blank" class="com__contact-email-item" ng-repeat="emailData in activity.view_mode.to_contact_data_emails">
+                                                                        <span class="com__contact-email-item-icon {{emailData.icon}}"></span>
+                                                                        <span class="com__contact-email-item-label">{{emailData.label}}</span>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <div class="com__email-info-row">
                                                             <div class="com__email-info-row-name">CC:</div>
-                                                            <div class="com__email-info-row-value">{{activity.view_mode.cc_contact_email_label}}</div>
+                                                            <div class="com__email-info-row-value">
+                                                                <div class="com__contact-email-wrap">
+                                                                    <a title="go to the contact '{{emailData.contact_display_name}}'" href="{{emailData.contact_link}}" target="_blank" class="com__contact-email-item" ng-repeat="emailData in activity.view_mode.cc_contact_data_emails">
+                                                                        <span class="com__contact-email-item-icon {{emailData.icon}}"></span>
+                                                                        <span class="com__contact-email-item-label">{{emailData.label}}</span>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <div class="com__email-info-row">
                                                             <div class="com__email-info-row-name">Subject:</div>
@@ -165,7 +189,7 @@
                                                                         <div class="com__templates">
                                                                             <input class="spc__input spc--single-select" mailutils-template on-select="$broadcast('insert:reply', token.name)" tabindex="-1" style="z-index:1">
                                                                         </div>
-                                                                        <textarea crm-ui-id="email-reply-{{activity.reply_mode.id}}" crm-ui-richtext crm-ui-insert-rx="insert:reply"
+                                                                        <textarea crm-ui-id="email-reply-{{activity.reply_mode.id}}" crm-ui-richtext crm-ui-insert-rx="insert:reply" editor-focus-on-load
                                                                                   name="reply" ng-model="activity.reply_mode.email_body"
                                                                                   style="height: 500px" data-preset="civimail"></textarea>
                                                                     </div>
@@ -254,7 +278,7 @@
                                                                         <div class="com__templates">
                                                                             <input class="spc__input spc--single-select" mailutils-template on-select="$broadcast('insert:reply', token.name)" tabindex="-1" style="z-index:1">
                                                                         </div>
-                                                                        <textarea crm-ui-id="email-reply-{{activity.forward_mode.id}}" crm-ui-richtext crm-ui-insert-rx="insert:reply"
+                                                                        <textarea crm-ui-id="email-reply-{{activity.forward_mode.id}}" crm-ui-richtext crm-ui-insert-rx="insert:reply" editor-focus-on-load
                                                                                   name="forward" ng-model="activity.forward_mode.email_body"
                                                                                   style="height: 500px" data-preset="civimail"></textarea>
                                                                     </div>

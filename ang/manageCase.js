@@ -1349,6 +1349,17 @@
         };
     });
 
+    angular.module(moduleName).directive('editorFocusOnLoad', function() {
+        return {
+            link: function(scope, element) {
+                // TODO: to remove that hack we can make custom editor where can set 'focus on load'
+                setTimeout(function() {
+                    CRM.wysiwyg.focus(element);
+                }, 1500);
+            }
+        };
+    })
+
     angular.module(moduleName).directive("selectEmail", function() {
         return {
             restrict: "E",

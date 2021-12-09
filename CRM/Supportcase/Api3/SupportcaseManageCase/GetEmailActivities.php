@@ -65,11 +65,12 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     $normalizedSubject = CRM_Supportcase_Utils_Email::normalizeEmailSubject($activity['subject']);
     $replySubject = CRM_Supportcase_Utils_Email::addSubjectPrefix($normalizedSubject, CRM_Supportcase_Utils_Email::REPLY_MODE);
     $forwardSubject = CRM_Supportcase_Utils_Email::addSubjectPrefix($normalizedSubject, CRM_Supportcase_Utils_Email::FORWARD_MODE);
-    $fromContactDisplayName = !empty($fromEmailsData[0]['contact_display_name']) ? $fromEmailsData[0]['contact_display_name'] : '';
-    $replyForwardBody = $this->prepareReplyBody($activity, $fromContactDisplayName);
+    $fromEmailLabel = !empty($fromEmailsData['emails_data'][0]['label']) ? $fromEmailsData['emails_data'][0]['label'] : '';
+    $replyForwardBody = $this->prepareReplyBody($activity, $fromEmailLabel);
     $attachments = $this->prepareAttachments($activity);
     $replyForwardPrefillEmails = $this->getPrefillEmails($ccEmailsData, $toEmailsData, $fromEmailsData, $mainEmailId);
     $emailBody = CRM_Supportcase_Utils_Activity::getEmailBody($activity['details']);
+    $headIcon = $this->getHeadIco($mailUtilsMessage);
 
     return [
       'id' => $activity['id'],
@@ -77,12 +78,16 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
         'case_id' => $this->params['case_id'],
         'id' => $activity['id'],
         'subject' => $normalizedSubject,
+        'head_icon' => $headIcon,
         'email_body' => CRM_Utils_String::purifyHTML(nl2br(trim(CRM_Utils_String::stripAlternatives($emailBody['html'])))),
         'date_time' => $activity['activity_date_time'],
         'attachments' => $attachments,
         'from_contact_email_label' => $fromEmailsData['coma_separated_email_labels'],
         'to_contact_email_label' => $toEmailsData['coma_separated_email_labels'],
         'cc_contact_email_label' => $ccEmailsData['coma_separated_email_labels'],
+        'from_contact_data_emails' => $fromEmailsData['emails_data'],
+        'to_contact_data_emails' => $toEmailsData['emails_data'],
+        'cc_contact_data_emails' => $ccEmailsData['emails_data'],
       ],
       'reply_mode' => [
         'id' => $activity['id'],
@@ -141,15 +146,16 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
 
   /**
    * @param $activity
-   * @param $fromContactDisplayName
+   * @param $fromEmailLabel
    * @return string
    */
-  private function prepareReplyBody($activity, $fromContactDisplayName) {
+  private function prepareReplyBody($activity, $fromEmailLabel) {
+    $fromEmailLabel = CRM_Supportcase_Utils_EmailSearch::replaceHtmlSymbolInEmailLabel($fromEmailLabel);
     $emailBody = CRM_Supportcase_Utils_Activity::getEmailBody($activity['details']);
     $messageNewLines = "\n \n \n";
     $date = CRM_Utils_Date::customFormat($activity['activity_date_time']);
     $mailUtilsRenderedTemplate = CRM_Supportcase_Utils_Activity::getRenderedTemplateRelatedToActivity($activity['id']);
-    $message = "{$messageNewLines}{$mailUtilsRenderedTemplate}\n\nOn {$date} {$fromContactDisplayName} wrote:";
+    $message = "{$messageNewLines}{$mailUtilsRenderedTemplate}\n\nOn {$date} {$fromEmailLabel} wrote:";
     $quote = trim(CRM_Utils_String::stripAlternatives($emailBody['html']));
     $quote = str_replace("\r", "", $quote);
     $quote = str_replace("\n", "\n> ", $quote);
@@ -212,6 +218,16 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
       if (empty($emailData)) {
         continue;
       }
+
+      $icon = '';
+      if ($emailData['contact_type'] == 'Individual') {
+        $icon = 'com--individual-icon';
+      } elseif ($emailData['contact_type'] == 'Organization') {
+        $icon = 'com--organization-icon';
+      } elseif ($emailData['contact_type'] == 'Household') {
+        $icon = 'com--household-icon';
+      }
+
       $emailLabel = CRM_Supportcase_Utils_EmailSearch::prepareEmailLabel($emailData['contact_display_name'], $emailData['email']);
       $emailLabels[] = $emailLabel;
       $emailIds[] = $emailData['id'];
@@ -219,8 +235,14 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
         'id' => $emailData['id'],
         'label' => $emailLabel,
         'contact_id' => $emailData['contact_id'],
+        'contact_type' => $emailData['contact_type'],
         'contact_display_name' => $emailData['contact_display_name'],
         'email' => $emailData['email'],
+        'contact_link' => CRM_Utils_System::url('civicrm/contact/view/', [
+          'reset' => '1',
+          'cid' => $emailData['contact_id'],
+        ]),
+        'icon' => $icon,
       ];
     }
 
@@ -231,6 +253,17 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
       'coma_separated_email_ids' => implode(',', $emailIds),
       'emails_data' => $emailsData,
     ];
+  }
+
+  /**
+   * @param $mailUtilsMessage
+   * @return string
+   */
+  private function getHeadIco($mailUtilsMessage) {
+    $headIcon = '';
+    //TODO: 'fa-inbox' and 'fa-reply'
+
+    return $headIcon;
   }
 
 }

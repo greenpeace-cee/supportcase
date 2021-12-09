@@ -99,4 +99,18 @@ class CRM_Supportcase_Utils_EmailSearch {
     return $contactDisplayName . '<' . $email . '>';
   }
 
+  /**
+   * @param $emailLabel
+   * @return string
+   */
+  public static function replaceHtmlSymbolInEmailLabel($emailLabel) {
+    if (empty($emailLabel)) {
+      return '';
+    }
+    $emailLabel = str_replace("<", "&lt;", $emailLabel);
+    $emailLabel = str_replace(">", "&gt;", $emailLabel);
+
+    return $emailLabel;
+  }
+
 }
