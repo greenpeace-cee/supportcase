@@ -182,21 +182,20 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
     $referenceList = [$emailMessageId];
     if (empty($mailutilsThreadId)) {
       return json_encode([
-        "References" => implode(' ', $referenceList)
+        "References" => '<' . implode('> <', $referenceList) . '>',
       ]);
     }
 
     $mailutilsMessages = \Civi\Api4\MailutilsMessage::get()
       ->addSelect('*')
       ->addWhere('mailutils_thread_id', '=', $mailutilsThreadId)
-      ->setLimit(1)
       ->execute();
     foreach ($mailutilsMessages as $item) {
       $referenceList[] = $item['message_id'];
     }
 
     return json_encode([
-      "References" => implode(' ', $referenceList)
+      "References" => '<' . implode('> <', $referenceList) . '>',
     ]);
   }
 
