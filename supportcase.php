@@ -1,6 +1,8 @@
 <?php
 
 require_once 'supportcase.civix.php';
+
+use Civi\Api4\CiviCase;
 use CRM_Supportcase_ExtensionUtil as E;
 
 /**
@@ -171,5 +173,24 @@ function supportcase_civicrm_permission(&$permissions) {
 function supportcase_civicrm_alterAPIPermissions($entity, $action, &$params, &$permissions) {
   if (in_array(strtolower($entity), ['case_lock', 'supportcase_manage_case', 'supportcase_quick_action'])) {
     $permissions[$entity][$action] = ['access support cases'];
+  }
+}
+
+function supportcase_civicrm_links($op, $objectName, $objectId, &$links, &$mask, &$values) {
+  if ($objectName == 'Case' && $op == 'case.selector.actions') {
+    if (empty($objectId) || empty($links[0]['url']) || $links[0]['url'] != 'civicrm/contact/view/case') {
+      return;
+    }
+    $isSupportCase = CiviCase::get(FALSE)
+      ->selectRowCount()
+      ->addWhere('id', '=', $objectId)
+      ->addWhere('case_type_id:name', '=', 'support_case')
+      ->execute()
+      ->count();
+    if ($isSupportCase) {
+      $links[0]['url'] = 'civicrm/supportcase/manage-case-angular-wrap';
+      $links[0]['qs'] = 'reset=1&case_id=%%id%%';
+      $links[0]['target'] = '_blank';
+    }
   }
 }

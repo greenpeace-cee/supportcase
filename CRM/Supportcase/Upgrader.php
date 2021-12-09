@@ -100,4 +100,11 @@ class CRM_Supportcase_Upgrader extends CRM_Supportcase_Upgrader_Base {
     return TRUE;
   }
 
+  public function upgrade_0006() {
+    $this->ctx->log->info('Applying update 0006. Install wysiwyg_presets.');
+    (new CRM_Supportcase_Install_Entity_OptionValue())->createAll();
+    (new CRM_Supportcase_Install_Entity_WysiwygPreset())->createAll();
+    return TRUE;
+  }
+
 }

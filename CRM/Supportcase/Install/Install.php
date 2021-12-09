@@ -19,6 +19,7 @@ class CRM_Supportcase_Install_Install {
     (new CRM_Supportcase_Install_Entity_Tag())->createAll();
     (new CRM_Supportcase_Install_Entity_Job())->createAll();
     (new CRM_Supportcase_Install_Entity_LocationType())->createAll();
+    (new CRM_Supportcase_Install_Entity_WysiwygPreset())->createAll();
   }
 
   /**
