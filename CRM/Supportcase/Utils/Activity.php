@@ -61,7 +61,7 @@ class CRM_Supportcase_Utils_Activity {
       return null;
     }
 
-    $mailutilsMessages = \Civi\Api4\MailutilsMessage::get()
+    $mailutilsMessages = \Civi\Api4\MailutilsMessage::get(FALSE)
       ->addSelect('*')
       ->addWhere('activity_id', '=', $activityId)
       ->setLimit(1)
@@ -173,7 +173,7 @@ class CRM_Supportcase_Utils_Activity {
       return [];
     }
 
-    $mailutilsTemplate = \Civi\Api4\MailutilsTemplate::get()
+    $mailutilsTemplate = \Civi\Api4\MailutilsTemplate::get(FALSE)
       ->addWhere('id', '=', $mailUtilsSetting['mailutils_template_id'])
       ->setLimit(1)
       ->execute()

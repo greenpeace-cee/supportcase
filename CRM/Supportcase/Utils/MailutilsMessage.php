@@ -11,7 +11,7 @@ class CRM_Supportcase_Utils_MailutilsMessage {
       return null;
     }
 
-    $mailutilsSettings = \Civi\Api4\MailutilsSetting::get()
+    $mailutilsSettings = \Civi\Api4\MailutilsSetting::get(FALSE)
       ->addWhere('mail_setting_id', '=', $mailSettingId)
       ->setLimit(1)
       ->execute();

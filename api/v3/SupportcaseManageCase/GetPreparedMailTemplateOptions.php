@@ -9,7 +9,7 @@
  */
 function civicrm_api3_supportcase_manage_case_get_prepared_mail_template_options($params) {
   try {
-    $mailutilsTemplates = civicrm_api4('MailutilsTemplate', 'get', []);
+    $mailutilsTemplates = civicrm_api4('MailutilsTemplate', 'get', ['checkPermissions' => FALSE]);
   } catch (CiviCRM_API3_Exception $e) {
     throw new api_Exception('MailutilsTemplate returns error: ' . $e->getMessage(), 'mailutils_template_error');
   }

@@ -12,7 +12,7 @@ class CRM_Supportcase_Utils_MailutilsMessageParty {
       return [];
     }
 
-    $messagePartyQuery = \Civi\Api4\MailutilsMessageParty::get()
+    $messagePartyQuery = \Civi\Api4\MailutilsMessageParty::get(FALSE)
       ->addSelect('*')
       ->addWhere('mailutils_message_id', '=', $mailutilsMessageId);
 
