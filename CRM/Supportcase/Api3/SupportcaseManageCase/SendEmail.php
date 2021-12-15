@@ -35,7 +35,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
     }
 
     try {
-      \Civi\Api4\MailutilsMessage::send()
+      \Civi\Api4\MailutilsMessage::send(FALSE)
         ->setMessageId($mailutilsMessage['id'])
         ->execute();
     } catch (Exception $e) {
@@ -133,7 +133,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
     $headers = $this->generateHeaders($this->params['email']['mailutilsMessage']['mailutils_thread_id'], $emailMessageId);
 
     try {
-      $mailutilsMessage = \Civi\Api4\MailutilsMessage::create()
+      $mailutilsMessage = \Civi\Api4\MailutilsMessage::create(FALSE)
         ->addValue('activity_id', $activityId)
         ->addValue('subject', $this->params['email']['subject'])
         ->addValue('body', $this->params['email']['body'])
@@ -158,7 +158,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
    */
   private function createMailutilsMessageParty($emailData, $mailutilsMessageId, $partyTypeId) {
     try {
-      $messageParty = \Civi\Api4\MailutilsMessageParty::create()
+      $messageParty = \Civi\Api4\MailutilsMessageParty::create(FALSE)
         ->addValue('mailutils_message_id', $mailutilsMessageId)
         ->addValue('contact_id', $emailData['contact_id'])
         ->addValue('party_type_id', $partyTypeId)
@@ -186,7 +186,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
       ]);
     }
 
-    $mailutilsMessages = \Civi\Api4\MailutilsMessage::get()
+    $mailutilsMessages = \Civi\Api4\MailutilsMessage::get(FALSE)
       ->addSelect('*')
       ->addWhere('mailutils_thread_id', '=', $mailutilsThreadId)
       ->execute();

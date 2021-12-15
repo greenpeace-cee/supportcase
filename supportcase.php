@@ -171,7 +171,7 @@ function supportcase_civicrm_permission(&$permissions) {
 }
 
 function supportcase_civicrm_alterAPIPermissions($entity, $action, &$params, &$permissions) {
-  if (in_array(strtolower($entity), ['case_lock', 'supportcase_manage_case', 'supportcase_quick_action'])) {
+  if (in_array(strtolower($entity), ['case_lock', 'supportcase_manage_case', 'supportcase_quick_action', 'supportcase_email'])) {
     $permissions[$entity][$action] = ['access support cases'];
   }
 }
