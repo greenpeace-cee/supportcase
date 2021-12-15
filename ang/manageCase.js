@@ -229,7 +229,7 @@
             scope: {model: "="},
             controller: function($scope, $element) {
                 $scope.ts = CRM.ts();
-                $scope.isShowNote = $scope.model['note'] !== '';
+                $scope.isShowNote = false;
                 $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
 
                 $scope.addNewNote = function(fieldName, mode) {

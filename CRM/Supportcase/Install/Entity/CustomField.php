@@ -21,7 +21,6 @@ class CRM_Supportcase_Install_Entity_CustomField extends CRM_Supportcase_Install
    *
    * @var string
    */
-  const NOTE = 'note';
   const CATEGORY = 'category';
 
   /**
@@ -40,15 +39,6 @@ class CRM_Supportcase_Install_Entity_CustomField extends CRM_Supportcase_Install
         'is_searchable' => 1,
         'is_required' => 1,
         'option_group_id' => CRM_Supportcase_Utils_OptionGroup::getId(CRM_Supportcase_Install_Entity_OptionGroup::CASE_CATEGORY)
-      ],
-      [
-        'custom_group_id' => CRM_Supportcase_Install_Entity_CustomGroup::CASE_DETAILS,
-        'label' => ts('Note'),
-        'name' => CRM_Supportcase_Install_Entity_CustomField::NOTE,
-        'html_type' => "TextArea",
-        'data_type' => "Memo",
-        'is_searchable' => 1,
-        'is_required' => 0,
       ],
     ];
   }
