@@ -68,13 +68,23 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     $fromEmailLabel = !empty($fromEmailsData['emails_data'][0]['label']) ? $fromEmailsData['emails_data'][0]['label'] : '';
     $emailBody = CRM_Supportcase_Utils_Activity::getEmailBody($activity['details']);
     $replyForwardPrefillEmails = $this->getPrefillEmails($ccEmailsData, $toEmailsData, $fromEmailsData, $mainEmailId);
-    $replyForwardBody = $this->prepareReplyBody(
+    $replyBody = $this->prepareQuotedBody(
       $activity,
       $fromEmailLabel,
       CRM_Supportcase_Utils_EmailSearch::replaceHtmlSymbolInEmailLabel($ccEmailsData['coma_separated_email_labels']),
       CRM_Supportcase_Utils_EmailSearch::replaceHtmlSymbolInEmailLabel($toEmailsData['coma_separated_email_labels']),
       $normalizedSubject,
-      $emailBody
+      $emailBody,
+      CRM_Supportcase_Utils_Email::REPLY_MODE
+    );
+    $forwardBody = $this->prepareQuotedBody(
+      $activity,
+      $fromEmailLabel,
+      CRM_Supportcase_Utils_EmailSearch::replaceHtmlSymbolInEmailLabel($ccEmailsData['coma_separated_email_labels']),
+      CRM_Supportcase_Utils_EmailSearch::replaceHtmlSymbolInEmailLabel($toEmailsData['coma_separated_email_labels']),
+      $normalizedSubject,
+      $emailBody,
+      CRM_Supportcase_Utils_Email::FORWARD_MODE
     );
     $attachments = $this->prepareAttachments($activity);
     $headIcon = $this->getHeadIco($mainEmailId, $fromEmailsData);
@@ -100,7 +110,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
         'id' => $activity['id'],
         'case_id' => $this->params['case_id'],
         'subject' => $replySubject,
-        'email_body' => $replyForwardBody,
+        'email_body' => $replyBody,
         'date_time' => $activity['activity_date_time'],
         'attachments' => [],// attachments always empty for reply mode
         'mode_name' => CRM_Supportcase_Utils_Email::REPLY_MODE,
@@ -112,7 +122,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
         'id' => $activity['id'],
         'case_id' => $this->params['case_id'],
         'subject' => $forwardSubject,
-        'email_body' => $replyForwardBody,
+        'email_body' => $forwardBody,
         'date_time' => $activity['activity_date_time'],
         'attachments' => $attachments,
         'mode_name' => CRM_Supportcase_Utils_Email::FORWARD_MODE,
@@ -156,25 +166,42 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
    * @param $fromEmailLabel
    * @return string
    */
-  private function prepareReplyBody($activity, $fromEmailLabel, $ccEmailLabels, $toEmailLabels, $subject, $emailBody) {
+  private function prepareQuotedBody($activity, $fromEmailLabel, $ccEmailLabels, $toEmailLabels, $subject, $emailBody, $mode) {
     $fromEmailLabel = CRM_Supportcase_Utils_EmailSearch::replaceHtmlSymbolInEmailLabel($fromEmailLabel);
     $messageNewLines = "\n\n";
     $date = CRM_Utils_Date::customFormat($activity['activity_date_time']);
     $mailUtilsRenderedTemplate = CRM_Supportcase_Utils_Activity::getRenderedTemplateRelatedToActivity($activity['id']);
-
     $message = "{$messageNewLines}{$mailUtilsRenderedTemplate}\n\n";
-    $message .= "---------- Forwarded message ---------\n";
-    $message .= "From: {$fromEmailLabel}\n";
-    $message .= "Date: {$date}\n";
-    $message .= "Subject: {$subject}\n";
-    $message .= "To: {$toEmailLabels}\n";
-    $message .= "CC: {$ccEmailLabels}\n";
+    $addQuotes = TRUE;
+    switch ($mode) {
+      case CRM_Supportcase_Utils_Email::REPLY_MODE:
+        $message .= "On {$date} {$fromEmailLabel} wrote:";
+        break;
+
+      case CRM_Supportcase_Utils_Email::FORWARD_MODE:
+        $message .= "---------- Forwarded message ---------\n";
+        $message .= "From: {$fromEmailLabel}\n";
+        $message .= "Date: {$date}\n";
+        $message .= "Subject: {$subject}\n";
+        $message .= "To: {$toEmailLabels}\n";
+        if (!empty($ccEmailLabels)) {
+          $message .= "CC: {$ccEmailLabels}\n";
+        }
+        $addQuotes = FALSE;
+        break;
+    }
 
     $quote = trim($emailBody['html']);
     $quote = str_replace("\r", "", $quote);
-    $quote = str_replace("\n", "\n> ", $quote);
-    $quote = str_replace('> >', '>>', $quote);
-    $message = $message . "\n> " . $quote;
+    if ($addQuotes) {
+      $quote = str_replace("\n", "\n> ", $quote);
+      $quote = str_replace('> >', '>>', $quote);
+      $message = $message . "\n> " . $quote;
+    }
+    else {
+      $message = $message . "\n" . $quote;
+    }
+
 
     return nl2br($message);
   }
