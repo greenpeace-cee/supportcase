@@ -99,9 +99,17 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
 
   //handles category_id:
   if (!empty($params['category_id'])) {
-    $categoryFieldName = CRM_Core_BAO_CustomField::getCustomFieldID('category', CRM_Supportcase_Install_Entity_CustomGroup::CASE_DETAILS, TRUE);
+    $categoryFieldName = CRM_Core_BAO_CustomField::getCustomFieldID(CRM_Supportcase_Install_Entity_CustomField::CATEGORY, CRM_Supportcase_Install_Entity_CustomGroup::CASE_DETAILS, TRUE);
     if (!empty($categoryFieldName)) {
       $updateCaseParams[$categoryFieldName] = $params['category_id'];
+    }
+  }
+
+  //handles category_id:
+  if (isset($params['note'])) {
+    $noteFieldName = CRM_Core_BAO_CustomField::getCustomFieldID(CRM_Supportcase_Install_Entity_CustomField::NOTE, CRM_Supportcase_Install_Entity_CustomGroup::CASE_DETAILS, TRUE);
+    if (!empty($noteFieldName)) {
+      $updateCaseParams[$noteFieldName] = empty($params['note']) ? '' : $params['note'];
     }
   }
 
@@ -165,6 +173,12 @@ function _civicrm_api3_supportcase_manage_case_update_case_info_spec(&$params) {
     'api.required' => 0,
     'type' => CRM_Utils_Type::T_STRING,
     'title' => 'Category id',
+  ];
+  $params['note'] = [
+    'name' => 'note',
+    'api.required' => 0,
+    'type' => CRM_Utils_Type::T_STRING,
+    'title' => 'Note',
   ];
   $params['new_case_client_id'] = [
     'name' => 'new_case_client_id',

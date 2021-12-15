@@ -13,6 +13,7 @@
     flex-wrap: wrap;
     align-content: stretch;
     height: 100%;
+    gap: 4px;
     padding: 10px 10px 5px 10px;
 }
 
@@ -21,11 +22,22 @@
     width: 200px;
     box-sizing: border-box;
     vertical-align: top;
-    margin: 2px;
     position: relative;
     overflow: hidden;
     background: white;
     border: 1px solid #d3dee2;
+}
+
+.ci__case-info-item-wrap.ci--case-info-note-wrap {
+    width: 100%;
+    max-width: 1424px;
+}
+
+.ci__case-info-item-wrap.ci--case-info-add-note-wrap {
+    border: none;
+    width: 100px;
+    display: flex;
+    align-items: center;
 }
 
 .ci__case-info-item {
@@ -35,6 +47,11 @@
 
 .ci__case-info-item-content {
     word-wrap: break-word;
+}
+
+.ci__case-info-item-content-note {
+    border: none !important;
+    background: none !important;
 }
 
 .ci__case-info-header {

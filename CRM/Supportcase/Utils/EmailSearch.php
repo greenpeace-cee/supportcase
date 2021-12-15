@@ -7,19 +7,31 @@ class CRM_Supportcase_Utils_EmailSearch {
    * @return array
    */
   public static function searchByString($searchString) {
+    if (empty($searchString)) {
+      return [];
+    }
+
     $searchResult = [];
 
+    $params = [
+      'sequential' => 1,
+      'return' => ["contact_id.display_name" , 'email', 'contact_id.id', 'contact_id.is_deleted', 'contact_id.contact_type'],
+      'email' => ['LIKE' => "%" . $searchString . "%"],
+      'contact_id.display_name' => ['LIKE' => "%" . $searchString . "%"],
+      'options' => [
+        'or' => [["contact_id.display_name", "email"]],
+        'limit' => 0,
+      ],
+    ];
+
+    // to make better performance:
+    if (CRM_Supportcase_Utils_String::isStringContains('@', $searchString)) {
+      unset($params['contact_id.display_name']);
+      unset($params['options']['or']);
+    }
+
     try {
-      $emails = civicrm_api3('Email', 'get', [
-        'sequential' => 1,
-        'return' => ["contact_id.display_name" , 'email', 'contact_id.id', 'contact_id.is_deleted', 'contact_id.contact_type'],
-        'email' => ['LIKE' => "%" . $searchString . "%"],
-        'contact_id.display_name' => ['LIKE' => "%" . $searchString . "%"],
-        'options' => [
-          'or' => [["contact_id.display_name", "email"]],
-          'limit' => 0,
-        ],
-      ]);
+      $emails = civicrm_api3('Email', 'get', $params);
     } catch (CiviCRM_API3_Exception $e) {
       return $searchResult;
     }

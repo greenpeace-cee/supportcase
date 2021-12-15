@@ -66,11 +66,18 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     $replySubject = CRM_Supportcase_Utils_Email::addSubjectPrefix($normalizedSubject, CRM_Supportcase_Utils_Email::REPLY_MODE);
     $forwardSubject = CRM_Supportcase_Utils_Email::addSubjectPrefix($normalizedSubject, CRM_Supportcase_Utils_Email::FORWARD_MODE);
     $fromEmailLabel = !empty($fromEmailsData['emails_data'][0]['label']) ? $fromEmailsData['emails_data'][0]['label'] : '';
-    $replyForwardBody = $this->prepareReplyBody($activity, $fromEmailLabel);
-    $attachments = $this->prepareAttachments($activity);
-    $replyForwardPrefillEmails = $this->getPrefillEmails($ccEmailsData, $toEmailsData, $fromEmailsData, $mainEmailId);
     $emailBody = CRM_Supportcase_Utils_Activity::getEmailBody($activity['details']);
-    $headIcon = $this->getHeadIco($mailUtilsMessage);
+    $replyForwardPrefillEmails = $this->getPrefillEmails($ccEmailsData, $toEmailsData, $fromEmailsData, $mainEmailId);
+    $replyForwardBody = $this->prepareReplyBody(
+      $activity,
+      $fromEmailLabel,
+      CRM_Supportcase_Utils_EmailSearch::replaceHtmlSymbolInEmailLabel($ccEmailsData['coma_separated_email_labels']),
+      CRM_Supportcase_Utils_EmailSearch::replaceHtmlSymbolInEmailLabel($toEmailsData['coma_separated_email_labels']),
+      $normalizedSubject,
+      $emailBody
+    );
+    $attachments = $this->prepareAttachments($activity);
+    $headIcon = $this->getHeadIco($mainEmailId, $fromEmailsData);
 
     return [
       'id' => $activity['id'],
@@ -149,14 +156,21 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
    * @param $fromEmailLabel
    * @return string
    */
-  private function prepareReplyBody($activity, $fromEmailLabel) {
+  private function prepareReplyBody($activity, $fromEmailLabel, $ccEmailLabels, $toEmailLabels, $subject, $emailBody) {
     $fromEmailLabel = CRM_Supportcase_Utils_EmailSearch::replaceHtmlSymbolInEmailLabel($fromEmailLabel);
-    $emailBody = CRM_Supportcase_Utils_Activity::getEmailBody($activity['details']);
     $messageNewLines = "\n\n";
     $date = CRM_Utils_Date::customFormat($activity['activity_date_time']);
     $mailUtilsRenderedTemplate = CRM_Supportcase_Utils_Activity::getRenderedTemplateRelatedToActivity($activity['id']);
-    $message = "{$messageNewLines}{$mailUtilsRenderedTemplate}\n\nOn {$date} {$fromEmailLabel} wrote:";
-    $quote = trim(CRM_Utils_String::stripAlternatives($emailBody['html']));
+
+    $message = "{$messageNewLines}{$mailUtilsRenderedTemplate}\n\n";
+    $message .= "---------- Forwarded message ---------\n";
+    $message .= "From: {$fromEmailLabel}\n";
+    $message .= "Date: {$date}\n";
+    $message .= "Subject: {$subject}\n";
+    $message .= "To: {$toEmailLabels}\n";
+    $message .= "CC: {$ccEmailLabels}\n";
+
+    $quote = trim($emailBody['html']);
     $quote = str_replace("\r", "", $quote);
     $quote = str_replace("\n", "\n> ", $quote);
     $quote = str_replace('> >', '>>', $quote);
@@ -256,14 +270,14 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
   }
 
   /**
-   * @param $mailUtilsMessage
+   * @param $mainEmailId
+   * @param $fromEmailsData
    * @return string
    */
-  private function getHeadIco($mailUtilsMessage) {
-    $headIcon = '';
-    //TODO: 'fa-inbox' and 'fa-reply'
+  private function getHeadIco($mainEmailId, $fromEmailsData) {
+    $fromEmailId = !empty($fromEmailsData['emails_data'][0]['id']) ? $fromEmailsData['emails_data'][0]['id'] : '';
 
-    return $headIcon;
+    return $mainEmailId == $fromEmailId ? 'fa-reply' : 'fa-inbox';
   }
 
 }

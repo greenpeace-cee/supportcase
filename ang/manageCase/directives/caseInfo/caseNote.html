@@ -1,0 +1,28 @@
+<div class="ci__case-info-item noteField">
+    <div class="ci__case-info-header">
+        <div class="ci__case-info-item-label">Note</div>
+        <div class="ci__case-info-edit-button" title="Edit note" ng-click="toggleMode();setFieldFromModel();">
+            <i class="crm-i fa-pencil"></i>
+        </div>
+    </div>
+
+    <div class="ci__case-info-view-mode">
+        <div class="ci__case-info-item-content">
+            <pre class="ci__case-info-item-content-note">{{model['note']}}</pre>
+        </div>
+    </div>
+
+    <div class="ci__case-info-edit-mode">
+        <div class="ci__case-info-errors-wrap"></div>
+
+        <div class="crm-section">
+            <textarea rows="12" class="ci__case-info-edit-mode-textarea spc--textarea spc__input" ng-model="note" name="note" ></textarea>
+            <div class="clear"></div>
+        </div>
+
+        <div class="ci__case-info-edit-mode-buttons">
+            <button class="ci__case-info-edit-confirm spc__button spc--height-medium" ng-click="editConfirm()">confirm</button>
+            <button class="button__cancel spc__button spc--height-medium" ng-click="toggleMode()">cancel</button>
+        </div>
+    </div>
+</div>

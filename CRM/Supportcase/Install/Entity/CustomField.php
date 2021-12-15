@@ -17,6 +17,14 @@ class CRM_Supportcase_Install_Entity_CustomField extends CRM_Supportcase_Install
   protected $entitySearchParams = ['name', 'custom_group_id'];
 
   /**
+   * Custom Field name
+   *
+   * @var string
+   */
+  const NOTE = 'note';
+  const CATEGORY = 'category';
+
+  /**
    * Gets list of entities params
    *
    * @return array
@@ -26,12 +34,21 @@ class CRM_Supportcase_Install_Entity_CustomField extends CRM_Supportcase_Install
       [
         'custom_group_id' => CRM_Supportcase_Install_Entity_CustomGroup::CASE_DETAILS,
         'label' => ts('Category'),
-        'name' => "category",
+        'name' => CRM_Supportcase_Install_Entity_CustomField::CATEGORY,
         'html_type' => "Select",
         'data_type' => "Int",
         'is_searchable' => 1,
         'is_required' => 1,
         'option_group_id' => CRM_Supportcase_Utils_OptionGroup::getId(CRM_Supportcase_Install_Entity_OptionGroup::CASE_CATEGORY)
+      ],
+      [
+        'custom_group_id' => CRM_Supportcase_Install_Entity_CustomGroup::CASE_DETAILS,
+        'label' => ts('Note'),
+        'name' => CRM_Supportcase_Install_Entity_CustomField::NOTE,
+        'html_type' => "TextArea",
+        'data_type' => "Memo",
+        'is_searchable' => 1,
+        'is_required' => 0,
       ],
     ];
   }

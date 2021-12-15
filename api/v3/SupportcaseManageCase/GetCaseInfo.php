@@ -53,7 +53,8 @@ function civicrm_api3_supportcase_manage_case_get_case_info($params) {
     }
   }
 
-  $categoryFieldName = CRM_Core_BAO_CustomField::getCustomFieldID('category', CRM_Supportcase_Install_Entity_CustomGroup::CASE_DETAILS, TRUE);
+  $noteFieldName = CRM_Core_BAO_CustomField::getCustomFieldID(CRM_Supportcase_Install_Entity_CustomField::NOTE, CRM_Supportcase_Install_Entity_CustomGroup::CASE_DETAILS, TRUE);
+  $categoryFieldName = CRM_Core_BAO_CustomField::getCustomFieldID(CRM_Supportcase_Install_Entity_CustomField::CATEGORY, CRM_Supportcase_Install_Entity_CustomGroup::CASE_DETAILS, TRUE);
   $availableStatuses = CRM_Supportcase_Utils_Case::getCaseStatuses();
 
   $caseStatusSettings = [];
@@ -72,6 +73,7 @@ function civicrm_api3_supportcase_manage_case_get_case_info($params) {
   $caseInfo = [
     'id' => $case['id'],
     'subject' => $case['subject'],
+    'note' => empty($case[$noteFieldName]) ? '' : $case[$noteFieldName],
     'client_ids' => $clientIds,
     'managers_ids' => $managerIds,
     'start_date' => $case['start_date'],

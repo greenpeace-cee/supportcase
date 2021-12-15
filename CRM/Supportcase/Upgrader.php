@@ -107,4 +107,10 @@ class CRM_Supportcase_Upgrader extends CRM_Supportcase_Upgrader_Base {
     return TRUE;
   }
 
+  public function upgrade_0007() {
+    $this->ctx->log->info('Applying update 0007. Install "note" custom field.');
+    (new CRM_Supportcase_Install_Entity_CustomField())->createAll();
+    return TRUE;
+  }
+
 }

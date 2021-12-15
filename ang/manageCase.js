@@ -150,8 +150,10 @@
         });
 
         $scope.handleCaseInfoResponse();
-        $scope.initLockTimer();
-        $scope.lockCase();
+        if (!$scope.isError) {
+            $scope.initLockTimer();
+            $scope.lockCase();
+        }
     });
 
     angular.module(moduleName).service('cookieService', function() {
@@ -225,11 +227,21 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/caseInfo.html",
             scope: {model: "="},
-            controller: function($scope) {
+            controller: function($scope, $element) {
                 $scope.ts = CRM.ts();
+                $scope.isShowNote = $scope.model['note'] !== '';
                 $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
 
-                $scope.showHelpInfo =  function(title, helpId, fileLocation) {
+                $scope.addNewNote = function(fieldName, mode) {
+                    $scope.isShowNote = true;
+                    $scope.setMode('note', 'edit-mode');
+                };
+
+                $scope.setMode = function(fieldName, mode) {
+                    CRM.$($element).find('.ci__case-info-item.' + fieldName + 'Field').addClass(mode);
+                };
+
+                $scope.showHelpInfo = function(title, helpId, fileLocation) {
                     CRM.help(title, {
                         id: helpId,
                         file: fileLocation
@@ -338,6 +350,30 @@
 
                 $scope.setFieldFromModel();
                 setTimeout(function() {$($element).find(".ci__case-info-edit-mode select").css($scope.$parent.getInputStyles()).select2();}, 0);
+            }
+        };
+    });
+
+    angular.module(moduleName).directive("caseNote", function() {
+        return {
+            restrict: "E",
+            templateUrl: "~/manageCase/directives/caseInfo/caseNote.html",
+            scope: {model: "="},
+            controller: function($scope, $element) {
+                $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
+                $scope.setFieldFromModel = function() {$scope.note = $scope.model['note'];};
+                $scope.updateInputValue = function() {
+                    $scope.setFieldFromModel();
+                };
+                $scope.getEntityLabel = $scope.$parent.getEntityLabel;
+                $scope.editConfirm = function() {
+                    $scope.$parent.editConfirm('note', $scope.note, $element, function(result) {
+                        $scope.model['note'] = $scope.note;
+                        $scope.$apply();
+                        CRM.status(ts('Note updated.'));
+                    });
+                };
+                $scope.setFieldFromModel();
             }
         };
     });
