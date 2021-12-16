@@ -16,6 +16,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
         'activity_type_id' => ['IN' => ['Email', 'Inbound Email']],
         'api.Attachment.get' => [],
         'return' => ['target_contact_id', 'source_contact_id', 'activity_type_id', 'activity_date_time', 'subject', 'details'],
+        'api.ActivityContact.get' => ['record_type_id' => 'Activity Assignees', 'return' => 'contact_id.display_name'],
         'options' => ['sort' => 'activity_date_time DESC', 'limit' => 0],
       ]);
     } catch (CiviCRM_API3_Exception $e) {
@@ -87,7 +88,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
       CRM_Supportcase_Utils_Email::FORWARD_MODE
     );
     $attachments = $this->prepareAttachments($activity);
-    $headIcon = $this->getHeadIco($mainEmailId, $fromEmailsData);
+    $headIcon = $this->getHeadIco($activity);
 
     return [
       'id' => $activity['id'],
@@ -98,6 +99,12 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
         'head_icon' => $headIcon,
         'email_body' => CRM_Utils_String::purifyHTML(nl2br(trim(CRM_Utils_String::stripAlternatives($emailBody['html'])))),
         'date_time' => $activity['activity_date_time'],
+        'activity_type' => CRM_Core_PseudoConstant::getName(
+          'CRM_Activity_BAO_Activity',
+          'activity_type_id',
+          $activity['activity_type_id']
+        ),
+        'author' => $activity['api.ActivityContact.get']['values'][0]['contact_id.display_name'] ?? NULL,
         'attachments' => $attachments,
         'from_contact_email_label' => $fromEmailsData['coma_separated_email_labels'],
         'to_contact_email_label' => $toEmailsData['coma_separated_email_labels'],
@@ -301,10 +308,9 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
    * @param $fromEmailsData
    * @return string
    */
-  private function getHeadIco($mainEmailId, $fromEmailsData) {
-    $fromEmailId = !empty($fromEmailsData['emails_data'][0]['id']) ? $fromEmailsData['emails_data'][0]['id'] : '';
-
-    return $mainEmailId == $fromEmailId ? 'fa-reply' : 'fa-inbox';
+  private function getHeadIco(array $activity) {
+    $activityType = CRM_Core_PseudoConstant::getName('CRM_Activity_BAO_Activity', 'activity_type_id', $activity['activity_type_id']);
+    return $activityType == 'Email' ? 'fa-reply' : 'fa-inbox';
   }
 
 }

@@ -14,7 +14,7 @@
                                 <div class="com__email-item-accordion-head">
                                     <div class="com__email-item-accordion-head-from-email">
                                         <span ng-if="activity.view_mode.head_icon !== ''" class="com__email-item-accordion-head-from-email-ico ui-icon {{activity.view_mode.head_icon}}"></span>
-                                        <div>From: {{activity.view_mode.from_contact_email_label}}</div>
+                                        <div>From: {{activity.view_mode.from_contact_email_label}}<span ng-if="activity.view_mode.author"> by {{activity.view_mode.author}}</span></div>
                                     </div>
                                     <div>{{formatDateAndTime(activity.view_mode.date_time, true)}}</div>
                                 </div>
