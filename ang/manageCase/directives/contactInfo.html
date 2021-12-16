@@ -11,7 +11,7 @@
 		<div class="contact-info__accordion-wrap" ng-class="{'opened' : isOpenDescription}">
 			<div class="contact-info__accordion-header" title="Show details" ng-click="toggleDescription()">
 				<div class="contact-info__accordion-header-ico"></div>
-				<div class="contact-info__accordion-header-label" >{{contact.display_name}} <a href="{{contact.link}}" target="_blank"><i class="crm-i fa-external-link"></i></a></div>
+				<div class="contact-info__accordion-header-label" >{{contact.display_name}} <a href="{{contact.link}}" ng-click="$event.stopPropagation();" target="_blank"><i class="crm-i fa-external-link"></i></a></div>
 			</div>
 			<div class="contact-info__accordion-body">
 				<div class="contact-info__contact-item">
