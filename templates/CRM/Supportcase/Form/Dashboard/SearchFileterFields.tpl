@@ -93,6 +93,14 @@
                                     <i class="crm-i fa-undo"></i>&nbsp;{ts}Reset Form{/ts}
                                 </a>
                             </div>
+
+                            <a href="{crmURL p='civicrm/supportcase/add-case' q='reset=1'}" title="{ts}Add new one{/ts}" class=" crm-popup">
+                                <button class="spc__button spc--height-big">
+                                    <span class="ui-button-icon ui-icon fa-plus"></span>
+                                    <span class="ui-button-icon-space"> </span>
+                                    <span>Add new one</span>
+                                </button>
+                            </a>
                         </div>
                     </div>
                 {/strip}

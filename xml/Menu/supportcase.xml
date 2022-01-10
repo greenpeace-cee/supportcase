@@ -24,4 +24,10 @@
     <title>Manage Case</title>
     <access_arguments>access support cases</access_arguments>
   </item>
+  <item>
+    <path>civicrm/supportcase/add-case</path>
+    <page_callback>CRM_Supportcase_Form_AddCase</page_callback>
+    <title>Create Support Case</title>
+    <access_arguments>access support cases</access_arguments>
+  </item>
 </menu>

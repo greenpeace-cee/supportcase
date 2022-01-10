@@ -55,6 +55,11 @@ class CRM_Supportcase_Install_Entity_OptionValue extends CRM_Supportcase_Install
         'name' => 'supportcase',
         'label' => 'SupportCase',
       ],
+      [
+        'option_group_id' => 'activity_type',
+        'name' => CRM_Supportcase_Utils_ActivityType::NOTE,
+        'label' => 'Note',
+      ],
     ];
   }
 

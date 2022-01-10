@@ -229,17 +229,7 @@
             scope: {model: "="},
             controller: function($scope, $element) {
                 $scope.ts = CRM.ts();
-                $scope.isShowNote = false;
                 $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
-
-                $scope.addNewNote = function(fieldName, mode) {
-                    $scope.isShowNote = true;
-                    $scope.setMode('note', 'edit-mode');
-                };
-
-                $scope.setMode = function(fieldName, mode) {
-                    CRM.$($element).find('.ci__case-info-item.' + fieldName + 'Field').addClass(mode);
-                };
 
                 $scope.showHelpInfo = function(title, helpId, fileLocation) {
                     CRM.help(title, {
@@ -354,26 +344,106 @@
         };
     });
 
-    angular.module(moduleName).directive("caseNote", function() {
+    angular.module(moduleName).directive("caseComment", function() {
         return {
             restrict: "E",
-            templateUrl: "~/manageCase/directives/caseInfo/caseNote.html",
+            templateUrl: "~/manageCase/directives/caseInfo/caseComment.html",
             scope: {model: "="},
             controller: function($scope, $element) {
-                $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
-                $scope.setFieldFromModel = function() {$scope.note = $scope.model['note'];};
-                $scope.updateInputValue = function() {
-                    $scope.setFieldFromModel();
+                $scope.comments = [];
+                $scope.newCommentBody = '';
+                $scope.isSimpleView = true;
+                $scope.isShowCreateCommentWindow = false;
+
+                this.$onInit = function() {
+                    $scope.getComments();
                 };
-                $scope.getEntityLabel = $scope.$parent.getEntityLabel;
-                $scope.editConfirm = function() {
-                    $scope.$parent.editConfirm('note', $scope.note, $element, function(result) {
-                        $scope.model['note'] = $scope.note;
+
+                $scope.toggleCreateComment = function() {
+                    $scope.isShowCreateCommentWindow = !$scope.isShowCreateCommentWindow;
+                    $scope.newCommentBody = '';
+                    $scope.handleViewMode();
+                };
+
+                $scope.toggleEditComment = function(comment) {
+                    comment['isShowEditWindow'] = !comment['isShowEditWindow'];
+                    comment['newCommentBody'] = comment['details'];
+                };
+
+                $scope.handleViewMode = function() {
+                    var isNeedToActivateSimpleMode = true;
+
+                    if ($scope.comments.length > 0) {
+                        isNeedToActivateSimpleMode = false;
+                    }
+
+                    if ($scope.isShowCreateCommentWindow) {
+                        isNeedToActivateSimpleMode = false;
+                    }
+
+                    if (isNeedToActivateSimpleMode) {
+                        $scope.isSimpleView = true;
+                        CRM.$($element).addClass('ci--no-border').removeClass('ci--seven-items-width');
+                    } else {
+                        $scope.isSimpleView = false;
+                        CRM.$($element).addClass('ci--seven-items-width').removeClass('ci--no-border');
+                    }
+                };
+
+                $scope.createComment = function() {
+                    CRM.api3('SupportcaseComment', 'create', {
+                        "case_id" : $scope.model,
+                        "comment" : $scope.newCommentBody
+                    }).then(function(result) {
+                        if (result.is_error === 1) {
+                            console.error('"SupportcaseComment->create" get error:');
+                            console.error(result.error_message);
+                        } else {
+                            $scope.getComments();
+                            $scope.toggleCreateComment();
+                            $scope.$apply();
+                        }
+                    }, function(error) {});
+                };
+
+                $scope.getComments = function() {
+                    CRM.api3('SupportcaseComment', 'get', {
+                        "sequential": 1,
+                        "case_id": $scope.model,
+                    }).then(function(result) {
+                        if (result.is_error === 1) {
+                            console.error('"SupportcaseComment->get" get error:');
+                            console.error(result.error_message);
+                        } else {
+                            $scope.comments = result['values'];
+                            $scope.handleViewMode();
+                            $scope.$apply();
+                        }
+                    }, function(error) {});
+                };
+
+                $scope.deleteComment = function(activityId) {
+                    CRM.api3('SupportcaseComment', 'delete', {
+                        "sequential": 1,
+                        "case_id": $scope.model,
+                        "activity_id": activityId,
+                    }).then(function(result) {
+                        $scope.getComments();
                         $scope.$apply();
-                        CRM.status(ts('Note updated.'));
-                    });
+                    }, function(error) {});
                 };
-                $scope.setFieldFromModel();
+
+                $scope.updateComment = function(comment) {
+                    CRM.api3('SupportcaseComment', 'update', {
+                        "sequential": 1,
+                        "case_id": $scope.model,
+                        "activity_id": comment.id,
+                        "comment": comment['newCommentBody'],
+                    }).then(function(result) {
+                        $scope.getComments();
+                        $scope.$apply();
+                    }, function(error) {});
+                };
             }
         };
     });
@@ -816,6 +886,132 @@
 
                     // first email have to be always not collapsed
                     CRM.$($element).find('.com__email-activity').first().removeClass('collapsed');
+                };
+            }
+        };
+    });
+
+    angular.module(moduleName).directive("newEmail", function() {
+        return {
+            restrict: "E",
+            templateUrl: "~/manageCase/directives/communication/newEmail.html",
+            scope: {model: "="},
+            controller: function($scope, $element) {
+                $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
+                $scope.isShowSendEmailWindow = false;
+                $scope.ts = CRM.ts();
+                $scope.emailData = {
+                    'case_id': $scope.model,
+                    'subject': '',
+                    'to_email_id': '',
+                    'from_email_id': '',
+                    'cc_email_ids': '',
+                    'mode': 'new',
+                    'body': '',
+                    'attachments': [],
+                };
+
+                $scope.toggleSendEmailWindow = function() {
+                    $scope.isShowSendEmailWindow = !$scope.isShowSendEmailWindow;
+                };
+
+                $scope.showError = function(errorMessage) {
+                    $scope.cleanErrors();
+                    CRM.$($element).find('.com__errors-wrap').append('<div class="crm-error">' + errorMessage + '</div>');
+                };
+
+                $scope.cleanErrors = function() {
+                    CRM.$($element).find('.com__errors-wrap').empty();
+                };
+
+                $scope.send = function() {
+                    var formData = new FormData();
+                    var files = $scope.getFiles();
+                    var data = {};
+                    data['case_id'] = $scope.emailData['case_id'];
+                    data['subject'] = $scope.emailData['subject'];
+                    data['body'] = $scope.emailData['body'];
+                    data['mode'] = 'new';
+                    data['to_email_id'] = $scope.emailData['to_email_id'];
+                    data['from_email_id'] = $scope.emailData['from_email_id'];
+                    data['cc_email_ids'] = $scope.emailData['cc_email_ids'];
+
+                    if (files['files'] !== undefined) {
+                        for (var i = 0; i < files['files']['length']; i++) {
+                            formData.append('attachments[]', files['files'][i]);
+                        }
+                    }
+
+                    formData.append('entity', 'SupportcaseManageCase');
+                    formData.append('action', 'send_email');
+                    formData.append('json', JSON.stringify(data));
+
+                    $.ajax({
+                        url : CRM.url('civicrm/ajax/rest'),
+                        type : 'POST',
+                        data : formData,
+                        processData: false,  // tell jQuery not to process the data
+                        contentType: false,  // tell jQuery not to set contentType
+                        success : function(response) {
+                            if (typeof response === 'string') {
+                                console.error('Error sending email:');
+                                console.error('Error parsing response.');
+                                $scope.showError('Error sending email: Error parsing response.');
+                                return;
+                            }
+
+                            if (response['is_error'] === 0) {
+                                CRM.status('Email is sent!');
+                                $scope.toggleSendEmailWindow();
+                                $scope.$apply();
+                            } else {
+                                console.error('Error sending email:');
+                                console.error(response['error_message']);
+                                $scope.showError(response['error_message']);
+                            }
+                        },
+                        error: function(data){
+                            var message = 'Error sending email: Server error.'
+                            console.error('Error sending email: Server error.');
+                            console.error(data);
+                            $scope.showError(message);
+                        }
+                    });
+                };
+
+                $scope.getFiles = function() {
+                    var preparedData = {
+                        'files' : [],
+                        'dataFiles' : [],
+                    }
+
+                    if ($scope.emailData['attachments'] === undefined) {
+                        return preparedData;
+                    }
+
+                    if ($scope.emailData['attachments']['uploader'] === undefined) {
+                        return preparedData;
+                    }
+
+                    if ($scope.emailData['attachments']['uploader']['queue'] === undefined) {
+                        return preparedData;
+                    }
+
+                    var queueFiles = $scope.emailData['attachments']['uploader']['queue'];
+
+                    if (!(queueFiles['length'] > 0)) {
+                        return preparedData;
+                    }
+
+                    for (var i = 0; queueFiles['length'] > i; i++ ) {
+                        preparedData.files.push(queueFiles[i]['_file']);
+                        preparedData.dataFiles.push({
+                            'name' : queueFiles[i]['_file']['name'],
+                            'description' : queueFiles[i]['crmData']['description']
+                        });
+                    }
+
+                    return preparedData;
                 };
             }
         };

@@ -71,8 +71,18 @@
     box-sizing: border-box !important;
 }
 
+.spc__button.spc--blue {
+    color: white !important;
+    background: #0071bd !important;
+}
+
+.spc__button.spc--blue:hover {
+    background: #005c99 !important;
+}
+
 .spc__button > .ui-button-icon {
     margin: 0 !important;
+    padding-top: 1px;
 }
 
 .spc__button.spc--height-medium {
@@ -89,6 +99,18 @@
 
 .spc__button[disabled="disabled"] {
     background: grey !important;
+}
+
+.spc__button.spc--bg-white-bordered {
+    background: #ffffff;
+    border: solid 1px #d3dee2;
+    color: #464354 !important;
+    cursor: pointer;
+    border-radius: 0;
+}
+
+.spc__button.spc--bg-white-bordered:hover {
+    background: #f3f6f7;
 }
 
 .spc__button.spc--cancel {

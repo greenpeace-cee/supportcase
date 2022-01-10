@@ -107,4 +107,11 @@ class CRM_Supportcase_Upgrader extends CRM_Supportcase_Upgrader_Base {
     return TRUE;
   }
 
+  public function upgrade_0009() {
+    $this->ctx->log->info('Applying update 0007. Install new activity type.');
+    (new CRM_Supportcase_Install_Entity_OptionValue())->createAll();
+
+    return TRUE;
+  }
+
 }

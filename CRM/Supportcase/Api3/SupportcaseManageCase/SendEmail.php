@@ -17,7 +17,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
     }
 
     if ($this->params['email']['mode'] == 'forward') {
-      CRM_Supportcase_Utils_Activity::copyAttachment($this->params['email']['activity']['id'], $activityId, $this->params['email']['forwardFileIds']);
+      CRM_Supportcase_Utils_Activity::copyAttachment($this->params['email']['options']['email_activity_id'], $activityId, $this->params['email']['forwardFileIds']);
     }
 
     $mailutilsMessage = $this->createMailutilsMessage($activityId);
@@ -89,6 +89,10 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
   private function attachFiles($activityId) {
     $results = [];
 
+    if (empty($_FILES['attachments'])) {
+      return $results;
+    }
+
     foreach ($_FILES['attachments']['name'] as $key => $name) {
       $params = [
         'name' => $_FILES['attachments']['name'][$key],
@@ -130,16 +134,16 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
    */
   private function createMailutilsMessage($activityId) {
     $emailMessageId = \ezcMailTools::generateMessageId($this->params['email']['fromEmails'][0]['email']);
-    $headers = $this->generateHeaders($this->params['email']['mailutilsMessage']['mailutils_thread_id'], $emailMessageId);
+    $headers = $this->generateHeaders($this->params['email']['options']['mailutils_thread_id'], $emailMessageId);
 
     try {
       $mailutilsMessage = \Civi\Api4\MailutilsMessage::create(FALSE)
         ->addValue('activity_id', $activityId)
         ->addValue('subject', $this->params['email']['subject'])
         ->addValue('body', $this->params['email']['body'])
-        ->addValue('mailutils_thread_id', $this->params['email']['mailutilsMessage']['mailutils_thread_id'])
-        ->addValue('mail_setting_id', $this->params['email']['mailutilsMessage']['mail_setting_id'])
-        ->addValue('in_reply_to', $this->params['email']['mailutilsMessage']['message_id'])
+        ->addValue('mailutils_thread_id', $this->params['email']['options']['mailutils_thread_id'])
+        ->addValue('mail_setting_id', $this->params['email']['options']['mail_setting_id'])
+        ->addValue('in_reply_to', $this->params['email']['options']['message_id'])
         ->addValue('message_id', $emailMessageId)
         ->addValue('headers', $headers)
         ->execute()
@@ -212,7 +216,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
       throw new api_Exception('Cannot send email. Please install "mailutils" extension.', 'can_not_send_email_mailutils_extension_is_required');
     }
 
-    if (empty($params['mode']) || !in_array($params['mode'], [CRM_Supportcase_Utils_Email::FORWARD_MODE, CRM_Supportcase_Utils_Email::REPLY_MODE])) {
+    if (empty($params['mode']) || !in_array($params['mode'], CRM_Supportcase_Utils_Email::getAvailableModes())) {
       throw new api_Exception('Error. Invalid mode. Mode can be: "' . implode('" , "', CRM_Supportcase_Utils_Email::getAvailableModes()) . '"', 'error_invalid_mode');
     }
 
@@ -249,14 +253,6 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
       throw new api_Exception('Cannot find from email', 'cannot_find_from_email');
     }
 
-    try {
-      $emailActivity = civicrm_api3('Activity', 'getsingle', [
-        'id' => $params['email_activity_id'],
-      ]);
-    } catch (CiviCRM_API3_Exception $e) {
-      throw new api_Exception('Email activity does not exist.' , 'email_activity_does_not_exist');
-    }
-
     $ccEmails = CRM_Supportcase_Utils_EmailSearch::searchByCommaSeparatedIds($params['cc_email_ids']);
     $bodyText = CRM_Utils_String::htmlToText($params['body']);
 
@@ -264,9 +260,37 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
       throw new api_Exception('Subject have to be less than 255 char', 'subject_to_long');
     }
 
-    $mailutilsMessage = CRM_Supportcase_Utils_Activity::getRelatedMailUtilsMessage($emailActivity['id']);
-    if (empty($mailutilsMessage)) {
-      throw new api_Exception('Cannot find related to activity MailutilsMessage.', 'cannot_find_mailutils_message');
+    if (in_array($params['mode'], [CRM_Supportcase_Utils_Email::FORWARD_MODE, CRM_Supportcase_Utils_Email::REPLY_MODE])) {
+      if (empty($params['email_activity_id'])) {
+        throw new api_Exception('"email_activity_id" field is required.' , 'email_activity_id_is_required');
+      }
+
+      try {
+        $emailActivity = civicrm_api3('Activity', 'getsingle', [
+          'id' => $params['email_activity_id'],
+        ]);
+      } catch (CiviCRM_API3_Exception $e) {
+        throw new api_Exception('Email activity does not exist.' , 'email_activity_does_not_exist');
+      }
+
+      $mailutilsMessage = CRM_Supportcase_Utils_Activity::getRelatedMailUtilsMessage($emailActivity['id']);
+      if (empty($mailutilsMessage)) {
+        throw new api_Exception('Cannot find related to activity MailutilsMessage.', 'cannot_find_mailutils_message');
+      }
+
+      $options = [
+        'mailutils_thread_id' => $mailutilsMessage['mailutils_thread_id'],
+        'mail_setting_id' => $mailutilsMessage['mail_setting_id'],
+        'message_id' => $mailutilsMessage['message_id'],
+        'email_activity_id' => $emailActivity['id'],
+      ];
+    } else {
+      $options = [
+        'mailutils_thread_id' => $this->generateMailutilsThreadId(),
+        'mail_setting_id' => $this->generateMailSettingId(),
+        'message_id' => \ezcMailTools::generateMessageId($fromEmails[0]['email']),
+        'email_activity_id' => null,// it always null
+      ];
     }
 
     return [
@@ -279,13 +303,40 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
           'html' => $params['body'],
           'text' => $bodyText,
         ]),
-        'activity' => $emailActivity,
         'subject' => $params['subject'],
-        'mailutilsMessage' => $mailutilsMessage,
-        'forwardFileIds' => $params['forward_file_ids'],
+        'options' => $options,
+        'forwardFileIds' => !empty($params['forward_file_ids']) ? $params['forward_file_ids'] : null,
       ],
       'caseId' => $params['case_id'],
     ];
+  }
+
+  /**
+   * @return int
+   */
+  private function generateMailutilsThreadId() {
+    $mailutilsThread = \Civi\Api4\MailutilsThread::create()->execute()->first();
+
+    return $mailutilsThread['id'];
+  }
+
+  /**
+   * Gets mails setting id by air ar space
+   * // TODO: sure that is correct id
+   *
+   * @return int
+   */
+  private function generateMailSettingId() {
+    $mailSettings = \Civi\Api4\MailSettings::get()
+      ->addSelect('MAX(id) AS max_id')
+      ->setLimit(0)
+      ->execute();
+
+    foreach ($mailSettings as $mailSetting) {
+      return $mailSetting['max_id'];
+    }
+
+    throw new api_Exception('Error getting "MailSettings"' , 'error_getting_mail_setting_id');
   }
 
 }

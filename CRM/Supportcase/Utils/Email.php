@@ -17,12 +17,20 @@ class CRM_Supportcase_Utils_Email {
   const REPLY_MODE = 'reply';
 
   /**
+   * New email name
+   *
+   * @var string
+   */
+  const NEW_EMAIL_MODE = 'new';
+
+  /**
    * @return array
    */
   public static function getModeOptions() {
     return [
       self::FORWARD_MODE => 'Forward mode',
       self::REPLY_MODE => 'Reply mode',
+      self::NEW_EMAIL_MODE => 'New email mode',
     ];
   }
 

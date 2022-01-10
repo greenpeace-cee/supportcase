@@ -70,7 +70,7 @@ function _civicrm_api3_supportcase_manage_case_send_email_spec(&$params) {
   ];
   $params['email_activity_id'] = [
     'name' => 'email_activity_id',
-    'api.required' => 1,
+    'api.required' => 0,
     'type' => CRM_Utils_Type::T_INT,
     'title' => 'Email activity id',
   ];

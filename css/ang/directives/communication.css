@@ -444,3 +444,8 @@
   font-family: 'FontAwesome';
   font-size: 14px;
 }
+
+.com__send-new-email-button {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}

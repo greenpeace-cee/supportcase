@@ -159,6 +159,16 @@ function supportcase_civicrm_navigationMenu(&$menu) {
     'separator' => 2,
   ));
   _supportcase_civix_navigationMenu($menu);
+
+  _supportcase_civix_insert_navigation_menu($menu, 'Cases', array(
+    'label' => E::ts('Add Support Case'),
+    'name' => 'Support_Dashboard',
+    'url' => 'civicrm/supportcase/add-case',
+    'permission' => 'access support cases',
+    'operator' => 'OR',
+    'separator' => 2,
+  ));
+  _supportcase_civix_navigationMenu($menu);
 }
 
 function supportcase_civicrm_permission(&$permissions) {
@@ -184,7 +194,7 @@ function supportcase_civicrm_links($op, $objectName, $objectId, &$links, &$mask,
     $isSupportCase = CiviCase::get(FALSE)
       ->selectRowCount()
       ->addWhere('id', '=', $objectId)
-      ->addWhere('case_type_id:name', '=', 'support_case')
+      ->addWhere('case_type_id:name', '=', CRM_Supportcase_Install_Entity_CaseType::SUPPORT_CASE)
       ->execute()
       ->count();
     if ($isSupportCase) {

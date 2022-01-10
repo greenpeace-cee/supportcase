@@ -1,0 +1,81 @@
+/*
+    Uses on communication caseComment;
+*/
+
+.comments {
+    margin: 0 10px 10px 10px;
+    height: 100%;
+}
+.comments pre {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+.comments__simple-view {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.comments__item-wrap {
+    background: white;
+    padding: 0 10px 10px 10px;
+    margin-bottom: 5px;
+}
+
+.comments__item-wrap:hover .comments__actions {
+    opacity: 1;
+}
+
+.comments__item-view-mode,
+.comments__create-comment-wrap,
+.comments__item-edit-mode {
+    max-width: 900px;
+}
+
+.comments__create-comment-wrap {
+    padding-left: 10px;
+}
+
+.comments__header {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 0 15px 0;
+}
+
+.comments__edit-comment-header {
+    padding: 0 10px 10px 0;
+}
+
+.comments__add-new-comment-header {
+    padding: 0 10px 10px 0;
+}
+
+.comments__header_label {
+    font-weight: bold;
+}
+
+.comments__info-wrap {
+    display: flex;
+    gap: 5px;
+}
+
+.comments__modified-date {
+    font-style: italic;
+    padding-top: 5px;
+}
+
+.comments__actions {
+    display: flex;
+    opacity: 0;
+    gap: 5px;
+}
+
+.comments__info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+}

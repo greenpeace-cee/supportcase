@@ -28,16 +28,24 @@
     border: 1px solid #d3dee2;
 }
 
-.ci__case-info-item-wrap.ci--case-info-note-wrap {
+.ci__case-info-item-wrap.ci--no-border {
+    border: none;
+}
+
+.ci__case-info-item-wrap.ci--seven-items-width.ci--max-width-100,
+.ci__case-info-item-wrap.ci--seven-items-width {
     width: 100%;
     max-width: 1424px;
 }
 
-.ci__case-info-item-wrap.ci--case-info-add-note-wrap {
-    border: none;
-    width: 100px;
-    display: flex;
-    align-items: center;
+.ci__case-info-item-wrap.ci--max-width-100 {
+    width: 100%;
+    max-width: 100px;
+}
+
+.ci__case-info-item-wrap.ci--seven-items-width.ci--max-width-100 {
+    width: 100%;
+    max-width: 1424px;
 }
 
 .ci__case-info-item {

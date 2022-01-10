@@ -1,0 +1,97 @@
+<div class="comments">
+    <div ng-if="isSimpleView" class="comments__simple-view">
+        <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="toggleCreateComment();">
+            <span class="ui-button-icon ui-icon fa-plus"></span>
+            <span class="ui-button-icon-space"> </span>
+            <span>Add comment</span>
+        </button>
+    </div>
+
+    <div ng-show="!isSimpleView" class="comments__extended-view">
+
+        <div class="comments__header">
+            <div class="comments__header_label">Comments</div>
+            <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="toggleCreateComment()" ng-if="!isShowCreateCommentWindow">
+                <span class="ui-button-icon ui-icon fa-plus"></span>
+                <span class="ui-button-icon-space"> </span>
+                <span>Add new comment</span>
+            </button>
+        </div>
+
+        <div ng-show="isShowCreateCommentWindow" class="comments__create-comment-wrap">
+            <div class="comments__add-new-comment-header">
+                <div class="comments__header_label">Add new comment</div>
+            </div>
+
+            <div class="crm-section">
+                <textarea rows="12" class="spc--textarea spc__input spc--width-100-percent" ng-model="newCommentBody" ></textarea>
+                <div class="clear"></div>
+            </div>
+
+            <div class="comments__create-comment-errors-wrap"></div>
+
+            <div>
+                <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="createComment()">
+                    <span class="ui-button-icon ui-icon fa-check"></span>
+                    <span class="ui-button-icon-space"> </span>
+                    <span>Create</span>
+                </button>
+                <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="toggleCreateComment()">
+                    <span>Cancel</span>
+                </button>
+            </div>
+        </div>
+
+        <div ng-if="comments.length > 0" ng-repeat="comment in comments" class="comments__item-wrap">
+            <div ng-show="!comment['isShowEditWindow']"  class="comments__item-view-mode">
+                <div class="comments__info-wrap">
+                    <div class="comments__info">
+                        <div>{{comment.source_contact_name}}</div>
+                        <div>{{comment.created_date}}</div>
+                    </div>
+                    <div class="comments__actions">
+                        <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="deleteComment(comment.id)">
+                            <span class="ui-button-icon ui-icon fa-trash"></span>
+                            <span class="ui-button-icon-space"> </span>
+                            <span>Delete</span>
+                        </button>
+                        <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="toggleEditComment(comment)">
+                            <span class="ui-button-icon ui-icon fa-pencil"></span>
+                            <span class="ui-button-icon-space"> </span>
+                            <span>Edit</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="comments__body">
+                    <pre>{{comment.details}}</pre>
+                    <div class="comments__modified-date" ng-if="comment.created_date !== comment.modified_date">Modified at: {{comment.modified_date}}</div>
+                </div>
+            </div>
+
+            <div ng-show="comment['isShowEditWindow']" class="comments__item-edit-mode">
+                <div class="comments__edit-comment-header">
+                    <div class="comments__header_label">Edit comment</div>
+                </div>
+
+                <div class="crm-section">
+                    <textarea rows="12" class="spc--textarea spc__input spc--width-100-percent" ng-model="comment.newCommentBody" ></textarea>
+                    <div class="clear"></div>
+                </div>
+
+                <div class="comments__create-comment-errors-wrap"></div>
+
+                <div>
+                    <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="updateComment(comment)">
+                        <span class="ui-button-icon ui-icon fa-plus"></span>
+                        <span class="ui-button-icon-space"> </span>
+                        <span>Update</span>
+                    </button>
+                    <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="toggleEditComment(comment)">
+                        <span>Cancel</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

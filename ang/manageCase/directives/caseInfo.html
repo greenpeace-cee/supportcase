@@ -35,18 +35,7 @@
 					<case-tags model="model"></case-tags>
 				</div>
 
-				<div ng-if="false" class="ci__case-info-item-wrap ci--case-info-add-note-wrap">
-					<button class="spc__button spc--height-little" ng-click="addNewNote()">
-						<span class="ui-button-icon ui-icon fa-plus"></span>
-						<span class="ui-button-icon-space"> </span>
-						<span>Add note</span>
-					</button>
-				</div>
-
-				<div ng-show="false" class="ci__case-info-item-wrap ci--case-info-note-wrap">
-					<case-note model="model"></case-note>
-				</div>
-
+				<case-comment class="ci__case-info-item-wrap ci--no-border ci--max-width-100" model="model['id']"></case-comment>
 			</div>
 		</div>
 	</div>
