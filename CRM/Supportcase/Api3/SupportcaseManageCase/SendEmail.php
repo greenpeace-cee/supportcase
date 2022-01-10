@@ -68,7 +68,8 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
     try {
       $activity = civicrm_api3('Activity', 'create', [
         'source_contact_id' => $this->params['email']['fromEmails'][0]['contact_id'],
-        'activity_type_id' => "Inbound Email",
+        'assignee_id' => 'user_contact_id',
+        'activity_type_id' => 'Email',
         'subject' => $this->params['email']['subject'],
         'details' => $this->params['email']['body'],
         'status_id' => CRM_Supportcase_Utils_ActivityStatus::DRAFT_EMAIL,

@@ -114,11 +114,11 @@ class CRM_Supportcase_Utils_Email {
    */
   public static function addSubjectPrefix($subject, $mode = null) {
     if ($mode === CRM_Supportcase_Utils_Email::FORWARD_MODE) {
-      return "Fwd:{$subject}";
+      return "Fwd: {$subject}";
     }
 
     if ($mode === CRM_Supportcase_Utils_Email::REPLY_MODE) {
-      return "Re:{$subject}";
+      return "Re: {$subject}";
     }
 
     return $subject;

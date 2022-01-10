@@ -85,7 +85,7 @@ class CRM_Supportcase_Utils_EmailSearch {
     } elseif ($email['contact_id.contact_type'] == 'Household') {
       $ico = 'Household-icon';
     }
-    
+
     return [
       'label' => self::prepareEmailLabel($email['contact_id.display_name'], $email['email']),
       'email' => $email['email'],
@@ -108,7 +108,7 @@ class CRM_Supportcase_Utils_EmailSearch {
       return '';
     }
 
-    return $contactDisplayName . '<' . $email . '>';
+    return $contactDisplayName . ' <' . $email . '>';
   }
 
   /**
