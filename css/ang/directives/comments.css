@@ -20,8 +20,8 @@
 
 .comments__item-wrap {
     background: white;
-    padding: 0 10px 10px 10px;
-    margin-bottom: 5px;
+    padding: 10px;
+    border-top: 1px solid #d3dee2;
 }
 
 .comments__item-wrap:hover .comments__actions {
