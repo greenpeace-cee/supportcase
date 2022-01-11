@@ -18,7 +18,6 @@ class CRM_Supportcase_Form_AddCase extends CRM_Core_Form {
         'multiple' => FALSE,
         'create' => FALSE,
         'placeholder' => ts('- select client -'),
-        'api' => ['params' => ['group' => CRM_Supportcase_Install_Entity_Group::SUPPORT_AGENT]],
         'class' => 'spc__input spc--single-select spc--width-100-percent'
       ],
       TRUE
