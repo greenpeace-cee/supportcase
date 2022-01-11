@@ -9,7 +9,7 @@ class CRM_Supportcase_Form_AddCase extends CRM_Core_Form {
   public function buildQuickForm() {
     CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/ang/element.css');
     $this->add('text', 'subject', 'Subject', ['class' => 'spc__input spc--width-100-percent'], TRUE);
-    $this->add('select', 'category_id', ts('New Case Category'), CRM_Supportcase_Utils_Category::getOptions(), TRUE, ['class' => 'spc__input spc--width-100-percent']);
+    $this->add('select', 'category_id', ts('Category'), CRM_Supportcase_Utils_Category::getOptions(), TRUE, ['class' => 'spc__input spc--width-100-percent']);
     $this->addEntityRef(
       'client_contact_id',
       ts('Client'),
