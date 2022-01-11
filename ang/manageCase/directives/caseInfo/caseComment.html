@@ -46,8 +46,7 @@
             <div ng-show="!comment['isShowEditWindow']"  class="comments__item-view-mode">
                 <div class="comments__info-wrap">
                     <div class="comments__info">
-                        <div>{{comment.source_contact_name}}</div>
-                        <div>{{comment.created_date}}</div>
+                        <span>{{comment.source_contact_name}} on {{formatDateAndTime(comment.activity_date_time, true)}}</span>
                     </div>
                     <div class="comments__actions">
                         <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="deleteComment(comment.id)">
@@ -64,7 +63,7 @@
                 </div>
 
                 <div class="comments__body">
-                    <pre>{{comment.details}}</pre>
+                    <p ng-bind-html="comment.details"></p>
                     <div class="comments__modified-date" ng-if="comment.created_date !== comment.modified_date">Modified at: {{comment.modified_date}}</div>
                 </div>
             </div>

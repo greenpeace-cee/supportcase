@@ -354,6 +354,7 @@
                 $scope.newCommentBody = '';
                 $scope.isSimpleView = true;
                 $scope.isShowCreateCommentWindow = false;
+                $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
 
                 this.$onInit = function() {
                     $scope.getComments();
@@ -367,7 +368,7 @@
 
                 $scope.toggleEditComment = function(comment) {
                     comment['isShowEditWindow'] = !comment['isShowEditWindow'];
-                    comment['newCommentBody'] = comment['details'];
+                    comment['newCommentBody'] = comment['details_text'];
                 };
 
                 $scope.handleViewMode = function() {
