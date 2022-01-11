@@ -16,7 +16,7 @@ class CRM_Supportcase_Form_AddCase extends CRM_Core_Form {
       [
         'entity' => 'Contact',
         'multiple' => FALSE,
-        'create' => FALSE,
+        'create' => TRUE,
         'placeholder' => ts('- select client -'),
         'class' => 'spc__input spc--single-select spc--width-100-percent'
       ],
