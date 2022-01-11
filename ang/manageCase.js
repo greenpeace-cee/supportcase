@@ -422,6 +422,17 @@
                     }, function(error) {});
                 };
 
+                $scope.showDeleteCommentWindow = function(activityId) {
+                    CRM.confirm({
+                        title: 'Delete comment',
+                        width: '600',
+                        message: 'Are you sure to delete this comment?',
+                        options: {yes: "Delete", no: "Cancel"},
+                    }).on('crmConfirm:yes', function () {
+                        $scope.deleteComment(activityId);
+                    });
+                };
+
                 $scope.deleteComment = function(activityId) {
                     CRM.api3('SupportcaseComment', 'delete', {
                         "sequential": 1,
@@ -898,6 +909,7 @@
             scope: {model: "="},
             controller: function($scope, $element) {
                 $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
+                $scope.reloadEmailList = $scope.$parent.getEmails;
                 $scope.isShowSendEmailWindow = false;
                 $scope.ts = CRM.ts();
                 $scope.emailData = {
@@ -963,6 +975,7 @@
                             if (response['is_error'] === 0) {
                                 CRM.status('Email is sent!');
                                 $scope.toggleSendEmailWindow();
+                                $scope.reloadEmailList();
                                 $scope.$apply();
                             } else {
                                 console.error('Error sending email:');

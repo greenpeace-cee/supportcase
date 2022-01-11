@@ -73,35 +73,35 @@
                                                         </div>
                                                     </div>
                                                     <div class="com__email-info-panel-wrap">
-                                                        <button class="spc__button spc--height-little" ng-click="toggleReadEmail(activity.id, true)" ng-show="!activity.view_mode.isRead">
+                                                        <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="toggleReadEmail(activity.id, true)" ng-show="!activity.view_mode.isRead">
                                                             <span class="ui-button-icon ui-icon fa-eye"></span>
                                                             <span class="ui-button-icon-space"> </span>
                                                             <span>Mark as read</span>
                                                         </button>
-                                                        <button class="spc__button spc--height-little" ng-click="toggleReadEmail(activity.id, false)" ng-show="activity.view_mode.isRead">
+                                                        <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="toggleReadEmail(activity.id, false)" ng-show="activity.view_mode.isRead">
                                                             <span class="ui-button-icon ui-icon fa-eye-slash"></span>
                                                             <span class="ui-button-icon-space"> </span>
                                                             <span>Mark as unread</span>
                                                         </button>
-                                                        <button class="spc__button spc--height-little" ng-click="reply(activity.id)">
+                                                        <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="reply(activity.id)">
                                                             <span class="ui-button-icon ui-icon fa-reply"></span>
                                                             <span class="ui-button-icon-space"> </span>
                                                             <span>Reply</span>
                                                         </button>
-                                                        <button class="spc__button spc--height-little" ng-click="forward(activity.id)">
+                                                        <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="forward(activity.id)">
                                                             <span class="ui-button-icon ui-icon fa-share"></span>
                                                             <span class="ui-button-icon-space"> </span>
                                                             <span>Forward</span>
                                                         </button>
                                                         <div class="com__message-toggle-height-to-full">
-                                                            <button class=" spc__button spc--height-little" ng-click="toggleHeight(activity.id)">
+                                                            <button class=" spc__button spc--height-little spc--bg-white-bordered" ng-click="toggleHeight(activity.id)">
                                                                 <span class="ui-button-icon ui-icon fa-expand"></span>
                                                                 <span class="ui-button-icon-space"> </span>
                                                                 <span>Expand Message</span>
                                                             </button>
                                                         </div>
                                                         <div class="com__message-toggle-height-to-part">
-                                                            <button class=" spc__button spc--height-little" ng-click="toggleHeight(activity.id)">
+                                                            <button class=" spc__button spc--height-little spc--bg-white-bordered" ng-click="toggleHeight(activity.id)">
                                                                 <span class="ui-button-icon ui-icon fa-compress"></span>
                                                                 <span class="ui-button-icon-space"> </span>
                                                                 <span>Collapse Message</span>
@@ -316,3 +316,5 @@
         </div>
     </div>
 </div>
+
+<new-email model="model['case_id']"></new-email>

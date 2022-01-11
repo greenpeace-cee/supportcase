@@ -1,6 +1,6 @@
 <div class="com__send-new-email-wrap">
 
-    <button class="com__send-new-email-button spc__button spc--height-medium" ng-click="toggleSendEmailWindow()">
+    <button ng-if="!isShowSendEmailWindow" class="com__send-new-email-button spc__button spc--height-medium" ng-click="toggleSendEmailWindow()">
         <span class="ui-button-icon ui-icon fa-send"></span>
         <span class="ui-button-icon-space"> </span>
         <span>Send New Email</span>
@@ -11,6 +11,7 @@
             <div class="com__email-block">
                 <div class="com__email-top-block">
                     <div class="com__email-info-rows-wrap">
+                        <div class="com__email-info-rows-title">Send new email</div>
                         <div class="com__email-info-row">
                             <div class="com__email-info-row-name">From:</div>
                             <div class="com__email-info-row-value">

@@ -34,8 +34,15 @@
     max-width: 900px;
 }
 
+.comments__item-edit-mode,
 .comments__create-comment-wrap {
-    padding-left: 10px;
+    padding: 10px;
+    background: whitesmoke;
+    border: 1px solid #d3dee2;
+}
+
+.comments__create-comment-wrap {
+    margin-bottom: 10px;
 }
 
 .comments__header {

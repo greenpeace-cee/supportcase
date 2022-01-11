@@ -1,6 +1,6 @@
 <div class="comments">
     <div ng-if="isSimpleView" class="comments__simple-view">
-        <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="toggleCreateComment();">
+        <button class="spc__button spc--height-little" ng-click="toggleCreateComment();">
             <span class="ui-button-icon ui-icon fa-plus"></span>
             <span class="ui-button-icon-space"> </span>
             <span>Add comment</span>
@@ -30,13 +30,13 @@
 
             <div class="comments__create-comment-errors-wrap"></div>
 
-            <div>
-                <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="createComment()">
+            <div class="grid__flex-space-between">
+                <button class="spc__button spc--height-little" ng-click="createComment()">
                     <span class="ui-button-icon ui-icon fa-check"></span>
                     <span class="ui-button-icon-space"> </span>
                     <span>Create</span>
                 </button>
-                <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="toggleCreateComment()">
+                <button class="spc__button spc--height-little spc--cancel" ng-click="toggleCreateComment()">
                     <span>Cancel</span>
                 </button>
             </div>
@@ -50,7 +50,7 @@
                         <div>{{comment.created_date}}</div>
                     </div>
                     <div class="comments__actions">
-                        <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="deleteComment(comment.id)">
+                        <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="showDeleteCommentWindow(comment.id)">
                             <span class="ui-button-icon ui-icon fa-trash"></span>
                             <span class="ui-button-icon-space"> </span>
                             <span>Delete</span>
@@ -81,13 +81,13 @@
 
                 <div class="comments__create-comment-errors-wrap"></div>
 
-                <div>
-                    <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="updateComment(comment)">
-                        <span class="ui-button-icon ui-icon fa-plus"></span>
+                <div class="grid__flex-space-between">
+                    <button class="spc__button spc--height-little" ng-click="updateComment(comment)">
+                        <span class="ui-button-icon ui-icon fa-check"></span>
                         <span class="ui-button-icon-space"> </span>
                         <span>Update</span>
                     </button>
-                    <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="toggleEditComment(comment)">
+                    <button class="spc__button spc--height-little spc--cancel" ng-click="toggleEditComment(comment)">
                         <span>Cancel</span>
                     </button>
                 </div>
