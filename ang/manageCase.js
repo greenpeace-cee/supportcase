@@ -366,9 +366,11 @@
                     $scope.handleViewMode();
                 };
 
-                $scope.toggleEditComment = function(comment) {
-                    comment['isShowEditWindow'] = !comment['isShowEditWindow'];
-                    comment['newCommentBody'] = comment['details_text'];
+                $scope.setMode = function(comment, mode) {
+                    comment['mode'] = mode;
+                    if (mode === 'edit') {
+                        comment['newCommentBody'] = comment['details_text'];
+                    }
                 };
 
                 $scope.handleViewMode = function() {
@@ -416,22 +418,18 @@
                             console.error('"SupportcaseComment->get" get error:');
                             console.error(result.error_message);
                         } else {
-                            $scope.comments = result['values'];
+                            var comments = [];
+                            for (var i = 0; i < result.values.length; i++) {
+                                var comment = Object.assign({}, result.values[i]);
+                                comment['mode'] = 'view';
+                                comments.push(comment);
+                            }
+
+                            $scope.comments = comments;
                             $scope.handleViewMode();
                             $scope.$apply();
                         }
                     }, function(error) {});
-                };
-
-                $scope.showDeleteCommentWindow = function(activityId) {
-                    CRM.confirm({
-                        title: 'Delete comment',
-                        width: '600',
-                        message: 'Are you sure to delete this comment?',
-                        options: {yes: "Delete", no: "Cancel"},
-                    }).on('crmConfirm:yes', function () {
-                        $scope.deleteComment(activityId);
-                    });
                 };
 
                 $scope.deleteComment = function(activityId) {

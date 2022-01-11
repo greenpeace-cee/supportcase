@@ -29,11 +29,13 @@
 }
 
 .comments__item-view-mode,
+.comments__item-delete-mode,
 .comments__create-comment-wrap,
 .comments__item-edit-mode {
     max-width: 900px;
 }
 
+.comments__item-delete-mode,
 .comments__item-edit-mode,
 .comments__create-comment-wrap {
     padding: 10px;
@@ -58,6 +60,10 @@
 
 .comments__add-new-comment-header {
     padding: 0 10px 10px 0;
+}
+
+.comments__delete-message {
+    padding: 10px 10px 20px 0;
 }
 
 .comments__header_label {
