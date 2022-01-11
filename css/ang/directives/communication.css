@@ -313,6 +313,12 @@
   padding-bottom: 0;
 }
 
+.com__email-info-rows-title {
+  font-size: 16px;
+  margin: 10px 10px 15px 0px;
+  font-weight: bold;
+}
+
 .com__email-view-mode .com__email-info-row {
   padding-bottom: 5px;
 }
@@ -446,6 +452,12 @@
 }
 
 .com__send-new-email-button {
-  margin-bottom: 10px;
-  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.com__send-new-email-wrap {
+  padding-left: 10px;
+  padding-right: 10px;
+  border-top: 1px solid #d3dee2;
+  padding-top: 10px;
 }

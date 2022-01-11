@@ -71,7 +71,7 @@
 
 .comments__modified-date {
     font-style: italic;
-    padding-top: 5px;
+    padding-left: 10px;
 }
 
 .comments__actions {
@@ -85,4 +85,8 @@
     align-items: center;
     gap: 10px;
     font-weight: bold;
+}
+
+.comments__body-text {
+    padding: 10px;
 }
