@@ -135,7 +135,13 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
    */
   private function createMailutilsMessage($activityId) {
     $emailMessageId = \ezcMailTools::generateMessageId($this->params['email']['fromEmails'][0]['email']);
-    $headers = $this->generateHeaders($this->params['email']['options']['mailutils_thread_id'], $emailMessageId);
+    $headers = '{}';
+    $inReplyTo = NULL;
+
+    if (in_array($this->params['email']['mode'], [CRM_Supportcase_Utils_Email::FORWARD_MODE, CRM_Supportcase_Utils_Email::REPLY_MODE])) {
+      $headers = $this->generateHeaders($this->params['email']['options']['mailutils_thread_id'], $emailMessageId);
+      $inReplyTo = $this->params['email']['options']['message_id'];
+    }
 
     try {
       $mailutilsMessage = \Civi\Api4\MailutilsMessage::create(FALSE)
@@ -144,7 +150,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
         ->addValue('body', $this->params['email']['body'])
         ->addValue('mailutils_thread_id', $this->params['email']['options']['mailutils_thread_id'])
         ->addValue('mail_setting_id', $this->params['email']['options']['mail_setting_id'])
-        ->addValue('in_reply_to', $this->params['email']['options']['message_id'])
+        ->addValue('in_reply_to', $inReplyTo)
         ->addValue('message_id', $emailMessageId)
         ->addValue('headers', $headers)
         ->execute()
@@ -289,8 +295,8 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
       $options = [
         'mailutils_thread_id' => $this->generateMailutilsThreadId(),
         'mail_setting_id' => $this->generateMailSettingId(),
-        'message_id' => \ezcMailTools::generateMessageId($fromEmails[0]['email']),
-        'email_activity_id' => null,// it always null
+        'message_id' => null,// it is always null, it is reply/forward email 'message_id'
+        'email_activity_id' => null,// it is always null, it is reply/forward email 'activity id'
       ];
     }
 
