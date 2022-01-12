@@ -912,13 +912,13 @@
                 $scope.isShowSendEmailWindow = false;
                 $scope.ts = CRM.ts();
                 $scope.emailData = {
-                    'case_id': $scope.model,
-                    'subject': '',
-                    'to_email_id': '',
-                    'from_email_id': '',
-                    'cc_email_ids': '',
+                    'case_id': $scope.model['case_id'],
+                    'subject': $scope.model['new_email_prefill_fields']['subject'],
+                    'from_email_id': $scope.model['new_email_prefill_fields']['from_email_id'],
+                    'to_email_id': $scope.model['new_email_prefill_fields']['to_email_id'],
+                    'cc_email_ids': $scope.model['new_email_prefill_fields']['cc_email_ids'],
+                    'body': $scope.model['new_email_prefill_fields']['email_body'],
                     'mode': 'new',
-                    'body': '',
                     'attachments': [],
                 };
 
@@ -1115,6 +1115,7 @@
                     'count' : 0,
                     'case_id' : $scope.model['id'],
                     'openMainAccordion' : $scope.openMainAccordion,
+                    'new_email_prefill_fields' : $scope.model['new_email_prefill_fields'],
                 };
             }
         };

@@ -92,6 +92,13 @@ function civicrm_api3_supportcase_manage_case_get_case_info($params) {
     'settings' => [
       'case_status_ids' => $caseStatusSettings,
       'mange_case_update_lock_time' => CRM_Supportcase_Utils_Setting::getMangeCaseUpdateLockTime(),
+    ],
+    'new_email_prefill_fields' => [
+      'subject' => $case['subject'],
+      'from_email_id' => !empty($clientIds[0]) ? CRM_Supportcase_Utils_EmailSearch::getEmailIdByContactId($clientIds[0]) : '',
+      'to_email_id' => '',
+      'cc_email_ids' => '',
+      'email_body' => '',
     ]
   ];
 

@@ -119,10 +119,33 @@ class CRM_Supportcase_Utils_EmailSearch {
     if (empty($emailLabel)) {
       return '';
     }
+
     $emailLabel = str_replace("<", "&lt;", $emailLabel);
     $emailLabel = str_replace(">", "&gt;", $emailLabel);
 
     return $emailLabel;
+  }
+
+  /**
+   * @param $contactId
+   * @return int|false
+   */
+  public static function getEmailIdByContactId($contactId) {
+    if (empty($contactId)) {
+      return false;
+    }
+
+    try {
+      $emails = civicrm_api3('Email', 'getsingle', [
+        'sequential' => 1,
+        'return' => ['id'],
+        'id' => $contactId,
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      return false;
+    }
+
+    return $emails['id'];
   }
 
 }
