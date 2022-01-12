@@ -147,25 +147,36 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
    * @return array
    */
   private function getPrefillEmails($ccEmailsData, $toEmailsData, $fromEmailsData, $mainEmailId) {
-    $toEmailIds = [];
-
-    foreach ($toEmailsData['email_ids'] as $emailId) {
-      if ($emailId != $mainEmailId) {
-        $toEmailIds[] = $emailId;
-      }
-    }
-
-    foreach ($fromEmailsData['email_ids'] as $emailId) {
-      if ($emailId != $mainEmailId) {
-        $toEmailIds[] = $emailId;
-      }
-    }
-
+    $toEmailIds = array_unique(array_merge(
+      $this->getFilteredEmailIds($toEmailsData['emails_data'], $mainEmailId),
+      $this->getFilteredEmailIds($fromEmailsData['emails_data'], $mainEmailId)
+    ));
+    $ccEmailIds = $this->getFilteredEmailIds($ccEmailsData['emails_data'], $mainEmailId);
     return [
-      'cc' => $ccEmailsData['coma_separated_email_ids'],
+      'cc' => implode(',', $ccEmailIds),
       'from' => $mainEmailId,
       'to' => implode(',', $toEmailIds),
     ];
+  }
+
+  /**
+   * Return emails that are not $mainEmailId and not on the discard list
+   *
+   * @param $emailData
+   * @param $mainEmailId
+   *
+   * @return array
+   */
+  private function getFilteredEmailIds(array $emailData, $mainEmailId): array {
+    $emailIds = [];
+    $discardEmails = \Civi::settings()->get('supportcase_discard_mail_aliases');
+    foreach ($emailData as $email) {
+      if (in_array($email['email'], $discardEmails) || $email['id'] == $mainEmailId) {
+        continue;
+      }
+      $emailIds[] = $email['id'];
+    }
+    return $emailIds;
   }
 
   /**

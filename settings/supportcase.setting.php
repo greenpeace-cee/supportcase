@@ -49,5 +49,16 @@ return [
     'is_domain' => 1,
     'is_contact' => 0,
     'description' => 'List of available activity type names',
-  ]
+  ],
+  'supportcase_discard_mail_aliases' => [
+    'group_name' => 'SupportcaseConfig',
+    'group' => 'SupportcaseConfig',
+    'name' => 'supportcase_discard_mail_aliases',
+    'type' => 'Array',
+    'default' => [],
+    'add' => '4.7',
+    'is_domain' => 1,
+    'is_contact' => 0,
+    'description' => 'List of email addresses that are known aliases of an inbox and should be discarded for To/CC prefills',
+  ],
 ];

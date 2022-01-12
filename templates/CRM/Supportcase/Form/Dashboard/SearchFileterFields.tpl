@@ -98,7 +98,7 @@
                                 <button class="spc__button spc--height-big">
                                     <span class="ui-button-icon ui-icon fa-plus"></span>
                                     <span class="ui-button-icon-space"> </span>
-                                    <span>Add new one</span>
+                                    <span>Add Case</span>
                                 </button>
                             </a>
                         </div>
