@@ -136,16 +136,18 @@ class CRM_Supportcase_Utils_EmailSearch {
     }
 
     try {
-      $emails = civicrm_api3('Email', 'getsingle', [
+      $email = civicrm_api3('Email', 'getsingle', [
         'sequential' => 1,
-        'return' => ['id'],
+        'return' => ['id', "contact_id.display_name" , 'email', 'contact_id.id', 'contact_id.is_deleted', 'contact_id.contact_type'],
         'id' => $contactId,
       ]);
     } catch (CiviCRM_API3_Exception $e) {
       return false;
     }
 
-    return $emails['id'];
+    $email['email_label'] = self::prepareEmailLabel($email['contact_id.display_name'], $email['email']);
+
+    return $email;
   }
 
 }

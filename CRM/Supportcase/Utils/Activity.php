@@ -133,7 +133,19 @@ class CRM_Supportcase_Utils_Activity {
       return null;
     }
 
-    $fromEmailLabel = CRM_Supportcase_Utils_OptionValue::getLabelByValue($mailUtilsSettings['from_email_address_id'], 'from_email_address');
+    return CRM_Supportcase_Utils_Activity::getMainEmailIdByFromEmailAddressId($mailUtilsSettings['from_email_address_id']);
+  }
+
+  /**
+   * @param $fromEmailAddressId
+   * @return null|int
+   */
+  public static function getMainEmailIdByFromEmailAddressId($fromEmailAddressId) {
+    if (empty($fromEmailAddressId)) {
+      return null;
+    }
+
+    $fromEmailLabel = CRM_Supportcase_Utils_OptionValue::getLabelByValue($fromEmailAddressId, 'from_email_address');
     if (empty($fromEmailLabel)) {
       return null;
     }

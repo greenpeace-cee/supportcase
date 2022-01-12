@@ -55,6 +55,7 @@ function civicrm_api3_supportcase_manage_case_get_case_info($params) {
 
   $categoryFieldName = CRM_Core_BAO_CustomField::getCustomFieldID(CRM_Supportcase_Install_Entity_CustomField::CATEGORY, CRM_Supportcase_Install_Entity_CustomGroup::CASE_DETAILS, TRUE);
   $availableStatuses = CRM_Supportcase_Utils_Case::getCaseStatuses();
+  $firstClientId = !empty($clientIds[0]) ? $clientIds[0] : '';
 
   $caseStatusSettings = [];
   foreach ($availableStatuses as $status) {
@@ -89,17 +90,11 @@ function civicrm_api3_supportcase_manage_case_get_case_info($params) {
     'available_tags' => CRM_Supportcase_Utils_Tags::getAvailableTags('civicrm_case'),
     'phone_number_for_do_not_sms_action' => CRM_Supportcase_Utils_Case::findPhoneNumberInActivities($params['case_id']),
     'email_for_manage_email_subscriptions' => CRM_Supportcase_Utils_Case::findEmailInActivities($params['case_id']),
+    'new_email_prefill_fields' => CRM_Supportcase_Utils_EmailPrefillFields::get($case['subject'], $firstClientId, $case[$categoryFieldName]),
     'settings' => [
       'case_status_ids' => $caseStatusSettings,
       'mange_case_update_lock_time' => CRM_Supportcase_Utils_Setting::getMangeCaseUpdateLockTime(),
     ],
-    'new_email_prefill_fields' => [
-      'subject' => $case['subject'],
-      'from_email_id' => !empty($clientIds[0]) ? CRM_Supportcase_Utils_EmailSearch::getEmailIdByContactId($clientIds[0]) : '',
-      'to_email_id' => '',
-      'cc_email_ids' => '',
-      'email_body' => '',
-    ]
   ];
 
   return civicrm_api3_create_success($caseInfo);
