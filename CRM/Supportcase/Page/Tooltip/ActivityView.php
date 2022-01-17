@@ -23,7 +23,7 @@ class CRM_Supportcase_Page_Tooltip_ActivityView extends CRM_Core_Page {
       'client' => $activity['source_contact_sort_name'],
       'date' => $activity['activity_date_time'],
       'activity_type' => CRM_Supportcase_Utils_OptionValue::getLabelByValue($activity['activity_type_id'], 'activity_type'),
-      'details' => CRM_Supportcase_Utils_Activity::getEmailBody($activity['details'])['text'],
+      'details' => CRM_Utils_String::purifyHTML(nl2br(trim(CRM_Utils_String::stripAlternatives($activity['details'])))),
       'status' => CRM_Supportcase_Utils_OptionValue::getLabelByValue($activity['status_id'], 'activity_status'),
       'priority' => CRM_Supportcase_Utils_OptionValue::getLabelByValue($activity['priority_id'], 'priority'),
       'location' => $activity['location'],
