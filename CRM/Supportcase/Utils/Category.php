@@ -22,6 +22,7 @@ class CRM_Supportcase_Utils_Category {
         'return' => ["id", "value", "label"],
         "sequential" => 1,
         'option_group_id' => $optionGroupId,
+        'is_active' => 1,
         'options' => ['limit' => 0],
       ]);
     } catch (CiviCRM_API3_Exception $e) {
