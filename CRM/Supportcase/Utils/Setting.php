@@ -71,7 +71,10 @@ class CRM_Supportcase_Utils_Setting {
         'option_group_id' => "case_status",
         'name' => ['IN' => $availableCaseStatuses],
         'is_active' => 1,
-        'options' => ['limit' => 0],
+        'options' => [
+          'limit' => 0,
+          'sort' => 'weight',
+        ],
       ]);
     } catch (CiviCRM_API3_Exception $e) {
       return [];

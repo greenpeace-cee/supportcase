@@ -54,7 +54,7 @@ function civicrm_api3_supportcase_manage_case_get_case_info($params) {
   }
 
   $categoryFieldName = CRM_Core_BAO_CustomField::getCustomFieldID(CRM_Supportcase_Install_Entity_CustomField::CATEGORY, CRM_Supportcase_Install_Entity_CustomGroup::CASE_DETAILS, TRUE);
-  $availableStatuses = CRM_Supportcase_Utils_Case::getCaseStatuses();
+  $availableStatuses = CRM_Supportcase_Utils_Setting::getCaseStatusOptions();
   $firstClientId = !empty($clientIds[0]) ? $clientIds[0] : '';
 
   $caseStatusSettings = [];
