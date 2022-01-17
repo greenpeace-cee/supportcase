@@ -80,7 +80,7 @@ class CRM_Supportcase_Utils_EmailPrefillFields {
       return false;
     }
 
-    $mailutilsSetting = \Civi\Api4\MailutilsSetting::get()
+    $mailutilsSetting = \Civi\Api4\MailutilsSetting::get(FALSE)
       ->addSelect('*')
       ->addWhere('support_case_category_id', '=', $caseCategoryId)
       ->addOrderBy('id', 'ASC')

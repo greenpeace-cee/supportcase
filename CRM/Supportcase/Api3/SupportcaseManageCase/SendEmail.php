@@ -334,7 +334,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
    * @return int
    */
   private function generateMailSettingId() {
-    $mailSettings = \Civi\Api4\MailSettings::get()
+    $mailSettings = \Civi\Api4\MailSettings::get(FALSE)
       ->addSelect('MAX(id) AS max_id')
       ->setLimit(0)
       ->execute();
