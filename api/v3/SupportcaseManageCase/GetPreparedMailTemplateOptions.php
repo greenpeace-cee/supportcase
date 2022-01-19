@@ -13,7 +13,7 @@ function civicrm_api3_supportcase_manage_case_get_prepared_mail_template_options
     $mailutilsTemplateApi->setLimit(0);
     $mailutilsTemplateApi->setCheckPermissions(FALSE);
     if (!empty($params['support_case_category_id'])) {
-      $mailutilsTemplateApi->addWhere('support_case_category_id', '=', $params['support_case_category_id']);
+      $mailutilsTemplateApi->addClause('OR', ['support_case_category_id', '=', $params['support_case_category_id']], ['support_case_category_id', 'IS NULL']);
     }
 
     $mailutilsTemplates = $mailutilsTemplateApi->execute();
