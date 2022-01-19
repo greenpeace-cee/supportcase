@@ -17,6 +17,7 @@ class CRM_Supportcase_Utils_EmailPrefillFields {
       'to_email_id' => '',
       'cc_email_ids' => '',
       'email_body' => '',
+      'case_category_id' => $caseCategoryId,
     ];
 
     $mailUtilsSetting = self::getFirstRelatedMailutilsSetting($caseCategoryId);
@@ -43,10 +44,11 @@ class CRM_Supportcase_Utils_EmailPrefillFields {
    * @return string
    */
   private static function getBody($mailUtilsSetting) {
-    $renderedTemplate = self::getRenderedTemplate($mailUtilsSetting);
     $messageNewLines = "\n\n";
+    $renderedTemplate = self::getRenderedTemplate($mailUtilsSetting);
+    $message = "{$messageNewLines}{$renderedTemplate}\n\n";
 
-    return "{$messageNewLines}{$renderedTemplate}\n\n";
+    return nl2br($message);
   }
 
   /**

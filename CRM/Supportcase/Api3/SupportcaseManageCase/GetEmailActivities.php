@@ -124,6 +124,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
         'emails' => $replyForwardPrefillEmails,
         'maxFileSize' => $maxFileSize,
         'attachmentsLimit' => $attachmentsLimit,
+        'case_category_id' => $this->params['case_category_id'],
       ],
       'forward_mode' => [
         'id' => $activity['id'],
@@ -136,6 +137,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
         'emails' => $replyForwardPrefillEmails,
         'maxFileSize' => $maxFileSize,
         'attachmentsLimit' => $attachmentsLimit,
+        'case_category_id' => $this->params['case_category_id'],
       ]
     ];
   }
@@ -220,7 +222,6 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
       $message = $message . "\n" . $quote;
     }
 
-
     return nl2br($message);
   }
 
@@ -233,15 +234,18 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
    */
   protected function prepareParams($params) {
     try {
-      civicrm_api3('Case', 'getsingle', [
+      $case = civicrm_api3('Case', 'getsingle', [
         'id' => $params['case_id'],
       ]);
     } catch (CiviCRM_API3_Exception $e) {
       throw new api_Exception('Case does not exist.', 'case_does_not_exist');
     }
 
+    $categoryFieldName = CRM_Core_BAO_CustomField::getCustomFieldID(CRM_Supportcase_Install_Entity_CustomField::CATEGORY, CRM_Supportcase_Install_Entity_CustomGroup::CASE_DETAILS, TRUE);
+
     return [
       'case_id' => $params['case_id'],
+      'case_category_id' => (!empty($case[$categoryFieldName])) ? $case[$categoryFieldName] : NULL,
     ];
   }
 

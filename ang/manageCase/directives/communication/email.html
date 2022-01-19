@@ -187,7 +187,7 @@
                                                                 <div>
                                                                     <div class="com__reply-edit-area">
                                                                         <div class="com__templates">
-                                                                            <input class="spc__input spc--single-select" mailutils-template on-select="$broadcast('insert:reply', token.name)" tabindex="-1" style="z-index:1">
+                                                                            <input class="spc__input spc--single-select" support-case-category-id="{{activity['reply_mode']['case_category_id']}}" mailutils-template on-select="$broadcast('insert:reply', token.name)" tabindex="-1" style="z-index:1">
                                                                         </div>
                                                                         <textarea crm-ui-id="email-reply-{{activity.reply_mode.id}}" crm-ui-richtext crm-ui-insert-rx="insert:reply" editor-focus-on-load
                                                                                   name="reply" ng-model="activity.reply_mode.email_body"
@@ -276,7 +276,7 @@
                                                                 <div>
                                                                     <div class="com__reply-edit-area">
                                                                         <div class="com__templates">
-                                                                            <input class="spc__input spc--single-select" mailutils-template on-select="$broadcast('insert:reply', token.name)" tabindex="-1" style="z-index:1">
+                                                                            <input class="spc__input spc--single-select" support-case-category-id="{{activity['forward_mode']['case_category_id']}}" mailutils-template on-select="$broadcast('insert:reply', token.name)" tabindex="-1" style="z-index:1">
                                                                         </div>
                                                                         <textarea crm-ui-id="email-reply-{{activity.forward_mode.id}}" crm-ui-richtext crm-ui-insert-rx="insert:reply" editor-focus-on-load
                                                                                   name="forward" ng-model="activity.forward_mode.email_body"

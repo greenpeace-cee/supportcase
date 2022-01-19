@@ -918,11 +918,22 @@
                     'to_email_id': $scope.model['new_email_prefill_fields']['to_email_id'],
                     'cc_email_ids': $scope.model['new_email_prefill_fields']['cc_email_ids'],
                     'body': $scope.model['new_email_prefill_fields']['email_body'],
+                    'case_category_id': $scope.model['new_email_prefill_fields']['case_category_id'],
                     'mode': 'new',
                     'attachments': [],
                 };
 
+                $scope.refreshPrefillData = function() {
+                    $scope.emailData['subject'] = $scope.model['new_email_prefill_fields']['subject'];
+                    $scope.emailData['from_email_id'] = $scope.model['new_email_prefill_fields']['from_email_id'];
+                    $scope.emailData['to_email_id'] = $scope.model['new_email_prefill_fields']['to_email_id'];
+                    $scope.emailData['cc_email_ids'] = $scope.model['new_email_prefill_fields']['cc_email_ids'];
+                    $scope.emailData['body'] = $scope.model['new_email_prefill_fields']['email_body'];
+                    $scope.emailData['case_category_id'] = $scope.model['new_email_prefill_fields']['case_category_id'];
+                };
+
                 $scope.toggleSendEmailWindow = function() {
+                    $scope.refreshPrefillData();
                     $scope.isShowSendEmailWindow = !$scope.isShowSendEmailWindow;
                 };
 
@@ -1129,7 +1140,9 @@
             },
             template: '<input type="text" class="crmMailingToken" />',
             link: function (scope, element, attrs, crmUiIdCtrl) {
-                CRM.api3('SupportcaseManageCase', 'get_prepared_mail_template_options').then(function(result) {
+                CRM.api3('SupportcaseManageCase', 'get_prepared_mail_template_options', {
+                    "support_case_category_id": attrs['supportCaseCategoryId']
+                }).then(function(result) {
                     if (result.is_error === 1) {
                         console.error('SupportcaseManageCase->get_prepared_mail_template_options error:');
                         console.error(result.error_message);
