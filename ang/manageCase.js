@@ -845,7 +845,7 @@
                 };
 
                 $scope.handleEmailCollapsing = function() {
-                    CRM.$($element).find('.com__email-activity').addClass('collapsed').first().removeClass('collapsed');
+                    CRM.$($element).find('.com__email-activity:not(:first)').addClass('collapsed');
                 };
             }
         };
