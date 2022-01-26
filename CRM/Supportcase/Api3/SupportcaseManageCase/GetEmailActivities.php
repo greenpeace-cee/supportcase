@@ -69,11 +69,10 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     $fromEmailLabel = !empty($fromEmailsData['emails_data'][0]['label']) ? $fromEmailsData['emails_data'][0]['label'] : '';
     $emailBody = CRM_Supportcase_Utils_Activity::getEmailBody($activity['details']);
     $replyForwardPrefillEmails = $this->getPrefillEmails($ccEmailsData, $toEmailsData, $fromEmailsData, $mainEmailId);
-    $fromEmailContactId = !empty($fromEmailsData['emails_data'][0]['contact_id']) ? $fromEmailsData['emails_data'][0]['contact_id'] : null;
     $replyBody = $this->prepareQuotedBody(
       $activity,
       $fromEmailLabel,
-      $fromEmailContactId,
+      CRM_Supportcase_Utils_Case::getFirstClient($this->params['case']),
       CRM_Supportcase_Utils_EmailSearch::replaceHtmlSymbolInEmailLabel($ccEmailsData['coma_separated_email_labels']),
       CRM_Supportcase_Utils_EmailSearch::replaceHtmlSymbolInEmailLabel($toEmailsData['coma_separated_email_labels']),
       $normalizedSubject,
@@ -83,7 +82,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     $forwardBody = $this->prepareQuotedBody(
       $activity,
       $fromEmailLabel,
-      $fromEmailContactId,
+      CRM_Supportcase_Utils_Case::getFirstClient($this->params['case']),
       CRM_Supportcase_Utils_EmailSearch::replaceHtmlSymbolInEmailLabel($ccEmailsData['coma_separated_email_labels']),
       CRM_Supportcase_Utils_EmailSearch::replaceHtmlSymbolInEmailLabel($toEmailsData['coma_separated_email_labels']),
       $normalizedSubject,
@@ -128,7 +127,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
         'maxFileSize' => $maxFileSize,
         'attachmentsLimit' => $attachmentsLimit,
         'case_category_id' => $this->params['case_category_id'],
-        'token_contact_id' => $this->getFirstClient(),
+        'token_contact_id' => CRM_Supportcase_Utils_Case::getFirstClient($this->params['case']),
       ],
       'forward_mode' => [
         'id' => $activity['id'],
@@ -142,24 +141,9 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
         'maxFileSize' => $maxFileSize,
         'attachmentsLimit' => $attachmentsLimit,
         'case_category_id' => $this->params['case_category_id'],
-        'token_contact_id' => $this->getFirstClient(),
+        'token_contact_id' => CRM_Supportcase_Utils_Case::getFirstClient($this->params['case']),
       ]
     ];
-  }
-
-  /**
-   * @return int|string
-   */
-  public function getFirstClient() {
-    if (!empty($this->params['case']['contacts'])) {
-      foreach ($this->params['case']['contacts'] as $contact) {
-        if ($contact['role'] == 'Client') {
-          return $contact['contact_id'];
-        }
-      }
-    }
-    
-    return '';
   }
 
   /**

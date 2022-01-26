@@ -10,7 +10,7 @@ class CRM_Supportcase_Utils_EmailPrefillFields {
    * @param $caseCategoryId
    * @return array
    */
-  public static function get($caseSubject, $toContactId, $caseCategoryId) {
+  public static function get($caseSubject, $toContactId, $caseCategoryId, $clientId) {
     $data = [
       'subject' => $caseSubject,
       'from_email_id' => '',
@@ -18,7 +18,7 @@ class CRM_Supportcase_Utils_EmailPrefillFields {
       'cc_email_ids' => '',
       'email_body' => '',
       'case_category_id' => $caseCategoryId,
-      'token_contact_id' => '',
+      'token_contact_id' => $clientId,
     ];
 
     $mailUtilsSetting = self::getFirstRelatedMailutilsSetting($caseCategoryId);
@@ -28,8 +28,7 @@ class CRM_Supportcase_Utils_EmailPrefillFields {
       $mainEmail = CRM_Supportcase_Utils_Activity::getMainEmailIdByFromEmailAddressId($mailUtilsSetting['from_email_address_id']);
       if (!empty($mainEmail)) {
         $data['from_email_id'] = $mainEmail;
-        $data['token_contact_id'] = CRM_Supportcase_Utils_EmailSearch::getContactIdByEmailId($mainEmail);
-        $data['email_body'] = CRM_Supportcase_Utils_SupportcaseTokenProcessor::handleTokens($data['email_body'], $data['token_contact_id']);
+        $data['email_body'] = CRM_Supportcase_Utils_SupportcaseTokenProcessor::handleTokens($data['email_body'], $clientId);
       }
     }
 

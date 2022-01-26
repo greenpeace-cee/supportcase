@@ -48,4 +48,21 @@ class CRM_Supportcase_Utils_Case {
     ]);
   }
 
+  /**
+   * Gets first client id by case data from api
+   *
+   * @return int|string
+   */
+  public static function getFirstClient($apiCaseResult) {
+    if (!empty($apiCaseResult['contacts'])) {
+      foreach ($apiCaseResult['contacts'] as $contact) {
+        if ($contact['role'] == 'Client') {
+          return $contact['contact_id'];
+        }
+      }
+    }
+
+    return '';
+  }
+
 }

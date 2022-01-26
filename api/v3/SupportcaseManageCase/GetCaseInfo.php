@@ -90,7 +90,7 @@ function civicrm_api3_supportcase_manage_case_get_case_info($params) {
     'available_tags' => CRM_Supportcase_Utils_Tags::getAvailableTags('civicrm_case'),
     'phone_number_for_do_not_sms_action' => CRM_Supportcase_Utils_Case::findPhoneNumberInActivities($params['case_id']),
     'email_for_manage_email_subscriptions' => CRM_Supportcase_Utils_Case::findEmailInActivities($params['case_id']),
-    'new_email_prefill_fields' => CRM_Supportcase_Utils_EmailPrefillFields::get($case['subject'], $firstClientId, $case[$categoryFieldName]),
+    'new_email_prefill_fields' => CRM_Supportcase_Utils_EmailPrefillFields::get($case['subject'], $firstClientId, $case[$categoryFieldName], CRM_Supportcase_Utils_Case::getFirstClient($case)),
     'settings' => [
       'case_status_ids' => $caseStatusSettings,
       'mange_case_update_lock_time' => CRM_Supportcase_Utils_Setting::getMangeCaseUpdateLockTime(),
