@@ -184,42 +184,6 @@
 
             return '';
         }
-
-        this.getReadEmails = function() {
-            var readEmails = this.getCookie('supportcaseReadEmails');
-
-            if (readEmails !== '' && readEmails !== undefined) {
-                return readEmails.split(",");
-            }
-
-            return [];
-        };
-
-        this.toggleReadEmail = function(emailActivityId, isRead) {
-            emailActivityId = emailActivityId.toString();
-            var readEmails = this.getReadEmails();
-
-            if (isRead === true) {
-                if (readEmails.includes(emailActivityId)) {
-                    return;
-                }
-
-                readEmails.push(emailActivityId);
-            }
-
-            if (isRead === false) {
-                if (!readEmails.includes(emailActivityId)) {
-                    return;
-                }
-
-                var indexOfItem = readEmails.indexOf(emailActivityId);
-                if (indexOfItem > -1) {
-                    readEmails.splice(indexOfItem, 1);
-                }
-            }
-
-            this.setCookie('supportcaseReadEmails', readEmails.toString());
-        };
     });
 
     angular.module(moduleName).directive("caseInfo", function() {
@@ -651,7 +615,7 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/communication/email.html",
             scope: {model: "="},
-            controller: function($scope, $element, cookieService, $sce) {
+            controller: function($scope, $element, $sce) {
                 $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
                 $scope.emailActivities = [];
                 $scope.isReplyId = null;
@@ -728,10 +692,8 @@
                             CRM.status('Error via getting emails', 'error');
                         } else {
                             var emailActivities = [];
-                            var readEmails = cookieService.getReadEmails();
                             for (var i = 0; i < result.values.length; i++) {
                                 emailActivities[i] = Object.assign({}, result.values[i]);
-                                emailActivities[i]['view_mode']['isRead'] = (readEmails.includes(result.values[i]['view_mode']['id'].toString()));
                                 emailActivities[i]['view_mode']['emailBodyResolved'] = $sce.trustAsHtml(result.values[i]['view_mode']['email_body']);
                                 emailActivities[i]['forward_mode']['additionalAttachments'] = {};
                                 emailActivities[i]['reply_mode']['additionalAttachments'] = {};
@@ -878,24 +840,12 @@
                     $scope.getActivityElement(activityId).find('.com__errors-wrap.com__errors-mode-' + mode).empty();
                 };
 
-                $scope.toggleReadEmail = function(emailActivityId, isRead) {
-                    cookieService.toggleReadEmail(emailActivityId, isRead);
-                    for (var i = 0; i < $scope.emailActivities.length; i++) {
-                        if ($scope.emailActivities[i]['view_mode']['id'].toString() === emailActivityId.toString()) {
-                            $scope.emailActivities[i]['view_mode']['isRead'] = isRead;
-                        }
-                    }
-                };
-
                 $scope.toggleHeight = function(emailActivityId) {
                     CRM.$($element).find('.com__email-activity[data-activity-id="' + emailActivityId + '"]').toggleClass('com--full-height');
                 };
 
                 $scope.handleEmailCollapsing = function() {
-                    CRM.$($element).find('.com__email-activity-is-read').addClass('collapsed');
-
-                    // first email have to be always not collapsed
-                    CRM.$($element).find('.com__email-activity').first().removeClass('collapsed');
+                    CRM.$($element).find('.com__email-activity').addClass('collapsed').first().removeClass('collapsed');
                 };
             }
         };
@@ -919,6 +869,7 @@
                     'cc_email_ids': $scope.model['new_email_prefill_fields']['cc_email_ids'],
                     'body': $scope.model['new_email_prefill_fields']['email_body'],
                     'case_category_id': $scope.model['new_email_prefill_fields']['case_category_id'],
+                    'token_contact_id': $scope.model['new_email_prefill_fields']['token_contact_id'],
                     'mode': 'new',
                     'attachments': [],
                 };
@@ -1141,7 +1092,8 @@
             template: '<input type="text" class="crmMailingToken" />',
             link: function (scope, element, attrs, crmUiIdCtrl) {
                 CRM.api3('SupportcaseManageCase', 'get_prepared_mail_template_options', {
-                    "support_case_category_id": attrs['supportCaseCategoryId']
+                    "support_case_category_id": attrs['supportCaseCategoryId'],
+                    "token_contact_id": attrs['tokenContactId'],
                 }).then(function(result) {
                     if (result.is_error === 1) {
                         console.error('SupportcaseManageCase->get_prepared_mail_template_options error:');
@@ -1262,6 +1214,10 @@
                         $scope.model['status_id'] = $scope.model['settings']['case_status_ids']['resolve'];
                         $scope.$apply();
                         CRM.status('Case was resolved.');
+
+                        // sends message to parent page to close popup window when this page is loaded in popup(in iframe)
+                        var parentPage = window['location']['origin'] + CRM.url('civicrm/supportcase');
+                        top.postMessage("manage_supportcase_close_popup_window" , parentPage);
                     });
                 };
 

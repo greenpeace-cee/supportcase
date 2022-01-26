@@ -73,6 +73,44 @@
     text-overflow: ellipsis;
 }
 
+.contact-info__accordion-header-link {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    top: 0;
+    overflow: hidden;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    color: #464354 !important;
+    background: white !important;
+}
+
+.contact-info__accordion-header-link:hover {
+    color: black !important;
+}
+
+.contact-info__accordion-header-link > .ui-button-icon {
+    margin: 0 !important;
+}
+
+.contact-info__accordion-header-wrap {
+    padding-right: 30px;
+    height: 30px;
+    overflow: hidden;
+    position: relative;
+}
+
+.contact-info__accordion-header-link::before {
+    content: "";
+    display: block;
+    height: 15px;
+    overflow: hidden;
+    font: normal normal normal 18px/1 FontAwesome;
+}
+
 .contact-info__preloader-text {
     padding-left: 20px;
 }

@@ -7,7 +7,6 @@
             <div class="spc__accordion-body-wrap spc--padding-right-20">
                 <div>
                     <div data-activity-id="{{activity.id}}" ng-repeat="activity in emailActivities"
-                         ng-class="{'com__email-activity-is-read' : activity['view_mode']['isRead']}"
                          class="com__email-activity crm-accordion-wrapper spc__accordion spc--header-white spc--size-little">
                         <ng-form name="activityEmailForm">
                             <div class="crm-accordion-header crm-master-accordion-header">
@@ -73,16 +72,6 @@
                                                         </div>
                                                     </div>
                                                     <div class="com__email-info-panel-wrap">
-                                                        <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="toggleReadEmail(activity.id, true)" ng-show="!activity.view_mode.isRead">
-                                                            <span class="ui-button-icon ui-icon fa-eye"></span>
-                                                            <span class="ui-button-icon-space"> </span>
-                                                            <span>Mark as read</span>
-                                                        </button>
-                                                        <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="toggleReadEmail(activity.id, false)" ng-show="activity.view_mode.isRead">
-                                                            <span class="ui-button-icon ui-icon fa-eye-slash"></span>
-                                                            <span class="ui-button-icon-space"> </span>
-                                                            <span>Mark as unread</span>
-                                                        </button>
                                                         <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="reply(activity.id)">
                                                             <span class="ui-button-icon ui-icon fa-reply"></span>
                                                             <span class="ui-button-icon-space"> </span>
@@ -187,7 +176,10 @@
                                                                 <div>
                                                                     <div class="com__reply-edit-area">
                                                                         <div class="com__templates">
-                                                                            <input class="spc__input spc--single-select" support-case-category-id="{{activity['reply_mode']['case_category_id']}}" mailutils-template on-select="$broadcast('insert:reply', token.name)" tabindex="-1" style="z-index:1">
+                                                                            <input class="spc__input spc--single-select"
+                                                                                   support-case-category-id="{{activity['reply_mode']['case_category_id']}}"
+                                                                                   token-contact-id="{{activity['forward_mode']['token_contact_id']}}"
+                                                                                   mailutils-template on-select="$broadcast('insert:reply', token.name)" tabindex="-1" style="z-index:1">
                                                                         </div>
                                                                         <textarea crm-ui-id="email-reply-{{activity.reply_mode.id}}" crm-ui-richtext crm-ui-insert-rx="insert:reply" editor-focus-on-load
                                                                                   name="reply" ng-model="activity.reply_mode.email_body"
@@ -276,7 +268,11 @@
                                                                 <div>
                                                                     <div class="com__reply-edit-area">
                                                                         <div class="com__templates">
-                                                                            <input class="spc__input spc--single-select" support-case-category-id="{{activity['forward_mode']['case_category_id']}}" mailutils-template on-select="$broadcast('insert:reply', token.name)" tabindex="-1" style="z-index:1">
+                                                                            <input class="spc__input spc--single-select"
+                                                                                   support-case-category-id="{{activity['forward_mode']['case_category_id']}}"
+                                                                                   token-contact-id="{{activity['forward_mode']['token_contact_id']}}"
+                                                                                   mailutils-template on-select="$broadcast('insert:reply', token.name)"
+                                                                                   tabindex="-1" style="z-index:1">
                                                                         </div>
                                                                         <textarea crm-ui-id="email-reply-{{activity.forward_mode.id}}" crm-ui-richtext crm-ui-insert-rx="insert:reply" editor-focus-on-load
                                                                                   name="forward" ng-model="activity.forward_mode.email_body"

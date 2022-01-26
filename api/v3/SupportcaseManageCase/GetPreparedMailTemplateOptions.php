@@ -37,8 +37,13 @@ function civicrm_api3_supportcase_manage_case_get_prepared_mail_template_options
       ];
     }
 
+    $message = $template['message'];
+    if (!empty($params['token_contact_id'])) {
+      $message = CRM_Supportcase_Utils_SupportcaseTokenProcessor::handleTokens($message, $params['token_contact_id']);
+    }
+    
     $preparedTemplates[$categoryId]['children'][] = [
-      'id' => $template['message'],
+      'id' => $message,
       'text' => $template['name'],
     ];
   }
@@ -63,5 +68,11 @@ function _civicrm_api3_supportcase_manage_case_get_prepared_mail_template_option
     'api.required' => 0,
     'type' => CRM_Utils_Type::T_INT,
     'title' => 'Support case category id',
+  ];
+  $params['token_contact_id'] = [
+    'name' => 'token_contact_id',
+    'api.required' => 0,
+    'type' => CRM_Utils_Type::T_INT,
+    'title' => 'token contact id',
   ];
 }

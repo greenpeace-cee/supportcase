@@ -69,9 +69,11 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     $fromEmailLabel = !empty($fromEmailsData['emails_data'][0]['label']) ? $fromEmailsData['emails_data'][0]['label'] : '';
     $emailBody = CRM_Supportcase_Utils_Activity::getEmailBody($activity['details']);
     $replyForwardPrefillEmails = $this->getPrefillEmails($ccEmailsData, $toEmailsData, $fromEmailsData, $mainEmailId);
+    $fromEmailContactId = !empty($fromEmailsData['emails_data'][0]['contact_id']) ? $fromEmailsData['emails_data'][0]['contact_id'] : null;
     $replyBody = $this->prepareQuotedBody(
       $activity,
       $fromEmailLabel,
+      $fromEmailContactId,
       CRM_Supportcase_Utils_EmailSearch::replaceHtmlSymbolInEmailLabel($ccEmailsData['coma_separated_email_labels']),
       CRM_Supportcase_Utils_EmailSearch::replaceHtmlSymbolInEmailLabel($toEmailsData['coma_separated_email_labels']),
       $normalizedSubject,
@@ -81,6 +83,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     $forwardBody = $this->prepareQuotedBody(
       $activity,
       $fromEmailLabel,
+      $fromEmailContactId,
       CRM_Supportcase_Utils_EmailSearch::replaceHtmlSymbolInEmailLabel($ccEmailsData['coma_separated_email_labels']),
       CRM_Supportcase_Utils_EmailSearch::replaceHtmlSymbolInEmailLabel($toEmailsData['coma_separated_email_labels']),
       $normalizedSubject,
@@ -125,6 +128,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
         'maxFileSize' => $maxFileSize,
         'attachmentsLimit' => $attachmentsLimit,
         'case_category_id' => $this->params['case_category_id'],
+        'token_contact_id' => $this->getFirstClient(),
       ],
       'forward_mode' => [
         'id' => $activity['id'],
@@ -138,8 +142,24 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
         'maxFileSize' => $maxFileSize,
         'attachmentsLimit' => $attachmentsLimit,
         'case_category_id' => $this->params['case_category_id'],
+        'token_contact_id' => $this->getFirstClient(),
       ]
     ];
+  }
+
+  /**
+   * @return int|string
+   */
+  public function getFirstClient() {
+    if (!empty($this->params['case']['contacts'])) {
+      foreach ($this->params['case']['contacts'] as $contact) {
+        if ($contact['role'] == 'Client') {
+          return $contact['contact_id'];
+        }
+      }
+    }
+    
+    return '';
   }
 
   /**
@@ -186,11 +206,12 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
    * @param $fromEmailLabel
    * @return string
    */
-  private function prepareQuotedBody($activity, $fromEmailLabel, $ccEmailLabels, $toEmailLabels, $subject, $emailBody, $mode) {
+  private function prepareQuotedBody($activity, $fromEmailLabel, $fromEmailContactId, $ccEmailLabels, $toEmailLabels, $subject, $emailBody, $mode) {
     $fromEmailLabel = CRM_Supportcase_Utils_EmailSearch::replaceHtmlSymbolInEmailLabel($fromEmailLabel);
     $messageNewLines = "\n\n";
     $date = CRM_Utils_Date::customFormat($activity['activity_date_time']);
     $mailUtilsRenderedTemplate = CRM_Supportcase_Utils_Activity::getRenderedTemplateRelatedToActivity($activity['id']);
+    $mailUtilsRenderedTemplate = CRM_Supportcase_Utils_SupportcaseTokenProcessor::handleTokens($mailUtilsRenderedTemplate, $fromEmailContactId);
     $message = "{$messageNewLines}{$mailUtilsRenderedTemplate}\n\n";
     $addQuotes = TRUE;
     switch ($mode) {
@@ -244,6 +265,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     $categoryFieldName = CRM_Core_BAO_CustomField::getCustomFieldID(CRM_Supportcase_Install_Entity_CustomField::CATEGORY, CRM_Supportcase_Install_Entity_CustomGroup::CASE_DETAILS, TRUE);
 
     return [
+      'case' => $case,
       'case_id' => $params['case_id'],
       'case_category_id' => (!empty($case[$categoryFieldName])) ? $case[$categoryFieldName] : NULL,
     ];

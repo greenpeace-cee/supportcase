@@ -204,3 +204,20 @@ function supportcase_civicrm_links($op, $objectName, $objectId, &$links, &$mask,
     }
   }
 }
+
+function supportcase_civicrm_tokenValues(&$values, $cids, $job = null, $tokens = [], $context = null) {
+  if (isset($tokens['supportcase_user'])) {
+    $currentContactId = CRM_Core_Session::getLoggedInContactID();
+    try {
+      $contact = civicrm_api3('Contact', 'getsingle', [
+        'id' => $currentContactId,
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      return;
+    }
+
+    foreach ($cids as $cid) {
+      $values[$cid]['supportcase_user.display_name'] = $contact['display_name'];
+    }
+  }
+}

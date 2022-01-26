@@ -84,6 +84,7 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     parent::preProcess();
 
     $this->_queryParams = $this->getQueryParams();
+    $config = CRM_Core_Config::singleton();
     $this->set('queryParams', $this->_queryParams);
     $selector = new CRM_Supportcase_Selector_Dashboard($this->_queryParams, $this->_action);
     $controller = new CRM_Core_Selector_Controller($selector,
@@ -110,6 +111,7 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $this->assign('isTagsFilterEmpty', $this->isTagsFilterEmpty());
     $this->assign('lockReloadTimeInSek', CRM_Supportcase_Utils_Setting::getDashboardLockReloadTime());
     $this->assign('isShowPagination', $isShowPagination);
+    $this->assign('civiBaseUrl', rtrim($config->userFrameworkBaseURL, "/"));
 
     // to clean old values from previous tasks when user click on 'cancel' button
     $buttonName = $this->controller->getButtonName();
