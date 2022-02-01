@@ -192,11 +192,10 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
    */
   private function prepareQuotedBody($activity, $fromEmailLabel, $fromEmailContactId, $ccEmailLabels, $toEmailLabels, $subject, $emailBody, $mode) {
     $fromEmailLabel = CRM_Supportcase_Utils_EmailSearch::replaceHtmlSymbolInEmailLabel($fromEmailLabel);
-    $messageNewLines = "\n\n";
     $date = CRM_Utils_Date::customFormat($activity['activity_date_time']);
     $mailUtilsRenderedTemplate = CRM_Supportcase_Utils_Activity::getRenderedTemplateRelatedToActivity($activity['id']);
     $mailUtilsRenderedTemplate = CRM_Supportcase_Utils_SupportcaseTokenProcessor::handleTokens($mailUtilsRenderedTemplate, $fromEmailContactId);
-    $message = "{$messageNewLines}{$mailUtilsRenderedTemplate}\n\n";
+    $message = "{$mailUtilsRenderedTemplate}\n\n";
     $addQuotes = TRUE;
     switch ($mode) {
       case CRM_Supportcase_Utils_Email::REPLY_MODE:

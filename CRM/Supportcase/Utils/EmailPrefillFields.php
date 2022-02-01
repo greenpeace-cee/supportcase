@@ -46,9 +46,8 @@ class CRM_Supportcase_Utils_EmailPrefillFields {
    * @return string
    */
   private static function getBody($mailUtilsSetting) {
-    $messageNewLines = "\n\n";
     $renderedTemplate = self::getRenderedTemplate($mailUtilsSetting);
-    $message = "{$messageNewLines}{$renderedTemplate}\n\n";
+    $message = "{$renderedTemplate}\n\n";
 
     return nl2br($message);
   }
