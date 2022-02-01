@@ -322,7 +322,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
    * @return int
    */
   private function generateMailutilsThreadId() {
-    $mailutilsThread = \Civi\Api4\MailutilsThread::create()->execute()->first();
+    $mailutilsThread = \Civi\Api4\MailutilsThread::create(FALSE)->execute()->first();
 
     return $mailutilsThread['id'];
   }
