@@ -14,8 +14,8 @@
     <url desc="Support">https://github.com/greenpeace-cee/supportcase/issues</url>
     <url desc="Licensing">https://www.gnu.org/licenses/agpl-3.0.html</url>
   </urls>
-  <releaseDate>2022-01-17</releaseDate>
-  <version>0.1-beta.2</version>
+  <releaseDate>2022-02-01</releaseDate>
+  <version>0.1-beta.3</version>
   <develStage>beta</develStage>
   <compatibility>
     <ver>5.39</ver>
