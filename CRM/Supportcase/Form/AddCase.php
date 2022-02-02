@@ -16,9 +16,16 @@ class CRM_Supportcase_Form_AddCase extends CRM_Core_Form {
       [
         'entity' => 'Contact',
         'multiple' => FALSE,
-        'create' => TRUE,
         'placeholder' => ts('- select client -'),
-        'class' => 'spc__input spc--single-select spc--width-100-percent'
+        'class' => 'spc__input spc--single-select spc--width-100-percent',
+        'data-create-links' => json_encode([
+          [
+            'label' => 'New support case contact',
+            'url' => CRM_Utils_System::url('civicrm/supportcase/create-new-support-case-contact', "reset=1&context=dialog", NULL, NULL, FALSE, FALSE, TRUE),
+            'type' => 'Individual',
+            'icon' => 'fa-user',
+          ],
+        ]),
       ],
       TRUE
     );

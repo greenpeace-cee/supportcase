@@ -13,6 +13,12 @@
     <access_arguments>access support cases</access_arguments>
   </item>
   <item>
+    <path>civicrm/supportcase/create-new-support-case-contact</path>
+    <page_callback>CRM_Supportcase_Form_CreateSupportcaseContact</page_callback>
+    <title>Supportcase</title>
+    <access_arguments>access support cases</access_arguments>
+  </item>
+  <item>
     <path>civicrm/supportcase/report-spam</path>
     <page_callback>CRM_Supportcase_Form_ReportSpam</page_callback>
     <title>Report Spam</title>
