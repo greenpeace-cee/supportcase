@@ -79,12 +79,15 @@
                     <div class="com__errors-wrap"></div>
 
                     <div class="com__message-buttons">
-                        <button class="spc__button spc--height-medium" ng-disabled="sendNewEmailForm.$invalid" ng-click="send()">
+                        <div class="com__message-buttons-loader" ng-if="isEmailSending">
+                            Email is sending... Please wait.
+                        </div>
+                        <button ng-if="!isEmailSending" class="spc__button spc--height-medium" ng-disabled="sendNewEmailForm.$invalid" ng-click="send()">
                             <span class="ui-button-icon ui-icon fa-paper-plane-o"></span>
                             <span class="ui-button-icon-space"> </span>
                             <span>Send</span>
                         </button>
-                        <button class="spc__button spc--height-medium button__cancel" ng-click="toggleSendEmailWindow()">Cancel</button>
+                        <button ng-if="!isEmailSending" class="spc__button spc--height-medium button__cancel" ng-click="toggleSendEmailWindow()">Cancel</button>
                     </div>
 
                 </div>

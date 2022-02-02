@@ -120,10 +120,18 @@
   margin-bottom: 15px;
   display: flex;
   gap: 10px;
+  position: relative;
 }
 
 .com__message-buttons .ui-button-icon {
   margin: 0;
+}
+
+.com__message-buttons-loader {
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .com__errors-wrap {

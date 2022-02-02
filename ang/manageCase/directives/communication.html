@@ -12,9 +12,23 @@
                     <span>No messages</span>
                 </div>
 
-                <sms-communication model="sms"></sms-communication>
+				<div spc-accordion class="spc__accordion spc--white-header spc--header-with-arrows">
+					<div class="spc__accordion-header" ng-show="sms.count > 0">
+						<span>SMS Messages {{'(' + sms.count + ')'}}:</span>
+					</div>
+					<div class="spc__accordion-body">
+						<sms-communication model="sms"></sms-communication>
+					</div>
+				</div>
 
-                <email-communication model="email"></email-communication>
+				<div spc-accordion class="spc__accordion spc--white-header spc--header-with-arrows">
+					<div class="spc__accordion-header" ng-show="sms.count > 0">
+						<span>Email Messages {{'(' + email.count + ')'}}:</span>
+					</div>
+					<div class="spc__accordion-body">
+						<email-communication model="email"></email-communication>
+					</div>
+				</div>
 
 			</div>
 		</div>

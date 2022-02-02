@@ -185,6 +185,16 @@
             return '';
         }
     });
+    angular.module(moduleName).service('reloadService', function() {
+        this.reloadEmailsCallback = function() {};
+
+        this.reloadEmails = function() {
+            this.reloadEmailsCallback();
+        };
+        this.setReloadEmailsCallback = function(callback) {
+            this.reloadEmailsCallback = callback;
+        };
+    });
 
     angular.module(moduleName).directive("caseInfo", function() {
         return {
@@ -547,7 +557,7 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/caseInfo/caseCategory.html",
             scope: {model: "="},
-            controller: function($scope, $element) {
+            controller: function($scope, $element, reloadService) {
                 $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
                 $scope.updateInputValue = function() {
                     $scope.setFieldFromModel();
@@ -562,6 +572,7 @@
                         $scope.model['category_id'] = $scope.categoryId;
                         $scope.$apply();
                         CRM.status(ts('Category updated.'));
+                        reloadService.reloadEmails();
                     });
                 };
 
@@ -615,11 +626,12 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/communication/email.html",
             scope: {model: "="},
-            controller: function($scope, $element, $sce) {
+            controller: function($scope, $element, $sce, reloadService) {
                 $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
                 $scope.emailActivities = [];
                 $scope.isReplyId = null;
                 $scope.replyMode = null;
+                $scope.isEmailSending = false;
                 $scope.ts = CRM.ts();
 
                 $scope.getFiles = function(activityId, mode) {
@@ -711,8 +723,13 @@
                                 callback();
                             }
                         }
-                    }, function(error) {});
+                    }, function(error) {
+                        console.error('Activity get server error:');
+                        CRM.status('Server error via getting emails', 'error');
+                    });
                 }
+
+                reloadService.setReloadEmailsCallback($scope.getEmails);
 
                 $scope.reply = function(activityId) {
                     $scope.currentReplyId = activityId;
@@ -745,8 +762,16 @@
                 };
 
                 $scope.send = function(activity) {
+                    if ($scope.isEmailSending) {
+                        console.error('Email is sending');
+                        $scope.showError('Email is sending', activity['id'], $scope.replyMode);
+                        return;
+                    }
+                    $scope.isEmailSending = true;
+
                     if (!($scope.replyMode === 'reply' || $scope.replyMode === 'forward')) {
                         console.error('Unknown reply mode');
+                        $scope.isEmailSending = false;
                         return;
                     }
 
@@ -770,6 +795,7 @@
                     }
 
                     if (files['files'] !== undefined && files['files']['length'] > emailData['attachmentsLimit']) {
+                        $scope.isEmailSending = false;
                         $scope.showError('To match attachments. Maximum is ' + emailData['attachmentsLimit'] + '.', activity['id'], $scope.replyMode);
                         return;
                     }
@@ -806,6 +832,7 @@
                                 console.error('Error sending email:');
                                 console.error('Error parsing response.');
                                 $scope.showError('Error sending email: Error parsing response.', activity['id'], $scope.replyMode);
+                                $scope.isEmailSending = false;
                                 return;
                             }
 
@@ -821,12 +848,14 @@
                                 console.error(response['error_message']);
                                 $scope.showError(response['error_message'], activity['id'], $scope.replyMode);
                             }
+                            $scope.isEmailSending = false;
                         },
                         error: function(data){
                             var message = 'Error sending email: Server error.'
                             console.error('Error sending email: Server error.');
                             console.error(data);
                             $scope.showError(message, activity['id'], $scope.replyMode);
+                            $scope.isEmailSending = false;
                         }
                     });
                 };
@@ -845,7 +874,7 @@
                 };
 
                 $scope.handleEmailCollapsing = function() {
-                    CRM.$($element).find('.com__email-activity:not(:first)').addClass('collapsed');
+                    CRM.$($element).find('.com__email-activity-accordion:not(:first)').addClass('spc--collapsed');
                 };
             }
         };
@@ -860,6 +889,7 @@
                 $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
                 $scope.reloadEmailList = $scope.$parent.getEmails;
                 $scope.isShowSendEmailWindow = false;
+                $scope.isEmailSending = false;
                 $scope.ts = CRM.ts();
                 $scope.emailData = {
                     'case_id': $scope.model['case_id'],
@@ -898,6 +928,13 @@
                 };
 
                 $scope.send = function() {
+                    if ($scope.isEmailSending) {
+                        console.error('Email is sending');
+                        $scope.showError('Email is sending');
+                        return;
+                    }
+                    $scope.isEmailSending = true;
+
                     var formData = new FormData();
                     var files = $scope.getFiles();
                     var data = {};
@@ -930,6 +967,7 @@
                                 console.error('Error sending email:');
                                 console.error('Error parsing response.');
                                 $scope.showError('Error sending email: Error parsing response.');
+                                $scope.isEmailSending = false;
                                 return;
                             }
 
@@ -943,12 +981,14 @@
                                 console.error(response['error_message']);
                                 $scope.showError(response['error_message']);
                             }
+                            $scope.isEmailSending = false;
                         },
                         error: function(data){
                             var message = 'Error sending email: Server error.'
                             console.error('Error sending email: Server error.');
                             console.error(data);
                             $scope.showError(message);
+                            $scope.isEmailSending = false;
                         }
                     });
                 };
@@ -1091,32 +1131,65 @@
             },
             template: '<input type="text" class="crmMailingToken" />',
             link: function (scope, element, attrs, crmUiIdCtrl) {
-                CRM.api3('SupportcaseManageCase', 'get_prepared_mail_template_options', {
-                    "support_case_category_id": attrs['supportCaseCategoryId'],
-                    "token_contact_id": attrs['tokenContactId'],
-                }).then(function(result) {
-                    if (result.is_error === 1) {
-                        console.error('SupportcaseManageCase->get_prepared_mail_template_options error:');
-                        console.error(result.error_message);
-                    } else {
-                        $(element).addClass('crm-action-menu fa-code').crmSelect2({
-                            width: "12em",
-                            dropdownAutoWidth: true,
-                            data: result['values'],
-                            placeholder: ts('Templates')
-                        });
-                        $(element).on('select2-selecting', function (e) {
-                            e.preventDefault();
-                            $(element).select2('close').select2('val', '');
-                            scope.$parent.$eval(attrs.onSelect, {
-                                token: {name: e.val}
+                var loadTemplates = function() {
+                    CRM.api3('SupportcaseManageCase', 'get_prepared_mail_template_options', {
+                        "support_case_category_id": attrs['supportCaseCategoryId'],
+                        "token_contact_id": attrs['tokenContactId'],
+                    }).then(function(result) {
+                        if (result.is_error === 1) {
+                            console.error('SupportcaseManageCase->get_prepared_mail_template_options error:');
+                            console.error(result.error_message);
+                        } else {
+                            $(element).addClass('crm-action-menu fa-code').crmSelect2({
+                                width: "12em",
+                                dropdownAutoWidth: true,
+                                data: result['values'],
+                                placeholder: ts('Templates')
                             });
-                        });
+                            $(element).on('select2-selecting', function (e) {
+                                e.preventDefault();
+                                $(element).select2('close').select2('val', '');
+                                scope.$parent.$eval(attrs.onSelect, {
+                                    token: {name: e.val}
+                                });
+                            });
+                        }
+                    }, function(error) {
+                        console.error('SupportcaseManageCase->get_prepared_mail_template_options error:');
+                        console.error(error);
+                    });
+                };
+                loadTemplates();
+            }
+        };
+    });
+
+    /*
+        Example:
+        <div spc-accordion class="spc__accordion spc--blue-header spc--header-with-arrows spc--collapsed">
+            <div class="spc__accordion-header">Name</div>
+            <div class="spc__accordion-body">content</div>
+        </div>
+     */
+    angular.module(moduleName).directive("spcAccordion", function() {
+        return {
+            restrict: "A",
+            controller: function($element) {
+                this.$onInit = function() {
+                    var collapsedClassName = 'spc--collapsed';
+                    var accordion = CRM.$($element);
+                    var accordionHeader = accordion.children('.spc__accordion-header');
+                    var accordionBody = accordion.children('.spc__accordion-body');
+                    if (accordionHeader['length'] !== 1 || accordionBody['length'] !== 1) {
+                        return;
                     }
-                }, function(error) {
-                    console.error('SupportcaseManageCase->get_prepared_mail_template_options error:');
-                    console.error(error);
-                });
+
+                    accordionHeader.click(function() {
+                        accordionBody.slideToggle( "fast", function() {
+                            accordion.toggleClass(collapsedClassName);
+                        });
+                    });
+                };
             }
         };
     });

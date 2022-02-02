@@ -10,7 +10,7 @@
 */
 
 /*
-   Accordion:
+   Styling of CiviCRM Accordion:
 */
 
 .spc__accordion > .crm-accordion-header {
@@ -60,7 +60,119 @@
 }
 
 /*
-   End accordion:
+   End Styling of CiviCRM Accordion:
+*/
+
+/*
+   Supportcase Accordion
+*/
+
+.spc__accordion,
+.spc__accordion-body,
+.spc__accordion-header {
+    box-sizing: border-box;
+}
+
+
+.spc__accordion.spc--collapsed .spc__accordion-body  {
+    display: none;
+}
+
+.spc__accordion .spc__accordion-body  {
+    display: block;
+}
+
+.spc__accordion-body.spc--padding-right-20  {
+    padding-right: 20px;
+}
+
+.spc__accordion-body.spc--padding-left-20  {
+    padding-left: 20px;
+}
+
+.spc__accordion-header {
+    padding: 7px;
+    font-size: 13px;
+    position: relative;
+    font-weight: 600;
+    line-height: 18px;
+    box-sizing: border-box;
+    cursor: pointer;
+    user-select: none;
+    color: #000000;
+}
+
+.spc__accordion-header::before {
+    color: #000000;
+}
+
+.spc__accordion.spc--white-header > .spc__accordion-header {
+    background: white;
+    color: #585858;
+}
+
+.spc__accordion.spc--white-header.spc--header-with-arrows > .spc__accordion-header {
+    padding-left: 21px;/* 18 + 3 */
+}
+
+.spc__accordion.spc--white-header.spc--header-with-arrows > .spc__accordion-header::before {
+    color: #000000;
+    left: 0;
+}
+
+.spc__accordion.spc--white-header.spc--header-with-arrows > .spc__accordion-header::before {
+    color: #000000;
+}
+
+.spc__accordion.spc--blue-header > .spc__accordion-header {
+    background: #0071bd;
+    color: white;
+}
+
+.spc__accordion.spc--blue-header.spc--header-with-arrows > .spc__accordion-header::before {
+    color: white;
+}
+
+.spc__accordion.spc--header-with-arrows:not(.spc--collapsed) > .spc__accordion-header::before {
+    content: '\f107';
+}
+
+.spc__accordion.spc--header-with-arrows > .spc__accordion-header::before {
+    font-style: normal;
+    text-rendering: auto;
+    font-size: 13px;
+    content: "";
+    color: white;
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    top: 7px;
+    left: 7px;
+    font-family: 'FontAwesome';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding-top: 3px;
+    box-sizing: border-box;
+}
+
+.spc__accordion.spc--header-with-arrows > .spc__accordion-header {
+    padding-left: 32px;/*   7 + 18 + 7 */
+}
+
+.spc__accordion.spc--header-big-font > .spc__accordion-header {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.spc__accordion.spc--header-big-font > .spc__accordion-header::before {
+    font-size: 18px;
+    padding-top: 2px;
+}
+
+/*
+   End supportcase Accordion
 */
 
 /*
