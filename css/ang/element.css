@@ -435,3 +435,35 @@
 /*
    End grid:
 */
+
+/*
+   Form:
+*/
+
+.spc__form-wrap {
+    padding: 20px 10px 0 10px;
+}
+
+.spc__form-block {
+    display: flex;
+    margin-bottom: 5px;
+    align-items: center;
+}
+
+.spc__form-input-label {
+    width: 200px;
+    text-align: right ;
+}
+
+.spc__form-input-html {
+    width: 300px;
+}
+
+.spc__form-input-html .crm-error {
+    display: block;
+    margin-top: 5px;
+}
+
+/*
+   End form:
+*/
