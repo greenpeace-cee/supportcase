@@ -19,7 +19,7 @@ CKEDITOR.editorConfig = function( config ) {
     { name: 'about', groups: [ 'about' ] }
   ];
 
-  config.removeButtons = 'Subscript,Superscript,Outdent,Blockquote,Link,Unlink,Anchor,Image,Table,HorizontalRule,SpecialChar,Styles,Format,Maximize,About,Indent,Scayt,PasteText,PasteFromWord';
+  config.removeButtons = 'Subscript,Superscript,Outdent,Blockquote,Link,Unlink,Anchor,Image,Table,HorizontalRule,SpecialChar,Styles,Format,Maximize,About,Indent,Scayt,PasteText,PasteFromWord,Paste';
 
   config.skin = 'moono';
 
