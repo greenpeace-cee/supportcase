@@ -93,7 +93,7 @@ class CRM_Supportcase_Form_CreateSupportcaseContact extends CRM_Core_Form {
 
     civicrm_api3('Email', 'create', [
       'contact_id' => $contact['id'],
-      "location_type_id" => "support",
+      "location_type_id" => CRM_Supportcase_Install_Entity_LocationType::SUPPORT,
       'is_primary' => 1,
       'email' => $email,
     ]);
