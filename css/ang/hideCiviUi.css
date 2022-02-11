@@ -56,3 +56,7 @@ body.manage-case-page.crm-menubar-visible.crm-menubar-over-cms-menu.crm-menubar-
     padding: 40px 15px 15px 15px;
     background: white !important;
 }
+
+.page-civicrm #crm-container #crm-main-content-wrapper {
+    background: #ffffff !important;
+}
