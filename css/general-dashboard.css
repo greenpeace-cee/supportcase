@@ -371,3 +371,7 @@
 #content > .section > .region-content > .block .content {
     margin-top: 0;
 }
+
+.page-civicrm, #page {
+ background: white !important;
+}

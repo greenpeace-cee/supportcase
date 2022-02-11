@@ -7,7 +7,13 @@ body.manage-case-page #page-title {
     margin: 0px !important;
 }
 
+body.manage-case-page, body.manage-case-page.page-civicrm, body.manage-case-page#page {
+    background: white !important;
+}
+
 body.manage-case-page #header,
+body.manage-case-page #breadcrumb,
+body.manage-case-page #branding,
 body.manage-case-page #main-content,
 body.manage-case-page #page-title,
 body.manage-case-page .tabs,
