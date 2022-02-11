@@ -51,3 +51,8 @@ body.manage-case-page.crm-menubar-visible.crm-menubar-over-cms-menu.crm-menubar-
 @media (min-width: 768px) {
     body.manage-case-page.crm-menubar-visible.crm-menubar-over-cms-menu {padding-top: 0px !important;}
 }
+
+#crm-main-content-wrapper {
+    padding: 40px 15px 15px 15px;
+    background: white !important;
+}
