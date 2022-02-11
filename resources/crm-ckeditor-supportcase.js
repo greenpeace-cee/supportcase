@@ -19,9 +19,13 @@ CKEDITOR.editorConfig = function( config ) {
     { name: 'about', groups: [ 'about' ] }
   ];
 
-  config.removeButtons = 'Scayt,Subscript,Superscript,Outdent,Blockquote,Link,Unlink,Anchor,Image,Table,HorizontalRule,SpecialChar,Styles,Format,Maximize,About,Indent';
+  config.removeButtons = 'Subscript,Superscript,Outdent,Blockquote,Link,Unlink,Anchor,Image,Table,HorizontalRule,SpecialChar,Styles,Format,Maximize,About,Indent,Scayt,PasteText,PasteFromWord,Paste';
 
   config.skin = 'moono';
 
   config.allowedContent = true;
+
+  config.forcePasteAsPlainText = true;
+
+  config.disableNativeSpellChecker = false;
 };
