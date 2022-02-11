@@ -3,32 +3,11 @@
     Prefix-alias: mp  = managePanel
 */
 
-.mp__button {
-    cursor: pointer;
+.mp__manage-panel {
+    padding-bottom: 10px;
 }
 
-.mp__button-blue  {
-    background: #0071bd;
-    border: 0;
-    border-radius: 2px;
-    color: #fff;
-    font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
-    line-height: 1;
-    padding: 11px 12px;
-    text-shadow: none;
-    text-transform: uppercase;
-    vertical-align: middle;
-    display: inline-block;
-}
-
-.mp__button .ui-icon {
-  margin: 0;
-}
-
-.crm-container .mp__manage-panel .crm-section {
-    margin-bottom: 0;
-}
-
-.crm-container .mp__manage-panel .crm-submit-buttons {
-    padding: 8px 0 0 0;
+.mp__buttons-wrap {
+    display: flex;
+    gap: 10px;
 }

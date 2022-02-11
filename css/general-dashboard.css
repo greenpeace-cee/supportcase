@@ -361,3 +361,13 @@
     display: flex;
     align-items: center;
 }
+
+#page-title,
+#breadcrumb,
+#content > .section > .tabs {
+    display: none !important;
+}
+
+#content > .section > .region-content > .block .content {
+    margin-top: 0;
+}

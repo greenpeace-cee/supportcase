@@ -46,25 +46,33 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
    * @throws CiviCRM_API3_Exception
    */
   public function setDefaultValues() {
-    $defaultValues = parent::setDefaultValues();
-    $defaultValues['case_type_id'] = CRM_Supportcase_Utils_Setting::getMainCaseTypeId();
-    $defaultValues['case_status_id'] = [
-      CRM_Core_PseudoConstant::getKey('CRM_Case_BAO_Case', 'case_status_id', 'Open'),
-      CRM_Core_PseudoConstant::getKey('CRM_Case_BAO_Case', 'case_status_id', 'Urgent'),
-    ];
+    $defaultValues = array_merge(parent::setDefaultValues(), $this->getSupportcaseDefaultValues());
 
     // to prevent accidentally selecting cases on not active tabs - clears cases checkboxes
     // clears if current task is default task
     $isDefaultTask = $this->controller->getStateMachine()->getTaskFormName() == 'DefaultTask';
     if ($isDefaultTask) {
       foreach ($defaultValues as $key => $field) {
-        if(preg_match('/^' . CRM_Core_Form::CB_PREFIX . '/', $key)) {
+        if (preg_match('/^' . CRM_Core_Form::CB_PREFIX . '/', $key)) {
           unset($defaultValues[$key]);
         }
       }
     }
 
     return $defaultValues;
+  }
+
+  /**
+   * @return array
+   */
+  public function getSupportcaseDefaultValues() {
+    return [
+      'case_type_id' => CRM_Supportcase_Utils_Setting::getMainCaseTypeId(),
+      'case_status_id' => [
+        CRM_Core_PseudoConstant::getKey('CRM_Case_BAO_Case', 'case_status_id', 'Open'),
+        CRM_Core_PseudoConstant::getKey('CRM_Case_BAO_Case', 'case_status_id', 'Urgent'),
+      ]
+    ];
   }
 
   /**
@@ -112,12 +120,42 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $this->assign('lockReloadTimeInSek', CRM_Supportcase_Utils_Setting::getDashboardLockReloadTime());
     $this->assign('isShowPagination', $isShowPagination);
     $this->assign('civiBaseUrl', rtrim($config->userFrameworkBaseURL, "/"));
+    $this->assign('isCollapseFilter', $this->isCollapseFilter());
 
     // to clean old values from previous tasks when user click on 'cancel' button
     $buttonName = $this->controller->getButtonName();
     if ($buttonName == '_qf_Dashboard_display') {
       $this->cleanSelectedCasesAtFormParams();
     }
+  }
+
+  /**
+   * @return bool
+   */
+  public function isCollapseFilter() {
+    $submitValues = $this->getSubmitValues();
+    $defaultValues = $this->getSupportcaseDefaultValues();
+    if (empty($submitValues)) {
+      return true;
+    }
+
+    foreach ($defaultValues as $name => $value) {
+      if (empty($submitValues[$name])) {
+        return false;
+      }
+
+      if (is_array($value)) {
+        if (!empty(array_diff($value, $submitValues[$name])) || !empty(array_diff($submitValues[$name], $value))) {
+          return false;
+        }
+      } else {
+        if ($submitValues[$name] != $value) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 
   /**

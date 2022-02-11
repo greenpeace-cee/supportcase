@@ -8,13 +8,11 @@ body.manage-case-page #page-title {
 }
 
 body.manage-case-page #header,
-body.manage-case-page #breadcrumb,
 body.manage-case-page #main-content,
 body.manage-case-page #page-title,
 body.manage-case-page .tabs,
 body.manage-case-page #footer,
 body.manage-case-page #content > .section .tabs,
-body.manage-case-page #civicrm-menu-nav,
 body.manage-case-page #civicrm-footer,
 body.manage-case-page #footer-wrapper,
 body.manage-case-page #access.footer,
@@ -32,7 +30,7 @@ body.manage-case-page {
 
 body.manage-case-page #main, #content {
     width: 100% !important;
-    margin: 0 !important;
+    margin: 10px 0 0 0!important;
 }
 
 body.manage-case-page #page {
@@ -41,7 +39,7 @@ body.manage-case-page #page {
     padding : 0 !important;
 }
 body.manage-case-page.crm-menubar-visible.crm-menubar-over-cms-menu.crm-menubar-wrapped {
-    padding-top: 0px !important;
+    padding-top: 0 !important;
 
 }
 @media (min-width: 768px) {

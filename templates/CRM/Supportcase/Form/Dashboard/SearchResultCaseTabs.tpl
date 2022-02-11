@@ -61,44 +61,11 @@
             var showCaseActivityButtons = $('.supportcase__show-case-activity-button');
             var caseToggleSelectButton = $('#supportcaseToggleSelectCases');
 
-            initUpdatingPageAfterClosePopupAngularPage();
             initTabs();
             activateTab(storageGetActiveTab());
             initCaseToggleSelectButton();
             hideSelectAllCasesButton();
             initLocker();
-
-            function initUpdatingPageAfterClosePopupAngularPage() {
-                //hack to prevent double initialization
-                if (window.isDialogcloseExtended === true) {
-                    return;
-                }
-
-                $(document).on('dialogclose', function(e) {
-                    if (window.isCrurrentPopupAngularManageCase) {
-                      $('#crm-main-content-wrapper').crmSnippet().crmSnippet('refresh');
-                    }
-                });
-
-                $(document).on('dialogopen', function(e) {
-                    setTimeout(function () {
-                        var supportCaseAngularJsWrap = $('.support-case-angular-js-wrap');
-                        window.isCrurrentPopupAngularManageCase = (supportCaseAngularJsWrap.length >= 1);
-
-                        var dialog = $(e.target);
-                        if (supportCaseAngularJsWrap.length > 0) {
-                            dialog.dialog('option', {
-                                width: '90%',
-                                height: '600',
-                                resizable: false,
-                            });
-                            dialog.trigger('dialogresize');
-                        }
-                    }, 500);
-                });
-
-                window.isDialogcloseExtended = true;
-            }
 
             function initTabs() {
                 allTabs.click(function() {

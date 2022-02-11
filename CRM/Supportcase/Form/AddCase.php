@@ -88,8 +88,13 @@ class CRM_Supportcase_Form_AddCase extends CRM_Core_Form {
     }
 
     CRM_Core_Session::setStatus('Supportcase is created!', 'Success', 'success');
-    $angularUrl = CRM_Utils_System::url('civicrm/supportcase/manage-case-angular-wrap', ['case_id' => $case['id']]);
+    $angularUrl = CRM_Utils_System::url('civicrm/a/', NULL, TRUE, 'supportcase/manage-case/' . $case['id'] );;
     CRM_Utils_System::redirect($angularUrl);
+  }
+
+  public function cancelAction() {
+    CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/supportcase'));//TODO add search hash
+    CRM_Utils_System::civiExit();
   }
 
 }

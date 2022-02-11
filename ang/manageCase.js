@@ -6,15 +6,12 @@
     angular.module(moduleName).config([
         "$routeProvider",
         function($routeProvider) {
-            $routeProvider.when("/supportcase/manage-case/:caseId?/:scrollableBlockHeight?", {
+            $routeProvider.when("/supportcase/manage-case/:caseId?", {
                 controller: "manageCaseCtrl",
                 templateUrl: "~/manageCase/manageCase.html",
                 resolve: {
                     caseId: function($route) {
                         return angular.isDefined($route.current.params.caseId) ? $route.current.params.caseId : false;
-                    },
-                    scrollableBlockHeight: function($route) {
-                        return angular.isDefined($route.current.params.scrollableBlockHeight) ? $route.current.params.scrollableBlockHeight : false;
                     },
                     apiCalls: function($route, crmApi) {
                         var reqs = {};
@@ -32,7 +29,7 @@
         }
     ]);
 
-    angular.module(moduleName).controller("manageCaseCtrl", function($scope, crmApi, apiCalls, caseId, scrollableBlockHeight, $interval) {
+    angular.module(moduleName).controller("manageCaseCtrl", function($scope, crmApi, apiCalls, caseId, $interval) {
         $scope.ts = CRM.ts();
         $scope.caseInfo = {};
         $scope.isError = false;
@@ -40,13 +37,6 @@
         $scope.isCaseUnlocked = false;
         $scope.errorMessage = '';
         $scope.isCaseLocked = false;
-        if (scrollableBlockHeight !== false) {
-            setTimeout(function() {
-                CRM.$('.mc__scrollable-block')
-                    .css('overflow-y', 'scroll')
-                    .css('height', scrollableBlockHeight + 'px');
-            }, 0);
-        }
         //to add ability to use styles only for this page
         setTimeout(function() {
             CRM.$('body').addClass('manage-case-page');
@@ -1257,6 +1247,8 @@
             templateUrl: "~/manageCase/directives/managePanel.html",
             scope: {model: "="},
             controller: function($scope, $window, $element) {
+                $scope.backUrl = CRM.url('civicrm/supportcase');// TODO: add search hash
+
                 $scope.showError = function(errorMessage) {
                     $($element).find('.mp__error-wrap').empty().append('<div class="crm-error">' + errorMessage + '</div>');
                 };
@@ -1285,12 +1277,8 @@
                 $scope.resolveCase = function() {
                     $scope.doAction('status_id', $scope.model['settings']['case_status_ids']['resolve'], function () {
                         $scope.model['status_id'] = $scope.model['settings']['case_status_ids']['resolve'];
-                        $scope.$apply();
                         CRM.status('Case was resolved.');
-
-                        // sends message to parent page to close popup window when this page is loaded in popup(in iframe)
-                        var parentPage = window['location']['origin'] + CRM.url('civicrm/supportcase');
-                        top.postMessage("manage_supportcase_close_popup_window" , parentPage);
+                        window.location.href = CRM.url('civicrm/supportcase');// TODO: add search hash
                     });
                 };
 

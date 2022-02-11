@@ -198,8 +198,8 @@ function supportcase_civicrm_links($op, $objectName, $objectId, &$links, &$mask,
       ->execute()
       ->count();
     if ($isSupportCase) {
-      $links[0]['url'] = 'civicrm/supportcase/manage-case-angular-wrap';
-      $links[0]['qs'] = 'reset=1&case_id=%%id%%';
+      $links[0]['url'] = 'civicrm/a/#/supportcase/manage-case/%%id%%';
+      $links[0]['qs'] = 'reset=1';
       $links[0]['target'] = '_blank';
     }
   }

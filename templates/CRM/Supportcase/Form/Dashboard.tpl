@@ -21,20 +21,3 @@
 
   {include file="CRM/Supportcase/Form/Dashboard/SearchResultCaseTabs.tpl"}
 {/if}
-
-{literal}
-  <script>
-    // this addEventListener handles messages from 'manage supportcase angular' page which is loaded in iframe
-    // when get 'manage_supportcase_close_popup_window' then close popup window
-    window.addEventListener("message", (event) => {
-      if (event.origin !== '{/literal}{$civiBaseUrl}{literal}') {
-        return;
-      }
-
-      if (event['data'] === 'manage_supportcase_close_popup_window') {
-        CRM.$('.ui-dialog-content').dialog('close');
-        CRM.status('Case was resolved.');
-      }
-    }, false);
-  </script>
-{/literal}

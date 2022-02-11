@@ -2,37 +2,34 @@
 
 <div class="supportcase-manage-case-module-wrap">
 	<div class="crm-form-block">
-		<div class="mc__block-wrap">
-			<div class="mc__scrollable-block">
-				<div ng-if="isError">
-					<div class="mc__error-message crm-error">{{errorMessage}}</div>
-				</div>
-
-				<div ng-if="!isError && isCaseLocked">
-					<div class="mc__error-message crm-error">{{caseInfo.lock_message}}</div>
-				</div>
-
-				<div ng-if="isCaseUnlocked">
-					<div class="mc__error-message crm-error">
-						This case may have been opened in another window and/or by a different user.
-						<br />
-						Please refresh the page to see if any changes were made.
-					</div>
-				</div>
-
-				<div ng-if="!isError && !isCaseLocked && !isCaseUnlocked">
-					<case-info model='caseInfo'></case-info>
-					<communication model='caseInfo'></communication>
-					<quick-actions model='caseInfo'></quick-actions>
-					<activities model='caseInfo'></activities>
-					<recent-cases model='caseInfo'></recent-cases>
-				</div>
+		<div>
+			<div ng-if="!isError && !isCaseLocked && !isCaseUnlocked">
+				<manage-panel model='caseInfo'></manage-panel>
 			</div>
-			<div class="mc__fixed-block">
-				<div ng-if="!isError && !isCaseLocked && !isCaseUnlocked">
-					<manage-panel model='caseInfo'></manage-panel>
-				</div>
+		</div>
+
+		<div ng-if="isError">
+			<div class="mc__error-message crm-error">{{errorMessage}}</div>
+		</div>
+
+		<div ng-if="!isError && isCaseLocked">
+			<div class="mc__error-message crm-error">{{caseInfo.lock_message}}</div>
+		</div>
+
+		<div ng-if="isCaseUnlocked">
+			<div class="mc__error-message crm-error">
+				This case may have been opened in another window and/or by a different user.
+				<br />
+				Please refresh the page to see if any changes were made.
 			</div>
+		</div>
+
+		<div ng-if="!isError && !isCaseLocked && !isCaseUnlocked">
+			<case-info model='caseInfo'></case-info>
+			<communication model='caseInfo'></communication>
+			<quick-actions model='caseInfo'></quick-actions>
+			<activities model='caseInfo'></activities>
+			<recent-cases model='caseInfo'></recent-cases>
 		</div>
 	</div>
 </div>

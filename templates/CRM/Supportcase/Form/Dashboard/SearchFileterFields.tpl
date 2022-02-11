@@ -1,6 +1,6 @@
 <div class="supportcase__dashboard-search-filters-wrap">
     <div class="crm-block crm-form-block">
-        <div class="spc__accordion crm-accordion-wrapper crm-contribution_search_form-accordion">
+        <div class="spc__accordion crm-accordion-wrapper crm-contribution_search_form-accordion {if $isCollapseFilter}collapsed{/if}">
             <div class="crm-accordion-header crm-master-accordion-header">
                 {ts}Filter{/ts}
             </div>
@@ -94,12 +94,12 @@
                                 </a>
                             </div>
 
-                            <a href="{crmURL p='civicrm/supportcase/add-case' q='reset=1'}" title="{ts}Add new one{/ts}" class=" crm-popup">
-                                <button class="spc__button spc--height-big">
+                            <a href="{crmURL p='civicrm/supportcase/add-case'}" title="{ts}Add new one{/ts}">
+                                <div class="spc__button spc--height-big spc--blue">
                                     <span class="ui-button-icon ui-icon fa-plus"></span>
                                     <span class="ui-button-icon-space"> </span>
                                     <span>Add Case</span>
-                                </button>
+                                </div>
                             </a>
                         </div>
                     </div>

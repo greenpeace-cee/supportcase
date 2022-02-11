@@ -269,25 +269,6 @@ class CRM_Supportcase_Utils_Setting {
   }
 
   /**
-   * Iframe height with 'Manage Case' angular page
-   *
-   * @return int
-   */
-  public static function getAngularIframeHeight() {
-    return 4000;// value in pixels
-  }
-
-  /**
-   * Iframe height with 'Manage Case' angular page
-   * which is opened in modal window
-   *
-   * @return int
-   */
-  public static function getAngularIframeHeightInModal() {
-    return 650;// value in pixels
-  }
-
-  /**
    * @return int
    */
   public static function getMaxFilesSize() {

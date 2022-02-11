@@ -181,6 +181,7 @@
 .spc__button {
     cursor: pointer;
     box-sizing: border-box !important;
+    display: block;
 }
 
 .spc__button.spc--blue {

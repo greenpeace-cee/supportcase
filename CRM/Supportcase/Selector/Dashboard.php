@@ -268,10 +268,11 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
       self::$_links = [
         CRM_Core_Action::VIEW => [
           'name' => ts('Manage'),
-          'url' => 'civicrm/supportcase/manage-case-angular-wrap',
-          'qs' => 'reset=1&case_id=%%id%%',
+          'url' => 'civicrm/a/#/supportcase/manage-case/%%id%%',
+          'qs' => 'reset=1',
           'ref' => 'manage-case',
           'title' => ts('Manage Case'),
+          'class' => 'not-popup', // huck to make this link not in popup
         ],
         CRM_Core_Action::UPDATE => [
           'name' => ts('Report Spam'),

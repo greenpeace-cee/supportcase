@@ -1,56 +1,66 @@
 <div class="mp__manage-panel">
-	<div class="crm-submit-buttons">
-		<div class="crm-section">
-			<div class="mp__buttons-wrap">
-				<div ng-if="!isCaseDeleted() && !isCaseHasStatus('spam');">
-
-					<button ng-if="!isCaseHasStatus('resolve');" class="mp__button crm-form-submit spc__button spc--height-big" ng-click="resolveCase();">
-						<span class="ui-button-icon ui-icon fa-check"></span>
-						<span class="ui-button-icon-space"> </span>
-						Resolve
-					</button>
-					<button ng-if="!isCaseHasStatus('ongoing');" class="mp__button crm-form-submit spc__button spc--height-big" ng-click="makeCaseOngoing();">
-						<span class="ui-button-icon ui-icon fa-refresh"></span>
-						<span class="ui-button-icon-space"> </span>
-						Ongoing
-					</button>
-					<button ng-if="!isCaseHasStatus('urgent');" class="mp__button crm-form-submit spc__button spc--height-big" ng-click="makeCaseUrgent();">
-						<span class="ui-button-icon ui-icon fa-exclamation-circle"></span>
-						<span class="ui-button-icon-space"> </span>
-						Urgent
-					</button>
-					<button ng-if="!isCaseHasStatus('spam');" class="mp__button crm-form-submit spc__button spc--height-big" ng-click="reportSpamCase();">
-						<span class="ui-button-icon ui-icon fa-flag"></span>
-						<span class="ui-button-icon-space"> </span>
-						Report Spam
-					</button>
-					<button class="mp__button crm-form-submit spc__button spc--height-big" ng-click="moveToTrashCase();">
-						<span class="ui-button-icon ui-icon fa-trash"></span>
-						<span class="ui-button-icon-space"> </span>
-						Delete case
-					</button>
-				</div>
-				<div ng-if="isCaseDeleted();">
-					<button class="mp__button crm-form-submit" ng-click="restoreCase();">
-						<span class="ui-button-icon ui-icon fa-trash-o"></span>
-						<span class="ui-button-icon-space"> </span>
-						Restore case from trash
-					</button>
-				</div>
-				<div ng-if="isCaseHasStatus('spam') && !isCaseDeleted();">
-					<button class="mp__button crm-form-submit spc__button spc--height-big" ng-click="makeCaseOngoing();">
-						<span class="ui-button-icon ui-icon fa-refresh"></span>
-						<span class="ui-button-icon-space"> </span>
-						Not Spam
-					</button>
-					<button class="mp__button crm-form-submit spc__button spc--height-big" ng-click="moveToTrashCase();">
-						<span class="ui-button-icon ui-icon fa-trash"></span>
-						<span class="ui-button-icon-space"> </span>
-						Delete case
-					</button>
-				</div>
-			</div>
-			<div class="mp__error-wrap"></div>
-		</div>
+	<div ng-if="!isCaseDeleted() && !isCaseHasStatus('spam');" class="mp__buttons-wrap">
+		<a class="spc__button spc--height-big spc--blue" href="{{backUrl}}" title="Back to dashboard">
+			<span class="ui-button-icon ui-icon fa-arrow-left"></span>
+			<span class="ui-button-icon-space"> </span>
+			<span>Back</span>
+		</a>
+		<button ng-if="!isCaseHasStatus('resolve');" class="spc__button spc--height-big" ng-click="resolveCase();">
+			<span class="ui-button-icon ui-icon fa-check"></span>
+			<span class="ui-button-icon-space"> </span>
+			<span>Resolve</span>
+		</button>
+		<button ng-if="!isCaseHasStatus('ongoing');" class="spc__button spc--height-big" ng-click="makeCaseOngoing();">
+			<span class="ui-button-icon ui-icon fa-refresh"></span>
+			<span class="ui-button-icon-space"> </span>
+			<span>Ongoing</span>
+		</button>
+		<button ng-if="!isCaseHasStatus('urgent');" class="spc__button spc--height-big" ng-click="makeCaseUrgent();">
+			<span class="ui-button-icon ui-icon fa-exclamation-circle"></span>
+			<span class="ui-button-icon-space"> </span>
+			<span>Urgent</span>
+		</button>
+		<button ng-if="!isCaseHasStatus('spam');" class="spc__button spc--height-big" ng-click="reportSpamCase();">
+			<span class="ui-button-icon ui-icon fa-flag"></span>
+			<span class="ui-button-icon-space"> </span>
+			<span>Report Spam</span>
+		</button>
+		<button class="spc__button spc--height-big" ng-click="moveToTrashCase();">
+			<span class="ui-button-icon ui-icon fa-trash"></span>
+			<span class="ui-button-icon-space"> </span>
+			<span>Delete case</span>
+		</button>
 	</div>
+
+	<div ng-if="isCaseDeleted();" class="mp__buttons-wrap">
+		<a class="spc__button spc--height-big spc--blue" href="{{backUrl}}" title="Back to dashboard">
+			<span class="ui-button-icon ui-icon fa-arrow-left"></span>
+			<span class="ui-button-icon-space"> </span>
+			<span>Back</span>
+		</a>
+		<button class="spc__button" ng-click="restoreCase();">
+			<span class="ui-button-icon ui-icon fa-trash-o"></span>
+			<span class="ui-button-icon-space"> </span>
+			<span>Restore case from trash</span>
+		</button>
+	</div>
+
+	<div ng-if="isCaseHasStatus('spam') && !isCaseDeleted();" class="mp__buttons-wrap">
+		<a class="spc__button spc--height-big spc--blue" href="{{backUrl}}" title="Back to dashboard">
+			<span class="ui-button-icon ui-icon fa-arrow-left"></span>
+			<span class="ui-button-icon-space"> </span>
+			<span>Back</span>
+		</a>
+		<button class="spc__button spc--height-big" ng-click="makeCaseOngoing();">
+			<span class="ui-button-icon ui-icon fa-refresh"></span>
+			<span class="ui-button-icon-space"> </span>
+			<span>Not Spam</span>
+		</button>
+		<button class="spc__button spc--height-big" ng-click="moveToTrashCase();">
+			<span class="ui-button-icon ui-icon fa-trash"></span>
+			<span class="ui-button-icon-space"> </span>
+			<span>Delete case</span>
+		</button>
+	</div>
+	<div class="mp__error-wrap"></div>
 </div>
