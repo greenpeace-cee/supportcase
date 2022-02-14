@@ -363,6 +363,7 @@
 }
 
 #page-title,
+#branding,
 #breadcrumb,
 #content > .section > .tabs {
     display: none !important;
