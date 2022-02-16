@@ -31,6 +31,16 @@ function civicrm_api3_supportcase_email_getoriginal($params) {
     ->execute()
     ->first();
 
+  // the original implementation in ezcMailCharsetConverter does not use
+  // //translit//ignore with iconv and seems to fail sometimes
+  ezcMailCharsetConverter::setConvertMethod(function($text, $originalCharset) {
+    if ( $originalCharset === 'unknown-8bit' || $originalCharset === 'x-user-defined' )
+    {
+      $originalCharset = 'latin1';
+    }
+    return iconv($originalCharset, 'utf-8//translit//ignore', $text);
+  });
+
   $html = NULL;
   foreach (json_decode($message['body'], TRUE) as $partJson) {
     if (empty($partJson['headers'])) {
