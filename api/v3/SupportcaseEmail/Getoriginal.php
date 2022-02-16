@@ -38,7 +38,7 @@ function civicrm_api3_supportcase_email_getoriginal($params) {
     {
       $originalCharset = 'latin1';
     }
-    return iconv($originalCharset, 'utf-8//translit//ignore', $text);
+    return iconv($originalCharset, 'utf-8//TRANSLIT//IGNORE', $text);
   });
 
   $html = NULL;
