@@ -1258,7 +1258,11 @@
             templateUrl: "~/manageCase/directives/managePanel.html",
             scope: {model: "="},
             controller: function($scope, $window, $element) {
-                $scope.backUrl = CRM.url('civicrm/supportcase', {'qfKey': $scope.model['dashboardSearchQfKey']});
+                if ($scope.model['dashboardSearchQfKey']) {
+                    $scope.backUrl = CRM.url('civicrm/supportcase', {'qfKey': $scope.model['dashboardSearchQfKey']});
+                } else {
+                    $scope.backUrl = CRM.url('civicrm/supportcase');
+                }
 
                 $scope.showError = function(errorMessage) {
                     $($element).find('.mp__error-wrap').empty().append('<div class="crm-error">' + errorMessage + '</div>');
@@ -1289,7 +1293,11 @@
                     $scope.doAction('status_id', $scope.model['settings']['case_status_ids']['resolve'], function () {
                         $scope.model['status_id'] = $scope.model['settings']['case_status_ids']['resolve'];
                         CRM.status('Case was resolved.');
-                        window.location.href = CRM.url('civicrm/supportcase', {'qfKey': $scope.model['dashboardSearchQfKey']});
+                        if ($scope.model['dashboardSearchQfKey']) {
+                            window.location.href = CRM.url('civicrm/supportcase', {'qfKey': $scope.model['dashboardSearchQfKey']});
+                        } else {
+                            window.location.href = CRM.url('civicrm/supportcase');
+                        }
                     });
                 };
 

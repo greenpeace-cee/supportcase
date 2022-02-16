@@ -111,7 +111,15 @@
           <td class="{$row.class} crm-case-status_{$row.case_status}">
             <span>{$row.case_status}</span>
           </td>
-          <td>{$row.action|replace:'%%qfKey%%':$qfKey|replace:'xx':$row.case_id|replace:'action-item crm-hover-button manage-case not-popup':'crm-hover-button manage-case'}{$row.moreActions|replace:'xx':$row.case_id}</td>
+          <td>
+            {if $dashboardSearchQfKey}
+                {$row.action|replace:'%%qfKey%%':$dashboardSearchQfKey|replace:'xx':$row.case_id|replace:'action-item crm-hover-button manage-case not-popup':'crm-hover-button manage-case'}
+            {else}
+                {$row.action|replace:'/%%qfKey%%':''|replace:'xx':$row.case_id|replace:'action-item crm-hover-button manage-case not-popup':'crm-hover-button manage-case'}
+            {/if}
+
+            {$row.moreActions|replace:'xx':$row.case_id}
+          </td>
         {/foreach}
     </table>
   </div>

@@ -110,6 +110,8 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
 
     $pager = (CRM_Core_Smarty::singleton())->get_template_vars('pager');
     $isShowPagination = !empty($pager) && $pager->numItems() > $pager->_perPage;
+    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String');
+    $dashboardSearchQfKey = CRM_Utils_Rule::qfKey($qfKey) ? $qfKey : false;
 
     $this->set('searchFormName', 'Dashboard');
     $this->assign('cases', (new CRM_Supportcase_Utils_CasesHandler($this->caseRows))->run());
@@ -122,6 +124,7 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $this->assign('civiBaseUrl', rtrim($config->userFrameworkBaseURL, "/"));
     $this->assign('isCollapseFilter', $this->isCollapseFilter());
     $this->assign('addNewCaseUrl', $this->getCreateNewCaseUrl());
+    $this->assign('dashboardSearchQfKey', $dashboardSearchQfKey);
 
     // to clean old values from previous tasks when user click on 'cancel' button
     $buttonName = $this->controller->getButtonName();
@@ -134,13 +137,13 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
    * @return string
    */
   private function getCreateNewCaseUrl() {
-    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
-    $urlParams = '';
+    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String');
+
     if (CRM_Utils_Rule::qfKey($qfKey)) {
-      $urlParams .= "dashboardSearchQfKey=$qfKey";
+      return CRM_Utils_System::url('civicrm/supportcase/add-case', "dashboardSearchQfKey=$qfKey");
     }
 
-    return CRM_Utils_System::url('civicrm/supportcase/add-case', $urlParams);
+    return CRM_Utils_System::url('civicrm/supportcase/add-case');
   }
 
   /**
