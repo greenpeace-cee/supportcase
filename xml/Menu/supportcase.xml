@@ -36,4 +36,10 @@
     <title>View Original</title>
     <access_arguments>access support cases</access_arguments>
   </item>
+  <item>
+    <path>civicrm/supportcase/view-original-iframe</path>
+    <page_callback>CRM_Supportcase_Page_ViewOriginalIframe</page_callback>
+    <title>View Original</title>
+    <access_arguments>access support cases</access_arguments>
+  </item>
 </menu>
