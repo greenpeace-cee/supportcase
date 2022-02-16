@@ -71,15 +71,6 @@
               </span>
             </div>
           </td>
-          <td class="supportcase__case-assignee-column-wrap">
-            {foreach from=$row.case_manager_contacts item='manager_contact'}
-              <div class="supportcase__case-contact-item">
-                <a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$manager_contact.id`"}" title="{ts}View Contact Details{/ts}" target="_blank">
-                  <span class="supportcase__case-contact-item-line" >{$manager_contact.sort_name}</span>
-                </a>
-              </div>
-            {/foreach}
-          </td>
           <td class="supportcase__case-subject-column-wrap">
             <span>{$row.case_subject}</span>
           </td>
@@ -87,7 +78,7 @@
             {if $row.case_recent_activity_id}
               <a href="{crmURL p='civicrm/supportcase/tooltip-activity-view' q="id=`$row.case_recent_activity_id`&snippet=4"}" class="crm-summary-link">
                 <blockquote class="supportcase__recent-communication-details">
-                  {$row.case_recent_activity_details|strip_tags:false|truncate:160|purify}
+                  {$row.case_recent_activity_details|strip_tags:false|truncate:255|purify}
                 </blockquote>
                 <cite class="supportcase__recent-communication-meta">{$row.case_recent_activity_type_label} on {$row.case_recent_activity_date|crmDate}</cite>
               </a>
@@ -108,8 +99,15 @@
               {/if}
             </div>
           </td>
-          <td class="{$row.class} crm-case-status_{$row.case_status}">
+          <td class="supportcase__case-status-column-wrap {$row.class} crm-case-status_{$row.case_status}">
             <span>{$row.case_status}</span>
+            {foreach from=$row.case_manager_contacts item='manager_contact'}
+              <div class="supportcase__case-contact-item">
+                <a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$manager_contact.id`"}" title="{ts}View Contact Details{/ts}" target="_blank">
+                  <span class="supportcase__case-contact-item-line" >{$manager_contact.sort_name}</span>
+                </a>
+              </div>
+            {/foreach}
           </td>
           <td>
             {if $dashboardSearchQfKey}

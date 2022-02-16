@@ -3,6 +3,9 @@
         <div class="spc__accordion crm-accordion-wrapper crm-contribution_search_form-accordion {if $isCollapseFilter}collapsed{/if}">
             <div class="crm-accordion-header crm-master-accordion-header">
                 {ts}Filter{/ts}
+                <a href="{crmURL p='civicrm/supportcase' q='reset=1'}" class="spc__accordion-refresh css_right" title="Refresh">
+                  <i class="crm-i fa-refresh" aria-hidden="true"></i>
+                </a>
             </div>
             <div class="crm-accordion-body">
                 {strip}

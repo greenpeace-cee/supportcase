@@ -585,10 +585,6 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
           'direction' => CRM_Utils_Sort::DONTCARE,
         ],
         [
-          'name' => ts('Managers'),
-          'direction' => CRM_Utils_Sort::DONTCARE,
-        ],
-        [
           'name' => ts('Subject'),
           'direction' => CRM_Utils_Sort::DONTCARE,
         ],

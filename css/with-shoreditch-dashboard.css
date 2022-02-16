@@ -90,7 +90,6 @@
 .crm-container .supportcase__result-block a.sorting::after {
     right: auto;
     padding-left: 7px;
-    top: 23px;
 }
 
 .supportcase__result-table-head-column span,

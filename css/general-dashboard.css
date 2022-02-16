@@ -81,6 +81,10 @@
     max-width: 300px;
 }
 
+.supportcase__case-status-column-wrap {
+  min-width: 130px;
+}
+
 .crm-container table.dataTable tr td .supportcase__case-tags-wrap .supportcase__case-tag-item {
     margin: 1px;
     max-width: 100px;
@@ -326,6 +330,10 @@
 .supportcase__recent-communication-details {
     margin: 0;
     line-height: 1.1;
+    max-width: 600px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .supportcase__recent-communication-details:before {

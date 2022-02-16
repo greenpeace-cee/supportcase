@@ -170,6 +170,19 @@
     font-size: 18px;
     padding-top: 2px;
 }
+.crm-container .crm-accordion-header a.spc__accordion-refresh {
+    display: none;
+}
+.crm-container .collapsed .crm-accordion-header a.spc__accordion-refresh {
+    display: block;
+    position: absolute;
+    right: 7px;
+    top: 7px;
+    color: inherit;
+}
+.crm-container .collapsed  .crm-accordion-header a.spc__accordion-refresh:hover {
+  color: inherit;
+}
 
 /*
    End supportcase Accordion
