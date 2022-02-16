@@ -111,7 +111,7 @@
           <td class="{$row.class} crm-case-status_{$row.case_status}">
             <span>{$row.case_status}</span>
           </td>
-          <td>{$row.action|replace:'xx':$row.case_id|replace:'action-item crm-hover-button manage-case not-popup':'crm-hover-button manage-case'}{$row.moreActions|replace:'xx':$row.case_id}</td>
+          <td>{$row.action|replace:'%%qfKey%%':$qfKey|replace:'xx':$row.case_id|replace:'action-item crm-hover-button manage-case not-popup':'crm-hover-button manage-case'}{$row.moreActions|replace:'xx':$row.case_id}</td>
         {/foreach}
     </table>
   </div>

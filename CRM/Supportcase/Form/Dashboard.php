@@ -121,12 +121,26 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $this->assign('isShowPagination', $isShowPagination);
     $this->assign('civiBaseUrl', rtrim($config->userFrameworkBaseURL, "/"));
     $this->assign('isCollapseFilter', $this->isCollapseFilter());
+    $this->assign('addNewCaseUrl', $this->getCreateNewCaseUrl());
 
     // to clean old values from previous tasks when user click on 'cancel' button
     $buttonName = $this->controller->getButtonName();
     if ($buttonName == '_qf_Dashboard_display') {
       $this->cleanSelectedCasesAtFormParams();
     }
+  }
+
+  /**
+   * @return string
+   */
+  private function getCreateNewCaseUrl() {
+    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
+    $urlParams = '';
+    if (CRM_Utils_Rule::qfKey($qfKey)) {
+      $urlParams .= "dashboardSearchQfKey=$qfKey";
+    }
+
+    return CRM_Utils_System::url('civicrm/supportcase/add-case', $urlParams);
   }
 
   /**

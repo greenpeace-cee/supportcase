@@ -139,7 +139,7 @@ class CRM_Supportcase_Utils_Setting {
    * Default count of rows on supportcase dashboard
    */
   public static function getDefaultCountOfRows() {
-    return 1000;
+    return 100;
   }
 
   /**

@@ -23,7 +23,7 @@ class CRM_Supportcase_Form_Task_Spam extends CRM_Supportcase_Form_SupportCaseTas
     $updatedCaseCount = 0;
     $notUpdatedCaseCount = 0;
 
-    foreach ($this->getSelectedCaseIds() as $caseId) {
+    foreach ($this->getCaseIds() as $caseId) {
       try {
         civicrm_api3('Case', 'create', ['id' => $caseId, 'status_id' => "spam"]);
         $updatedCaseCount++;

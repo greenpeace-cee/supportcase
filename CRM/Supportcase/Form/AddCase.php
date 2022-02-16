@@ -8,6 +8,7 @@ class CRM_Supportcase_Form_AddCase extends CRM_Core_Form {
 
   public function buildQuickForm() {
     CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/ang/element.css');
+    $this->add('hidden', 'dashboard_search_qf_key', CRM_Utils_Request::retrieve('dashboardSearchQfKey', 'String'));
     $this->add('text', 'subject', 'Subject', ['class' => 'spc__input spc--width-100-percent'], TRUE);
     $this->add('select', 'category_id', ts('Category'), CRM_Supportcase_Utils_Category::getOptions(), TRUE, ['class' => 'spc__input spc--width-100-percent']);
     $this->addEntityRef(
@@ -88,13 +89,32 @@ class CRM_Supportcase_Form_AddCase extends CRM_Core_Form {
     }
 
     CRM_Core_Session::setStatus('Supportcase is created!', 'Success', 'success');
-    $angularUrl = CRM_Utils_System::url('civicrm/a/', NULL, TRUE, 'supportcase/manage-case/' . $case['id'] );;
+    $this->redirectToManageCase($case['id']);
+  }
+
+  /**
+   * @param $caseId
+   * @return void
+   */
+  public function redirectToManageCase($caseId) {
+    $angularRoute = 'supportcase/manage-case/' . $caseId;
+    $qfKey = CRM_Utils_Request::retrieve('dashboard_search_qf_key', 'String', $this);
+    if (!empty($qfKey)) {
+      $angularRoute .= '/' . $qfKey;
+    }
+
+    $angularUrl = CRM_Utils_System::url('civicrm/a/', NULL, TRUE, $angularRoute);
     CRM_Utils_System::redirect($angularUrl);
   }
 
   public function cancelAction() {
-    CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/supportcase'));//TODO add search hash
-    CRM_Utils_System::civiExit();
+    $urlParams = [];
+    $qfKey = CRM_Utils_Request::retrieve('dashboard_search_qf_key', 'String', $this);
+    if (!empty($qfKey)) {
+      $urlParams['qfKey'] = $qfKey;
+    }
+
+    CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/supportcase', $urlParams));
   }
 
 }

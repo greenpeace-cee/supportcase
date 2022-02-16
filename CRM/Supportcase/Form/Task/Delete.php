@@ -33,7 +33,7 @@ class CRM_Supportcase_Form_Task_Delete extends CRM_Supportcase_Form_SupportCaseT
     $deleted = 0;
     $failed = 0;
 
-    foreach ($this->getSelectedCaseIds() as $caseId) {
+    foreach ($this->getCaseIds() as $caseId) {
       if (CRM_Case_BAO_Case::deleteCase($caseId, $isMoveToTrash)) {
         $deleted++;
       } else {

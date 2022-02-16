@@ -6,12 +6,15 @@
     angular.module(moduleName).config([
         "$routeProvider",
         function($routeProvider) {
-            $routeProvider.when("/supportcase/manage-case/:caseId?", {
+            $routeProvider.when("/supportcase/manage-case/:caseId?/:dashboardSearchQfKey?", {
                 controller: "manageCaseCtrl",
                 templateUrl: "~/manageCase/manageCase.html",
                 resolve: {
                     caseId: function($route) {
                         return angular.isDefined($route.current.params.caseId) ? $route.current.params.caseId : false;
+                    },
+                    dashboardSearchQfKey: function($route) {
+                        return angular.isDefined($route.current.params.dashboardSearchQfKey) ? $route.current.params.dashboardSearchQfKey : false;
                     },
                     apiCalls: function($route, crmApi) {
                         var reqs = {};
@@ -29,7 +32,7 @@
         }
     ]);
 
-    angular.module(moduleName).controller("manageCaseCtrl", function($scope, crmApi, apiCalls, caseId, $interval) {
+    angular.module(moduleName).controller("manageCaseCtrl", function($scope, crmApi, apiCalls, caseId, dashboardSearchQfKey, $interval) {
         $scope.ts = CRM.ts();
         $scope.caseInfo = {};
         $scope.isError = false;
@@ -48,6 +51,7 @@
                 $scope.errorMessage = apiCalls.caseInfoResponse.error_message;
             } else {
                 $scope.caseInfo = apiCalls.caseInfoResponse.values;
+                $scope.caseInfo['dashboardSearchQfKey'] = dashboardSearchQfKey;
                 $scope.isCaseLocked = $scope.caseInfo['is_case_locked'] && !$scope.caseInfo['is_locked_by_self'];
             }
         };
@@ -751,6 +755,12 @@
                     $scope.getActivityElement(activityId).find('.com__email-item-accordion-head').effect("highlight", {}, 6000);
                 };
 
+                $scope.scrollToActivity = function(activityId) {
+                    $('html, body').animate({
+                        scrollTop: parseInt($scope.getActivityElement(activityId).offset().top) - 100
+                    }, 500);
+                };
+
                 $scope.send = function(activity) {
                     if ($scope.isEmailSending) {
                         console.error('Email is sending');
@@ -831,6 +841,7 @@
                                 var emailActivity = response['values']['activity_id'];
                                 $scope.getEmails(function () {
                                     $scope.highlightActivity(emailActivity);
+                                    $scope.scrollToActivity(emailActivity);
                                 });
                                 $scope.replyMode = null;
                             } else {
@@ -1247,7 +1258,7 @@
             templateUrl: "~/manageCase/directives/managePanel.html",
             scope: {model: "="},
             controller: function($scope, $window, $element) {
-                $scope.backUrl = CRM.url('civicrm/supportcase');// TODO: add search hash
+                $scope.backUrl = CRM.url('civicrm/supportcase', {'qfKey': $scope.model['dashboardSearchQfKey']});
 
                 $scope.showError = function(errorMessage) {
                     $($element).find('.mp__error-wrap').empty().append('<div class="crm-error">' + errorMessage + '</div>');
@@ -1278,7 +1289,7 @@
                     $scope.doAction('status_id', $scope.model['settings']['case_status_ids']['resolve'], function () {
                         $scope.model['status_id'] = $scope.model['settings']['case_status_ids']['resolve'];
                         CRM.status('Case was resolved.');
-                        window.location.href = CRM.url('civicrm/supportcase');// TODO: add search hash
+                        window.location.href = CRM.url('civicrm/supportcase', {'qfKey': $scope.model['dashboardSearchQfKey']});
                     });
                 };
 

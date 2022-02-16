@@ -14,8 +14,10 @@
   {include file="CRM/Supportcase/Form/Dashboard/SearchFileterFields.tpl"}
 
   {if $isShowPagination}
-    <div class="supportcase__top-pagination-wrap">
-      {include file="CRM/common/pager.tpl" location="bottom"}
+    <div class="supportcase__top-pagination-block">
+      <div class="supportcase__top-pagination-wrap">
+        {include file="CRM/common/pager.tpl" location="bottom"}
+      </div>
     </div>
   {/if}
 

@@ -3,18 +3,11 @@
 abstract class CRM_Supportcase_Form_SupportCaseTaskBase extends CRM_Core_Form_Task {
 
   /**
-   * Cases from database with applied search params on dashboard
+   * Cases data
    *
    * @var array
    */
   private $cases = [];
-
-  /**
-   * Selected cases by UI
-   *
-   * @var array
-   */
-  private $selectedCases = [];
 
   /**
    * @return array
@@ -26,16 +19,9 @@ abstract class CRM_Supportcase_Form_SupportCaseTaskBase extends CRM_Core_Form_Ta
   /**
    * @return array
    */
-  public function getSelectedCases() {
-    return $this->selectedCases;
-  }
-
-  /**
-   * @return array
-   */
-  public function getSelectedCaseIds() {
+  public function getCaseIds() {
     $ids = [];
-    foreach ($this->getSelectedCases() as $case) {
+    foreach ($this->getCases() as $case) {
       $ids[] = $case['id'];
     }
 
@@ -65,7 +51,7 @@ abstract class CRM_Supportcase_Form_SupportCaseTaskBase extends CRM_Core_Form_Ta
     $this->prepareCaseData();
     CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/ang/element.css');
     CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/case-tasks.css');
-    $this->assign('cases', $this->getSelectedCases());
+    $this->assign('cases', $this->getCases());
     $this->setRedirectUrl('civicrm/supportcase');
   }
 
@@ -87,47 +73,21 @@ abstract class CRM_Supportcase_Form_SupportCaseTaskBase extends CRM_Core_Form_Ta
     $session->replaceUserContext(CRM_Utils_System::url($redirectUrl, $urlParams));
   }
 
-  /**
-   * Prepare data for task
-   * - selected cases by UI
-   * - cases from database with applied search params on dashboard
-   *
-   * @throws CRM_Core_Exception
-   */
   private function prepareCaseData() {
-    $selectedCases = [];
-    $selectedCaseIds = [];
-    $cases = [];
+    $caseIds = [];
     $queryParams = $this->get('queryParams');
 
     foreach ($queryParams as $values) {
       if (substr($values[0], 0, CRM_Core_Form::CB_PREFIX_LEN) == CRM_Core_Form::CB_PREFIX) {
-        $selectedCaseIds[] = substr($values[0], CRM_Core_Form::CB_PREFIX_LEN);
+        $caseIds[] = substr($values[0], CRM_Core_Form::CB_PREFIX_LEN);
       }
     }
 
-    $query = new CRM_Contact_BAO_Query($queryParams, NULL, NULL, FALSE, FALSE);
-    $query->_distinctComponentClause = " ( civicrm_case.id )";
-    $query->_groupByComponentClause = " GROUP BY civicrm_case.id ";;
-    $query->_select[] = 'civicrm_case.subject as case_subject';
-    $query->_select[] = 'civicrm_case.id as case_id';
-    $result = $query->searchQuery(0, 0);
+    $result = CRM_Core_DAO::executeQuery('SELECT id, subject FROM civicrm_case WHERE id IN(%1)', [
+      1 => [implode(',', $caseIds), 'CommaSeparatedIntegers'],
+    ]);
 
-    while ($result->fetch()) {
-      $caseId = $result->case_id;
-      $case = [
-        'id' => $caseId,
-        'subject' => $result->case_subject,
-      ];
-
-      $cases[$caseId] = $case;
-      if (in_array($caseId, $selectedCaseIds)) {
-        $selectedCases[] =  $case;
-      }
-    }
-
-    $this->selectedCases = $selectedCases;
-    $this->cases = $cases;
+    $this->cases = $result->fetchAll();
   }
 
 }

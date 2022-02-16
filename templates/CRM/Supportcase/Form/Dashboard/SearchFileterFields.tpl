@@ -94,7 +94,7 @@
                                 </a>
                             </div>
 
-                            <a href="{crmURL p='civicrm/supportcase/add-case'}" title="{ts}Add new one{/ts}">
+                            <a href="{$addNewCaseUrl}" title="{ts}Add new one{/ts}">
                                 <div class="spc__button spc--height-big spc--blue">
                                     <span class="ui-button-icon ui-icon fa-plus"></span>
                                     <span class="ui-button-icon-space"> </span>

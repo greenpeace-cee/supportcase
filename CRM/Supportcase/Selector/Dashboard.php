@@ -268,7 +268,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
       self::$_links = [
         CRM_Core_Action::VIEW => [
           'name' => ts('Manage'),
-          'url' => 'civicrm/a/#/supportcase/manage-case/%%id%%',
+          'url' => 'civicrm/a/#/supportcase/manage-case/%%id%%/%%qfKey%%',
           'qs' => 'reset=1',
           'ref' => 'manage-case',
           'title' => ts('Manage Case'),
@@ -308,13 +308,6 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
   public function getPagerParams($action, &$params) {
     $params['status'] = ts('Case') . ' %%StatusMessage%%';
     $params['csvString'] = NULL;
-    if ($this->_limit) {
-      $params['rowCount'] = $this->_limit;
-    }
-    else {
-      $params['rowCount'] = CRM_Utils_Pager::ROWCOUNT;
-    }
-
     $params['buttonTop'] = 'PagerTopButton';
     $params['buttonBottom'] = 'PagerBottomButton';
     $params['rowCount'] = CRM_Supportcase_Utils_Setting::getDefaultCountOfRows();
