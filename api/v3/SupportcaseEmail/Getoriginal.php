@@ -25,7 +25,7 @@ function _civicrm_api3_supportcase_email_getoriginal_spec(&$params) {
  *
  * @return array
  */
-function  civicrm_api3_supportcase_email_getoriginal($params) {
+function civicrm_api3_supportcase_email_getoriginal($params) {
   $message = MailutilsMessage::get(FALSE)
     ->addWhere('activity_id', '=', $params['activity_id'])
     ->execute()
