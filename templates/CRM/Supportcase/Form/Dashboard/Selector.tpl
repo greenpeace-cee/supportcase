@@ -43,6 +43,18 @@
                   <i title="This case needs urgent attention" class="supportcase__case-ico supportcase__case-ico-urgent crm-i fa-exclamation-circle" aria-hidden="true"></i>
                 {/if}
 
+                {if $row.case_status == 'Resolved'}
+                  <i title="This case has been resolved" class="supportcase__case-ico supportcase__case-ico-resolved crm-i fa-check-square" aria-hidden="true"></i>
+                {/if}
+
+                {if $row.case_status == 'Forwarded'}
+                  <i title="This case was forwarded" class="supportcase__case-ico supportcase__case-ico-forwarded crm-i fa-share" aria-hidden="true"></i>
+                {/if}
+
+                {if $row.case_status == 'Spam'}
+                  <i title="This case was flagged as Spam" class="supportcase__case-ico supportcase__case-ico-spam crm-i fa-flag" aria-hidden="true"></i>
+                {/if}
+
                 {if $row.is_case_deleted}
                   <i title="This case in the trash" class="supportcase__case-ico supportcase__case-ico-grey crm-i fa-trash" aria-hidden="true"></i>
                 {/if}

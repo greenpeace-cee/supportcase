@@ -105,8 +105,20 @@
     max-width: 1160px;
 }
 
-.supportcase__result-block .supportcase__case-row.supportcase__case-row-urgent > td {
+.supportcase__result-block .supportcase__case-row.crm-case-status_Urgent > td {
     background: #fff2f2 !important;
+}
+
+.supportcase__result-block .supportcase__case-row.crm-case-status_Spam > td {
+    background: #e7e7e7 !important;
+}
+
+.supportcase__result-block .supportcase__case-row.crm-case-status_Resolved > td {
+    background: #e2ffe2 !important;
+}
+
+.supportcase__result-block .supportcase__case-row.crm-case-status_Forwarded > td {
+    background: #dce6fe !important;
 }
 
 .supportcase__toggle-filter-button {
@@ -249,11 +261,20 @@
 .supportcase__case-ico.supportcase__case-ico-grey {
     color: #aaaaaa;
 }
+.supportcase__case-ico.supportcase__case-ico-urgent,
+.supportcase__case-ico.supportcase__case-ico-resolved,
+.supportcase__case-ico.supportcase__case-ico-forwarded,
+.supportcase__case-ico.supportcase__case-ico-spam {
+    padding-left: 5px;
+    padding-right: 5px;
+}
 
 .supportcase__case-ico.supportcase__case-ico-urgent {
     color: rgb(213, 64, 64);
-    padding-left: 5px;
-    padding-right: 5px;
+}
+
+.supportcase__case-ico.supportcase__case-ico-resolved {
+    color: rgb(33, 135, 43);
 }
 
 .supportcase__case-ico.fa-lock {
