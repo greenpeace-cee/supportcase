@@ -71,7 +71,18 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
       'case_status_id' => [
         CRM_Core_PseudoConstant::getKey('CRM_Case_BAO_Case', 'case_status_id', 'Open'),
         CRM_Core_PseudoConstant::getKey('CRM_Case_BAO_Case', 'case_status_id', 'Urgent'),
-      ]
+      ],
+      "case_id" => '',
+      "case_keyword" => '',
+      "case_agents" => '',
+      "case_start_date_relative" => '',
+      "case_start_date_low" => '',
+      "case_start_date_high" => '',
+      "case_end_date_relative" => '',
+      "case_end_date_low" => '',
+      "case_end_date_high" => '',
+      "case_client" => '',
+      "case_taglist" => '',
     ];
   }
 
@@ -147,6 +158,9 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
   }
 
   /**
+   * true - search filter closed
+   * false - search filter open
+   *
    * @return bool
    */
   public function isCollapseFilter() {
@@ -157,8 +171,31 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     }
 
     foreach ($defaultValues as $name => $value) {
-      if (empty($submitValues[$name])) {
+      if ($name === 'case_type_id') {
+        continue;
+      }
+
+      if (empty($submitValues[$name]) && !empty($value)) {
         return false;
+      }
+
+      // case_taglist field is complicated and need to advance compare. It is list of tag sets with values
+      if ($name === 'case_taglist') {
+        if ($submitValues[$name] === $value) {
+          continue;
+        }
+
+        if (!is_array($submitValues[$name])) {
+          return false;
+        }
+
+        foreach ($submitValues[$name] as $tagSetId => $tagSetValues) {
+          if (!empty($tagSetValues)) {
+            return false;
+          }
+        }
+
+        continue;
       }
 
       if (is_array($value)) {

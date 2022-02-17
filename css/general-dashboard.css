@@ -64,19 +64,6 @@
     max-width: 920px;
 }
 
-.supportcase__search-buttons .crm-submit-buttons.reset-advanced-search {
-    display: inline-block;
-}
-
-.supportcase__search-buttons .supportcase__search-button-submit {
-    display: inline-block;
-}
-
-.supportcase__search-buttons .supportcase__search-button-submit > button {
-    padding: 11px 12px !important;
-    min-width: 0 !important;
-}
-
 .supportcase__case-tags-wrap {
     max-width: 300px;
 }
@@ -121,12 +108,6 @@
     background: #dce6fe !important;
 }
 
-.supportcase__toggle-filter-button {
-    display: inline-block;
-    cursor: pointer;
-    margin-left: 10px;
-}
-
 .supportcase__search-by-case-id-wrap {
     display: none;
 }
@@ -160,15 +141,7 @@
     padding: 0 !important;
 }
 
-.supportcase__search-block.searching-by-case-id .supportcase__search-by-case-id-wrap {
-    display: block;
-}
-
-.supportcase__search-block.searching-by-case-id .supportcase__toggle-filter-button-case-id-text {
-    display: none;
-}
-
-.supportcase__search-block.searching-by-case-id .supportcase__toggle-filter-button-params-text  {
+.supportcase__search-block.supportcase__search-by-case-id-mode .supportcase__search-by-case-id-wrap {
     display: block;
 }
 
@@ -176,7 +149,7 @@
     display: none;
 }
 
-.supportcase__search-block.searching-by-case-id .supportcase__search-filters-wrap  {
+.supportcase__search-block.supportcase__search-by-case-id-mode .supportcase__search-filters-wrap  {
     display: none;
 }
 
@@ -389,6 +362,20 @@
 .supportcase__search-buttons {
     display: flex;
     align-items: center;
+    margin-top: 10px;
+    gap: 10px;
+}
+
+.supportcase__button-go-to-advanced-search {
+    display: none;
+}
+
+.supportcase__search-block.supportcase__search-by-case-id-mode .supportcase__button-go-to-advanced-search {
+    display: block;
+}
+
+.supportcase__search-block.supportcase__search-by-case-id-mode .supportcase__button-go-to-case-id-search {
+    display: none;
 }
 
 #page-title,

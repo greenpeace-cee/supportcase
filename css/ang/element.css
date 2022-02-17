@@ -215,12 +215,24 @@
     padding: 5px 12px !important;
 }
 
+.spc__button.spc--height-medium.spc--cancel {
+    padding: 4px 11px !important;
+}
+
 .spc__button.spc--height-big {
     padding: 11px 12px !important;
 }
 
+.spc__button.spc--height-big.spc--cancel {
+    padding: 10px 11px !important;
+}
+
 .spc__button.spc--height-little {
     padding: 2px 5px !important;
+}
+
+.spc__button.spc--height-little.spc--cancel {
+    padding: 1px 4px !important;
 }
 
 .spc__button[disabled="disabled"] {

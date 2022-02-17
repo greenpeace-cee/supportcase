@@ -3,7 +3,7 @@
         <div class="spc__accordion crm-accordion-wrapper crm-contribution_search_form-accordion {if $isCollapseFilter}collapsed{/if}">
             <div class="crm-accordion-header crm-master-accordion-header">
                 {ts}Filter{/ts}
-                <a href="{crmURL p='civicrm/supportcase' q='reset=1'}" class="spc__accordion-refresh css_right" title="Refresh">
+                <a href="{crmURL p='civicrm/supportcase' q='reset=1'}" class="spc__accordion-refresh css_right" title="Clear all search criteria">
                   <i class="crm-i fa-refresh" aria-hidden="true"></i>
                 </a>
             </div>
@@ -82,27 +82,34 @@
                         </div>
 
                         <div class="supportcase__search-buttons">
-                            <div class="supportcase__search-button-submit">
-                                {$form.buttons.html}
-                            </div>
-
-                            <button class="spc__button spc--height-big supportcase__toggle-filter-button button" id="toggleFilterButton">
-                              <span class="supportcase__toggle-filter-button-case-id-text">Search by Case ID</span>
-                              <span class="supportcase__toggle-filter-button-params-text">Advanced Search</span>
+                            <button class="spc__button spc--height-big spc--blue" value="1" type="submit" name="_qf_Dashboard_refresh" id="_qf_Dashboard_refresh">
+                                <span class="ui-button-icon ui-icon fa-check"></span>
+                                <span class="ui-button-icon-space"> </span>
+                                <span>Search</span>
                             </button>
 
-                            <div class="crm-submit-buttons reset-advanced-search">
-                                <a href="{crmURL p='civicrm/supportcase' q='reset=1'}" class="spc__button spc--height-big spc--cancel" title="{ts}Clear all search criteria{/ts}">
-                                    <i class="crm-i fa-undo"></i>&nbsp;{ts}Reset Form{/ts}
-                                </a>
+                            <div class="spc__button spc--height-big spc--blue supportcase__button-go-to-advanced-search supportcase__toggle-mode-button">
+                                <span class="ui-button-icon ui-icon fa-search"></span>
+                                <span class="ui-button-icon-space"> </span>
+                                <span>Advanced Search</span>
                             </div>
 
-                            <a href="{$addNewCaseUrl}" title="{ts}Add new one{/ts}">
-                                <div class="spc__button spc--height-big spc--blue">
-                                    <span class="ui-button-icon ui-icon fa-plus"></span>
-                                    <span class="ui-button-icon-space"> </span>
-                                    <span>Add Case</span>
-                                </div>
+                            <div class="spc__button spc--height-big spc--blue supportcase__button-go-to-case-id-search supportcase__toggle-mode-button">
+                                <span class="ui-button-icon ui-icon fa-search"></span>
+                                <span class="ui-button-icon-space"> </span>
+                                <span>Search by Case ID</span>
+                            </div>
+
+                            <a class="spc__button spc--height-big spc--cancel" href="{crmURL p='civicrm/supportcase' q='reset=1'}" title="{ts}Clear all search criteria{/ts}" >
+                                <span class="ui-button-icon ui-icon fa-undo"></span>
+                                <span class="ui-button-icon-space"> </span>
+                                <span>{ts}Reset Form{/ts}</span>
+                            </a>
+
+                            <a class="spc__button spc--height-big spc--blue" href="{$addNewCaseUrl}" title="{ts}Add new one{/ts}" >
+                                <span class="ui-button-icon ui-icon fa-plus"></span>
+                                <span class="ui-button-icon-space"> </span>
+                                <span>Add Case</span>
                             </a>
                         </div>
                     </div>
@@ -121,16 +128,16 @@
                 var caseIdElement = $('.supportcase__search-by-case-id-wrap input#case_id');
                 var searchBlockElement = $('.supportcase__search-block');
 
-                $('#toggleFilterButton').click(function(e) {
+                $('.supportcase__toggle-mode-button').click(function(e) {
                     e.preventDefault();
-                    searchBlockElement.toggleClass('searching-by-case-id');
+                    searchBlockElement.toggleClass('supportcase__search-by-case-id-mode');
                     caseIdElement.val('');
                 });
 
                 if (caseIdElement.val().length > 0) {
-                    searchBlockElement.addClass('searching-by-case-id');
+                    searchBlockElement.addClass('supportcase__search-by-case-id-mode');
                 } else {
-                    searchBlockElement.removeClass('searching-by-case-id');
+                    searchBlockElement.removeClass('supportcase__search-by-case-id-mode');
                 }
             }
         });

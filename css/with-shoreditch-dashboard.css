@@ -11,21 +11,8 @@
     padding: 10px 0 0 0 !important;
 }
 
-.supportcase__search-buttons .crm-submit-buttons.reset-advanced-search {
-    padding: 5px 10px;
-}
-
 .supportcase__search-block {
     padding: 10px 10px;
-}
-
-.supportcase__search-block .supportcase__search-filters-wrap select,
-.supportcase__search-block .supportcase__search-filters-wrap input {
-    height: 30px;
-}
-
-.supportcase__search-buttons {
-    margin-top: 10px;
 }
 
 .supportcase__case-tags-filter {
