@@ -730,13 +730,18 @@
                     $scope.replyMode = 'reply';
                 };
 
+                $scope.switchToOriginMode = function(activityId) {
+                    $scope.currentReplyId = activityId;
+                    $scope.replyMode = 'origin';
+                };
+
                 $scope.forward = function(activityId) {
                     $scope.currentReplyId = activityId;
                     $scope.replyMode = 'forward';
                 };
 
                 $scope.cancel = function() {
-                    $scope.cleanErrors($scope.currentReplyId, $scope.replyMode );
+                    $scope.cleanErrors($scope.currentReplyId, $scope.replyMode);
                     $scope.currentReplyId = null;
                     $scope.replyMode = null;
                 };
@@ -1816,6 +1821,26 @@
                             }
                         });
                     }, 0);
+                };
+            }
+        };
+    });
+
+    angular.module(moduleName).directive("viewEmailOrigin", function() {
+        return {
+            restrict: "E",
+            template: '<div class="com__iframe-origin">Loading...</div>',
+            scope: {activityId: "<activityId"},
+            controller: function($scope, $element) {
+                this.$onInit = function() {
+                    if ($scope.activityId === undefined) {
+                        return;
+                    }
+
+                    var mainElement = CRM.$($element);
+                    var iframeUrl = CRM.url('civicrm/supportcase/view-original', {'id' : $scope.activityId});
+                    mainElement.empty();
+                    mainElement.append('<iframe class="com__iframe-origin" sandbox src="' + iframeUrl + '"></iframe>');
                 };
             }
         };
