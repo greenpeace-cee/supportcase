@@ -93,9 +93,9 @@
                                                         </button>
                                                     </div>
                                                     <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="switchToOriginMode(activity.id)">
-                                                        <span class="ui-button-icon ui-icon fa-reply"></span>
+                                                        <span class="ui-button-icon ui-icon fa-envelope-o"></span>
                                                         <span class="ui-button-icon-space"> </span>
-                                                        <span>Show origin</span>
+                                                        <span>Show origin email</span>
                                                     </button>
                                                     <div class="com__email-info-panel-date">{{formatDateAndTime(activity.view_mode.date_time, true)}}</div>
                                                 </div>
@@ -313,7 +313,7 @@
                                 <!-- origin mode-->
                                 <div class="com__email-origin-mode" ng-if="replyMode == 'origin' && currentReplyId == activity.reply_mode.id">
                                     <div class="com__email-block">
-                                        <div class="com__email-header-block">Origin message:</div>
+                                        <div class="com__email-header-block">Origin email:</div>
 
                                         <div class="com__email-bottom-block">
                                             <div class="com__email-body">
