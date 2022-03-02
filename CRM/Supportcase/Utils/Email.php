@@ -17,6 +17,13 @@ class CRM_Supportcase_Utils_Email {
   const REPLY_MODE = 'reply';
 
   /**
+   * Reply mode name
+   *
+   * @var string
+   */
+  const REPLY_ALL_MODE = 'reply_all';
+
+  /**
    * New email name
    *
    * @var string
@@ -31,6 +38,7 @@ class CRM_Supportcase_Utils_Email {
       self::FORWARD_MODE => 'Forward mode',
       self::REPLY_MODE => 'Reply mode',
       self::NEW_EMAIL_MODE => 'New email mode',
+      self::REPLY_ALL_MODE => 'Reply all mode',
     ];
   }
 

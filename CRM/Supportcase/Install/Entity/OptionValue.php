@@ -10,6 +10,14 @@ class CRM_Supportcase_Install_Entity_OptionValue extends CRM_Supportcase_Install
   protected $entityName = 'OptionValue';
 
   /**
+   * BPK Option Value
+   * It installs by 'de.systopia.bpk' extension
+   *
+   * @var string
+   */
+  const BPK_STATUS_RESOLVED = 'resolved';
+
+  /**
    * Params to check entity existence
    *
    * @var array

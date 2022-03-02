@@ -50,4 +50,26 @@ class CRM_Supportcase_Utils_OptionValue {
     return $optionValues['values'];
   }
 
+  /**
+   * @param $optionGroupName
+   * @return string|NULL
+   */
+  public static function getValue($optionGroupName, $name) {
+    if (empty($optionGroupName) || empty($name)) {
+      return NULL;
+    }
+
+    try {
+      $optionValue = civicrm_api3('OptionValue', 'getsingle', [
+        'return' => ["label", "value", "name", "is_active"],
+        'option_group_id' => $optionGroupName,
+        'name' => $name
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      return NULL;
+    }
+
+    return $optionValue['value'];
+  }
+
 }

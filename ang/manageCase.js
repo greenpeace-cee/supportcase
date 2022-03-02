@@ -623,69 +623,15 @@
             controller: function($scope, $element, $sce, reloadService) {
                 $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
                 $scope.emailActivities = [];
-                $scope.isReplyId = null;
-                $scope.replyMode = null;
+                $scope.availableModes = {
+                    'view' : 'view',
+                    'reply' : 'reply',
+                    'reply_all' : 'reply_all',
+                    'forward' : 'forward',
+                    'origin' : 'origin',
+                };
                 $scope.isEmailSending = false;
                 $scope.ts = CRM.ts();
-
-                $scope.getFiles = function(activityId, mode) {
-                    var preparedData = {
-                        'files' : [],
-                        'dataFiles' : [],
-                    }
-                    var activityKey = undefined;
-
-                    $scope.emailActivities.filter(function(el, key) {
-                        if (el.id === activityId) {
-                            activityKey = key;
-                        }
-                        return el.id === activityId;
-                    });
-
-                    if (activityKey === undefined) {
-                        return preparedData;
-                    }
-
-                    if ($scope.emailActivities[activityKey] === undefined) {
-                        return preparedData;
-                    }
-
-                    if ($scope.emailActivities[activityKey][mode] === undefined) {
-                        return preparedData;
-                    }
-
-                    if ($scope.emailActivities[activityKey][mode]['additionalAttachments'] === undefined) {
-                        return preparedData;
-                    }
-
-                    if ($scope.emailActivities[activityKey][mode]['additionalAttachments']['uploader'] === undefined) {
-                        return preparedData;
-                    }
-
-                    if ($scope.emailActivities[activityKey][mode]['additionalAttachments']['uploader']['queue'] === undefined) {
-                        return preparedData;
-                    }
-
-                    var queueFiles = $scope.emailActivities[activityKey][mode]['additionalAttachments']['uploader']['queue'];
-
-                    if (!(queueFiles['length'] > 0)) {
-                        return preparedData;
-                    }
-
-                    for (var i = 0; queueFiles['length'] > i; i++ ) {
-                        preparedData.files.push(queueFiles[i]['_file']);
-                        preparedData.dataFiles.push({
-                            'name' : queueFiles[i]['_file']['name'],
-                            'description' : queueFiles[i]['crmData']['description']
-                        });
-                    }
-
-                    return preparedData;
-                };
-
-                this.$onInit = function() {
-                    $scope.getEmails();
-                };
 
                 $scope.getEmails = function(callback) {
                     CRM.api3('SupportcaseManageCase', 'get_email_activities', {
@@ -700,9 +646,10 @@
                             var emailActivities = [];
                             for (var i = 0; i < result.values.length; i++) {
                                 emailActivities[i] = Object.assign({}, result.values[i]);
-                                emailActivities[i]['view_mode']['emailBodyResolved'] = $sce.trustAsHtml(result.values[i]['view_mode']['email_body']);
-                                emailActivities[i]['forward_mode']['additionalAttachments'] = {};
-                                emailActivities[i]['reply_mode']['additionalAttachments'] = {};
+                                emailActivities[i]['modes'][$scope.availableModes.view]['emailBodyResolved'] = $sce.trustAsHtml(result.values[i]['modes'][$scope.availableModes.view]['email_body']);
+                                emailActivities[i]['modes'][$scope.availableModes.forward]['additionalAttachments'] = {};
+                                emailActivities[i]['modes'][$scope.availableModes.reply]['additionalAttachments'] = {};
+                                emailActivities[i]['modes'][$scope.availableModes.reply_all]['additionalAttachments'] = {};
                             }
 
                             if (emailActivities.length > 0) {
@@ -716,6 +663,10 @@
                             if (callback !== undefined) {
                                 callback();
                             }
+
+                            console.log('$onInit');
+                            console.log('$scope.emailActivities');
+                            console.log($scope.emailActivities);
                         }
                     }, function(error) {
                         console.error('Activity get server error:');
@@ -725,25 +676,24 @@
 
                 reloadService.setReloadEmailsCallback($scope.getEmails);
 
-                $scope.reply = function(activityId) {
-                    $scope.currentReplyId = activityId;
-                    $scope.replyMode = 'reply';
+                this.$onInit = function() {
+                    $scope.getEmails();
                 };
 
-                $scope.switchToOriginMode = function(activityId) {
-                    $scope.currentReplyId = activityId;
-                    $scope.replyMode = 'origin';
+                $scope.switchToMode = function(mode, activityId) {
+                    console.log('switchToMode');
+                    console.log(activityId);
+                    console.log(mode);
+                    $scope.getActivity(activityId).current_mode = mode;
                 };
 
-                $scope.forward = function(activityId) {
-                    $scope.currentReplyId = activityId;
-                    $scope.replyMode = 'forward';
+                $scope.getActivity = function(activityId) {
+                    return  $scope.emailActivities.filter(function(el, key) {return el.id === activityId;})[0];
                 };
 
-                $scope.cancel = function() {
-                    $scope.cleanErrors($scope.currentReplyId, $scope.replyMode);
-                    $scope.currentReplyId = null;
-                    $scope.replyMode = null;
+                $scope.cancel = function(activityId) {
+                    $scope.cleanErrors(activityId);
+                    $scope.switchToMode($scope.availableModes.view, activityId);
                 };
 
                 $scope.removeForwardAttachment = function(fileId, activityForwardData) {
@@ -766,30 +716,12 @@
                     }, 500);
                 };
 
-                $scope.send = function(activity) {
-                    if ($scope.isEmailSending) {
-                        console.error('Email is sending');
-                        $scope.showError('Email is sending', activity['id'], $scope.replyMode);
-                        return;
-                    }
-                    $scope.isEmailSending = true;
-
-                    if (!($scope.replyMode === 'reply' || $scope.replyMode === 'forward')) {
-                        console.error('Unknown reply mode');
-                        $scope.isEmailSending = false;
-                        return;
-                    }
-
-                    var emailData = {};
-                    var files = [];
+                $scope.prepareEmailSendData = function(activity) {
+                    var emailData = activity['modes'][activity.current_mode];
+                    var files = $scope.getFiles(activity['id'], activity.current_mode);
                     var data = {};
 
-                    if ($scope.replyMode === 'reply') {
-                        emailData = activity['reply_mode'];
-                        files =  $scope.getFiles(activity['id'], 'reply_mode');
-                    } else if ($scope.replyMode === 'forward') {
-                        emailData = activity['forward_mode'];
-                        files =  $scope.getFiles(activity['id'], 'forward_mode');
+                    if (activity.current_mode === $scope.availableModes.forward) {
                         var forwardFileIds = [];
                         for (var j = 0; j < emailData['attachments'].length; j++) {
                             if (emailData['attachments'][j]['isAdded'] === true) {
@@ -801,13 +733,13 @@
 
                     if (files['files'] !== undefined && files['files']['length'] > emailData['attachmentsLimit']) {
                         $scope.isEmailSending = false;
-                        $scope.showError('To match attachments. Maximum is ' + emailData['attachmentsLimit'] + '.', activity['id'], $scope.replyMode);
+                        $scope.showError('To match attachments. Maximum is ' + emailData['attachmentsLimit'] + '.', activity['id'], activity.current_mode);
                         return;
                     }
 
                     data['case_id'] = $scope.model['case_id'];
                     data['subject'] = emailData['subject'];
-                    data['mode'] = $scope.replyMode;
+                    data['mode'] = activity.current_mode;
                     data['email_activity_id'] = activity['id'];
                     data['body'] = emailData['email_body'];
                     data['to_email_id'] = emailData['emails']['to'];
@@ -826,17 +758,41 @@
                     formData.append('action', 'send_email');
                     formData.append('json', JSON.stringify(data));
 
+                    return formData;
+                }
+
+                $scope.send = function(activity) {
+                    if ($scope.isEmailSending) {
+                        console.error('Email is sending');
+                        $scope.showError('Email is sending', activity['id'], activity.current_mode);
+                        return;
+                    }
+                    $scope.isEmailSending = true;
+
+                    if (!(activity.current_mode === $scope.availableModes.reply
+                        || activity.current_mode === $scope.availableModes.forward
+                        || activity.current_mode === $scope.availableModes.reply_all
+                    )) {
+                        console.error('Unknown mode');
+                        $scope.isEmailSending = false;
+                        return;
+                    }
+
+                    var data = $scope.prepareEmailSendData(activity);
+                    console.log('data');
+                    console.log(data);
+
                     $.ajax({
                         url : CRM.url('civicrm/ajax/rest'),
                         type : 'POST',
-                        data : formData,
+                        data : data,
                         processData: false,  // tell jQuery not to process the data
                         contentType: false,  // tell jQuery not to set contentType
                         success : function(response) {
                             if (typeof response === 'string') {
                                 console.error('Error sending email:');
                                 console.error('Error parsing response.');
-                                $scope.showError('Error sending email: Error parsing response.', activity['id'], $scope.replyMode);
+                                $scope.showError('Error sending email: Error parsing response.', activity['id'], activity.current_mode);
                                 $scope.isEmailSending = false;
                                 return;
                             }
@@ -848,11 +804,10 @@
                                     $scope.highlightActivity(emailActivity);
                                     $scope.scrollToActivity(emailActivity);
                                 });
-                                $scope.replyMode = null;
                             } else {
                                 console.error('Error sending email:');
                                 console.error(response['error_message']);
-                                $scope.showError(response['error_message'], activity['id'], $scope.replyMode);
+                                $scope.showError(response['error_message'], activity['id'], activity.current_mode);
                             }
                             $scope.isEmailSending = false;
                         },
@@ -860,7 +815,7 @@
                             var message = 'Error sending email: Server error.'
                             console.error('Error sending email: Server error.');
                             console.error(data);
-                            $scope.showError(message, activity['id'], $scope.replyMode);
+                            $scope.showError(message, activity['id'], activity.current_mode);
                             $scope.isEmailSending = false;
                         }
                     });
@@ -871,8 +826,8 @@
                     $scope.getActivityElement(activityId).find('.com__errors-wrap.com__errors-mode-' + mode).append('<div class="crm-error">' + errorMessage + '</div>');
                 };
 
-                $scope.cleanErrors = function(activityId, mode) {
-                    $scope.getActivityElement(activityId).find('.com__errors-wrap.com__errors-mode-' + mode).empty();
+                $scope.cleanErrors = function(activityId) {
+                    $scope.getActivityElement(activityId).find('.com__errors-wrap').empty();
                 };
 
                 $scope.toggleHeight = function(emailActivityId) {
@@ -881,6 +836,46 @@
 
                 $scope.handleEmailCollapsing = function() {
                     CRM.$($element).find('.com__email-activity-accordion:not(:first)').addClass('spc--collapsed');
+                };
+
+                $scope.getFiles = function(activityId, mode) {
+                    var preparedData = {
+                        'files' : [],
+                        'dataFiles' : [],
+                    }
+
+                    var activity = $scope.getActivity(activityId);
+                    if (activity === undefined) {
+                        return preparedData;
+                    }
+
+                    if (activity['modes'][mode]['additionalAttachments'] === undefined) {
+                        return preparedData;
+                    }
+
+                    if (activity['modes'][mode]['additionalAttachments']['uploader'] === undefined) {
+                        return preparedData;
+                    }
+
+                    if (activity['modes'][mode]['additionalAttachments']['uploader']['queue'] === undefined) {
+                        return preparedData;
+                    }
+
+                    var queueFiles = activity['modes'][mode]['additionalAttachments']['uploader']['queue'];
+
+                    if (!(queueFiles['length'] > 0)) {
+                        return preparedData;
+                    }
+
+                    for (var i = 0; queueFiles['length'] > i; i++ ) {
+                        preparedData.files.push(queueFiles[i]['_file']);
+                        preparedData.dataFiles.push({
+                            'name' : queueFiles[i]['_file']['name'],
+                            'description' : queueFiles[i]['crmData']['description']
+                        });
+                    }
+
+                    return preparedData;
                 };
             }
         };
@@ -909,6 +904,8 @@
                     'mode': 'new',
                     'attachments': [],
                 };
+                console.log('$scope.emailData');
+                console.log($scope.emailData);
 
                 $scope.refreshPrefillData = function() {
                     $scope.emailData['subject'] = $scope.model['new_email_prefill_fields']['subject'];

@@ -17,6 +17,14 @@ class CRM_Supportcase_Install_Entity_CustomGroup extends CRM_Supportcase_Install
   const CASE_DETAILS = 'support_case_details';
 
   /**
+   * BPK Custom Group
+   * It installs by 'de.systopia.bpk' extension
+   *
+   * @var string
+   */
+  const BPK = 'bpk';
+
+  /**
    * Params to check entity existence
    *
    * @var array

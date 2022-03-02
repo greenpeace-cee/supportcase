@@ -24,6 +24,14 @@ class CRM_Supportcase_Install_Entity_CustomField extends CRM_Supportcase_Install
   const CATEGORY = 'category';
 
   /**
+   * BPK Custom Field
+   * It installs by 'de.systopia.bpk' extension
+   *
+   * @var string
+   */
+  const BPK_STATUS = 'bpk_status';
+
+  /**
    * Gets list of entities params
    *
    * @return array

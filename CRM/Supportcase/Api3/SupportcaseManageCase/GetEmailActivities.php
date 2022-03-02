@@ -6,6 +6,17 @@
 class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_Supportcase_Api3_Base {
 
   /**
+   * Modes
+   *
+   * @var string
+   */
+  const VIEW = 'view';
+  const REPLY = 'reply';
+  const REPLY_ALL = 'reply_all';
+  const FORWARD = 'forward';
+  const ORIGIN = 'origin';
+
+  /**
    * Get results of api
    */
   public function getResult() {
@@ -68,7 +79,8 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     $forwardSubject = CRM_Supportcase_Utils_Email::addSubjectPrefix($normalizedSubject, CRM_Supportcase_Utils_Email::FORWARD_MODE);
     $fromEmailLabel = !empty($fromEmailsData['emails_data'][0]['label']) ? $fromEmailsData['emails_data'][0]['label'] : '';
     $emailBody = CRM_Supportcase_Utils_Activity::getEmailBody($activity['details']);
-    $replyForwardPrefillEmails = $this->getPrefillEmails($ccEmailsData, $toEmailsData, $fromEmailsData, $mainEmailId);
+    $replyAllForwardPrefillEmails = $this->getPrefillEmails($ccEmailsData, $toEmailsData, $fromEmailsData, $mainEmailId);
+    $replyPrefillEmails = $this->getReplyPrefillEmails($ccEmailsData, $toEmailsData, $fromEmailsData, $mainEmailId);
     $replyBody = $this->prepareQuotedBody(
       $activity,
       $fromEmailLabel,
@@ -94,55 +106,68 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
 
     return [
       'id' => $activity['id'],
-      'view_mode' => [
-        'case_id' => $this->params['case_id'],
-        'id' => $activity['id'],
-        'subject' => $normalizedSubject,
-        'head_icon' => $headIcon,
-        'email_body' => CRM_Utils_String::purifyHTML(nl2br(trim(CRM_Utils_String::stripAlternatives($emailBody['html'])))),
-        'date_time' => $activity['activity_date_time'],
-        'activity_type' => CRM_Core_PseudoConstant::getName(
-          'CRM_Activity_BAO_Activity',
-          'activity_type_id',
-          $activity['activity_type_id']
-        ),
-        'author' => $activity['api.ActivityContact.get']['values'][0]['contact_id.display_name'] ?? NULL,
-        'attachments' => $attachments,
-        'from_contact_email_label' => $fromEmailsData['coma_separated_email_labels'],
-        'to_contact_email_label' => $toEmailsData['coma_separated_email_labels'],
-        'cc_contact_email_label' => $ccEmailsData['coma_separated_email_labels'],
-        'from_contact_data_emails' => $fromEmailsData['emails_data'],
-        'to_contact_data_emails' => $toEmailsData['emails_data'],
-        'cc_contact_data_emails' => $ccEmailsData['emails_data'],
+      'current_mode' => self::VIEW,
+      'modes' => [
+        self::VIEW => [
+          'case_id' => $this->params['case_id'],
+          'id' => $activity['id'],
+          'subject' => $normalizedSubject,
+          'head_icon' => $headIcon,
+          'email_body' => CRM_Utils_String::purifyHTML(nl2br(trim(CRM_Utils_String::stripAlternatives($emailBody['html'])))),
+          'date_time' => $activity['activity_date_time'],
+          'activity_type' => CRM_Core_PseudoConstant::getName('CRM_Activity_BAO_Activity', 'activity_type_id', $activity['activity_type_id']),
+          'author' => $activity['api.ActivityContact.get']['values'][0]['contact_id.display_name'] ?? NULL,
+          'attachments' => $attachments,
+          'from_contact_email_label' => $fromEmailsData['coma_separated_email_labels'],
+          'to_contact_email_label' => $toEmailsData['coma_separated_email_labels'],
+          'cc_contact_email_label' => $ccEmailsData['coma_separated_email_labels'],
+          'from_contact_data_emails' => $fromEmailsData['emails_data'],
+          'to_contact_data_emails' => $toEmailsData['emails_data'],
+          'cc_contact_data_emails' => $ccEmailsData['emails_data'],
+        ],
+        self::FORWARD => [
+          'id' => $activity['id'],
+          'case_id' => $this->params['case_id'],
+          'subject' => $forwardSubject,
+          'email_body' => $forwardBody,
+          'date_time' => $activity['activity_date_time'],
+          'attachments' => $attachments,
+          'mode_name' => CRM_Supportcase_Utils_Email::FORWARD_MODE,
+          'emails' => $replyAllForwardPrefillEmails,
+          'maxFileSize' => $maxFileSize,
+          'attachmentsLimit' => $attachmentsLimit,
+          'case_category_id' => $this->params['case_category_id'],
+          'token_contact_id' => CRM_Supportcase_Utils_Case::getFirstClient($this->params['case']),
+        ],
+        self::REPLY => [
+          'id' => $activity['id'],
+          'case_id' => $this->params['case_id'],
+          'subject' => $replySubject,
+          'email_body' => $replyBody,
+          'date_time' => $activity['activity_date_time'],
+          'attachments' => [],// attachments always empty for reply mode
+          'mode_name' => CRM_Supportcase_Utils_Email::REPLY_MODE,
+          'emails' => $replyPrefillEmails,
+          'maxFileSize' => $maxFileSize,
+          'attachmentsLimit' => $attachmentsLimit,
+          'case_category_id' => $this->params['case_category_id'],
+          'token_contact_id' => CRM_Supportcase_Utils_Case::getFirstClient($this->params['case']),
+        ],
+        self::REPLY_ALL => [
+          'id' => $activity['id'],
+          'case_id' => $this->params['case_id'],
+          'subject' => $replySubject,
+          'email_body' => $replyBody,
+          'date_time' => $activity['activity_date_time'],
+          'attachments' => [],// attachments always empty for reply all mode
+          'mode_name' => CRM_Supportcase_Utils_Email::REPLY_ALL_MODE,
+          'emails' => $replyAllForwardPrefillEmails,
+          'maxFileSize' => $maxFileSize,
+          'attachmentsLimit' => $attachmentsLimit,
+          'case_category_id' => $this->params['case_category_id'],
+          'token_contact_id' => CRM_Supportcase_Utils_Case::getFirstClient($this->params['case']),
+        ],
       ],
-      'reply_mode' => [
-        'id' => $activity['id'],
-        'case_id' => $this->params['case_id'],
-        'subject' => $replySubject,
-        'email_body' => $replyBody,
-        'date_time' => $activity['activity_date_time'],
-        'attachments' => [],// attachments always empty for reply mode
-        'mode_name' => CRM_Supportcase_Utils_Email::REPLY_MODE,
-        'emails' => $replyForwardPrefillEmails,
-        'maxFileSize' => $maxFileSize,
-        'attachmentsLimit' => $attachmentsLimit,
-        'case_category_id' => $this->params['case_category_id'],
-        'token_contact_id' => CRM_Supportcase_Utils_Case::getFirstClient($this->params['case']),
-      ],
-      'forward_mode' => [
-        'id' => $activity['id'],
-        'case_id' => $this->params['case_id'],
-        'subject' => $forwardSubject,
-        'email_body' => $forwardBody,
-        'date_time' => $activity['activity_date_time'],
-        'attachments' => $attachments,
-        'mode_name' => CRM_Supportcase_Utils_Email::FORWARD_MODE,
-        'emails' => $replyForwardPrefillEmails,
-        'maxFileSize' => $maxFileSize,
-        'attachmentsLimit' => $attachmentsLimit,
-        'case_category_id' => $this->params['case_category_id'],
-        'token_contact_id' => CRM_Supportcase_Utils_Case::getFirstClient($this->params['case']),
-      ]
     ];
   }
 
@@ -150,14 +175,17 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
    * @param $ccEmailsData
    * @param $toEmailsData
    * @param $fromEmailsData
+   * @param $mainEmailId
+   *
    * @return array
    */
-  private function getPrefillEmails($ccEmailsData, $toEmailsData, $fromEmailsData, $mainEmailId) {
+  private function getPrefillEmails($ccEmailsData, $toEmailsData, $fromEmailsData, $mainEmailId): array {
     $toEmailIds = array_unique(array_merge(
       $this->getFilteredEmailIds($toEmailsData['emails_data'], $mainEmailId),
       $this->getFilteredEmailIds($fromEmailsData['emails_data'], $mainEmailId)
     ));
     $ccEmailIds = $this->getFilteredEmailIds($ccEmailsData['emails_data'], $mainEmailId);
+
     return [
       'cc' => implode(',', $ccEmailIds),
       'from' => $mainEmailId,
@@ -166,9 +194,27 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
   }
 
   /**
+   * @param $ccEmailsData
+   * @param $toEmailsData
+   * @param $fromEmailsData
+   * @param $mainEmailId
+   *
+   * @return array
+   */
+  private function getReplyPrefillEmails($ccEmailsData, $toEmailsData, $fromEmailsData, $mainEmailId): array {
+    $prefillEmails = $this->getPrefillEmails($ccEmailsData, $toEmailsData, $fromEmailsData, $mainEmailId);
+
+    return [
+      'cc' => '',// for reply cc is empty
+      'from' => $mainEmailId,
+      'to' => explode(',', $prefillEmails['to'])[0], //get first email
+    ];
+  }
+
+  /**
    * Return emails that are not $mainEmailId and not on the discard list
    *
-   * @param $emailData
+   * @param array $emailData
    * @param $mainEmailId
    *
    * @return array

@@ -142,3 +142,40 @@
     position: relative;
     cursor: progress;
 }
+
+.contact-info__duplicate-item {
+    display: flex;
+    gap: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.contact-info__duplicate-item > .ui-icon {
+    display: inline-block;
+    margin: 2px 0 0 0 !important;
+}
+
+.contact-info__duplicate-item-label {
+    display: inline-block;
+    margin: 0 !important;
+}
+
+.contact-info__duplicate-block {
+    position: relative;
+    padding: 0 10px 5px 10px;
+    border-bottom: 1px solid #d3dee2;
+}
+
+.contact-info__duplicate-title {
+    font-size: 10px;
+    font-style: italic;
+    line-height: 10px;
+}
+
+.contact-info__duplicate-item-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: stretch;
+    justify-content: space-between;
+    gap: 5px;
+}

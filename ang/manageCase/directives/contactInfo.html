@@ -51,6 +51,17 @@
 					</div>
 				</div>
 			</div>
+
+			<div ng-if="contact.duplicate_links.length > 1" class="contact-info__duplicate-block">
+				<div class="contact-info__duplicate-title">Found duplicates:</div>
+				<div class="contact-info__duplicate-item-wrap">
+					<a href="{{contact.link}}" ng-repeat="duplicate in contact.duplicate_links"
+					   title="go to the advanced search" class="contact-info__duplicate-item" target="_blank">
+						<span class="ui-icon fa-search"></span>
+						<span class="contact-info__duplicate-item-label">{{duplicate.label}}({{duplicate.count}})</span>
+					</a>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
