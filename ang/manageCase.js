@@ -1842,7 +1842,7 @@
                     var mainElement = CRM.$($element);
                     var iframeUrl = CRM.url('civicrm/supportcase/view-original', {'id' : $scope.activityId});
                     mainElement.empty();
-                    mainElement.append('<iframe class="com__iframe-origin" sandbox src="' + iframeUrl + '"></iframe>');
+                    mainElement.append('<iframe class="com__iframe-origin" sandbox="allow-popups allow-popups-to-escape-sandboxswitchToMode" src="' + iframeUrl + '"></iframe>');
                 };
             }
         };
