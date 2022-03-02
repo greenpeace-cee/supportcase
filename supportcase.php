@@ -150,13 +150,15 @@ function supportcase_civicrm_themes(&$themes) {
  *
  */
 function supportcase_civicrm_navigationMenu(&$menu) {
-  _supportcase_civix_insert_navigation_menu($menu, 'Cases', array(
+  _supportcase_civix_insert_navigation_menu($menu, NULL, array(
     'label' => E::ts('Support Dashboard'),
+    'icon' => 'crm-i fa-medkit',
     'name' => 'Support_Dashboard',
     'url' => 'civicrm/supportcase',
     'permission' => 'access support cases',
     'operator' => 'OR',
-    'separator' => 2,
+    'separator' => 0,
+    'weight' => 70,
   ));
   _supportcase_civix_navigationMenu($menu);
 
