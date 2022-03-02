@@ -92,10 +92,6 @@
     max-width: 1160px;
 }
 
-.supportcase__result-block .supportcase__case-row.crm-case-status_Urgent > td {
-    background: #fff2f2 !important;
-}
-
 .supportcase__result-block .supportcase__case-row.crm-case-status_Spam > td {
     background: #e7e7e7 !important;
 }
@@ -202,6 +198,13 @@
 .supportcase__recent-communication-column-wrap {
     max-width: 600px;
 }
+
+@media screen and (max-width: 1450px) {
+    .supportcase__recent-communication-column-wrap {
+        max-width: 400px;
+    }
+}
+
 
 .supportcase__case-id-column-wrap {
     font-weight: 600;
