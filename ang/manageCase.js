@@ -1308,6 +1308,11 @@
                         $scope.model['status_id'] = $scope.model['settings']['case_status_ids']['spam'];
                         $scope.$apply();
                         CRM.status('Case was marked as spam.');
+                        if ($scope.model['dashboardSearchQfKey']) {
+                          window.location.href = CRM.url('civicrm/supportcase', {'qfKey': $scope.model['dashboardSearchQfKey']});
+                        } else {
+                          window.location.href = CRM.url('civicrm/supportcase');
+                        }
                     });
                 };
 
