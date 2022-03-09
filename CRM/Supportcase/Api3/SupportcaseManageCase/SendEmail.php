@@ -138,7 +138,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
     $headers = '{}';
     $inReplyTo = NULL;
 
-    if (in_array($this->params['email']['mode'], [CRM_Supportcase_Utils_Email::FORWARD_MODE, CRM_Supportcase_Utils_Email::REPLY_MODE])) {
+    if (in_array($this->params['email']['mode'], [CRM_Supportcase_Utils_Email::FORWARD_MODE, CRM_Supportcase_Utils_Email::REPLY_ALL_MODE, CRM_Supportcase_Utils_Email::REPLY_MODE])) {
       $headers = $this->generateHeaders($this->params['email']['options']['mailutils_thread_id'], $emailMessageId);
       $inReplyTo = $this->params['email']['options']['message_id'];
     }
@@ -267,7 +267,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
       throw new api_Exception('Subject have to be less than 255 char', 'subject_to_long');
     }
 
-    if (in_array($params['mode'], [CRM_Supportcase_Utils_Email::FORWARD_MODE, CRM_Supportcase_Utils_Email::REPLY_MODE])) {
+    if (in_array($params['mode'], [CRM_Supportcase_Utils_Email::FORWARD_MODE, CRM_Supportcase_Utils_Email::REPLY_MODE, CRM_Supportcase_Utils_Email::REPLY_ALL_MODE])) {
       if (empty($params['email_activity_id'])) {
         throw new api_Exception('"email_activity_id" field is required.' , 'email_activity_id_is_required');
       }
