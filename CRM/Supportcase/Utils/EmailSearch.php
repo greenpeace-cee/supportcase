@@ -10,7 +10,6 @@ class CRM_Supportcase_Utils_EmailSearch {
     if (empty($searchString)) {
       return [];
     }
-    //TODO: check if $searchString haven't  wrong code, it can be already checked by api4
 
     $preparedEmails = [];
 
