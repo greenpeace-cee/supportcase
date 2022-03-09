@@ -100,7 +100,7 @@
                                                     <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="switchToMode(availableModes.origin, activity.id)">
                                                         <span class="ui-button-icon ui-icon fa-envelope-o"></span>
                                                         <span class="ui-button-icon-space"> </span>
-                                                        <span>Show origin email</span>
+                                                        <span>Show Original Email</span>
                                                     </button>
                                                     <div class="com__email-info-panel-date">{{formatDateAndTime(activity.modes.view.date_time, true)}}</div>
                                                 </div>
@@ -409,7 +409,7 @@
                                 <!-- origin mode-->
                                 <div class="com__email-origin-mode" ng-if="activity.current_mode === availableModes.origin">
                                     <div class="com__email-block">
-                                        <div class="com__email-header-block">Origin email:</div>
+                                        <div class="com__email-header-block">Original Email:</div>
 
                                         <div class="com__email-bottom-block">
                                             <div class="com__email-body">
@@ -418,6 +418,7 @@
 
                                             <div class="com__message-buttons">
                                                 <button class="spc__button spc--height-medium button__cancel" ng-click="cancel(activity.id)">Cancel</button>
+                                                <button class="spc__button spc--height-medium button__view" ng-click="viewFullscreen(activity.id)">View Fullscreen</button>
                                             </div>
                                         </div>
                                     </div>

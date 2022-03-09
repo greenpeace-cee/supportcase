@@ -275,7 +275,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
           'class' => 'not-popup', // huck to make this link not in popup
         ],
         CRM_Core_Action::UPDATE => [
-          'name' => ts('Report Spam'),
+          'name' => ts('Spam'),
           'url' => 'civicrm/supportcase/report-spam',
           'qs' => 'reset=1&id=%%id%%&context=%%cxt%%' . $extraParams,
           'ref' => 'report-spam',
