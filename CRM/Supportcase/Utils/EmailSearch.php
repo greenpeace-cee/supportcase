@@ -10,51 +10,50 @@ class CRM_Supportcase_Utils_EmailSearch {
     if (empty($searchString)) {
       return [];
     }
+    //TODO: check if $searchString haven't  wrong code, it can be already checked by api4
 
-    $searchResult = [];
-
-    $params = [
-      'sequential' => 1,
-      'return' => self::getReturnEmailFields(),
-      'email' => ['LIKE' => "%" . $searchString . "%"],
-      'contact_id.display_name' => ['LIKE' => "%" . $searchString . "%"],
-      'options' => [
-        'or' => [["contact_id.display_name", "email"]],
-        'limit' => 0,
-      ],
-    ];
-
-    // to make better performance:
-    if (CRM_Supportcase_Utils_String::isStringContains('@', $searchString)) {
-      unset($params['contact_id.display_name']);
-      unset($params['options']['or']);
-    }
+    $preparedEmails = [];
 
     try {
-      $emails = civicrm_api3('Email', 'get', $params);
-    } catch (CiviCRM_API3_Exception $e) {
-      return $searchResult;
-    }
+      $emailQuery = self::getEmailSearchObject();
 
-    if (!empty($emails['values'])) {
-      foreach ($emails['values'] as $email) {
-        $searchResult[] = self::prepareResponse($email);
+      // to make better performance:
+      if (CRM_Supportcase_Utils_String::isStringContains('@', $searchString)) {
+        $emailQuery->addWhere('email', 'LIKE', "%" . $searchString . "%");
+      } else {
+        $emailQuery->addClause('OR', ['contact.display_name', 'LIKE', "%" . $searchString . "%"], ['email', 'LIKE', "%" . $searchString . "%"]);
       }
+
+      $emailsData = $emailQuery->execute();
+    } catch (Exception $e) {
+      return $preparedEmails;
     }
 
-    return $searchResult;
+    foreach ($emailsData as $emailData) {
+      $preparedEmails[] = self::prepareResponse($emailData);
+    }
+
+    return $preparedEmails;
   }
 
-  private static function getReturnEmailFields(): array {
-    return [
-      "contact_id.first_name",
-      "contact_id.last_name",
-      "contact_id.display_name" ,
-      'email',
-      'contact_id.id',
-      'contact_id.is_deleted',
-      'contact_id.contact_type'
-    ];
+  /**
+   * @return mixed
+   */
+  private static function getEmailSearchObject() {
+    return \Civi\Api4\Email::get(FALSE)
+      ->addSelect(
+        'email',
+        'contact.first_name',
+        'contact.last_name',
+        'contact.display_name',
+        'contact.id',
+        'contact.is_deleted',
+        'contact.contact_type',
+        'contact.addressee_display'
+      )
+      ->setJoin([
+        ['Contact AS contact', 'LEFT', NULL, ['contact_id', '=', 'contact.id']],
+      ]);
   }
 
   /**
@@ -63,22 +62,18 @@ class CRM_Supportcase_Utils_EmailSearch {
    */
   public static function searchByCommaSeparatedIds($commaSeparatedEmailIds) {
     $preparedEmails = [];
+    $emailIds = explode(',', $commaSeparatedEmailIds);
 
     try {
-      $emails = civicrm_api3('Email', 'get', [
-        'sequential' => 1,
-        'return' => self::getReturnEmailFields(),
-        'id' => ['IN' => explode(',', $commaSeparatedEmailIds)],
-        'options' => ['limit' => 0],
-      ]);
-    } catch (CiviCRM_API3_Exception $e) {
+      $emailsData = self::getEmailSearchObject()
+        ->addWhere('id', 'IN', $emailIds)
+        ->execute();
+    } catch (Exception $e) {
       return $preparedEmails;
     }
 
-    if (!empty($emails['values'])) {
-      foreach ($emails['values'] as $email) {
-        $preparedEmails[] = self::prepareResponse($email);
-      }
+    foreach ($emailsData as $emailData) {
+      $preparedEmails[] = self::prepareResponse($emailData);
     }
 
     return $preparedEmails;
@@ -90,31 +85,27 @@ class CRM_Supportcase_Utils_EmailSearch {
    */
   private static function prepareResponse($email) {
     $ico = '';
-    if ($email['contact_id.contact_type'] == 'Individual') {
+    if ($email['contact.contact_type'] == 'Individual') {
       $ico = 'Individual-icon';
-    } elseif ($email['contact_id.contact_type'] == 'Organization') {
+    } elseif ($email['contact.contact_type'] == 'Organization') {
       $ico = 'Organization-icon';
-    } elseif ($email['contact_id.contact_type'] == 'Household') {
+    } elseif ($email['contact.contact_type'] == 'Household') {
       $ico = 'Household-icon';
     }
 
-    if (!empty($email['contact_id.first_name']) && !empty($email['contact_id.last_name'])) {
-      $customName = $email['contact_id.first_name'] . ' ' . $email['contact_id.last_name'];
-    } elseif (!empty($email['contact_id.first_name'])) {
-      $customName = $email['contact_id.first_name'];
-    } elseif (!empty($email['contact_id.last_name'])) {
-      $customName = $email['contact_id.last_name'];
+    if (!empty($email['contact.addressee_display'])) {
+      $customName = $email['contact.addressee_display'];
     } else {
-      $customName = $email['contact_id.display_name'];
+      $customName = $email['contact.display_name'];
     }
 
     return [
-      'label' => self::prepareEmailLabel($email['contact_id.display_name'], $email['email']),
+      'label' => self::prepareEmailLabel($email['contact.display_name'], $email['email']),
       'email' => $email['email'],
-      'contact_display_name' => $email['contact_id.display_name'],
+      'contact_display_name' => $email['contact.display_name'],
       'contact_custom_display_name' => $customName,
       'email_id' => $email['id'],
-      'contact_id' => $email['contact_id.id'],
+      'contact_id' => $email['contact.id'],
       'icon' => $ico,
       'label_class' => '',
       'description' => [],
