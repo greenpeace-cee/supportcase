@@ -221,4 +221,31 @@ class CRM_Supportcase_Utils_Email {
     return [];
   }
 
+  /**
+   * @param $contactId
+   * @return array
+   */
+  public static function getContactEmails($contactId): array {
+    try {
+      $currentEmails = civicrm_api3('Email', 'get', [
+        'contact_id' => $contactId,
+        'options' => ['limit' => 0],
+        'return' => ["contact_id", "email"],
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      return [];
+    }
+
+    if (empty($currentEmails['values'])) {
+      return [];
+    }
+
+    $emails = [];
+    foreach ($currentEmails['values'] as $email) {
+      $emails[] = $email['email'];
+    }
+
+    return $emails;
+  }
+
 }

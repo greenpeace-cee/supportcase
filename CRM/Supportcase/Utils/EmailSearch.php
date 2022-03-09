@@ -15,7 +15,7 @@ class CRM_Supportcase_Utils_EmailSearch {
 
     $params = [
       'sequential' => 1,
-      'return' => ["contact_id.display_name" , 'email', 'contact_id.id', 'contact_id.is_deleted', 'contact_id.contact_type'],
+      'return' => self::getReturnEmailFields(),
       'email' => ['LIKE' => "%" . $searchString . "%"],
       'contact_id.display_name' => ['LIKE' => "%" . $searchString . "%"],
       'options' => [
@@ -45,6 +45,18 @@ class CRM_Supportcase_Utils_EmailSearch {
     return $searchResult;
   }
 
+  private static function getReturnEmailFields(): array {
+    return [
+      "contact_id.first_name",
+      "contact_id.last_name",
+      "contact_id.display_name" ,
+      'email',
+      'contact_id.id',
+      'contact_id.is_deleted',
+      'contact_id.contact_type'
+    ];
+  }
+
   /**
    * @param $commaSeparatedEmailIds
    * @return array
@@ -55,7 +67,7 @@ class CRM_Supportcase_Utils_EmailSearch {
     try {
       $emails = civicrm_api3('Email', 'get', [
         'sequential' => 1,
-        'return' => ["contact_id.display_name" , 'email', 'contact_id.id', 'contact_id.is_deleted', 'contact_id.contact_type'],
+        'return' => self::getReturnEmailFields(),
         'id' => ['IN' => explode(',', $commaSeparatedEmailIds)],
         'options' => ['limit' => 0],
       ]);
@@ -86,10 +98,21 @@ class CRM_Supportcase_Utils_EmailSearch {
       $ico = 'Household-icon';
     }
 
+    if (!empty($email['contact_id.first_name']) && !empty($email['contact_id.last_name'])) {
+      $customName = $email['contact_id.first_name'] . ' ' . $email['contact_id.last_name'];
+    } elseif (!empty($email['contact_id.first_name'])) {
+      $customName = $email['contact_id.first_name'];
+    } elseif (!empty($email['contact_id.last_name'])) {
+      $customName = $email['contact_id.last_name'];
+    } else {
+      $customName = $email['contact_id.display_name'];
+    }
+
     return [
       'label' => self::prepareEmailLabel($email['contact_id.display_name'], $email['email']),
       'email' => $email['email'],
       'contact_display_name' => $email['contact_id.display_name'],
+      'contact_custom_display_name' => $customName,
       'email_id' => $email['id'],
       'contact_id' => $email['contact_id.id'],
       'icon' => $ico,

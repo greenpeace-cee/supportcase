@@ -226,3 +226,38 @@ function supportcase_civicrm_tokenValues(&$values, $cids, $job = null, $tokens =
     }
   }
 }
+
+function supportcase_civicrm_preProcess($formName, &$form) {
+  if ($formName == CRM_Contact_Form_Search_Builder::class) {
+    $spcIsUsePrefillVal = CRM_Utils_Request::retrieve('spc_is_use_prefill_val', 'Integer');
+    $contactIds = CRM_Utils_Request::retrieve('c_ids', 'String');
+    $isReset = CRM_Utils_Request::retrieve('reset', 'Integer');
+
+    if (empty($spcIsUsePrefillVal) || empty($contactIds) || empty($isReset)) {
+      return;
+    }
+
+    $rowNumber = 0;
+    $contactWhereIndex = 1;
+
+    $form->_submitValues = [
+      'mapper' => [$contactWhereIndex => [
+        $rowNumber => [
+          0 => 'Contact',
+          1 => 'id',
+        ]
+      ]
+      ],
+      'operator' => [
+        $contactWhereIndex => [
+          $rowNumber => 'IN'
+        ]
+      ],
+      'value' => [
+        $contactWhereIndex => [
+          $rowNumber => $contactIds
+        ]
+      ],
+    ];
+  }
+}
