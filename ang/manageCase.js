@@ -484,7 +484,7 @@
         return {
             restrict: "E",
             templateUrl: "~/manageCase/directives/contactInfo.html",
-            scope: {model: "="},
+            scope: {model: "=", hidedupes: '='},
             controller: function($scope, $element) {
                 $scope.contact = [];
                 $scope.isLoading = true;
