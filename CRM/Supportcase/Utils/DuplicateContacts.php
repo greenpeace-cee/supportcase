@@ -42,6 +42,7 @@ class CRM_Supportcase_Utils_DuplicateContacts {
       'return' => ["contact_id", "email"],
       'options' => ['limit' => 0],
       'email' => ['IN' => $searchEmails],
+      'contact_id.is_deleted' => FALSE,
     ]);
 
     return self::prepareResponse($duplicateContactIds, 'Email');
@@ -62,6 +63,7 @@ class CRM_Supportcase_Utils_DuplicateContacts {
       'return' => ["contact_id", "phone"],
       'options' => ['limit' => 0],
       'phone' => ['IN' => $searchPhoneNumbers],
+      'contact_id.is_deleted' => FALSE,
     ]);
 
     return self::prepareResponse($duplicateContactIds, 'Phone');
