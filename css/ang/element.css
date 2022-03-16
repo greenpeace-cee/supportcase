@@ -548,6 +548,7 @@
     align-items: center;
     background: white;
     margin: 0;
+    gap: 20px;
 }
 
 .spc__pagination .crm-pager {
@@ -559,6 +560,24 @@
     align-items: center;
     line-height: 1 !important;
     background: white;
+}
+
+.spc__pagination > .form-item {
+    float: none !important;
+    display: flex;
+    align-items: center;
+    line-height: 1 !important;
+    background: white;
+}
+
+.spc__pagination > .form-item > label {
+    white-space: nowrap;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: normal !important;
 }
 
 .spc__pagination > .crm-pager > .element-right > span.ui-spinner {
@@ -588,14 +607,13 @@
 
 .spc__pagination .element-right {
     padding: 0 !important;
-    margin: 0 15px 0 0 !important;
+    margin: 0 !important;
     display: block !important;
     float: none !important;
     font-size: 14px !important;
 }
 
 .spc__pagination-items-per-page {
-    padding-right: 30px;
     white-space: nowrap;
     font-size: 14px;
 }
