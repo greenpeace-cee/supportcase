@@ -613,11 +613,6 @@
     font-size: 14px !important;
 }
 
-.spc__pagination-items-per-page {
-    white-space: nowrap;
-    font-size: 14px;
-}
-
 /*
    End pagination:
 */
