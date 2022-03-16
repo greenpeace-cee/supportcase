@@ -3,9 +3,6 @@
         <div class="spc__accordion crm-accordion-wrapper crm-contribution_search_form-accordion {if $isCollapseFilter}collapsed{/if}">
             <div class="crm-accordion-header crm-master-accordion-header">
                 {ts}Filter{/ts}
-                <a href="{crmURL p='civicrm/supportcase' q='reset=1'}" class="spc__accordion-refresh css_right" title="Clear all search criteria">
-                  <i class="crm-i fa-refresh" aria-hidden="true"></i>
-                </a>
             </div>
             <div class="crm-accordion-body">
                 {strip}
@@ -105,12 +102,6 @@
                                 <span class="ui-button-icon-space"> </span>
                                 <span>{ts}Reset Form{/ts}</span>
                             </a>
-
-                            <a class="spc__button spc--height-big spc--blue" href="{$addNewCaseUrl}" title="{ts}Add new one{/ts}" >
-                                <span class="ui-button-icon ui-icon fa-plus"></span>
-                                <span class="ui-button-icon-space"> </span>
-                                <span>Add Case</span>
-                            </a>
                         </div>
                     </div>
                 {/strip}
@@ -118,6 +109,8 @@
         </div>
     </div>
 </div>
+
+{include file="CRM/Supportcase/Form/Dashboard/ActionPanel.tpl"}
 
 {literal}
     <script>

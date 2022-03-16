@@ -39,7 +39,7 @@
 
 											<div ng-if="!tableHeader.is_dynamic_header">
 												<div class="act__column" ng-if="tableHeader.table_data_key == 'contact_id'">
-													<contact-info model="tableRow['contact_id']"></contact-info>
+													<contact-info model="tableRow['contact_id']" is-search-duplicates="true"></contact-info>
 												</div>
 
 												<div class="act__column" ng-if="tableHeader.table_data_key == 'contact_is_opt_out'">

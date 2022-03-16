@@ -1,23 +1,5 @@
 <?php
-/*
- +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC. All rights reserved.                        |
- |                                                                    |
- | This work is published under the GNU AGPLv3 license with some      |
- | permitted exceptions and without any warranty. For full license    |
- | and copyright information, see https://civicrm.org/licensing       |
- +--------------------------------------------------------------------+
- */
 
-/**
- *
- * @package CRM
- * @copyright CiviCRM LLC https://civicrm.org/licensing
- */
-
-/**
- * This class is used to retrieve and display a range of contacts that match the given criteria.
- */
 class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
 
   /**
@@ -374,7 +356,6 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
     $foundCaseIds = [];
     $mask = CRM_Core_Action::mask($permissions);
     $caseStatus = CRM_Core_OptionGroup::values('case_status', FALSE, FALSE, FALSE, " AND v.name = 'Urgent' ");
-    $scheduledInfo = [];
     $categoryCustomFieldName = CRM_Core_BAO_CustomField::getCustomFieldID('category', CRM_Supportcase_Install_Entity_CustomGroup::CASE_DETAILS, true);
 
     while ($result->fetch()) {
@@ -394,9 +375,6 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
         $row['case_status_id'] = empty($row['case_status_id']) ? "" : $row['case_status_id'] . '<br />' . ts('(deleted)');
       }
 
-      $scheduledInfo['case_id'][] = $result->case_id;
-      $scheduledInfo['contact_id'][] = $result->contact_id;
-      $scheduledInfo['case_deleted'] = $result->case_deleted;
       $row['checkbox'] = CRM_Core_Form::CB_PREFIX . $result->case_id;
 
       $links = self::links($isDeleted, $this->_key);
@@ -429,7 +407,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
       $row['lock_message'] = '';
 
       //it shows at 'most recent communication' column
-      $mostRecentCommunicationData = $this->getRecentCommunication($result->case_id);
+      $mostRecentCommunicationData = CRM_Supportcase_Utils_Case::getRecentCommunication($result->case_id);
       $row['case_recent_activity_id'] = $mostRecentCommunicationData['activity_id'];
       $row['case_recent_activity_date'] = $mostRecentCommunicationData['activity_date_time'];
       $row['case_recent_activity_details'] = CRM_Supportcase_Utils_Activity::getEmailBody($mostRecentCommunicationData['activity_details'])['text'];
@@ -498,54 +476,6 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
     }
 
     return $caseTags;
-  }
-
-  /**
-   * Get most recent communication by case id
-   * (it is activity)
-   *
-   * @param $caseId
-   * @return array
-   */
-  private function getRecentCommunication($caseId) {
-    $recentCommunication = [
-      'activity_id' => '',
-      'activity_date_time' => '',
-      'activity_details' => '',
-      'activity_type_label' => '',
-    ];
-
-    try {
-      $recentActivity = civicrm_api3('Activity', 'get', [
-        'case_id' => $caseId,
-        'activity_type_id' => ['IN' => CRM_Supportcase_Utils_Setting::get('supportcase_available_activity_type_names')],
-        'is_deleted' => "0",
-        'sequential' => 1,
-        'return' => [
-          'id',
-          'subject',
-          'details',
-          'activity_date_time',
-          'activity_type_id',
-          'activity_type_id.label'
-        ],
-        'options' => [
-          'sort' => "activity_date_time DESC",
-          'limit' => 1
-        ],
-      ]);
-    } catch (CiviCRM_API3_Exception $e) {
-      return $recentCommunication;
-    }
-
-    if (!empty($recentActivity['values'][0])) {
-      $recentCommunication['activity_id'] = $recentActivity['values'][0]['id'];
-      $recentCommunication['activity_date_time'] = $recentActivity['values'][0]['activity_date_time'];
-      $recentCommunication['activity_details'] = trim(CRM_Utils_String::stripAlternatives($recentActivity['values'][0]['details'] ?? NULL));
-      $recentCommunication['activity_type_label'] = $recentActivity['values'][0]['activity_type_id.label'];
-    }
-
-    return $recentCommunication;
   }
 
   /**

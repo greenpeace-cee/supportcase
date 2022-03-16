@@ -59,11 +59,6 @@
     overflow: hidden;
 }
 
-.supportcase__case-tags-filter-wrap {
-    width: 100%;
-    max-width: 920px;
-}
-
 .supportcase__case-tags-wrap {
     max-width: 300px;
 }
@@ -81,15 +76,13 @@
 }
 
 .supportcase__result-action-block {
-    padding-top: 30px;
+    justify-content: space-between;
+    display: flex;
+    padding: 40px 10px 0 10px;
 }
 
 .supportcase__empty-result-block {
     padding: 10px;
-}
-
-.supportcase__search-block {
-    max-width: 1160px;
 }
 
 .supportcase__result-block .supportcase__case-row.crm-case-status_Spam > td {
@@ -205,7 +198,6 @@
     }
 }
 
-
 .supportcase__case-id-column-wrap {
     font-weight: 600;
     font-size: 15px;
@@ -265,6 +257,12 @@
     display: inline-block;
 }
 
+.supportcase__case-select-row-checkbox > input[type="checkbox"] ,
+#supportcaseToggleSelectCases {
+    width: 20px;
+    height: 20px;
+}
+
 .supportcase__case-row-icons {
     display: inline-block;
 }
@@ -279,37 +277,12 @@
     margin-top: 0px;
 }
 
-.supportcase__top-pagination-wrap,
-.supportcase__bottom-pagination-wrap {
-    display: flex;
-    padding: 10px;
-    justify-content: space-between;
-}
-
 .supportcase__bottom-pagination-wrap {
     border-bottom: 1px solid #e8eef0;
-    margin: 0 10px 0 0;
-}
-
-.supportcase__top-pagination-wrap {
-    margin-bottom: 10px;
-}
-
-.supportcase__top-pagination-wrap .crm-pager,
-.supportcase__bottom-pagination-wrap .crm-pager {
-    box-shadow: none;
+    padding: 10px;
     margin: 0;
-    width: 100%;
-    padding: 0;
-}
-
-.supportcase__top-pagination-wrap .crm-pager {
-    max-width: 700px;
-}
-
-.supportcase__top-pagination-wrap .clear,
-.supportcase__bottom-pagination-wrap .clear {
-    display: none;
+    flex-direction: row-reverse;
+    display: flex;
 }
 
 .crm-container .supportcase__result-block .ui-tabs .supportcase__tab-link-wrap:first-child {
@@ -318,6 +291,10 @@
 
 .supportcase__result-table-wrap {
     margin-bottom: 20px;
+}
+
+.supportcase__result-table-wrap > table > tbody > tr {
+    background: white !important;
 }
 
 .supportcase__result-table-wrap > table {
@@ -394,4 +371,169 @@
 
 .page-civicrm, #page {
  background: white !important;
+}
+
+.supportcase__result-block .ui-tabs .ui-corner-top.ui-tabs-active {
+    z-index: 10;
+}
+
+.crm-container .supportcase__dashboard-search-filters-wrap .supportcase__case-tags-filter-wrap .crm-accordion-header {
+    padding: 5px 10px;
+}
+
+.crm-container .supportcase__dashboard-search-filters-wrap .supportcase__case-tags-filter-wrap .crm-accordion-body {
+    box-shadow: none;
+    padding: 10px 0 0 0 !important;
+}
+
+.supportcase__search-block {
+    padding: 10px 10px;
+    max-width: 1160px;
+}
+
+.supportcase__case-tags-filter {
+    margin-right: -5px;
+    margin-left: -5px;
+}
+
+.supportcase__case-tags-filter .case-tagset .select2-choices {
+    box-shadow: none !important;
+}
+
+.supportcase__result-action-block .crm-search-tasks {
+    background: white !important;
+}
+
+.supportcase__result-action-block .select2-choice {
+    box-shadow: none !important;
+}
+
+.supportcase__search-block .supportcase__search-filters-wrap .crm-absolute-date-range input {
+    max-width: 100px;
+}
+
+.supportcase__search-block .supportcase__search-filters-wrap .crm-absolute-date-range .crm-error {
+    display: block;
+    margin: 10px 0;
+}
+
+.supportcase__case-tags-filter-wrap {
+    margin-top: 6px;
+    width: 100%;
+    max-width: 920px;
+}
+
+.supportcase__result-block .crm-child-row .dataTables_wrapper {
+    box-shadow: none;
+    margin: 0;
+}
+
+.crm-container .supportcase__result-block .crm-child-row > td {
+    background: #ced2d4 !important;
+    padding: 10px;
+}
+
+.crm-container .supportcase__result-block .dataTables_wrapper .crm-datatable-pager-top {
+    padding-bottom: 46px;
+}
+
+.crm-container .supportcase__result-block .dataTables_wrapper table.crm-ajax-table {
+    width: 100%;
+}
+
+.crm-container .supportcase__result-block table.dataTable .supportcase__result-table-first-column {
+    padding-left: 15px;
+}
+
+.crm-container .supportcase__result-block .ui-tabs .supportcase__tab-link-wrap {
+    padding: 0;
+    margin: 0 1px;
+}
+
+.crm-container .supportcase__result-block .ui-tabs .supportcase__tab-link-wrap .supportcase__tab-link {
+    padding: 12px !important;
+}
+
+.crm-container .supportcase__result-block a.sorting_asc::after,
+.crm-container .supportcase__result-block a.sorting_desc::after,
+.crm-container .supportcase__result-block a.sorting::after {
+    right: auto;
+    padding-left: 7px;
+}
+
+.supportcase__result-table-head-column span,
+.supportcase__result-table-head-column a {
+    line-height: 20px;
+}
+
+.supportcase__result-table-head-column a {
+    position: relative;
+}
+
+.crm-container .supportcase__result-block table.dataTable .supportcase__result-table-head-column {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.crm-container table.dataTable tr td .supportcase__case-tags-wrap .supportcase__case-tag-item {
+    line-height: 135%;
+    display: block;
+    float: left;
+}
+
+.crm-container  .supportcase__dashboard-search-filters-wrap .crm-accordion-header {
+    padding: 7px;
+}
+
+.crm-container.ui-dialog {
+    background: white;
+}
+
+.crm-container a.crm-tooltip-down .crm-tooltip-wrapper::before {
+    top: 0px;
+}
+
+.ui-dialog-content.modal-dialog.crm-ajax-container {
+    padding-top: 0px !important;
+}
+
+.crm-container .supportcase__result-block .supportcase__tabs {
+    padding-top: 10px;
+}
+
+.supportcase__dashboard-search-filters-wrap > .crm-block {
+    box-shadow: none !important;
+    margin-bottom: 0 !important;
+}
+
+.supportcase__result-block > .crm-content-block {
+    box-shadow: none !important;
+}
+
+.CRM_Supportcase_Form_Dashboard.crm-search-form {
+    box-shadow: 0 3px 20px 0 rgb(88 80 80 / 25%);
+}
+
+.supportcase__tabs-item {
+    background: #eeeeee !important;
+}
+
+.supportcase__tabs-item.ui-tabs-active {
+    background: white !important;
+}
+
+#sidebar-first {
+    display: none !important;
+}
+
+.one-sidebar #content {
+    width: 100% !important;
+}
+
+#header div.section, #featured div.section, #messages div.section, #main, #triptych, #footer-columns, #footer {
+    width: 100% !important;
+}
+
+.crm-container .crm-form-block {
+    background: white !important;
 }

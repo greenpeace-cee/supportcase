@@ -15,6 +15,10 @@
 
 .spc__accordion > .crm-accordion-header {
     display: flex;
+    background: #0071bd !important;
+    color: #fff !important;
+    font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+    border: none;
 }
 
 .spc__accordion.spc--header-grey .crm-accordion-header {
@@ -170,19 +174,6 @@
     font-size: 18px;
     padding-top: 2px;
 }
-.crm-container .crm-accordion-header a.spc__accordion-refresh {
-    display: none;
-}
-.crm-container .collapsed .crm-accordion-header a.spc__accordion-refresh {
-    display: block;
-    position: absolute;
-    right: 7px;
-    top: 7px;
-    color: inherit;
-}
-.crm-container .collapsed  .crm-accordion-header a.spc__accordion-refresh:hover {
-  color: inherit;
-}
 
 /*
    End supportcase Accordion
@@ -195,6 +186,10 @@
     cursor: pointer;
     box-sizing: border-box !important;
     display: block;
+    background: #0071bd;
+    color: #fff;
+    font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+    border: none;
 }
 
 .spc__button.spc--blue {
@@ -260,6 +255,50 @@
 
 .spc__button.spc--cancel:hover {
     background: #f3f6f7;
+}
+
+.spc__button.spc--icon {
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    border-radius: 50%;
+    transition: background 0.5s;
+    background: white;
+}
+.spc__button.spc--icon.spc--disabled:hover,
+.spc__button.spc--icon.spc--disabled {
+    color: #7c8388;
+}
+
+.spc__button.spc--icon.spc--disabled:hover {
+    color: #7c8388;
+}
+
+.spc__button.spc--icon.spc--disabled:hover {
+    background: white;
+}
+
+.spc__button.spc--icon:hover {
+    background: #f3f6f7;
+}
+
+.spc__button.spc--icon.spc--active {
+    background: #f3f6f7;
+}
+
+.spc__button.spc--icon > .ui-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
 }
 
 /*
@@ -396,6 +435,10 @@
     width: 100% !important;
 }
 
+.spc__input.spc--width-90 {
+    width: 90px !important;
+}
+
 .spc__input.ng-invalid-required:not(.spc--multiple-select, .spc--single-select),
 .spc__input.ng-invalid:not(.spc--multiple-select, .spc--single-select) {
     border-color: #cf3458 !important;
@@ -492,4 +535,71 @@
 
 /*
    End form:
+*/
+
+/*
+   Pagination:
+*/
+
+.spc__pagination {
+    display: flex;
+    padding: 10px;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    margin: 0;
+}
+
+.spc__pagination .crm-pager {
+    box-shadow: none;
+    margin: 0;
+    width: 100%;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    line-height: 1 !important;
+    background: white;
+}
+
+.spc__pagination > .crm-pager > .element-right > span.ui-spinner {
+    margin-right: 5px;
+    margin-left: 5px;
+    font-size: 14px;
+}
+
+.spc__pagination .clear {
+    display: none;
+}
+
+.spc__pagination .crm-pager .crm-hover-button {
+    top: 0 !important;
+    font-size: 14px;
+}
+
+.spc__pagination .crm-pager-nav {
+    padding: 0 !important;
+    margin: 0 !important;
+    float: none !important;
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+}
+
+.spc__pagination .element-right {
+    padding: 0 !important;
+    margin: 0 15px 0 0 !important;
+    display: block !important;
+    float: none !important;
+    font-size: 14px !important;
+}
+
+.spc__pagination-items-per-page {
+    padding-right: 30px;
+    white-space: nowrap;
+    font-size: 14px;
+}
+
+/*
+   End pagination:
 */

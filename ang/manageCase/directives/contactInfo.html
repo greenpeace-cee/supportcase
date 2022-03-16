@@ -52,7 +52,7 @@
 				</div>
 			</div>
 
-			<div ng-if="!hidedupes && contact.duplicate_links.length > 0" class="contact-info__duplicate-block">
+			<div ng-if="contact.duplicate_links.length > 0" class="contact-info__duplicate-block">
 				<div class="contact-info__duplicate-title">Potential duplicates:</div>
 				<div class="contact-info__duplicate-item-wrap">
 					<a href="{{duplicate.link}}" ng-repeat="duplicate in contact.duplicate_links"

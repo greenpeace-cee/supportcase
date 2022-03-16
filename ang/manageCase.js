@@ -484,7 +484,10 @@
         return {
             restrict: "E",
             templateUrl: "~/manageCase/directives/contactInfo.html",
-            scope: {model: "=", hidedupes: '='},
+            scope: {
+                model: "=",
+                isSearchDuplicates: "<isSearchDuplicates",
+            },
             controller: function($scope, $element) {
                 $scope.contact = [];
                 $scope.isLoading = true;
@@ -501,6 +504,7 @@
                     CRM.api3('SupportcaseManageCase', 'get_contact_info', {
                         "sequential": 1,
                         "contact_id": $scope.model,
+                        "is_search_duplicates": $scope.isSearchDuplicates ? 1 : 0,
                     }).then(function(result) {
                         if (result.is_error === 1) {
                             console.error('"get_contact_info" action get error:');
@@ -663,10 +667,6 @@
                             if (callback !== undefined) {
                                 callback();
                             }
-
-                            console.log('$onInit');
-                            console.log('$scope.emailActivities');
-                            console.log($scope.emailActivities);
                         }
                     }, function(error) {
                         console.error('Activity get server error:');
@@ -681,9 +681,6 @@
                 };
 
                 $scope.switchToMode = function(mode, activityId) {
-                    console.log('switchToMode');
-                    console.log(activityId);
-                    console.log(mode);
                     $scope.getActivity(activityId).current_mode = mode;
                 };
 
@@ -783,9 +780,6 @@
                     }
 
                     var data = $scope.prepareEmailSendData(activity);
-                    console.log('data');
-                    console.log(data);
-
                     $.ajax({
                         url : CRM.url('civicrm/ajax/rest'),
                         type : 'POST',
@@ -908,8 +902,6 @@
                     'mode': 'new',
                     'attachments': [],
                 };
-                console.log('$scope.emailData');
-                console.log($scope.emailData);
 
                 $scope.refreshPrefillData = function() {
                     $scope.emailData['subject'] = $scope.model['new_email_prefill_fields']['subject'];
@@ -1567,7 +1559,6 @@
                             console.error('find_contacts_by_email get error:');
                             console.error(result.error_message);
                         } else {
-                          console.log(result);
                             $scope.info.tableHeaders = result.values['table_headers'];
                             $scope.info.tableData = result.values['table_data'];
                             $scope.info.availableGroups = result.values['available_groups'];

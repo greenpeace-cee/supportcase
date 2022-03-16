@@ -136,6 +136,8 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $this->assign('isCollapseFilter', $this->isCollapseFilter());
     $this->assign('addNewCaseUrl', $this->getCreateNewCaseUrl());
     $this->assign('dashboardSearchQfKey', $dashboardSearchQfKey);
+    $this->assign('categories', CRM_Supportcase_Utils_Category::get());
+    $this->assign('itemsPerPage', CRM_Supportcase_Utils_Setting::getDefaultCountOfRows());
 
     // to clean old values from previous tasks when user click on 'cancel' button
     $buttonName = $this->controller->getButtonName();
@@ -225,12 +227,8 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $this->addTaskMenu($tasks);
 
     CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/ang/element.css');
-    CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/general-dashboard.css');
-    if (function_exists('_shoreditch_isActive') && _shoreditch_isActive()) {
-      CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/with-shoreditch-dashboard.css');
-    } else {
-      CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/without-shoreditch-dashboard.css');
-    }
+    CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/actionPanel.css');
+    CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/dashboard.css');
   }
 
   public function postProcess() {

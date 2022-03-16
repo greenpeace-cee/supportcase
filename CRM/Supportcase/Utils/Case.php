@@ -65,4 +65,52 @@ class CRM_Supportcase_Utils_Case {
     return '';
   }
 
+  /**
+   * Get most recent communication by case id
+   * (it is activity)
+   *
+   * @param $caseId
+   * @return array
+   */
+  public static function getRecentCommunication($caseId) {
+    $recentCommunication = [
+      'activity_id' => '',
+      'activity_date_time' => '',
+      'activity_details' => '',
+      'activity_type_label' => '',
+    ];
+
+    try {
+      $recentActivity = civicrm_api3('Activity', 'get', [
+        'case_id' => $caseId,
+        'activity_type_id' => ['IN' => CRM_Supportcase_Utils_Setting::get('supportcase_available_activity_type_names')],
+        'is_deleted' => "0",
+        'sequential' => 1,
+        'return' => [
+          'id',
+          'subject',
+          'details',
+          'activity_date_time',
+          'activity_type_id',
+          'activity_type_id.label'
+        ],
+        'options' => [
+          'sort' => "activity_date_time DESC",
+          'limit' => 1
+        ],
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      return $recentCommunication;
+    }
+
+    if (!empty($recentActivity['values'][0])) {
+      $recentCommunication['activity_id'] = $recentActivity['values'][0]['id'];
+      $recentCommunication['activity_date_time'] = $recentActivity['values'][0]['activity_date_time'];
+      $recentCommunication['activity_details'] = trim(CRM_Utils_String::stripAlternatives($recentActivity['values'][0]['details'] ?? NULL));
+      $recentCommunication['activity_type_label'] = $recentActivity['values'][0]['activity_type_id.label'];
+    }
+
+    return $recentCommunication;
+  }
+
 }

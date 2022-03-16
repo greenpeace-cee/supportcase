@@ -133,11 +133,4 @@
         {/foreach}
     </table>
   </div>
-
-  {if $isShowPagination}
-    <div class="supportcase__bottom-pagination-wrap">
-        {include file="CRM/common/pager.tpl" location="top"}
-    </div>
-  {/if}
-
 {/strip}

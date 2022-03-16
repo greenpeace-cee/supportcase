@@ -50,7 +50,7 @@
 										</td>
 										<td>
 											<div class="act__column">
-												<contact-info model="contact.id"></contact-info>
+												<contact-info model="contact.id" is-search-duplicates="true"></contact-info>
 											</div>
 										</td>
 										<td>
@@ -83,7 +83,7 @@
 				<div class="act__step-logic">
 					<ul ng-repeat="contact in info['contacts']">
 						<li ng-if="contact['is_selected']">
-							<contact-info model="contact['id']"></contact-info>
+							<contact-info model="contact['id']" is-search-duplicates="true"></contact-info>
 						</li>
 					</ul>
 				</div>

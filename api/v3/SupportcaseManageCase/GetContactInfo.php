@@ -38,6 +38,11 @@ function civicrm_api3_supportcase_manage_case_get_contact_info($params) {
     }
   }
 
+  $duplicateLinks = [];
+  if (!empty($params['is_search_duplicates'])) {
+    $duplicateLinks = CRM_Supportcase_Utils_DuplicateContacts::getData($contact['contact_id']);
+  }
+
   $contactInfo = [
     'display_name' => $contact['display_name'],
     'contact_id' => $contact['contact_id'],
@@ -50,7 +55,7 @@ function civicrm_api3_supportcase_manage_case_get_contact_info($params) {
       'reset' => '1',
       'cid' => $contact['contact_id'],
     ], FALSE, NULL, FALSE),
-    'duplicate_links' => CRM_Supportcase_Utils_DuplicateContacts::getData($contact['contact_id']),
+    'duplicate_links' => $duplicateLinks,
   ];
 
   return civicrm_api3_create_success([$contactInfo]);
@@ -69,5 +74,11 @@ function _civicrm_api3_supportcase_manage_case_get_contact_info_spec(&$params) {
     'api.required' => 1,
     'type' => CRM_Utils_Type::T_INT,
     'title' => 'Contact id',
+  ];
+  $params['is_search_duplicates'] = [
+    'name' => 'is_search_duplicates',
+    'api.required' => 1,
+    'type' => CRM_Utils_Type::T_BOOLEAN,
+    'title' => 'Is search duplicates?',
   ];
 }
