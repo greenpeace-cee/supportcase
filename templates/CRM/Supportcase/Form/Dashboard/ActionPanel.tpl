@@ -66,13 +66,13 @@
             } else {
               CRM.status(result['values']['message']);
             }
+            reloadDashboard();
           }, function(error) {
             console.error('SupportcaseFastTask->change_category get server error:');
             console.error(error);
             CRM.status('Server error via changing category', 'error');
+            reloadDashboard();
           });
-
-          reloadDashboard();
         });
       }
 
