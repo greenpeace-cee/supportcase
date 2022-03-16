@@ -137,7 +137,6 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $this->assign('addNewCaseUrl', $this->getCreateNewCaseUrl());
     $this->assign('dashboardSearchQfKey', $dashboardSearchQfKey);
     $this->assign('categories', CRM_Supportcase_Utils_Category::get());
-    $this->assign('itemsPerPage', CRM_Supportcase_Utils_Setting::getDefaultCountOfRows());
 
     // to clean old values from previous tasks when user click on 'cancel' button
     $buttonName = $this->controller->getButtonName();
