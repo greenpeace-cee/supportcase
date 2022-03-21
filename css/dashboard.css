@@ -96,6 +96,10 @@
     background: #dadada !important;
 }
 
+.supportcase__result-block .supportcase__case-row.crm-case-status_Spam > td .supportcase__recent-communication-details {
+    background: transparent;
+}
+
 .supportcase__result-block .supportcase__case-row.crm-case-status_Resolved > td {
     background: #e2ffe2 !important;
 }
@@ -185,6 +189,11 @@
 .crm-container .supportcase__result-block .supportcase__case-subject-column-wrap {
     max-width: 220px;
     line-height: 18px;
+}
+
+.crm-container .supportcase__result-block .supportcase__case-subject-column-wrap > span {
+    word-wrap: break-word;
+    word-break: break-all;
 }
 
 .supportcase__view-activities-column-wrap {
@@ -504,6 +513,10 @@
 .supportcase__result-block .crm-child-row .dataTables_wrapper {
     box-shadow: none;
     margin: 0;
+}
+
+.supportcase__result-block .crm-child-row .dataTables_wrapper tr > td {
+    background: white !important;
 }
 
 .crm-container .supportcase__result-block .crm-child-row > td {
