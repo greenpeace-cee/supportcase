@@ -67,6 +67,13 @@
   min-width: 130px;
 }
 
+.supportcase__case-status-column-wrap > span {
+    min-width: 130px;
+    font-weight: 600;
+    line-height: 15px !important;
+    display: block;
+}
+
 .crm-container table.dataTable tr td .supportcase__case-tags-wrap .supportcase__case-tag-item {
     margin: 1px;
     max-width: 100px;
@@ -184,12 +191,49 @@
     max-width: 30px;
 }
 
+.supportcase__show-case-activity-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    display: block;
+    width: 20px;
+    height: 20px;
+    line-height: 20px !important;
+}
+
+.supportcase__show-case-activity-button::before {
+    padding: 0 0 0 8px !important;
+    display: block !important;
+    margin: 0 auto !important;
+    line-height: 20px !important;
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 15px !important;
+    box-sizing: border-box !important;
+}
+
+.supportcase__actions-column-wrap > span {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    gap: 5px;
+}
+
+.supportcase__actions-column-wrap > span > .crm-hover-button {
+    display: block;
+}
+
 .supportcase__case-client-column-wrap {
     max-width: 210px;
 }
 
 .supportcase__recent-communication-column-wrap {
-    max-width: 600px;
+    max-width: 590px;
+}
+
+.supportcase__recent-communication-column-wrap > a.crm-summary-link {
+    display: block;
+    line-height: 20px;
 }
 
 @media screen and (max-width: 1450px) {
@@ -204,6 +248,13 @@
     max-width: 70px;
 }
 
+.supportcase__case-id-column-wrap > span {
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 20px !important;
+    display: block;
+}
+
 .supportcase__case-select-column-wrap {
     max-width: 50px;
     font-weight: 600;
@@ -212,9 +263,20 @@
 
 .supportcase__case-ico {
     color: black;
-    padding-left: 5px;
-    padding-right: 5px;
     border: 1px solid rgba(211, 222, 226, 0);
+    display: flex !important;
+    align-items: center;
+    align-content: center;
+    padding: 0 !important;
+    margin: 0 !important;
+    line-height: 25px !important;
+    box-sizing: border-box !important;
+    width: 25px;
+    height: 25px;
+}
+
+.supportcase__case-ico::before {
+    margin: 0 auto;
 }
 
 .supportcase__unlock-button {
@@ -228,13 +290,6 @@
 
 .supportcase__case-ico.supportcase__case-ico-grey {
     color: #aaaaaa;
-}
-.supportcase__case-ico.supportcase__case-ico-urgent,
-.supportcase__case-ico.supportcase__case-ico-resolved,
-.supportcase__case-ico.supportcase__case-ico-forwarded,
-.supportcase__case-ico.supportcase__case-ico-spam {
-    padding-left: 5px;
-    padding-right: 5px;
 }
 
 .supportcase__case-ico.supportcase__case-ico-urgent {
@@ -254,21 +309,28 @@
 }
 
 .supportcase__case-select-row-checkbox {
-    display: inline-block;
+    display: block;
 }
 
 .supportcase__case-select-row-checkbox > input[type="checkbox"] ,
 #supportcaseToggleSelectCases {
     width: 20px;
     height: 20px;
+    margin: 0 !important;
+    display: block;
 }
 
 .supportcase__case-row-icons {
-    display: inline-block;
+    display: flex !important;
+    align-items: center;
+    gap: 5px;
 }
 
 .supportcase__case-select-row-column {
-    width: 70px;
+    width: 80px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .supportcase__search-block .supportcase__search-filters-wrap .supportcase__is-case-deleted-search-filter input {
@@ -303,19 +365,31 @@
 
 .supportcase__recent-communication-details {
     margin: 0;
-    line-height: 1.1;
     max-width: 600px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding: 0;
+    background: white;
+    border: none !important;
+    line-height: 18px !important;
+}
+
+.supportcase__recent-communication-details:before,
+.supportcase__recent-communication-details:after {
+    color: inherit;
+    font-size: 15px;
+    margin: 0 5px 0 0;
+    line-height: 15px !important;
+    vertical-align: 0;
 }
 
 .supportcase__recent-communication-details:before {
-  content: "\201C";
+    content: "\201C";
 }
 
 .supportcase__recent-communication-details:after {
-  content: "\201D";
+    content: "\201D";
 }
 
 .supportcase__recent-communication-meta {
@@ -333,6 +407,10 @@
 .supportcase__case-contact-item {
     padding-bottom: 5px;
     line-height: 20px;
+}
+
+.supportcase__case-contact-item:last-child {
+    padding-bottom: 0;
 }
 
 .supportcase__case-contact-item-line {
@@ -442,7 +520,7 @@
 }
 
 .crm-container .supportcase__result-block table.dataTable .supportcase__result-table-first-column {
-    padding-left: 15px;
+    padding-left: 10px;
 }
 
 .crm-container .supportcase__result-block .ui-tabs .supportcase__tab-link-wrap {

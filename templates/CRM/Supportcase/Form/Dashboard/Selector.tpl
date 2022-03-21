@@ -121,7 +121,7 @@
               </div>
             {/foreach}
           </td>
-          <td>
+          <td class="supportcase__actions-column-wrap">
             {if $dashboardSearchQfKey}
                 {$row.action|replace:'%%qfKey%%':$dashboardSearchQfKey|replace:'xx':$row.case_id|replace:'action-item crm-hover-button manage-case not-popup':'crm-hover-button manage-case'}
             {else}
