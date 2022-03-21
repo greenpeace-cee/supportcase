@@ -93,7 +93,7 @@
 }
 
 .supportcase__result-block .supportcase__case-row.crm-case-status_Spam > td {
-    background: #e7e7e7 !important;
+    background: #dadada !important;
 }
 
 .supportcase__result-block .supportcase__case-row.crm-case-status_Resolved > td {
