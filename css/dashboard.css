@@ -96,10 +96,6 @@
     background: #dadada !important;
 }
 
-.supportcase__result-block .supportcase__case-row.crm-case-status_Spam > td .supportcase__recent-communication-details {
-    background: transparent;
-}
-
 .supportcase__result-block .supportcase__case-row.crm-case-status_Resolved > td {
     background: #e2ffe2 !important;
 }
@@ -379,7 +375,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     padding: 0;
-    background: white;
+    background: transparent;
     border: none !important;
     line-height: 18px !important;
 }
