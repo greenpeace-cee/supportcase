@@ -259,5 +259,9 @@ function supportcase_civicrm_preProcess($formName, &$form) {
         ]
       ],
     ];
+
+    // hack to submit form after loading:
+    $script = 'CRM.$(function ($) { $("select#mapper_1_1_0").closest(".form-item").empty(); $("form.CRM_Contact_Form_Search_Builder").submit();});';
+    CRM_Core_Resources::singleton()->addScript($script, 10000, 'page-footer');
   }
 }
