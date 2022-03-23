@@ -1665,16 +1665,38 @@
                 maxWidth: "<maxWidth",
                 isMultiple: "<isMultiple",
                 isRequired: "<isRequired",
+                caseId: "<caseId",
             },
             controller: function($scope, $element) {
                 $scope.entityName = 'SupportcaseEmail';
                 $scope.newItemPseudoId = '_new_item_';
                 $scope.isAlreadyInitSelect = false;
+                $scope.currentSearchEmail = '';
 
                 $scope.isValidEmail = function(emailString) {
                     var patern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
                     return !!emailString.match(patern);
+                };
+
+                $scope.addToClientEmail = function() {
+                    CRM.api3('SupportcaseManageCase', 'add_email_to_client', {
+                        "case_id": $scope.caseId,
+                        "email": $scope.currentSearchEmail
+                    }).then(function(result) {
+                        if (result.is_error === 1) {
+                            console.error('"SupportcaseManageCase->add_email_to_client" get error:');
+                            console.error(result.error_message);
+                            CRM.status('Error via adding email to client:' + result.error_message, 'error');
+                        } else {
+                            CRM.status(result.values.message);
+                            $scope.$apply();
+                        }
+                    }, function(error) {
+                        console.error('"SupportcaseManageCase->add_email_to_client" get error:');
+                        console.error(result.error_message);
+                        CRM.status('Error via adding email to client:' + result.error_message, 'error');
+                    });
                 };
 
                 this.$onInit = function() {
@@ -1722,14 +1744,44 @@
                             'createSearchChoicePosition' : 'bottom',
                             'createSearchChoice' : function(searchString, selectedValues) {
                                 if (!_.findKey(selectedValues, {label: searchString}) && $scope.isValidEmail(searchString)) {
+                                    $scope.currentSearchEmail = searchString;
+
+                                    // hack to add new custom item to select2
+                                    setTimeout(function() {
+                                        $( ".select2-drop-active ul.select2-results" ).append( `
+                                            <li class="se_add-email-to-client-select2-option select2-results-dept-0 select2-result select2-result-selectable" role="presentation">
+                                                <div class="select2-result-label" role="option">
+                                                    <div class="crm-select2-row">
+                                                        <div>
+                                                            <div class="crm-select2-row-label se__color-blue">
+                                                                <i class="crm-i fa-plus-circle" aria-hidden="true"></i>
+                                                                    <span>&nbsp;&nbsp;Add email "` + $scope.currentSearchEmail + `" to client</span>
+                                                            </div>
+                                                            <div class="crm-select2-row-description">
+                                                                <p>Creates new email adn add it to client</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        ` );
+                                        $('.se_add-email-to-client-select2-option').click(function () {
+                                            $scope.addToClientEmail();
+                                            $($element).find(".se__select-email-input").select2('close');
+                                        });
+                                    }, 300);
+
                                     return {
                                         'id' : $scope.newItemPseudoId,
                                         'term' : searchString,
-                                        'label' : searchString + ' (' + ts('Add new email') + ')',
+                                        'label' : searchString + ' (' + ts('Add new contact') + ')',
                                         'description' : ['Create new Contact with "' + searchString + '" email'],
                                         'icon' : 'fa-plus-circle',
                                         'label_class' : 'se__color-blue',
                                     };
+                                } else {
+                                    $scope.currentSearchEmail = '';
+                                    $( ".se_add-email-to-client-select2-option" ).remove();
                                 }
                             },
                             'ajax': {

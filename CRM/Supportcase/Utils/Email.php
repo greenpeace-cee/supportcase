@@ -51,6 +51,7 @@ class CRM_Supportcase_Utils_Email {
 
   /**
    * Checks if email is valid
+   * TODO fix return value
    *
    * @param $stringEmail
    * @return bool
@@ -62,7 +63,7 @@ class CRM_Supportcase_Utils_Email {
       return false;
     }
 
-    return !preg_match( $pattern, $stringEmail);
+    return !preg_match($pattern, $stringEmail);
   }
 
   /**
@@ -246,6 +247,15 @@ class CRM_Supportcase_Utils_Email {
     }
 
     return $emails;
+  }
+
+  /**
+   * @param $email
+   * @param $contactId
+   * @return bool
+   */
+  public static function isContactHasEmail($email, $contactId) {
+    return !empty(CRM_Supportcase_Utils_Email::getEmailContactData($email, $contactId));
   }
 
 }
