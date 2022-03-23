@@ -202,12 +202,16 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
    * @return array
    */
   private function getReplyPrefillEmails($ccEmailsData, $toEmailsData, $fromEmailsData, $mainEmailId): array {
-    $prefillEmails = $this->getPrefillEmails($ccEmailsData, $toEmailsData, $fromEmailsData, $mainEmailId);
-
+    // prefill To: with the From: address unless it's an outbound email (i.e. matches $mainEmailId)
+    $to = $this->getFilteredEmailIds($fromEmailsData['emails_data'], $mainEmailId);
+    if (empty($to)) {
+      // this is a reply to an outbound email, prefill from To:
+      $to = $this->getFilteredEmailIds($toEmailsData['emails_data'], $mainEmailId);
+    }
     return [
       'cc' => '',// for reply cc is empty
       'from' => $mainEmailId,
-      'to' => explode(',', $prefillEmails['to'])[0], //get first email
+      'to' => explode(',', $to[0]), // use first match
     ];
   }
 
