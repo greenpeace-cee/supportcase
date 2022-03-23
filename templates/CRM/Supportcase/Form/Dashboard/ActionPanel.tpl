@@ -28,10 +28,13 @@
             </ul>
           </li>
           <li>
-            <div class="spc__menu-item">TODO 1 Action</div>
+            <div class="spc__menu-item spc__menu-change-case-status" data-status="spam">Report Spam</div>
           </li>
           <li>
-            <div class="spc__menu-item">TODO 2 Action</div>
+            <div class="spc__menu-item spc__menu-change-case-status" data-status="Closed">Resolve Cases</div>
+          </li>
+          <li>
+            <div class="spc__menu-item spc__menu-delete-case">Delete Cases</div>
           </li>
         </ul>
       </div>
@@ -52,6 +55,8 @@
       initFastActionsMenuButton();
       initHandleSelectedCases();
       initChangingCategory();
+      initChangeCaseStatus();
+      initDeleteCase();
 
       function initChangingCategory() {
         $('.spc__menu-change-category').click(function () {
@@ -73,6 +78,57 @@
             CRM.status('Server error via changing category', 'error');
             reloadDashboard();
           });
+        });
+      }
+
+      function initChangeCaseStatus() {
+        $('.spc__menu-change-case-status').click(function () {
+          CRM.api3('SupportcaseFastTask', 'change_status', {
+            "case_ids": getSelectedCaseIds(),
+            "status": $(this).data('status')
+          }).then(function(result) {
+            if (result.is_error === 1) {
+              console.error('SupportcaseFastTask->change_status get server error:');
+              console.error(error);
+              CRM.status('Server error via changing status', 'error');
+            } else {
+              CRM.status(result['values']['message']);
+            }
+            reloadDashboard();
+          }, function(error) {
+            console.error('SupportcaseFastTask->change_status get server error:');
+            console.error(error);
+            CRM.status('Server error via changing status', 'error');
+            reloadDashboard();
+          });
+        });
+      }
+
+      function initDeleteCase() {
+        $('.spc__menu-delete-case').click(function () {
+          CRM.confirm({
+            title: 'Delete cases?',
+            message: 'Are you sure you want to delete the selected cases?'
+          })
+            .on('crmConfirm:yes', function() {
+              CRM.api3('SupportcaseFastTask', 'delete_case', {
+                "case_ids": getSelectedCaseIds(),
+              }).then(function(result) {
+                if (result.is_error === 1) {
+                  console.error('SupportcaseFastTask->delete_case get server error:');
+                  console.error(error);
+                  CRM.status('Server error via delete', 'error');
+                } else {
+                  CRM.status(result['values']['message']);
+                }
+                reloadDashboard();
+              }, function(error) {
+                console.error('SupportcaseFastTask->delete_case get server error:');
+                console.error(error);
+                CRM.status('Server error via delete', 'error');
+                reloadDashboard();
+              });
+            });
         });
       }
 

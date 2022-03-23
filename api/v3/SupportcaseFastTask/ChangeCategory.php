@@ -32,8 +32,8 @@ function civicrm_api3_supportcase_fast_task_change_category($params) {
   }
 
   $message = '';
-  $message .= ($errorCaseCounter > 0) ? $errorCaseCounter . ' - cases updating category returns error.' : '';
-  $message .= ($sussesCaseCounter > 0) ? $sussesCaseCounter . ' - successfully updated cases.' : '';
+  $message .= ($errorCaseCounter > 0) ? $errorCaseCounter . ' cases failed to be moved!' : '';
+  $message .= ($sussesCaseCounter > 0) ? $sussesCaseCounter . ' cases have been moved!' : '';
 
   return civicrm_api3_create_success(['message' => $message]);
 }

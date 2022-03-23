@@ -26,9 +26,6 @@
                 {include file="CRM/Supportcase/Form/Dashboard/Selector.tpl" rows=$cases.rows}
               </div>
               <div class="supportcase__result-action-block">
-                <div class="crm-search-tasks crm-event-search-tasks" style="box-shadow: none;">
-                  {include file="CRM/Supportcase/Form/Dashboard/SearchResultTasks.tpl" context="Case" rows=$cases.rows}
-                </div>
 
                 {include file="CRM/Supportcase/Form/Dashboard/Pagination.tpl"}
 
