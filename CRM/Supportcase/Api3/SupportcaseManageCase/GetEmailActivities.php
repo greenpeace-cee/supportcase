@@ -211,7 +211,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     return [
       'cc' => '',// for reply cc is empty
       'from' => $mainEmailId,
-      'to' => explode(',', $to[0]), // use first match
+      'to' => $to[0], // use first match
     ];
   }
 
