@@ -2,11 +2,6 @@
 
 /**
  * Unlock case
- *
- * @param $params
- *
- * @return array
- * @throws Exception
  */
 function civicrm_api3_case_lock_unlock_case($params) {
   $case = new CRM_Case_BAO_Case();
@@ -21,13 +16,6 @@ function civicrm_api3_case_lock_unlock_case($params) {
   return civicrm_api3_create_success(['message' => 'Case id = ' . $params['case_id'] . ' is unlocked.']);
 }
 
-/**
- * This is used for documentation and validation.
- *
- * @param array $params description of fields supported by this API call
- * @return void
- * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
- */
 function _civicrm_api3_case_lock_unlock_case_spec(&$params) {
   $params['case_id'] = [
     'name'         => 'case_id',

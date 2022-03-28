@@ -2,10 +2,6 @@
 
 /**
  * Returns prepared templates for select2
- *
- * @param $params
- *
- * @return array
  */
 function civicrm_api3_supportcase_manage_case_get_prepared_mail_template_options($params) {
   try {
@@ -56,13 +52,6 @@ function civicrm_api3_supportcase_manage_case_get_prepared_mail_template_options
   return civicrm_api3_create_success($result);
 }
 
-/**
- * This is used for documentation and validation.
- *
- * @param array $params description of fields supported by this API call
- * @return void
- * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
- */
 function _civicrm_api3_supportcase_manage_case_get_prepared_mail_template_options_spec(&$params) {
   $params['support_case_category_id'] = [
     'name' => 'support_case_category_id',

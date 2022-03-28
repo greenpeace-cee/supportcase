@@ -2,10 +2,6 @@
 
 /**
  * Changes category
- *
- * @param $params
- *
- * @return array
  */
 function civicrm_api3_supportcase_fast_task_change_category($params) {
   $categoryOptions = CRM_Supportcase_Utils_Category::getOptions();
@@ -38,13 +34,6 @@ function civicrm_api3_supportcase_fast_task_change_category($params) {
   return civicrm_api3_create_success(['message' => $message]);
 }
 
-/**
- * This is used for documentation and validation.
- *
- * @param array $params description of fields supported by this API call
- * @return void
- * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
- */
 function _civicrm_api3_supportcase_fast_task_change_category_spec(&$params) {
   $params['case_ids'] = [
     'name' => 'case_ids',

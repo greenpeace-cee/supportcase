@@ -2,10 +2,6 @@
 
 /**
  * Finds contacts by phone number
- *
- * @param $params
- *
- * @return array
  */
 function civicrm_api3_supportcase_quick_action_find_contacts_by_number($params) {
   $phones = civicrm_api3('Phone', 'get', [
@@ -33,13 +29,6 @@ function civicrm_api3_supportcase_quick_action_find_contacts_by_number($params) 
   return civicrm_api3_create_success($preparedContacts);
 }
 
-/**
- * This is used for documentation and validation.
- *
- * @param array $params description of fields supported by this API call
- * @return void
- * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
- */
 function _civicrm_api3_supportcase_quick_action_find_contacts_by_number_spec(&$params) {
   $params['phone_number'] = [
     'name' => 'phone_number',

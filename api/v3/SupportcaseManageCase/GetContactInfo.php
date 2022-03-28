@@ -2,10 +2,6 @@
 
 /**
  * Gets contact info
- *
- * @param $params
- *
- * @return array
  */
 function civicrm_api3_supportcase_manage_case_get_contact_info($params) {
   $returnFields = ['id', 'display_name', 'contact_id', 'email', 'phone', 'birth_date'];
@@ -61,13 +57,6 @@ function civicrm_api3_supportcase_manage_case_get_contact_info($params) {
   return civicrm_api3_create_success([$contactInfo]);
 }
 
-/**
- * This is used for documentation and validation.
- *
- * @param array $params description of fields supported by this API call
- * @return void
- * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
- */
 function _civicrm_api3_supportcase_manage_case_get_contact_info_spec(&$params) {
   $params['contact_id'] = [
     'name' => 'contact_id',

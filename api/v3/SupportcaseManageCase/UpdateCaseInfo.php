@@ -2,10 +2,6 @@
 
 /**
  * Update case info
- *
- * @param $params
- *
- * @return array
  */
 function civicrm_api3_supportcase_manage_case_update_case_info($params) {
   try {
@@ -128,13 +124,6 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
   return civicrm_api3_create_success(['message' => 'Case is updated!', 'case' => $case]);
 }
 
-/**
- * This is used for documentation and validation.
- *
- * @param array $params description of fields supported by this API call
- * @return void
- * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
- */
 function _civicrm_api3_supportcase_manage_case_update_case_info_spec(&$params) {
   $params['case_id'] = [
     'name' => 'case_id',

@@ -2,10 +2,6 @@
 
 /**
  * Returns prepared template for select2
- *
- * @param $params
- *
- * @return array
  */
 function civicrm_api3_supportcase_manage_case_get_rendered_template($params) {
   try {
@@ -36,13 +32,6 @@ function civicrm_api3_supportcase_manage_case_get_rendered_template($params) {
   return civicrm_api3_create_success([]);
 }
 
-/**
- * This is used for documentation and validation.
- *
- * @param array $params description of fields supported by this API call
- * @return void
- * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
- */
 function _civicrm_api3_supportcase_manage_case_get_rendered_template_spec(&$params) {
   $params['token_contact_id'] = [
     'name' => 'token_contact_id',

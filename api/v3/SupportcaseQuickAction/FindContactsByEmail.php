@@ -3,10 +3,6 @@
 /**
  * Finds contacts by phone email
  * Also it returns their subscriptions
- *
- * @param $params
- *
- * @return array
  */
 function civicrm_api3_supportcase_quick_action_find_contacts_by_email($params) {
   $emails = civicrm_api3('Email', 'get', [
@@ -71,13 +67,6 @@ function civicrm_api3_supportcase_quick_action_find_contacts_by_email($params) {
   ]);
 }
 
-/**
- * This is used for documentation and validation.
- *
- * @param array $params description of fields supported by this API call
- * @return void
- * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
- */
 function _civicrm_api3_supportcase_quick_action_find_contacts_by_email_spec(&$params) {
   $params['email'] = [
     'name' => 'email',

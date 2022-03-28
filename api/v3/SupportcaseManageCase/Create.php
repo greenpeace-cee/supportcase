@@ -2,10 +2,6 @@
 
 /**
  * Creates supportcase
- *
- * @param $params
- *
- * @return array
  */
 function civicrm_api3_supportcase_manage_case_create($params) {
   $categories = CRM_Supportcase_Utils_Category::getOptions();
@@ -46,13 +42,6 @@ function civicrm_api3_supportcase_manage_case_create($params) {
   return civicrm_api3_create_success($result);
 }
 
-/**
- * This is used for documentation and validation.
- *
- * @param array $params description of fields supported by this API call
- * @return void
- * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
- */
 function _civicrm_api3_supportcase_manage_case_create_spec(&$params) {
   $params['client_contact_id'] = [
     'name' => 'client_contact_id',

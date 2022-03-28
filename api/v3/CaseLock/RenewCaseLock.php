@@ -2,11 +2,6 @@
 
 /**
  * Renews case locking
- *
- * @param $params
- *
- * @return array
- * @throws Exception
  */
 function civicrm_api3_case_lock_renew_case_lock($params) {
   $caseLockExistence = CRM_Supportcase_BAO_CaseLock::isCaseLockExist($params['case_lock_id']);
@@ -19,13 +14,6 @@ function civicrm_api3_case_lock_renew_case_lock($params) {
   return civicrm_api3_create_success($lockCase);
 }
 
-/**
- * This is used for documentation and validation.
- *
- * @param array $params description of fields supported by this API call
- * @return void
- * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
- */
 function _civicrm_api3_case_lock_renew_case_lock_spec(&$params) {
   $params['case_lock_id'] = [
     'name'         => 'case_lock_id',

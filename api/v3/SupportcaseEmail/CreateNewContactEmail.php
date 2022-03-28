@@ -2,10 +2,6 @@
 
 /**
  * Creates new Contact with entered email
- *
- * @param array $params
- *
- * @return array
  */
 function  civicrm_api3_supportcase_email_create_new_contact_email($params) {
   if (!CRM_Supportcase_Utils_Email::isValidEmail($params['email'])) {
@@ -43,14 +39,6 @@ function  civicrm_api3_supportcase_email_create_new_contact_email($params) {
   return civicrm_api3_create_success($emails[0], $params);
 }
 
-
-/**
- * This is used for documentation and validation.
- *
- * @param array $params description of fields supported by this API call
- * @return void
- * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
- */
 function _civicrm_api3_supportcase_email_create_new_contact_email_spec(&$params) {
   $params['email'] = [
     'name' => 'email',

@@ -2,10 +2,6 @@
 
 /**
  * Gets case lock statuses
- *
- * @param $params
- *
- * @return array
  */
 function civicrm_api3_case_lock_get_locked_cases($params) {
   if (isset($params['case_ids']) && !is_array($params['case_ids'])) {
@@ -21,13 +17,6 @@ function civicrm_api3_case_lock_get_locked_cases($params) {
   return civicrm_api3_create_success(CRM_Supportcase_BAO_CaseLock::getCasesLockStatus($caseIds));
 }
 
-/**
- * This is used for documentation and validation.
- *
- * @param array $params description of fields supported by this API call
- * @return void
- * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
- */
 function _civicrm_api3_case_lock_get_locked_cases_spec(&$params) {
   $params['case_ids'] = [
     'name'         => 'case_ids',

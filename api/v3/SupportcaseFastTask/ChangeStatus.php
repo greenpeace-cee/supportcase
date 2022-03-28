@@ -2,10 +2,6 @@
 
 /**
  * Change case status
- *
- * @param $params
- *
- * @return array
  */
 function civicrm_api3_supportcase_fast_task_change_status($params) {
   $caseIds = explode(',', $params['case_ids']);
@@ -23,13 +19,6 @@ function civicrm_api3_supportcase_fast_task_change_status($params) {
   return civicrm_api3_create_success(['message' => count($caseIds) . ' cases have been updated!']);
 }
 
-/**
- * This is used for documentation and validation.
- *
- * @param array $params description of fields supported by this API call
- * @return void
- * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
- */
 function _civicrm_api3_supportcase_fast_task_change_status_spec(&$params) {
   $params['case_ids'] = [
     'name' => 'case_ids',

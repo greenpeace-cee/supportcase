@@ -2,10 +2,6 @@
 
 /**
  * Search mailing emails/contacts by input
- *
- * @param array $params
- *
- * @return array
  */
 function  civicrm_api3_supportcase_email_get($params) {
   $searchResult = [];

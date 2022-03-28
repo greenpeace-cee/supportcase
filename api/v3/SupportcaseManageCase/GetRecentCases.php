@@ -2,10 +2,6 @@
 
 /**
  * Gets recent cases for contact where case type = 'support_case'
- *
- * @param $params
- *
- * @return array
  */
 function civicrm_api3_supportcase_manage_case_get_recent_cases($params) {
   try {
@@ -38,13 +34,6 @@ function civicrm_api3_supportcase_manage_case_get_recent_cases($params) {
   return civicrm_api3_create_success($recentCases);
 }
 
-/**
- * This is used for documentation and validation.
- *
- * @param array $params description of fields supported by this API call
- * @return void
- * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
- */
 function _civicrm_api3_supportcase_manage_case_get_recent_cases_spec(&$params) {
   $params['client_id'] = [
     'name' => 'client_id',
