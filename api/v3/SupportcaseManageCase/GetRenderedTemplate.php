@@ -7,7 +7,7 @@
  *
  * @return array
  */
-function civicrm_api3_supportcase_manage_case_get_prepared_mail_template_option($params) {
+function civicrm_api3_supportcase_manage_case_get_rendered_template($params) {
   try {
     $mailutilsTemplateApi = \Civi\Api4\MailutilsTemplate::get();
     $mailutilsTemplateApi->setLimit(0);
@@ -43,7 +43,7 @@ function civicrm_api3_supportcase_manage_case_get_prepared_mail_template_option(
  * @return void
  * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
  */
-function _civicrm_api3_supportcase_manage_case_get_prepared_mail_template_option_spec(&$params) {
+function _civicrm_api3_supportcase_manage_case_get_rendered_template_spec(&$params) {
   $params['token_contact_id'] = [
     'name' => 'token_contact_id',
     'api.required' => 1,

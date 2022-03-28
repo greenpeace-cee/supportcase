@@ -1133,13 +1133,13 @@
                 var onSelect = function (e) {
                     e.preventDefault();
 
-                    CRM.api3('SupportcaseManageCase', 'get_prepared_mail_template_option', {
+                    CRM.api3('SupportcaseManageCase', 'get_rendered_template', {
                         "id": e.object.mailutils_template_id,
                         "token_contact_id": attrs['tokenContactId'],
                     }).then(function(result) {
                         if (result.is_error === 1) {
                             CRM.status('Error via getting token value:' + result.error_message, 'error');
-                            console.error('SupportcaseManageCase->get_prepared_mail_template_option error:');
+                            console.error('SupportcaseManageCase->get_rendered_template error:');
                             console.error(result.error_message);
                         } else {
                             $(element).select2('close').select2('val', '');
@@ -1149,7 +1149,7 @@
                             });
                         }
                     }, function(error) {
-                        console.error('SupportcaseManageCase->get_prepared_mail_template_option error:');
+                        console.error('SupportcaseManageCase->get_rendered_template error:');
                         console.error(error);
                         CRM.status('Error via getting token value.', 'error');
                     });
