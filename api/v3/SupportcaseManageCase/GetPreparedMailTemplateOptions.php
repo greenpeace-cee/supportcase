@@ -38,13 +38,14 @@ function civicrm_api3_supportcase_manage_case_get_prepared_mail_template_options
     }
 
     $message = $template['message'];
-    if (!empty($params['token_contact_id'])) {
+    if (!empty($params['is_need_to_handle_tokens']) && $params['is_need_to_handle_tokens'] == '1' && !empty($params['token_contact_id'])) {
       $message = CRM_Supportcase_Utils_SupportcaseTokenProcessor::handleTokens($message, $params['token_contact_id']);
     }
     
     $preparedTemplates[$categoryId]['children'][] = [
       'id' => $message,
       'text' => $template['name'],
+      'mailutils_template_id' => $template['id'],
     ];
   }
 
@@ -74,5 +75,11 @@ function _civicrm_api3_supportcase_manage_case_get_prepared_mail_template_option
     'api.required' => 0,
     'type' => CRM_Utils_Type::T_INT,
     'title' => 'token contact id',
+  ];
+  $params['is_need_to_handle_tokens'] = [
+    'name' => 'is_need_to_handle_tokens',
+    'api.required' => 0,
+    'type' => CRM_Utils_Type::T_INT,
+    'title' => 'Is need to handle tokens',
   ];
 }

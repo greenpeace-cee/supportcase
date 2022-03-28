@@ -1130,6 +1130,31 @@
             },
             template: '<input type="text" class="crmMailingToken" />',
             link: function (scope, element, attrs, crmUiIdCtrl) {
+                var onSelect = function (e) {
+                    e.preventDefault();
+
+                    CRM.api3('SupportcaseManageCase', 'get_prepared_mail_template_option', {
+                        "id": e.object.mailutils_template_id,
+                        "token_contact_id": attrs['tokenContactId'],
+                    }).then(function(result) {
+                        if (result.is_error === 1) {
+                            CRM.status('Error via getting token value:' + result.error_message, 'error');
+                            console.error('SupportcaseManageCase->get_prepared_mail_template_option error:');
+                            console.error(result.error_message);
+                        } else {
+                            $(element).select2('close').select2('val', '');
+                            var  templateRenderedText = result['values']['rendered_text'];
+                            scope.$parent.$eval(attrs.onSelect, {
+                                token: {name: templateRenderedText}
+                            });
+                        }
+                    }, function(error) {
+                        console.error('SupportcaseManageCase->get_prepared_mail_template_option error:');
+                        console.error(error);
+                        CRM.status('Error via getting token value.', 'error');
+                    });
+                };
+
                 var loadTemplates = function() {
                     CRM.api3('SupportcaseManageCase', 'get_prepared_mail_template_options', {
                         "support_case_category_id": attrs['supportCaseCategoryId'],
@@ -1146,11 +1171,7 @@
                                 placeholder: ts('Templates')
                             });
                             $(element).on('select2-selecting', function (e) {
-                                e.preventDefault();
-                                $(element).select2('close').select2('val', '');
-                                scope.$parent.$eval(attrs.onSelect, {
-                                    token: {name: e.val}
-                                });
+                                onSelect(e);
                             });
                         }
                     }, function(error) {
