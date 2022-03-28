@@ -1,16 +1,9 @@
 <?php
 
 /**
- * Support Case Dashboard, based on CRM_Case_Form_Search
+ * Support Case Dashboard
  */
 class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
-
-  /**
-   * The params that are sent to the query
-   *
-   * @var array
-   */
-  protected $_queryParams;
 
   /**
    * Row limit
@@ -29,13 +22,6 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
   /**
    * @return string
    */
-  public function getDefaultEntity() {
-    return 'Case';
-  }
-
-  /**
-   * @return string
-   */
   public function getTitle() {
     return ts('Support Dashboard');
   }
@@ -46,20 +32,7 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
    * @throws CiviCRM_API3_Exception
    */
   public function setDefaultValues() {
-    $defaultValues = array_merge(parent::setDefaultValues(), $this->getSupportcaseDefaultValues());
-
-    // to prevent accidentally selecting cases on not active tabs - clears cases checkboxes
-    // clears if current task is default task
-    $isDefaultTask = $this->controller->getStateMachine()->getTaskFormName() == 'DefaultTask';
-    if ($isDefaultTask) {
-      foreach ($defaultValues as $key => $field) {
-        if (preg_match('/^' . CRM_Core_Form::CB_PREFIX . '/', $key)) {
-          unset($defaultValues[$key]);
-        }
-      }
-    }
-
-    return $defaultValues;
+    return array_merge(parent::setDefaultValues(), $this->getSupportcaseDefaultValues());
   }
 
   /**
@@ -102,10 +75,10 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $this->_actionButtonName = $this->getButtonName('next', 'action');
     parent::preProcess();
 
-    $this->_queryParams = $this->getQueryParams();
+    $queryParams = $this->getQueryParams();
     $config = CRM_Core_Config::singleton();
-    $this->set('queryParams', $this->_queryParams);
-    $selector = new CRM_Supportcase_Selector_Dashboard($this->_queryParams, $this->_action);
+    $this->set('queryParams', $queryParams);
+    $selector = new CRM_Supportcase_Selector_Dashboard($queryParams, $this->_action);
     $controller = new CRM_Core_Selector_Controller($selector,
       $this->get(CRM_Utils_Pager::PAGE_ID),
       $this->getSortID(),
@@ -137,12 +110,6 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $this->assign('addNewCaseUrl', $this->getCreateNewCaseUrl());
     $this->assign('dashboardSearchQfKey', $dashboardSearchQfKey);
     $this->assign('categories', CRM_Supportcase_Utils_Category::get());
-
-    // to clean old values from previous tasks when user click on 'cancel' button
-    $buttonName = $this->controller->getButtonName();
-    if ($buttonName == '_qf_Dashboard_display') {
-      $this->cleanSelectedCasesAtFormParams();
-    }
   }
 
   /**
@@ -222,8 +189,6 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $this->addSortNameField();
     CRM_Supportcase_BAO_Query::buildSearchForm($this);
     $this->addRowSelectors($this->caseRows);
-    $tasks = CRM_Supportcase_Task::permissionedTaskTitles(CRM_Core_Permission::getPermission(), []);
-    $this->addTaskMenu($tasks);
 
     CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/ang/element.css');
     CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/actionPanel.css');
@@ -232,24 +197,6 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
 
   public function postProcess() {
     $this->setFormValues();
-    $buttonName = $this->controller->getButtonName();
-
-    // to clean old values from previous tasks
-    $isGoToTheDashboardAfterTask = is_null($buttonName);
-    if ($isGoToTheDashboardAfterTask) {
-        $this->cleanSelectedCasesAtFormParams();
-    }
-
-    // check actionName and if next, then do not repeat a search, since we are going to the next page
-    if ($buttonName != $this->_actionButtonName) {
-      return;
-    }
-
-    // hack, make sure we reset the task values
-    // TODO: check if it still needed
-    $stateMachine = $this->controller->getStateMachine();
-    $formName = $stateMachine->getTaskFormName();
-    $this->controller->resetPage($formName);
   }
 
   /**
@@ -298,24 +245,4 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
 
     return CRM_Contact_BAO_Query::convertFormValues($values);
   }
-
-  /**
-   * Cleans old values from previous tasks
-   */
-  protected function cleanSelectedCasesAtFormParams() {
-    $formValues = $this->controller->get('formValues');
-    $cleanedQueryParams = [];
-
-    if (!empty($formValues))  {
-        foreach ($formValues as $key => $value) {
-            $isSelectCaseParam = substr($key, 0, CRM_Core_Form::CB_PREFIX_LEN) == CRM_Core_Form::CB_PREFIX;
-            if (!$isSelectCaseParam) {
-                $cleanedQueryParams[$key] = $value;
-            }
-        }
-    }
-
-    $this->controller->set('formValues', $cleanedQueryParams);
-  }
-
 }

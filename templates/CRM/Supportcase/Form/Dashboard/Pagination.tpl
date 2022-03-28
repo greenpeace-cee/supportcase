@@ -1,5 +1,5 @@
-<div class="spc__pagination">
-  {if $isShowPagination}
-    {include file="CRM/common/pager.tpl" location="bottom"}
-  {/if}
-</div>
+{if $isShowPagination}
+  <div class="spc__pagination">
+      {include file="CRM/common/pager.tpl" location="bottom"}
+  </div>
+{/if}

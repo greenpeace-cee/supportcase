@@ -8,7 +8,7 @@
  * @return array
  */
 function  civicrm_api3_supportcase_email_create_new_contact_email($params) {
-  if (CRM_Supportcase_Utils_Email::isValidEmail($params['email'])) {
+  if (!CRM_Supportcase_Utils_Email::isValidEmail($params['email'])) {
     throw new api_Exception('Please enter valid email', 'email_is_not_valid');
   }
 

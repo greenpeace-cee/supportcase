@@ -1,7 +1,5 @@
 <?php
 
-use Civi\Api4\CiviCase;
-
 /**
  * Delete cases
  *

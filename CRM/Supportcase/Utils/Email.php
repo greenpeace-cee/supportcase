@@ -51,19 +51,18 @@ class CRM_Supportcase_Utils_Email {
 
   /**
    * Checks if email is valid
-   * TODO fix return value
    *
    * @param $stringEmail
    * @return bool
    */
-  public static function isValidEmail($stringEmail) {
+  public static function isValidEmail($stringEmail): bool {
     $pattern = '/^((\"[^\"\f\n\r\t\v\b]+\")|([A-Za-z0-9_\!\#\$\%\&\'\*\+\-\~\/\^\`\|\{\}]+(\.[A-Za-z0-9_\!\#\$\%\&\'\*\+\-\~\/\^\`\|\{\}]+)*))@((\[(((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9])))\])|(((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9])))|((([A-Za-z0-9\-])+\.)+[A-Za-z\-]{2,}))$/';
 
     if (strlen($stringEmail) > 255) {
       return false;
     }
 
-    return !preg_match($pattern, $stringEmail);
+    return (bool) preg_match($pattern, $stringEmail);
   }
 
   /**
@@ -72,7 +71,7 @@ class CRM_Supportcase_Utils_Email {
    * @param $locationTypeName
    * @return bool
    */
-  public static function isLocationTypeExist($locationTypeName) {
+  public static function isLocationTypeExist($locationTypeName): bool {
     return !empty(self::getLocationType($locationTypeName));
   }
 
@@ -254,7 +253,7 @@ class CRM_Supportcase_Utils_Email {
    * @param $contactId
    * @return bool
    */
-  public static function isContactHasEmail($email, $contactId) {
+  public static function isContactHasEmail($email, $contactId): bool {
     return !empty(CRM_Supportcase_Utils_Email::getEmailContactData($email, $contactId));
   }
 

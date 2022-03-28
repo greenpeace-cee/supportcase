@@ -83,9 +83,9 @@
 }
 
 .supportcase__result-action-block {
-    justify-content: space-between;
     display: flex;
-    padding: 40px 10px 0 10px;
+    padding: 0 10px 0 10px;
+    flex-direction: row-reverse;
 }
 
 .supportcase__empty-result-block {
@@ -94,6 +94,11 @@
 
 .supportcase__result-block .supportcase__case-row.crm-case-status_Spam > td {
     background: #dadada !important;
+}
+
+.supportcase__result-block {
+    padding-bottom: 30px;
+    background: white;
 }
 
 .supportcase__result-block .supportcase__case-row.crm-case-status_Resolved > td {
@@ -354,10 +359,6 @@
 
 .crm-container .supportcase__result-block .ui-tabs .supportcase__tab-link-wrap:first-child {
     margin-left: 10px;
-}
-
-.supportcase__result-table-wrap {
-    margin-bottom: 20px;
 }
 
 .supportcase__result-table-wrap > table > tbody > tr {

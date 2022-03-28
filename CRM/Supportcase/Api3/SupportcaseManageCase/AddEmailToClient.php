@@ -10,7 +10,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_AddEmailToClient extends CRM_Su
    */
   public function getResult() {
     try {
-      civicrm_api3('Email', 'create', [
+      $createdEmail = civicrm_api3('Email', 'create', [
         'contact_id' => $this->params['client_id'],
         'email' => $this->params['email'],
         'location_type_id' => CRM_Supportcase_Install_Entity_LocationType::SUPPORT,
@@ -19,7 +19,12 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_AddEmailToClient extends CRM_Su
       throw new api_Exception('Creating email error: ' . $e->getMessage(), 'creating_email_error');
     }
 
-    return ['message' => 'Successfully added email to client.'];
+    $emails = CRM_Supportcase_Utils_EmailSearch::searchByCommaSeparatedIds($createdEmail['id']);
+
+    return [
+      'message' => 'Successfully added email to client.',
+      'data' => !empty($emails[0]) ? $emails[0] : [],
+    ];
   }
 
   /**
@@ -38,7 +43,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_AddEmailToClient extends CRM_Su
       throw new api_Exception('Case does not exist.', 'case_does_not_exist');
     }
 
-    if (CRM_Supportcase_Utils_Email::isValidEmail($params['email'])) {
+    if (!CRM_Supportcase_Utils_Email::isValidEmail($params['email'])) {
       throw new api_Exception('Please enter valid email', 'email_is_not_valid');
     }
 

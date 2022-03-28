@@ -1679,7 +1679,23 @@
                     return !!emailString.match(patern);
                 };
 
+                $scope.addNewItemAndSelectIt = function(newItem) {
+                    var element = $($element).find(".se__select-email-input");
+                    var data = element.select2('data');
+
+                    if ($scope.isMultiple) {
+                        data.push(newItem);
+                    } else {
+                        data = newItem;
+                    }
+
+                    element.select2('data', data, true);
+                };
+
                 $scope.addToClientEmail = function() {
+                    var select2Element = $($element).find(".se__select-email-input");
+                    select2Element.select2('close');
+
                     CRM.api3('SupportcaseManageCase', 'add_email_to_client', {
                         "case_id": $scope.caseId,
                         "email": $scope.currentSearchEmail
@@ -1690,7 +1706,14 @@
                             CRM.status('Error via adding email to client:' + result.error_message, 'error');
                         } else {
                             CRM.status(result.values.message);
-                            $scope.$apply();
+                            var item = {
+                                id: result.values.data.email_id,
+                                label: result.values.data.label,
+                                icon: result.values.data.icon,
+                                label_class: result.values.data.label_class,
+                                description: result.values.data.description,
+                            };
+                            $scope.addNewItemAndSelectIt(item);
                         }
                     }, function(error) {
                         console.error('"SupportcaseManageCase->add_email_to_client" get error:');
@@ -1767,7 +1790,6 @@
                                         ` );
                                         $('.se_add-email-to-client-select2-option').click(function () {
                                             $scope.addToClientEmail();
-                                            $($element).find(".se__select-email-input").select2('close');
                                         });
                                     }, 300);
 
