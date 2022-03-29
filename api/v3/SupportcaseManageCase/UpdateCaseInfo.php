@@ -87,7 +87,16 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
         throw new api_Exception('New client id and current client id is the same.', 'the_same_current_client_id_and_new_client_id');
       }
 
-      $updateCaseParams['client_id'] = $params['new_case_client_id'];
+      if (CRM_Supportcase_Utils_Setting::isCaseToolsExtensionEnable()) {
+        civicrm_api3('SupportcaseManageCase', 'change_client', [
+          'case_id' => $params['case_id'],
+          'new_case_client_id' => $params['new_case_client_id'],
+        ]);
+      }
+      else {
+        // fallback to core client update
+        $updateCaseParams['client_id'] = $params['new_case_client_id'];
+      }
     } else {
       throw new api_Exception('Clients cannot be empty.', 'clients_cannot_be_empty');
     }

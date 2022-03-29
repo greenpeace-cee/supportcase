@@ -1,5 +1,8 @@
 <?php
 
+use Civi\Api4\Note;
+use Civi\Api4\Relationship;
+
 class CRM_Supportcase_Utils_DuplicateContacts {
 
   /**
@@ -140,6 +143,60 @@ class CRM_Supportcase_Utils_DuplicateContacts {
       ], FALSE, NULL, FALSE),
       'count' => count($duplicateContactIds),
     ];
+  }
+
+  /**
+   * Create (or update) a duplicate relationship between $leadingContact and
+   * $dupeContact
+   *
+   * @param int $caseId
+   * @param int $leadingContact
+   * @param int $dupeContact
+   *
+   * @throws \API_Exception
+   * @throws \Civi\API\Exception\UnauthorizedException
+   */
+  public static function createDuplicateRelationship(
+    int $caseId,
+    int $leadingContact,
+    int $dupeContact
+  ) {
+    $note = 'Merge requested in Support Case #' . $caseId;
+    $relationship = Relationship::get(FALSE)
+      ->addSelect('note.note', 'note.id', 'id')
+      ->setJoin([
+        ['Note AS note', 'LEFT', NULL, ['note.entity_table', '=', "'civicrm_relationship'"], ['note.entity_id', '=', 'id']],
+      ])
+      ->addWhere('contact_id_a', '=', $dupeContact)
+      ->addWhere('contact_id_b', '=', $leadingContact)
+      ->addWhere('relationship_type_id:name', '=', 'duplicates')
+      ->execute()
+      ->first();
+    if (!empty($relationship['id'])) {
+      Relationship::update(FALSE)
+        ->addWhere('id', '=', $relationship['id'])
+        ->addValue('is_active', TRUE)
+        ->execute();
+      Note::update(FALSE)
+        ->addWhere('id', '=', $relationship['note.id'])
+        ->addValue('note', trim(
+          $relationship['note.note'] . '\n' . $note
+        ))
+        ->execute();
+    }
+    else {
+      Relationship::create(FALSE)
+        ->addValue('contact_id_a', $dupeContact)
+        ->addValue('contact_id_b', $leadingContact)
+        ->addValue('relationship_type_id:name', 'duplicates')
+        ->addValue('start_date', 'now')
+        ->addChain('note', Note::create()
+          ->addValue('note', $note)
+          ->addValue('entity_table:name', 'Relationship')
+          ->addValue('entity_id', '$id')
+        )
+        ->execute();
+    }
   }
 
 }

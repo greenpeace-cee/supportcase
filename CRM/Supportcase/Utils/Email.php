@@ -1,5 +1,7 @@
 <?php
 
+use Civi\Api4\Email;
+
 class CRM_Supportcase_Utils_Email {
 
   /**
@@ -255,6 +257,35 @@ class CRM_Supportcase_Utils_Email {
    */
   public static function isContactHasEmail($email, $contactId): bool {
     return !empty(CRM_Supportcase_Utils_Email::getEmailContactData($email, $contactId));
+  }
+
+  /**
+   * Ensure all emails provided in $emails exist for contact $contactId
+   *
+   * If emails do not exist yet, create them with a "Support" location type
+   *
+   * @param int $contactId
+   * @param array $emails
+   *
+   * @throws \API_Exception
+   * @throws \Civi\API\Exception\UnauthorizedException
+   */
+  public static function addSupportEmailsToContact(int $contactId, array $emails) {
+    foreach ($emails as $email) {
+      $emailExists = Email::get(FALSE)
+        ->selectRowCount()
+        ->addWhere('contact_id', '=', $contactId)
+        ->addWhere('email', '=', $email)
+        ->execute()
+        ->count();
+      if (!$emailExists) {
+        Email::create(FALSE)
+          ->addValue('contact_id', $contactId)
+          ->addValue('email', $email)
+          ->addValue('location_type_id:name', 'Support')
+          ->execute();
+      }
+    }
   }
 
 }

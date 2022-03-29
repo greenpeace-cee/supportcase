@@ -437,13 +437,12 @@
                 $scope.setFieldFromModel = function() {$scope.clientId = $scope.model['client_ids'][0];};
                 $scope.editConfirm = function() {
                     $scope.$parent.editConfirm('new_case_client_id', $scope.clientId, $element, function(result) {
-                        var message = '<ul>';
-                        message += '<li>Case(id=' + $scope.model['id'] + ') have been moved to the trash.</li>';
-                        message += '<li>Created the same case(with the same activities and tags) with new client.</li>';
-                        message += '<li>You have been redirected to this new case(id=' + result.values.case.id + ').</li>';
-                        message += '</ul>';
-                        CRM.alert(message, 'Change case client', 'success');
-                        $window.location.href = "#/supportcase/manage-case/" + result.values.case.id;
+                        CRM.alert('Client was successfully updated. Refreshing page.', 'Change case client', 'success');
+                        if ($scope.model['id'] != result.values.case.id) {
+                          $window.location.href = "#/supportcase/manage-case/" + result.values.case.id;
+                        } else {
+                          window.location.reload();
+                        }
                     });
                 };
 
