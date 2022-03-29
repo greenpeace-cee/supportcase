@@ -23,7 +23,7 @@ class CRM_Supportcase_Utils_EmailPrefillFields {
 
     $mailUtilsSetting = self::getFirstRelatedMailutilsSetting($caseCategoryId);
     if (!empty($mailUtilsSetting)) {
-      $data['email_body'] = self::getBody($mailUtilsSetting);
+      $data['email_body'] = self::getBody($mailUtilsSetting, $toContactId);
 
       $mainEmail = CRM_Supportcase_Utils_Activity::getMainEmailIdByFromEmailAddressId($mailUtilsSetting['from_email_address_id']);
       if (!empty($mainEmail)) {
@@ -45,8 +45,11 @@ class CRM_Supportcase_Utils_EmailPrefillFields {
   /**
    * @return string
    */
-  private static function getBody($mailUtilsSetting) {
-    $renderedTemplate = self::getRenderedTemplate($mailUtilsSetting);
+  private static function getBody($mailUtilsSetting, $toContactId) {
+    $renderedTemplate = CRM_Supportcase_Utils_SupportcaseTokenProcessor::handleTokens(
+      self::getRenderedTemplate($mailUtilsSetting),
+      $toContactId
+    );
     $message = "{$renderedTemplate}\n\n";
 
     return nl2br($message);
