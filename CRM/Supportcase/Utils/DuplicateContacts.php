@@ -167,15 +167,19 @@ class CRM_Supportcase_Utils_DuplicateContacts {
       ->setJoin([
         ['Note AS note', 'LEFT', NULL, ['note.entity_table', '=', "'civicrm_relationship'"], ['note.entity_id', '=', 'id']],
       ])
-      ->addWhere('contact_id_a', '=', $dupeContact)
-      ->addWhere('contact_id_b', '=', $leadingContact)
       ->addWhere('relationship_type_id:name', '=', 'duplicates')
+      ->addClause('OR',
+        ['AND', [['contact_id_a', '=', $dupeContact], ['contact_id_b', '=', $leadingContact]]],
+        ['AND', [['contact_id_a', '=', $leadingContact], ['contact_id_b', '=', $dupeContact]]]
+      )
       ->execute()
       ->first();
     if (!empty($relationship['id'])) {
       Relationship::update(FALSE)
         ->addWhere('id', '=', $relationship['id'])
         ->addValue('is_active', TRUE)
+        ->addValue('contact_id_a', $dupeContact)
+        ->addValue('contact_id_b', $leadingContact)
         ->execute();
       Note::update(FALSE)
         ->addWhere('id', '=', $relationship['note.id'])
