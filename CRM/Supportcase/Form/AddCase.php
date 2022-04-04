@@ -11,7 +11,10 @@ class CRM_Supportcase_Form_AddCase extends CRM_Core_Form {
     $prefillEmailId = CRM_Utils_Request::retrieve('prefill_email_id', 'String', $this);
     
     if (!empty($prefillEmailId) && CRM_Supportcase_Utils_Email::isEmailExist($prefillEmailId)) {
-      $defaultValues['client_contact_id'] = $prefillEmailId;
+      $contactId = CRM_Supportcase_Utils_EmailSearch::getContactIdByEmailId($prefillEmailId);
+      if (!empty($contactId)) {
+        $defaultValues['client_contact_id'] = $contactId;
+      }
     }
     
     return $defaultValues;
