@@ -6,7 +6,7 @@
     angular.module(moduleName).config([
         "$routeProvider",
         function($routeProvider) {
-            $routeProvider.when("/supportcase/manage-case/:caseId?/:dashboardSearchQfKey?", {
+            $routeProvider.when("/supportcase/manage-case/:caseId?/:dashboardSearchQfKey?/:prefillEmailId?", {
                 controller: "manageCaseCtrl",
                 templateUrl: "~/manageCase/manageCase.html",
                 resolve: {
@@ -15,6 +15,9 @@
                     },
                     dashboardSearchQfKey: function($route) {
                         return angular.isDefined($route.current.params.dashboardSearchQfKey) ? $route.current.params.dashboardSearchQfKey : false;
+                    },
+                    prefillEmailId: function($route) {
+                        return angular.isDefined($route.current.params.prefillEmailId) ? $route.current.params.prefillEmailId : false;
                     },
                     apiCalls: function($route, crmApi) {
                         var reqs = {};
@@ -32,7 +35,7 @@
         }
     ]);
 
-    angular.module(moduleName).controller("manageCaseCtrl", function($scope, crmApi, apiCalls, caseId, dashboardSearchQfKey, $interval) {
+    angular.module(moduleName).controller("manageCaseCtrl", function($scope, crmApi, apiCalls, caseId, dashboardSearchQfKey, prefillEmailId, $interval) {
         $scope.ts = CRM.ts();
         $scope.caseInfo = {};
         $scope.isError = false;
@@ -51,6 +54,11 @@
                 $scope.errorMessage = apiCalls.caseInfoResponse.error_message;
             } else {
                 $scope.caseInfo = apiCalls.caseInfoResponse.values;
+
+                if (prefillEmailId['length'] > 0) {
+                    $scope.caseInfo['new_email_prefill_fields']['to_email_id'] = prefillEmailId;
+                }
+
                 $scope.caseInfo['dashboardSearchQfKey'] = dashboardSearchQfKey;
                 $scope.isCaseLocked = $scope.caseInfo['is_case_locked'] && !$scope.caseInfo['is_locked_by_self'];
             }
@@ -73,6 +81,7 @@
                 $scope.renewCaseLock();
             }, $scope.getMangeCaseUpdateLockTime());
         };
+
         $scope.renewCaseLock = function() {
             if ($scope.isCaseUnlocked) {
                 return;

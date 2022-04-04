@@ -158,6 +158,18 @@ class CRM_Supportcase_Utils_Email {
   }
 
   /**
+   * @param $emailId
+   * @return bool
+   */
+  public static function isEmailExist($emailId): bool {
+    if (empty($emailId)) {
+      return false;
+    }
+
+    return !empty(CRM_Supportcase_Utils_Email::getEmailsByIds([$emailId]));
+  }
+
+  /**
    * @param $email
    * @return int|null
    */

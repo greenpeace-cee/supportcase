@@ -6,9 +6,21 @@ class CRM_Supportcase_Form_AddCase extends CRM_Core_Form {
     return ts('Create Support Case');
   }
 
+  public function setDefaultValues() {
+    $defaultValues = [];
+    $prefillEmailId = CRM_Utils_Request::retrieve('prefill_email_id', 'String', $this);
+    
+    if (!empty($prefillEmailId) && CRM_Supportcase_Utils_Email::isEmailExist($prefillEmailId)) {
+      $defaultValues['client_contact_id'] = $prefillEmailId;
+    }
+    
+    return $defaultValues;
+  }
+
   public function buildQuickForm() {
     CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/ang/element.css');
     $this->add('hidden', 'dashboard_search_qf_key', CRM_Utils_Request::retrieve('dashboardSearchQfKey', 'String'));
+    $this->add('hidden', 'prefill_email_id', CRM_Utils_Request::retrieve('prefill_email_id', 'Integer'));
     $this->add('text', 'subject', 'Subject', ['class' => 'spc__input spc--width-100-percent'], TRUE);
     $this->add('select', 'category_id', ts('Category'), CRM_Supportcase_Utils_Category::getOptions(), TRUE, ['class' => 'spc__input spc--width-100-percent']);
     $this->addEntityRef(
@@ -99,8 +111,15 @@ class CRM_Supportcase_Form_AddCase extends CRM_Core_Form {
   public function redirectToManageCase($caseId) {
     $angularRoute = 'supportcase/manage-case/' . $caseId;
     $qfKey = CRM_Utils_Request::retrieve('dashboard_search_qf_key', 'String', $this);
+    $prefillEmailId = CRM_Utils_Request::retrieve('prefill_email_id', 'String', $this);
+
     if (!empty($qfKey)) {
       $angularRoute .= '/' . $qfKey;
+      if (!empty($prefillEmailId)) {
+        $angularRoute .= '/' . $prefillEmailId;
+      }
+    } else if (!empty($prefillEmailId)) {
+      $angularRoute .= '//' . $prefillEmailId;
     }
 
     $angularUrl = CRM_Utils_System::url('civicrm/a/', NULL, TRUE, $angularRoute);

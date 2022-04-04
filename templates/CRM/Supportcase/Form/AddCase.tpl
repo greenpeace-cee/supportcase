@@ -14,6 +14,7 @@
         <div class="spc__form-input-html">{$form.category_id.html}</div>
       </div>
       {$form.dashboard_search_qf_key.html}
+      {$form.prefill_email_id.html}
     </div>
 
     <div class="crm-submit-buttons">
