@@ -32,22 +32,12 @@ function civicrm_api3_supportcase_manage_case_get_case_info($params) {
   }
 
   $recentCaseForContactId = '';
-  $clientIds = [];
-  $managerIds = [];
-  if (!empty($case['contacts'])) {
-    foreach ($case['contacts'] as $contact) {
-      if ($contact['role'] == 'Client') {
-        $clientIds[] = $contact['contact_id'];
-      }
-      if ($contact['role'] == 'Case Coordinator is') {
-        $managerIds[] = $contact['contact_id'];
-      }
-    }
-
-    if (!empty($clientIds[0])) {
-      $recentCaseForContactId = $clientIds[0];
-    }
+  $managerIds = CRM_Supportcase_Utils_Case::findManagersIds($case);
+  $clientIds = CRM_Supportcase_Utils_Case::findClientsIds($case);
+  if (!empty($clientIds[0])) {
+    $recentCaseForContactId = $clientIds[0];
   }
+
 
   $categoryFieldName = CRM_Core_BAO_CustomField::getCustomFieldID(CRM_Supportcase_Install_Entity_CustomField::CATEGORY, CRM_Supportcase_Install_Entity_CustomGroup::CASE_DETAILS, TRUE);
   $availableStatuses = CRM_Supportcase_Utils_Setting::getCaseStatusOptions();
@@ -71,6 +61,7 @@ function civicrm_api3_supportcase_manage_case_get_case_info($params) {
     'subject' => $case['subject'],
     'client_ids' => $clientIds,
     'managers_ids' => $managerIds,
+    'related_contact_data' => CRM_Supportcase_Utils_CaseRelatedContact::get($case['id'], $clientIds),
     'start_date' => $case['start_date'],
     'status_id' => $case['status_id'],
     'available_statuses' => $availableStatuses,

@@ -67,6 +67,32 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
     $updateCaseParams['track_managers_change'] = 1;
   }
 
+  //handles new_related_contact_ids:
+  if (isset($params['new_related_contact_ids'])) {
+    if (!is_array($params['new_related_contact_ids'])) {
+      throw new api_Exception('Invalid data at "new_related_contact_ids" field',  'invalid_data');
+    }
+
+    foreach ($params['new_related_contact_ids'] as $contactId) {
+      try {
+        civicrm_api3('Contact', 'getsingle', [
+          'id' => $contactId,
+        ]);
+      } catch (CiviCRM_API3_Exception $e) {
+        throw new api_Exception('Contact does not exist.', 'contact_does_not_exist');
+      }
+    }
+
+    $clientIds = CRM_Supportcase_Utils_Case::findClientsIds($case);
+    if (empty($clientIds[0])) {
+      throw new api_Exception('Cannot find client id',  'cannot_find_client_id');
+    }
+
+    $clientId = $clientIds[0];
+
+    CRM_Supportcase_Utils_CaseRelatedContact::update($case['id'], $params['new_related_contact_ids'], $clientId);
+  }
+
   //handles new_case_client_id:
   if (isset($params['new_case_client_id'])) {
     if (!empty($params['new_case_client_id'])) {
@@ -175,6 +201,12 @@ function _civicrm_api3_supportcase_manage_case_update_case_info_spec(&$params) {
     'api.required' => 0,
     'type' => CRM_Utils_Type::T_INT,
     'title' => 'New case manager ids',
+  ];
+  $params['new_related_contact_ids'] = [
+    'name' => 'new_related_contact_ids',
+    'api.required' => 0,
+    'type' => CRM_Utils_Type::T_INT,
+    'title' => 'New related contact ids',
   ];
   $params['is_deleted'] = [
     'name' => 'is_deleted',

@@ -113,4 +113,48 @@ class CRM_Supportcase_Utils_Case {
     return $recentCommunication;
   }
 
+  /**
+   * Finds case manager ids in case data from api 3
+   *
+   * @param $caseDataFromApi3
+   * @return array
+   */
+  public static function findManagersIds($caseDataFromApi3) {
+    $managerIds = [];
+
+    if (empty($caseDataFromApi3['contacts'])) {
+      return $managerIds;
+    }
+
+    foreach ($caseDataFromApi3['contacts'] as $contact) {
+      if ($contact['role'] == 'Case Coordinator is') {
+        $managerIds[] = $contact['contact_id'];
+      }
+    }
+
+    return $managerIds;
+  }
+
+  /**
+   * Finds case clients ids in case data from api 3
+   *
+   * @param $caseDataFromApi3
+   * @return array
+   */
+  public static function findClientsIds($caseDataFromApi3) {
+    $clientIds = [];
+
+    if (empty($caseDataFromApi3['contacts'])) {
+      return $clientIds;
+    }
+
+    foreach ($caseDataFromApi3['contacts'] as $contact) {
+      if ($contact['role'] == 'Client') {
+        $clientIds[] = $contact['contact_id'];
+      }
+    }
+
+    return $clientIds;
+  }
+
 }

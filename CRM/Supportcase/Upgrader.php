@@ -115,7 +115,14 @@ class CRM_Supportcase_Upgrader extends CRM_Supportcase_Upgrader_Base {
   }
 
   public function upgrade_0011() {
-    $this->ctx->log->info('Applying update 0010. Install new relationship type.');
+    $this->ctx->log->info('Applying update 0011. Install new relationship type.');
+    (new CRM_Supportcase_Install_Entity_RelationshipType())->createAll();
+
+    return TRUE;
+  }
+
+  public function upgrade_0012() {
+    $this->ctx->log->info('Applying update 0012. Install new relationship type.');
     (new CRM_Supportcase_Install_Entity_RelationshipType())->createAll();
 
     return TRUE;

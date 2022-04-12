@@ -488,6 +488,33 @@
         };
     });
 
+    angular.module(moduleName).directive("caseRelatedContacts", function() {
+        return {
+            restrict: "E",
+            templateUrl: "~/manageCase/directives/caseInfo/caseRelatedContacts.html",
+            scope: {model: "="},
+            controller: function($scope, $window, $element) {
+                $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
+                $scope.setFieldFromModel = function() {$scope.relatedContactIds = $scope.model['related_contact_data']['related_contact_ids'];};
+                $scope.editConfirm = function() {
+                    if (typeof $scope.relatedContactIds === 'string') {
+                        $scope.relatedContactIds = ($scope.relatedContactIds.length === 0) ? [] : $scope.relatedContactIds.split(",");
+                    }
+                    $scope.$parent.editConfirm('new_related_contact_ids', $scope.relatedContactIds, $element, function(result) {
+                        $scope.model['related_contact_data']['related_contact_ids'] = $scope.relatedContactIds;
+                        $scope.$apply();
+                        CRM.status(ts('Related contacts are updated.'));
+                    });
+                };
+
+                $scope.setFieldFromModel();
+                var inputStyles =  $scope.$parent.getInputStyles();
+                inputStyles['height'] = 'auto';
+                setTimeout(function() {$($element).find(".ci__case-info-edit-mode input").css(inputStyles).crmEntityRef();}, 0);
+            }
+        };
+    });
+
     angular.module(moduleName).directive("contactInfo", function() {
         return {
             restrict: "E",
