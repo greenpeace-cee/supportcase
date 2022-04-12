@@ -73,6 +73,12 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
       throw new api_Exception('Invalid data at "new_related_contact_ids" field',  'invalid_data');
     }
 
+    $relationshipTypeId = CRM_Supportcase_Utils_CaseRelatedContact::getRelationshipTypeId();
+    if (empty($relationshipTypeId)) {
+      $message = 'Cannot find relationship type id by name_a: ' . CRM_Supportcase_Install_Entity_RelationshipType::MADE_SUPPORT_REQUEST_RELATED_TO;
+      throw new api_Exception($message, 'cannot_find_relationship_type_id');
+    }
+
     foreach ($params['new_related_contact_ids'] as $contactId) {
       try {
         civicrm_api3('Contact', 'getsingle', [

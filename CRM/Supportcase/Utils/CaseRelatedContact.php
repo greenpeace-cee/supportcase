@@ -97,7 +97,7 @@ class CRM_Supportcase_Utils_CaseRelatedContact {
    *
    * @return false|int
    */
-  private static function getRelationshipTypeId() {
+  public static function getRelationshipTypeId() {
     if (is_null(self::$relationshipTypeId)) {
       $relationshipTypeId = self::getFromDBRelationshipTypeId();
 
