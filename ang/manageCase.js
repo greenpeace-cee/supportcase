@@ -1837,7 +1837,7 @@
                                                                     <span>&nbsp;&nbsp;Add email "` + $scope.currentSearchEmail + `" to client</span>
                                                             </div>
                                                             <div class="crm-select2-row-description">
-                                                                <p>Creates new email adn add it to client</p>
+                                                                <p>Create new <strong>email</strong> and add it to client</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1853,7 +1853,7 @@
                                         'id' : $scope.newItemPseudoId,
                                         'term' : searchString,
                                         'label' : searchString + ' (' + ts('Add new contact') + ')',
-                                        'description' : ['Create new Contact with "' + searchString + '" email'],
+                                        'description' : ['Create new contact with "' + searchString + '" email'],
                                         'icon' : 'fa-plus-circle',
                                         'label_class' : 'se__color-blue',
                                     };
