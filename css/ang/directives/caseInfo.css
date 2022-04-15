@@ -75,10 +75,6 @@
     padding: 5px 10px 10px 10px;
 }
 
-.ci__case-info-item.edit-mode .ci__case-info-view-mode {
-    display: none;
-}
-
 .ci__case-info-item:hover .ci__case-info-edit-button {
     display: block;
 }
@@ -91,10 +87,6 @@
     height: 24px;
     cursor: pointer;
     border: 1px solid #d3dee2;
-    display: none;
-}
-
-.ci__case-info-item.edit-mode .ci__case-info-edit-button {
     display: none;
 }
 
@@ -112,16 +104,11 @@
 
 .ci__case-info-edit-mode {
     padding: 10px;
-    display: none;
 }
 
 .ci__case-info-edit-mode-buttons {
     justify-content: space-between;
     display: flex;
-}
-
-.ci__case-info-item.edit-mode .ci__case-info-edit-mode {
-    display: block;
 }
 
 .ci__case-info-edit-mode-textarea {

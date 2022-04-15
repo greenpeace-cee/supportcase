@@ -1,16 +1,16 @@
 <div class="ci__case-info-item statusField">
 	<div class="ci__case-info-header">
 		<div class="ci__case-info-item-label">Status</div>
-		<div class="ci__case-info-edit-button" title="Edit status" ng-click="toggleMode();updateInputValue();">
+		<div ng-show="!isEditMode" class="ci__case-info-edit-button" title="Edit status" ng-click="toggleMode();">
 			<i class="crm-i fa-pencil"></i>
 		</div>
 	</div>
 
-	<div class="ci__case-info-view-mode">
+	<div class="ci__case-info-view-mode" ng-show="!isEditMode">
 		<div class="ci__case-info-item-content">{{getEntityLabel(model['available_statuses'], model['status_id'])}}</div>
 	</div>
 
-	<div class="ci__case-info-edit-mode">
+	<div class="ci__case-info-edit-mode" ng-show="isEditMode">
 		<div class="ci__case-info-errors-wrap"></div>
 
 		<div class="crm-section">

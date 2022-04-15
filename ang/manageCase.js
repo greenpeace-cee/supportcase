@@ -235,16 +235,6 @@
                     };
                 };
 
-                $scope.toggleMode = function(directiveElement) {
-                    var caseInfoItem = $(directiveElement);
-                    if (caseInfoItem.length === 0) {
-                        return;
-                    }
-
-                    caseInfoItem.find('.ci__case-info-errors-wrap').empty();
-                    caseInfoItem.find('.ci__case-info-item').toggleClass('edit-mode');
-                };
-
                 $scope.showError = function(directiveElement, errorMessage) {
                     var caseInfoItem = $(directiveElement);
                     if (caseInfoItem.length === 0) {
@@ -263,7 +253,6 @@
                             $scope.showError(directiveElement, result.error_message);
                         } else {
                             successCallback(result);
-                            $scope.toggleMode(directiveElement);
                         }
                     }, function(error) {});
                 };
@@ -277,11 +266,20 @@
             templateUrl: "~/manageCase/directives/caseInfo/caseSubject.html",
             scope: {model: "="},
             controller: function($scope, $element) {
-                $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
+                $scope.isEditMode = false;
+                $scope.toggleMode = function() {
+                    $($element).find('.ci__case-info-errors-wrap').empty();
+                    $scope.isEditMode = !$scope.isEditMode;
+
+                    if ($scope.isEditMode) {
+                        $scope.setFieldFromModel();
+                    }
+                };
                 $scope.setFieldFromModel = function() {$scope.subject = $scope.model['subject'];};
                 $scope.editConfirm = function() {
                     $scope.$parent.editConfirm('subject', $scope.subject, $element, function(result) {
                         $scope.model['subject'] = $scope.subject;
+                        $scope.toggleMode();
                         $scope.$apply();
                         CRM.status(ts('Subject updated.'));
                     });
@@ -298,8 +296,21 @@
             templateUrl: "~/manageCase/directives/caseInfo/caseStatus.html",
             scope: {model: "="},
             controller: function($scope, $element) {
-                $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
-                $scope.setFieldFromModel = function() {$scope.statusId = $scope.model['status_id'];};
+                $scope.isEditMode = false;
+                $scope.toggleMode = function() {
+                    $($element).find('.ci__case-info-errors-wrap').empty();
+                    $scope.isEditMode = !$scope.isEditMode;
+
+                    if ($scope.isEditMode) {
+                        $scope.setFieldFromModel();
+                        setTimeout(function() {
+                            $($element).find(".ci__case-info-edit-mode select.spc--single-select").val($scope.statusId).trigger('change');
+                        }, 0);
+                    }
+                };
+                $scope.setFieldFromModel = function() {
+                    $scope.statusId = $scope.model['status_id'];}
+                ;
                 $scope.updateInputValue = function() {
                     $scope.setFieldFromModel();
                     setTimeout(function() {
@@ -310,13 +321,17 @@
                 $scope.editConfirm = function() {
                     $scope.$parent.editConfirm('status_id', $scope.statusId, $element, function(result) {
                         $scope.model['status_id'] = $scope.statusId;
+                        $scope.toggleMode();
                         $scope.$apply();
                         CRM.status(ts('Status updated.'));
                     });
                 };
+                $scope.initSelect2 = function() {
+                    setTimeout(function() {$($element).find(".ci__case-info-edit-mode select").css($scope.$parent.getInputStyles()).select2();}, 0);
+                };
 
                 $scope.setFieldFromModel();
-                setTimeout(function() {$($element).find(".ci__case-info-edit-mode select").css($scope.$parent.getInputStyles()).select2();}, 0);
+                $scope.initSelect2();
             }
         };
     });
@@ -442,7 +457,16 @@
             scope: {model: "="},
             controller: function($scope, $window, $element) {
                 $scope.showHelpInfo = $scope.$parent.showHelpInfo;
-                $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
+                $scope.isEditMode = false;
+                $scope.toggleMode = function() {
+                    $($element).find('.ci__case-info-errors-wrap').empty();
+                    $scope.isEditMode = !$scope.isEditMode;
+
+                    if ($scope.isEditMode) {
+                        $scope.setFieldFromModel();
+                        $($element).find("input.sc__select-contact-input").trigger('updateAllOptionsFromServer');
+                    }
+                };
                 $scope.setFieldFromModel = function() {$scope.clientId = $scope.model['client_ids'][0];};
                 $scope.editConfirm = function() {
                     $scope.$parent.editConfirm('new_case_client_id', $scope.clientId, $element, function(result) {
@@ -452,11 +476,11 @@
                         } else {
                           window.location.reload();
                         }
+                        $scope.toggleMode();
                     });
                 };
 
                 $scope.setFieldFromModel();
-                setTimeout(function() {$($element).find(".ci__case-info-edit-mode input").css($scope.$parent.getInputStyles()).crmEntityRef();}, 0);
             }
         };
     });
@@ -467,7 +491,16 @@
             templateUrl: "~/manageCase/directives/caseInfo/caseManagers.html",
             scope: {model: "="},
             controller: function($scope, $window, $element) {
-                $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
+                $scope.isEditMode = false;
+                $scope.toggleMode = function() {
+                    $($element).find('.ci__case-info-errors-wrap').empty();
+                    $scope.isEditMode = !$scope.isEditMode;
+
+                    if ($scope.isEditMode) {
+                        $scope.setFieldFromModel();
+                        $($element).find("input.sc__select-contact-input").trigger('updateAllOptionsFromServer');
+                    }
+                };
                 $scope.setFieldFromModel = function() {$scope.managerIds = $scope.model['managers_ids'];};
                 $scope.editConfirm = function() {
                     if (typeof $scope.managerIds === 'string') {
@@ -475,15 +508,13 @@
                     }
                     $scope.$parent.editConfirm('new_case_manager_ids', $scope.managerIds, $element, function(result) {
                         $scope.model['managers_ids'] = $scope.managerIds;
+                        $scope.toggleMode();
                         $scope.$apply();
                         CRM.status(ts('Managers are updated.'));
                     });
                 };
 
                 $scope.setFieldFromModel();
-                var inputStyles =  $scope.$parent.getInputStyles();
-                inputStyles['height'] = 'auto';
-                setTimeout(function() {$($element).find(".ci__case-info-edit-mode input").css(inputStyles).crmEntityRef();}, 0);
             }
         };
     });
@@ -494,7 +525,16 @@
             templateUrl: "~/manageCase/directives/caseInfo/caseRelatedContacts.html",
             scope: {model: "="},
             controller: function($scope, $window, $element) {
-                $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
+                $scope.isEditMode = false;
+                $scope.toggleMode = function() {
+                    $($element).find('.ci__case-info-errors-wrap').empty();
+                    $scope.isEditMode = !$scope.isEditMode;
+
+                    if ($scope.isEditMode) {
+                        $scope.setFieldFromModel();
+                        $($element).find("input.sc__select-contact-input").trigger('updateAllOptionsFromServer');
+                    }
+                };
                 $scope.setFieldFromModel = function() {$scope.relatedContactIds = $scope.model['related_contact_data']['related_contact_ids'];};
                 $scope.editConfirm = function() {
                     if (typeof $scope.relatedContactIds === 'string') {
@@ -502,15 +542,13 @@
                     }
                     $scope.$parent.editConfirm('new_related_contact_ids', $scope.relatedContactIds, $element, function(result) {
                         $scope.model['related_contact_data']['related_contact_ids'] = $scope.relatedContactIds;
+                        $scope.toggleMode();
                         $scope.$apply();
                         CRM.status(ts('Related contacts are updated.'));
                     });
                 };
 
                 $scope.setFieldFromModel();
-                var inputStyles =  $scope.$parent.getInputStyles();
-                inputStyles['height'] = 'auto';
-                setTimeout(function() {$($element).find(".ci__case-info-edit-mode input").css(inputStyles).crmEntityRef();}, 0);
             }
         };
     });
@@ -566,8 +604,16 @@
             scope: {model: "="},
             controller: function($scope, $element) {
                 $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
+                $scope.isEditMode = false;
+                $scope.toggleMode = function() {
+                    $($element).find('.ci__case-info-errors-wrap').empty();
+                    $scope.isEditMode = !$scope.isEditMode;
+
+                    if ($scope.isEditMode) {
+                        $scope.setFieldFromModel();
+                    }
+                };
                 $scope.setFieldFromModel = function() {$scope.startDate = $scope.model['start_date'];};
-                $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
                 $scope.updateInputValue = function() {
                     $scope.setFieldFromModel();
                     setTimeout(function() {
@@ -577,10 +623,13 @@
                 $scope.editConfirm = function() {
                     $scope.$parent.editConfirm('start_date', $scope.startDate, $element, function(result) {
                         $scope.model['start_date'] = $scope.startDate;
+                        $scope.toggleMode();
                         $scope.$apply();
                         CRM.status(ts('Start date updated.'));
                     });
                 };
+
+                $scope.setFieldFromModel();
             }
         };
     });
@@ -591,26 +640,35 @@
             templateUrl: "~/manageCase/directives/caseInfo/caseCategory.html",
             scope: {model: "="},
             controller: function($scope, $element, reloadService) {
-                $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
-                $scope.updateInputValue = function() {
-                    $scope.setFieldFromModel();
-                    setTimeout(function() {
-                        $($element).find(".ci__case-info-edit-mode select").val($scope.categoryId).trigger('change');
-                    }, 0);
+                $scope.isEditMode = false;
+                $scope.toggleMode = function() {
+                    $($element).find('.ci__case-info-errors-wrap').empty();
+                    $scope.isEditMode = !$scope.isEditMode;
+
+                    if ($scope.isEditMode) {
+                        $scope.setFieldFromModel();
+                        setTimeout(function() {
+                            $($element).find(".ci__case-info-edit-mode select.spc--single-select").val($scope.categoryId).trigger('change');
+                        }, 0);
+                    }
                 };
                 $scope.getEntityLabel = $scope.$parent.getEntityLabel;
                 $scope.setFieldFromModel = function() {$scope.categoryId = $scope.model['category_id'];};
                 $scope.editConfirm = function() {
                     $scope.$parent.editConfirm('category_id', $scope.categoryId, $element, function(result) {
                         $scope.model['category_id'] = $scope.categoryId;
+                        $scope.toggleMode();
                         $scope.$apply();
                         CRM.status(ts('Category updated.'));
                         reloadService.reloadEmails();
                     });
                 };
+                $scope.initSelect2 = function() {
+                    setTimeout(function() {$($element).find(".ci__case-info-edit-mode select").css($scope.$parent.getInputStyles()).select2();}, 0);
+                };
 
                 $scope.setFieldFromModel();
-                setTimeout(function() {$($element).find(".ci__case-info-edit-mode select").css($scope.$parent.getInputStyles()).select2();}, 0);
+                $scope.initSelect2();
             }
         };
     });
@@ -621,7 +679,18 @@
             templateUrl: "~/manageCase/directives/caseInfo/caseTags.html",
             scope: {model: "="},
             controller: function($scope, $element) {
-                $scope.toggleMode = function() {$scope.$parent.toggleMode($element);};
+                $scope.isEditMode = false;
+                $scope.toggleMode = function() {
+                    $($element).find('.ci__case-info-errors-wrap').empty();
+                    $scope.isEditMode = !$scope.isEditMode;
+
+                    if ($scope.isEditMode) {
+                        $scope.setFieldFromModel();
+                        setTimeout(function() {
+                            $($element).find(".ci__case-info-edit-mode select").val($scope.caseTags).trigger('change');
+                        }, 0);
+                    }
+                };
                 $scope.setFieldFromModel = function() {$scope.caseTags = $scope.model['tags_ids'];};
                 $scope.generateStyles = function(tagColor) {
                     var style = "";
@@ -641,15 +710,19 @@
                     var tagsIds = ($scope.caseTags === undefined) ? [] : $scope.caseTags;
                     $scope.$parent.editConfirm('tags_ids', tagsIds, $element, function(result) {
                         $scope.model['tags_ids'] = $scope.caseTags;
+                        $scope.toggleMode();
                         CRM.status(ts('Tags updated.'));
                         $scope.$apply();
                     });
                 };
+                $scope.initSelect2 = function() {
+                    var inputStyles =  $scope.$parent.getInputStyles();
+                    inputStyles['height'] = 'auto';
+                    setTimeout(function() {$($element).find(".ci__case-info-edit-mode select").css(inputStyles).select2();}, 0);
+                };
 
                 $scope.setFieldFromModel();
-                var inputStyles =  $scope.$parent.getInputStyles();
-                inputStyles['height'] = 'auto';
-                setTimeout(function() {$($element).find(".ci__case-info-edit-mode select").css(inputStyles).select2();}, 0);
+                $scope.initSelect2();
             }
         };
     });
@@ -1948,6 +2021,144 @@
                             }
                         });
                     }, 0);
+                };
+            }
+        };
+    });
+
+    angular.module(moduleName).directive("selectContact", function() {
+        return {
+            restrict: "E",
+            templateUrl: "~/manageCase/directives/selectContact.html",
+            scope: {
+                model: "=",
+                maxWidth: "<maxWidth",
+                isMultiple: "<isMultiple",
+                isRequired: "<isRequired",
+                searchApiParams: "<searchApiParams",
+            },
+            controller: function($scope, $element) {
+                $scope.entityName = 'Contact';
+                $scope.isAlreadyInitSelect = false;
+                if ($scope['searchApiParams'] === undefined) {
+                    $scope['searchApiParams'] = {};
+                }
+
+                $scope.initSelect2 = function() {
+                    setTimeout(function() {
+                        var input = $($element).find(".sc__select-contact-input");
+                        input.css({
+                            'width' : '100%',
+                            'max-width' : $scope.maxWidth + 'px',
+                            'box-sizing' : 'border-box',
+                        });
+
+                        input.select2({
+                            'tokenSeparators': [' '],
+                            'closeOnSelect': false,
+                            "multiple" : $scope.isMultiple,
+                            'placeholder': '- none -',
+                            'placeholderOption' : 'first',
+                            'allowClear' : 'true',
+                            'minimumInputLength' : 1,
+                            'formatResult' :  function (row) {
+                                var html = '<div class="crm-select2-row">';
+
+                                html += '<div><div class="crm-select2-row-label '+(row.label_class || '')+'">';
+                                html += (row.icon_class ? '<i class="crm-i ' + row.icon_class + '-icon"" aria-hidden="true"></i>&nbsp;&nbsp;' : '');
+                                html +=  _.escape(row.label);
+                                html += '</div>';
+
+                                html += '<div class="crm-select2-row-description">';
+                                $.each(row.description || [], function(k, text) {
+                                    html += '<p>' + _.escape(text) + '</p> ';
+                                });
+                                html += '</div></div></div>';
+
+                                return html;
+                            },
+                            'formatSelection' :  function(row) {
+                                var html = '<div>';
+                                html += row.icon ? '<div class="crm-select2-icon"><div class="crm-i ' + row.icon + '"></div></div>' : '';
+                                html +=  _.escape(row.label);
+                                html += '</div>';
+
+                                return html;
+                            },
+                            'escapeMarkup' : _.identity,
+                            'ajax': {
+                                'url': CRM.url('civicrm/ajax/rest'),
+                                'dataType': 'json',
+                                'type': 'GET',
+                                'quietMillis' : 300,
+                                'data' : function (searchString, pageNumber) {
+                                    return {
+                                        'entity' : $scope.entityName,
+                                        'action' : 'getlist',
+                                        'json' : JSON.stringify({
+                                            'input' : searchString,
+                                            'page_num' : pageNumber,
+                                            'params' : $scope['searchApiParams'],
+                                        })
+                                    };
+                                },
+                                'results' : function(data) {
+                                    return {more: data.more_results, results: data.values || []};
+                                }
+                            },
+                            'initSelection' : function($select, callback) {
+                                if ($scope.isAlreadyInitSelect) {
+                                    return;
+                                }
+
+                                $scope.isAlreadyInitSelect = true;
+                                var val = $select.val();
+
+                                if (val === '') {
+                                    return;
+                                }
+
+                                var contactIds = val.split(',');
+
+                                if (contactIds.length > 0) {
+                                    CRM.api3($scope.entityName, 'getlist', {id: contactIds.join(',')}).done(function(result) {
+                                        if (result['is_error'] === 0 && result.values.length > 0) {
+                                            callback($scope.isMultiple ? result.values : result.values[0]);
+                                            $select.trigger('change');
+                                        }
+                                    });
+                                }
+                            }
+                        });
+
+                        input.on('updateAllOptionsFromServer', function (e) {
+                            setTimeout(function() {
+                                if ($scope.model === undefined || $scope.model === '') {
+                                    return;
+                                }
+
+                                CRM.api3('Contact', 'getlist', {
+                                    "id": $scope.model
+                                }).then(function(result) {
+                                    if (result['is_error'] === 1) {
+                                        console.error('Error via updating contact select. Api: Contact->getlist message:')
+                                        console.error(result['error_message'])
+                                    } else {
+                                        var data = $scope.isMultiple ? result.values : result.values[0];
+                                        input.select2('data', data, true);
+                                        input.trigger('change');
+                                    }
+                                }, function(error) {
+                                    console.error('Error via updating contact select. Api: Contact->getlist message:')
+                                    console.error(error)
+                                });
+                            }, 150);
+                        });
+                    }, 0);
+                };
+
+                this.$onInit = function() {
+                    $scope.initSelect2();
                 };
             }
         };

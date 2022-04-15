@@ -4,12 +4,12 @@
 			<span>Client</span>
 			<a ng-click="showHelpInfo('About clients updating', 'id-about-clients-updating', 'CRM\/Supportcase\/Helper\/CaseInfo')" href="javascript:;" title="Help" class="helpicon"></a>
 		</div>
-		<div class="ci__case-info-edit-button" title="Edit client" ng-click="toggleMode();setFieldFromModel();">
+		<div ng-show="!isEditMode" class="ci__case-info-edit-button" title="Edit client" ng-click="toggleMode();">
 			<i class="crm-i fa-pencil"></i>
 		</div>
 	</div>
 
-	<div class="ci__case-info-view-mode">
+	<div class="ci__case-info-view-mode" ng-show="!isEditMode">
 		<div class="ci__case-info-item-content">
 			<div class="ci__clients-wrap">
 				<div ng-repeat="clientContactId in model['client_ids']">
@@ -19,9 +19,9 @@
 		</div>
 	</div>
 
-	<div class="ci__case-info-edit-mode">
+	<div class="ci__case-info-edit-mode" ng-show="isEditMode">
 		<div class="crm-section">
-			<input class="spc__input spc--single-select crm-form-select" ng-model="clientId" placeholder="- none -" data-select-params='{"multiple":false}' data-api-entity="contact" type="text" />
+			<select-contact is-required="true" search-api-params='{}' is-multiple="false" max-width="600" model="clientId"></select-contact>
 		</div>
 
 		<div class="ci__case-info-errors-wrap"></div>

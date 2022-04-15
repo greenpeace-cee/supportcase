@@ -1,0 +1,49 @@
+/*
+    Uses on selectContact directive
+    Prefix-alias: sc = selectContact
+*/
+
+.sc__select-contact .Individual-icon::before {
+    content: "";
+    margin-left: 2px;
+}
+
+.sc__select-contact .Household-icon::before {
+    content: "";
+    margin-left: 0;
+}
+
+.sc__select-contact .Organization-icon::before {
+    content: "";
+    margin-left: 2px;
+}
+
+.sc__select-contact .crm-select2-icon,
+.sc__select-contact .crm-select2-icon,
+.sc__select-contact .crm-select2-icon {
+    display: inline-block;
+    padding-right: 5px;
+}
+
+.sc__select-contact .Individual-icon::before,
+.sc__select-contact .Household-icon::before,
+.sc__select-contact .Organization-icon::before {
+    display: block;
+    font-family: 'FontAwesome';
+    font-size: 14px;
+}
+
+.sc__select-contact .select2-container .select2-choice abbr::before {
+    font-family: 'FontAwesome';
+    font-style: normal;
+    text-rendering: auto;
+    color: #0071bd;
+    content: "";
+    font-size: 13px;
+}
+
+.crm-container .select2-container .select2-choice abbr {
+    background-image: none !important;
+    right: 30px;
+    top: 1px;
+}
