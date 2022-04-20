@@ -40,9 +40,14 @@
         $scope.caseInfo = {};
         $scope.isError = false;
         $scope.caseLockId = undefined;
-        $scope.isCaseUnlocked = false;
         $scope.errorMessage = '';
         $scope.isCaseLocked = false;
+        if (dashboardSearchQfKey) {
+            $scope.backUrl = CRM.url('civicrm/supportcase', {'qfKey': dashboardSearchQfKey});
+        } else {
+            $scope.backUrl = CRM.url('civicrm/supportcase');
+        }
+
         //to add ability to use styles only for this page
         setTimeout(function() {
             CRM.$('body').addClass('manage-case-page');
@@ -83,7 +88,7 @@
         };
 
         $scope.renewCaseLock = function() {
-            if ($scope.isCaseUnlocked) {
+            if ($scope.isCaseLocked) {
                 return;
             }
 
@@ -92,7 +97,7 @@
             }).then(function(result) {
                 if (result.is_error === 1) {
                     if (result.error_code === "case_lock_does_not_exist") {
-                        $scope.isCaseUnlocked = true;
+                        $scope.isCaseLocked = true;
                         $scope.$apply();
                     } else {
                         console.error('renew_case_lock get error:');

@@ -3,28 +3,50 @@
 <div class="supportcase-manage-case-module-wrap">
 	<div class="crm-form-block">
 		<div>
-			<div ng-if="!isError && !isCaseLocked && !isCaseUnlocked">
+			<div ng-if="!isError && !isCaseLocked">
 				<manage-panel model='caseInfo'></manage-panel>
 			</div>
 		</div>
 
 		<div ng-if="isError">
-			<div class="mc__error-message crm-error">{{errorMessage}}</div>
+			<div class="supportcase-manage-case-error-button-wrap">
+				<a class="spc__button spc--height-big spc--blue" href="{{backUrl}}" title="Back to dashboard">
+					<span class="ui-button-icon ui-icon fa-arrow-left"></span>
+					<span class="ui-button-icon-space"> </span>
+					<span>Back to the Support Dashboard</span>
+				</a>
+			</div>
+			<div class="crm-error">{{errorMessage}}</div>
 		</div>
 
 		<div ng-if="!isError && isCaseLocked">
-			<div class="mc__error-message crm-error">{{caseInfo.lock_message}}</div>
+			<div class="supportcase-manage-case-error-button-wrap">
+				<a class="spc__button spc--height-big spc--blue" href="{{backUrl}}" title="Back to dashboard">
+					<span class="ui-button-icon ui-icon fa-arrow-left"></span>
+					<span class="ui-button-icon-space"> </span>
+					<span>Back to the Support Dashboard</span>
+				</a>
+			</div>
+			<div class="crm-error">{{caseInfo.lock_message}}</div>
 		</div>
 
-		<div ng-if="isCaseUnlocked">
-			<div class="mc__error-message crm-error">
+		<div ng-if="isCaseLocked">
+			<div class="supportcase-manage-case-error-button-wrap">
+				<a class="spc__button spc--height-big spc--blue" href="{{backUrl}}" title="Back to dashboard">
+					<span class="ui-button-icon ui-icon fa-arrow-left"></span>
+					<span class="ui-button-icon-space"> </span>
+					<span>Back to the Support Dashboard</span>
+				</a>
+			</div>
+
+			<div class="crm-error">
 				This case may have been opened in another window and/or by a different user.
 				<br />
 				Please refresh the page to see if any changes were made.
 			</div>
 		</div>
 
-		<div ng-if="!isError && !isCaseLocked && !isCaseUnlocked">
+		<div ng-if="!isError && !isCaseLocked">
 			<case-info model='caseInfo'></case-info>
 			<communication model='caseInfo'></communication>
 			<quick-actions model='caseInfo'></quick-actions>

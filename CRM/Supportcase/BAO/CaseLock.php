@@ -277,14 +277,12 @@ class CRM_Supportcase_BAO_CaseLock extends CRM_Supportcase_DAO_CaseLock {
   }
 
   /**
-   * Removes all case locks by case id and contact id
+   * Removes all case locks by case id
    *
    * @param $caseId
-   * @param $contactId
    */
-  public static function removeCaseLocks($caseId, $contactId) {
+  public static function removeCaseLocks($caseId) {
     $caseLocks = self::getAll([
-      'contact_id' => $contactId,
       'case_id' => $caseId,
     ]);
 
