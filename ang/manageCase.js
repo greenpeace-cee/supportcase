@@ -2138,7 +2138,7 @@
 
                         input.on('updateAllOptionsFromServer', function (e) {
                             setTimeout(function() {
-                                if ($scope.model === undefined || $scope.model === '') {
+                                if ($scope.model === undefined || $scope.model === '' || $scope.model['length'] === 0) {
                                     return;
                                 }
 
