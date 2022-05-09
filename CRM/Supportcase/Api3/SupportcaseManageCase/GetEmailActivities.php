@@ -133,7 +133,9 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
           'date_time' => $activity['activity_date_time'],
           'attachments' => $attachments,
           'mode_name' => CRM_Supportcase_Utils_Email::FORWARD_MODE,
-          'emails' => $replyAllForwardPrefillEmails,
+          'emails' => [
+            'from' => $replyAllForwardPrefillEmails['from'] ?? NULL
+          ],
           'maxFileSize' => $maxFileSize,
           'attachmentsLimit' => $attachmentsLimit,
           'case_category_id' => $this->params['case_category_id'],
