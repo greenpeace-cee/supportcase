@@ -28,6 +28,7 @@ return [
     17 => 'css/ang/directives/actions/doNotSms.css',
     18 => 'css/ang/directives/actions/manageEmailSubscriptions.css',
     19 => 'css/ang/directives/selectContacts.css',
+    20 => 'css/ang/directives/spcEmailEditor.css',
   ],
   'partials' => [
     0 => 'ang/manageCase',

@@ -193,6 +193,7 @@
             return '';
         }
     });
+
     angular.module(moduleName).service('reloadService', function() {
         this.reloadEmailsCallback = function() {};
 
@@ -1235,68 +1236,6 @@
         };
     });
 
-    angular.module(moduleName).directive("mailutilsTemplate", function () {
-        return {
-            require: '^crmUiIdScope',
-            scope: {
-                onSelect: '@'
-            },
-            template: '<input type="text" class="crmMailingToken" />',
-            link: function (scope, element, attrs, crmUiIdCtrl) {
-                var onSelect = function (e) {
-                    e.preventDefault();
-
-                    CRM.api3('SupportcaseManageCase', 'get_rendered_template', {
-                        "id": e.object.mailutils_template_id,
-                        "token_contact_id": attrs['tokenContactId'],
-                    }).then(function(result) {
-                        if (result.is_error === 1) {
-                            CRM.status('Error via getting token value:' + result.error_message, 'error');
-                            console.error('SupportcaseManageCase->get_rendered_template error:');
-                            console.error(result.error_message);
-                        } else {
-                            $(element).select2('close').select2('val', '');
-                            var  templateRenderedText = result['values']['rendered_text'];
-                            scope.$parent.$eval(attrs.onSelect, {
-                                token: {name: templateRenderedText}
-                            });
-                        }
-                    }, function(error) {
-                        console.error('SupportcaseManageCase->get_rendered_template error:');
-                        console.error(error);
-                        CRM.status('Error via getting token value.', 'error');
-                    });
-                };
-
-                var loadTemplates = function() {
-                    CRM.api3('SupportcaseManageCase', 'get_prepared_mail_template_options', {
-                        "support_case_category_id": attrs['supportCaseCategoryId'],
-                        "token_contact_id": attrs['tokenContactId'],
-                    }).then(function(result) {
-                        if (result.is_error === 1) {
-                            console.error('SupportcaseManageCase->get_prepared_mail_template_options error:');
-                            console.error(result.error_message);
-                        } else {
-                            $(element).addClass('crm-action-menu fa-code').crmSelect2({
-                                width: "12em",
-                                dropdownAutoWidth: true,
-                                data: result['values'],
-                                placeholder: ts('Templates')
-                            });
-                            $(element).on('select2-selecting', function (e) {
-                                onSelect(e);
-                            });
-                        }
-                    }, function(error) {
-                        console.error('SupportcaseManageCase->get_prepared_mail_template_options error:');
-                        console.error(error);
-                    });
-                };
-                loadTemplates();
-            }
-        };
-    });
-
     /*
         Example:
         <div spc-accordion class="spc__accordion spc--blue-header spc--header-with-arrows spc--collapsed">
@@ -1779,16 +1718,155 @@
         };
     });
 
-    angular.module(moduleName).directive('editorFocusOnLoad', function() {
+    angular.module(moduleName).directive("spcEmailEditor", function() {
         return {
-            link: function(scope, element) {
-                // TODO: to remove that hack we can make custom editor where can set 'focus on load'
-                setTimeout(function() {
-                    CRM.wysiwyg.focus(element);
-                }, 1500);
+            restrict: "E",
+            templateUrl: "~/manageCase/directives/communication/spcEmailEditor.html",
+            scope: {
+                supportCaseCategoryId: "=",
+                tokenContactId: "=",
+                emailBody: "=",
+            },
+            controller: function($scope, $element) {
+                $scope.recentlyAddedTemplateClass = 'spc__recently-added-template';
+                $scope.cursorClass = 'spc__editor-cursor';
+
+                $scope.getCkeditorInstance = function() {
+                    var item = $scope.getTextareaElement();
+                    var name = $(item).attr("name"),
+                        id = $(item).attr("id");
+                    if (name && window.CKEDITOR && CKEDITOR.instances[name]) {
+                        return CKEDITOR.instances[name];
+                    }
+                    if (id && window.CKEDITOR && CKEDITOR.instances[id]) {
+                        return CKEDITOR.instances[id];
+                    }
+
+                    return undefined;
+                }
+
+                $scope.insertTemplateToEditor = function(template) {
+                    var editor = $scope.getCkeditorInstance();
+                    var selection = editor.getSelection();
+                    var htmlTemplate = '<div class="' + $scope.recentlyAddedTemplateClass + '">' + template + '</div>';
+                    var selectedRange = selection.getRanges()[0];
+
+                    $($(htmlTemplate)).insertAfter($(selectedRange['startContainer']['$']));// insert template
+                    editor.focus();// it updates model
+
+                    var editorHtmlBodyElement = $(selection['root']['$']);
+                    var recentlyAddedElement = editorHtmlBodyElement.find('.' + $scope.recentlyAddedTemplateClass);
+
+                    if (recentlyAddedElement.length > 0) {
+                        var cursorElements = editor.document.find('.' + $scope.recentlyAddedTemplateClass + ' .' + $scope.cursorClass).toArray();
+                        if (cursorElements.length > 0) {
+                            var range = editor.createRange();
+                            range.setStart(cursorElements[0], 0);
+                            range.setEnd(cursorElements[0], 0);
+                            selection.selectRanges([range]);
+                            range.select().scrollIntoView();
+                        }
+                        recentlyAddedElement.removeClass($scope.recentlyAddedTemplateClass);
+                    }
+                }
+
+                $scope.focusToCkeditor = function() {
+                    setTimeout(function() {
+                        var editor = $scope.getCkeditorInstance();
+                        var cursorElements = editor.document.find('.' + $scope.cursorClass).toArray();
+
+                        if (cursorElements.length > 0) {
+                            editor.focus();
+                            var range = editor.createRange();
+                            range.setStart(cursorElements[0], 0);
+                            range.setEnd(cursorElements[0], 0);
+                            range.select().scrollIntoView();
+                        } else {
+                            // TODO: replace this to config.startupFocus = true; now config doesn't work
+                            editor.focus();
+                        }
+                    }, 1600);
+                }
+
+                $scope.getTextareaElement = function() {
+                    return $($element).find('.see__editor');
+                }
+
+                $scope.initCkeditor = function() {
+                    var textareaElement = $scope.getTextareaElement()
+                    textareaElement.attr('name', $scope.getUniqueName());
+                    CRM.wysiwyg.create(textareaElement);
+                }
+
+                $scope.getUniqueName = function() {
+                    return 'email_body_scope_id_' + $scope['$id'];
+                }
+
+                $scope.initCkeditor();
+                $scope.focusToCkeditor();
             }
         };
-    })
+    });
+
+    angular.module(moduleName).directive("selectMailutilsTemplate", function() {
+        return {
+            restrict: "E",
+            template: '<input type="text" class="spc__input spc--single-select" />',
+            scope: {
+                supportCaseCategoryId: "<supportCaseCategoryId",
+                tokenContactId: "<tokenContactId",
+                insertTemplateToEditor: "<insertTemplateToEditor",
+            },
+            controller: function($scope, $element) {
+                var onSelect = function (e) {
+                    e.preventDefault();
+
+                    CRM.api3('SupportcaseManageCase', 'get_rendered_template', {
+                        "id": e.object.mailutils_template_id,
+                        "token_contact_id": $scope.tokenContactId,
+                    }).then(function(result) {
+                        if (result.is_error === 1) {
+                            CRM.status('Error via getting token value:' + result.error_message, 'error');
+                            console.error('SupportcaseManageCase->get_rendered_template error:');
+                            console.error(result.error_message);
+                        } else {
+                            $($element).select2('close').select2('val', '');
+                            $scope.insertTemplateToEditor(result['values']['rendered_text']);
+                        }
+                    }, function(error) {
+                        console.error('SupportcaseManageCase->get_rendered_template error:');
+                        console.error(error);
+                        CRM.status('Error via getting token value.', 'error');
+                    });
+                };
+
+                var loadTemplates = function() {
+                    CRM.api3('SupportcaseManageCase', 'get_prepared_mail_template_options', {
+                        "support_case_category_id": $scope.supportCaseCategoryId,
+                        "token_contact_id": $scope.tokenContactId,
+                    }).then(function(result) {
+                        if (result.is_error === 1) {
+                            console.error('SupportcaseManageCase->get_prepared_mail_template_options error:');
+                            console.error(result.error_message);
+                        } else {
+                            $($element).addClass('crm-action-menu fa-code').crmSelect2({
+                                width: "12em",
+                                dropdownAutoWidth: true,
+                                data: result['values'],
+                                placeholder: ts('Templates')
+                            });
+                            $($element).on('select2-selecting', function (e) {onSelect(e);});
+                        }
+                    }, function(error) {
+                        console.error('SupportcaseManageCase->get_prepared_mail_template_options error:');
+                        console.error(error);
+                    });
+                };
+
+                loadTemplates();
+            }
+        };
+    });
 
     angular.module(moduleName).directive("selectEmail", function() {
         return {

@@ -25,6 +25,8 @@ CKEDITOR.editorConfig = function( config ) {
 
   config.allowedContent = true;
 
+  config.startupFocus = true;
+
   config.forcePasteAsPlainText = true;
 
   config.disableNativeSpellChecker = false;

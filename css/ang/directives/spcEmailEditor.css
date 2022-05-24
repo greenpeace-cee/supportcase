@@ -1,0 +1,56 @@
+/*
+    Uses on spcEmailEditor directive
+    Prefix-alias: see  = spcEmailEditor
+*/
+
+.see__support-case-email-editor {
+    position: relative;
+    margin-bottom: 5px;
+}
+
+.see__support-case-email-editor .cke_contents {
+    height: 340px !important;
+}
+
+.see__support-case-email-editor input[type="file"] {
+    padding-left: 0;
+    margin: 5px 0 5px 0;
+}
+
+
+.see__support-case-email-editor .cke_combo .cke_combo_button:hover,
+.see__support-case-email-editor .cke_combo .cke_combo_button {
+    margin: 0 10px 0 10px !important;
+    padding: 0 !important;
+    background: white !important;
+    border: 1px solid #c2cfd8 !important;
+}
+
+.see__support-case-email-editor .cke .cke_combo_text {
+    border-color: #c2cfd8 !important;
+    color: #2786C2 !important;
+}
+
+.see__support-case-email-editor .cke_combo:first-child .cke_combo_button,
+.see__support-case-email-editor .cke_combo:first-child .cke_combo_button:hover {
+    margin-left: 0 !important;
+}
+
+.see__support-case-email-editor .cke_bottom.cke_reset_all  {
+    display: none !important;
+}
+
+.see__support-case-email-editor .cke, .crm-container .cke .cke_top, .crm-container .cke .cke_bottom {
+    background: #f5f5f5 !important;
+    border-color: #d3dee2 !important;
+}
+
+.see__templates {
+    position: absolute;
+    left: 540px;
+    top: 6px;
+}
+
+.see__templates > .select2-container > .select2-choice {
+    box-shadow: none !important;
+}
