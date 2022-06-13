@@ -247,7 +247,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
     $date = CRM_Utils_Date::customFormat($activity['activity_date_time']);
     $mailUtilsRenderedTemplate = CRM_Supportcase_Utils_Activity::getRenderedTemplateRelatedToActivity($activity['id']);
     $mailUtilsRenderedTemplate = CRM_Supportcase_Utils_SupportcaseTokenProcessor::handleTokens($mailUtilsRenderedTemplate, $fromEmailContactId);
-    $message = "{$mailUtilsRenderedTemplate}\n\n";
+    $message = "{$mailUtilsRenderedTemplate}";
     $addQuotes = TRUE;
     switch ($mode) {
       case CRM_Supportcase_Utils_Email::REPLY_MODE:
