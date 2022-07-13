@@ -1527,44 +1527,44 @@
                 $scope.insertTemplateToEditor = function(template) {
                     var editor = $scope.getCkeditorInstance();
                     var selection = editor.getSelection();
-                    var htmlTemplate = '<div class="' + $scope.recentlyAddedTemplateClass + '">' + template + '</div>';
-                    var selectedRange = selection.getRanges()[0];
-
-                    $($(htmlTemplate)).insertAfter($(selectedRange['startContainer']['$']));// insert template
-                    editor.focus();// it updates model
-
-                    var editorHtmlBodyElement = $(selection['root']['$']);
-                    var recentlyAddedElement = editorHtmlBodyElement.find('.' + $scope.recentlyAddedTemplateClass);
-
-                    if (recentlyAddedElement.length > 0) {
-                        var cursorElements = editor.document.find('.' + $scope.recentlyAddedTemplateClass + ' .' + $scope.cursorClass).toArray();
-                        if (cursorElements.length > 0) {
-                            var range = editor.createRange();
-                            range.setStart(cursorElements[0], 0);
-                            range.setEnd(cursorElements[0], 0);
-                            selection.selectRanges([range]);
-                            range.select().scrollIntoView();
-                        }
-                        recentlyAddedElement.removeClass($scope.recentlyAddedTemplateClass);
+                    editor.insertHtml(template, 'unfiltered_html');
+                    var cursorElements = editor.editable().find('.' + $scope.cursorClass).toArray();
+                    if (cursorElements.length > 0) {
+                      var range = editor.createRange();
+                      range.moveToElementEditStart(cursorElements[0]);
+                      range.select().scrollIntoView();
                     }
+                    // remove all cursor classes
+                    cursorElements.forEach(function(element) {
+                      element.removeClass($scope.cursorClass)
+                    });
                 }
 
                 $scope.focusToCkeditor = function() {
-                    setTimeout(function() {
-                        var editor = $scope.getCkeditorInstance();
-                        var cursorElements = editor.document.find('.' + $scope.cursorClass).toArray();
+                    function focusEditor() {
+                      var editor = $scope.getCkeditorInstance();
+                      if (editor === undefined || editor.document === undefined) {
+                        // CKEditor is still initialising
+                        setTimeout(focusEditor, 500);
+                        return;
+                      }
+                      var cursorElements = editor.document.find('.' + $scope.cursorClass).toArray();
 
-                        if (cursorElements.length > 0) {
-                            editor.focus();
-                            var range = editor.createRange();
-                            range.setStart(cursorElements[0], 0);
-                            range.setEnd(cursorElements[0], 0);
-                            range.select().scrollIntoView();
-                        } else {
-                            // TODO: replace this to config.startupFocus = true; now config doesn't work
-                            editor.focus();
-                        }
-                    }, 1600);
+                      if (cursorElements.length > 0) {
+                        editor.focus();
+                        var range = editor.createRange();
+                        range.moveToElementEditStart(cursorElements[0]);
+                        range.select().scrollIntoView();
+                      } else {
+                        // TODO: replace this to config.startupFocus = true; now config doesn't work
+                        editor.focus();
+                      }
+                      // remove all cursor classes
+                      cursorElements.forEach(function(element) {
+                        element.removeClass($scope.cursorClass)
+                      });
+                    }
+                    focusEditor();
                 }
 
                 $scope.getTextareaElement = function() {
