@@ -234,4 +234,20 @@ class CRM_Supportcase_Utils_Activity {
     }
   }
 
+  /**
+   * @param $activityId
+   * @return int|null
+   */
+  public static function getCaseId($activityId) {
+    try {
+      $case = civicrm_api3('Case', 'getsingle', [
+        'activity_id' => $activityId,
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      return null;
+    }
+
+    return (int) $case['id'];
+  }
+
 }

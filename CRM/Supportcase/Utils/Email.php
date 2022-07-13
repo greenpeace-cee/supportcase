@@ -33,6 +33,13 @@ class CRM_Supportcase_Utils_Email {
   const NEW_EMAIL_MODE = 'new';
 
   /**
+   * Draft email mode name
+   *
+   * @var string
+   */
+  const DRAFT_MODE = 'draft';
+
+  /**
    * @return array
    */
   public static function getModeOptions() {
@@ -41,6 +48,7 @@ class CRM_Supportcase_Utils_Email {
       self::REPLY_MODE => 'Reply mode',
       self::NEW_EMAIL_MODE => 'New email mode',
       self::REPLY_ALL_MODE => 'Reply all mode',
+      self::DRAFT_MODE => 'Draft mode',
     ];
   }
 

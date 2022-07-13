@@ -1,0 +1,78 @@
+<div class="com__email-editor-wrap"style="margin-bottom: 30px;">
+    <div class="com__email-editor-pre-loader" ng-if="isShowPreloader">
+        <div class="crm-container">
+            <div class="dataTables_processing"></div>
+        </div>
+    </div>
+
+    <div class="com__email-editor" ng-if="isShowEditorBlock">
+        <div class="com__email-top-block">
+            <div class="com__email-info-rows-wrap">
+                <div class="com__email-info-row">
+                    <div class="com__email-info-row-name">From:</div>
+                    <div class="com__email-info-row-value">
+                        <div>
+                            <select-email case-id="email.caseId" is-required="true" is-multiple="false" max-width="600" model="email.from"></select-email>
+                        </div>
+                    </div>
+                </div>
+                <div class="com__email-info-row">
+                    <div class="com__email-info-row-name">To:</div>
+                    <div class="com__email-info-row-value">
+                        <div>
+                            <select-email case-id="email.case_id" is-required="true" is-multiple="true" max-width="600" model="email.to"></select-email>
+                        </div>
+                    </div>
+                </div>
+                <div class="com__email-info-row">
+                    <div class="com__email-info-row-name">CC:</div>
+                    <div class="com__email-info-row-value">
+                        <div>
+                            <select-email case-id="email.case_id" is-required="false" is-multiple="true" max-width="600" model="email.cc"></select-email>
+                        </div>
+                    </div>
+                </div>
+                <div class="com__email-info-row">
+                    <div class="com__email-info-row-name">Subject:</div>
+                    <div class="com__email-info-row-value">
+                        <div class="com__edit-subject-input-wrap">
+                            <input class="spc__input spc--width-100-percent" ng-model="email.subject" type="text" ng-required="true">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="com__email-bottom-block">
+            <spc-email-editor support-case-category-id="email.caseCategoryId"
+                              token-contact-id="tokenContactId"
+                              email-body="email.body"
+            ></spc-email-editor>
+
+            <spc-attachment-uploader model="email.additionalAttachments" ></spc-attachment-uploader>
+
+            <div class="com__errors-wrap"></div>
+
+            <div class="com__message-buttons">
+                <button class="spc__button spc--height-medium" ng-click="sendDraft()">
+                    <span class="ui-button-icon ui-icon fa-paper-plane-o"></span>
+                    <span class="ui-button-icon-space"> </span>
+                    <span>Send</span>
+                </button>
+                <button class="spc__button spc--height-medium" ng-click="saveDraft()">
+                    <span class="ui-button-icon ui-icon fa-save"></span>
+                    <span class="ui-button-icon-space"> </span>
+                    <span>Save</span>
+                </button>
+                <button class="spc__button spc--height-medium button__cancel" ng-click="cancel()">
+                    <span ng-if="emailMode !== 'draft'">Cancel</span>
+                    <span ng-if="emailMode === 'draft'">Delete draft</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+

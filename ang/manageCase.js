@@ -59,11 +59,6 @@
                 $scope.errorMessage = apiCalls.caseInfoResponse.error_message;
             } else {
                 $scope.caseInfo = apiCalls.caseInfoResponse.values;
-
-                if (prefillEmailId['length'] > 0) {
-                    $scope.caseInfo['new_email_prefill_fields']['to_email_id'] = prefillEmailId;
-                }
-
                 $scope.caseInfo['dashboardSearchQfKey'] = dashboardSearchQfKey;
                 $scope.isCaseLocked = $scope.caseInfo['is_case_locked'] && !$scope.caseInfo['is_locked_by_self'];
             }
@@ -741,6 +736,8 @@
             controller: function($scope, $element, $sce, reloadService) {
                 $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
                 $scope.emailActivities = [];
+                $scope.draftEmailActivities = [];
+                $scope.isLoading = false;
                 $scope.availableModes = {
                     'view' : 'view',
                     'reply' : 'reply',
@@ -752,6 +749,8 @@
                 $scope.ts = CRM.ts();
 
                 $scope.getEmails = function(callback) {
+                    $scope.isLoading = true;
+
                     CRM.api3('SupportcaseManageCase', 'get_email_activities', {
                         "sequential": 1,
                         "case_id": $scope.model['case_id'],
@@ -762,22 +761,37 @@
                             CRM.status('Error via getting emails', 'error');
                         } else {
                             var emailActivities = [];
-                            for (var i = 0; i < result.values.length; i++) {
-                                emailActivities[i] = Object.assign({}, result.values[i]);
-                                emailActivities[i]['modes'][$scope.availableModes.view]['emailBodyResolved'] = $sce.trustAsHtml(result.values[i]['modes'][$scope.availableModes.view]['email_body']);
-                                emailActivities[i]['modes'][$scope.availableModes.forward]['additionalAttachments'] = {};
-                                emailActivities[i]['modes'][$scope.availableModes.reply]['additionalAttachments'] = {};
-                                emailActivities[i]['modes'][$scope.availableModes.reply_all]['additionalAttachments'] = {};
+                            var draftEmailActivities = [];
+                            var totalCount = 0;
+
+                            for (var i = 0; i < result.values[0].emails.length; i++) {
+                                emailActivities[i] = Object.assign({}, result.values[0].emails[i]);
+                                emailActivities[i]['modes'][$scope.availableModes.view]['emailBodyResolved'] = $sce.trustAsHtml(result.values[0].emails[i]['modes'][$scope.availableModes.view]['email_body']);
+                            }
+
+                            for (var j = 0; j < result.values[0].drafts.length; j++) {
+                                draftEmailActivities[j] = Object.assign({}, result.values[0].drafts[j]);
+                                draftEmailActivities[j]['emailBodyResolved'] = $sce.trustAsHtml(result.values[0].drafts[j]['email_body']);
                             }
 
                             if (emailActivities.length > 0) {
+                                totalCount += emailActivities.length;
+                            }
+
+                            if (draftEmailActivities.length > 0) {
+                                totalCount += draftEmailActivities.length;
+                            }
+
+                            if (totalCount > 0) {
                                 $scope.model.openMainAccordion();
-                                $scope.model.count = emailActivities.length;
+                                $scope.model.count = totalCount;
                             }
 
                             $scope.emailActivities = emailActivities;
+                            $scope.draftEmailActivities = draftEmailActivities;
+                            $scope.isLoading = false;
+
                             $scope.$apply();
-                            $scope.handleEmailCollapsing();
                             if (callback !== undefined) {
                                 callback();
                             }
@@ -831,108 +845,6 @@
                     }, 500);
                 };
 
-                $scope.prepareEmailSendData = function(activity) {
-                    var emailData = activity['modes'][activity.current_mode];
-                    var files = $scope.getFiles(activity['id'], activity.current_mode);
-                    var data = {};
-
-                    if (activity.current_mode === $scope.availableModes.forward) {
-                        var forwardFileIds = [];
-                        for (var j = 0; j < emailData['attachments'].length; j++) {
-                            if (emailData['attachments'][j]['isAdded'] === true) {
-                                forwardFileIds.push(emailData['attachments'][j]['file_id']);
-                            }
-                        }
-                        data['forward_file_ids'] = forwardFileIds;
-                    }
-
-                    if (files['files'] !== undefined && files['files']['length'] > emailData['attachmentsLimit']) {
-                        $scope.isEmailSending = false;
-                        $scope.showError('To match attachments. Maximum is ' + emailData['attachmentsLimit'] + '.', activity['id'], activity.current_mode);
-                        return;
-                    }
-
-                    data['case_id'] = $scope.model['case_id'];
-                    data['subject'] = emailData['subject'];
-                    data['mode'] = activity.current_mode;
-                    data['email_activity_id'] = activity['id'];
-                    data['body'] = emailData['email_body'];
-                    data['to_email_id'] = emailData['emails']['to'];
-                    data['from_email_id'] = emailData['emails']['from'];
-                    data['cc_email_ids'] = emailData['emails']['cc'];
-                    data['attachments'] = files['dataFiles'];
-
-                    var formData = new FormData();
-                    if (files['files'] !== undefined) {
-                        for (var i = 0; i < files['files']['length']; i++) {
-                            formData.append('attachments[]', files['files'][i]);
-                        }
-                    }
-
-                    formData.append('entity', 'SupportcaseManageCase');
-                    formData.append('action', 'send_email');
-                    formData.append('json', JSON.stringify(data));
-
-                    return formData;
-                }
-
-                $scope.send = function(activity) {
-                    if ($scope.isEmailSending) {
-                        console.error('Email is sending');
-                        $scope.showError('Email is sending', activity['id'], activity.current_mode);
-                        return;
-                    }
-                    $scope.isEmailSending = true;
-
-                    if (!(activity.current_mode === $scope.availableModes.reply
-                        || activity.current_mode === $scope.availableModes.forward
-                        || activity.current_mode === $scope.availableModes.reply_all
-                    )) {
-                        console.error('Unknown mode');
-                        $scope.isEmailSending = false;
-                        return;
-                    }
-
-                    var data = $scope.prepareEmailSendData(activity);
-                    $.ajax({
-                        url : CRM.url('civicrm/ajax/rest'),
-                        type : 'POST',
-                        data : data,
-                        processData: false,  // tell jQuery not to process the data
-                        contentType: false,  // tell jQuery not to set contentType
-                        success : function(response) {
-                            if (typeof response === 'string') {
-                                console.error('Error sending email:');
-                                console.error('Error parsing response.');
-                                $scope.showError('Error sending email: Error parsing response.', activity['id'], activity.current_mode);
-                                $scope.isEmailSending = false;
-                                return;
-                            }
-
-                            if (response['is_error'] === 0) {
-                                CRM.status('Email is sent!');
-                                var emailActivity = response['values']['activity_id'];
-                                $scope.getEmails(function () {
-                                    $scope.highlightActivity(emailActivity);
-                                    $scope.scrollToActivity(emailActivity);
-                                });
-                            } else {
-                                console.error('Error sending email:');
-                                console.error(response['error_message']);
-                                $scope.showError(response['error_message'], activity['id'], activity.current_mode);
-                            }
-                            $scope.isEmailSending = false;
-                        },
-                        error: function(data){
-                            var message = 'Error sending email: Server error.'
-                            console.error('Error sending email: Server error.');
-                            console.error(data);
-                            $scope.showError(message, activity['id'], activity.current_mode);
-                            $scope.isEmailSending = false;
-                        }
-                    });
-                };
-
                 $scope.showError = function(errorMessage, activityId, mode) {
                     $scope.cleanErrors(activityId, mode);
                     $scope.getActivityElement(activityId).find('.com__errors-wrap.com__errors-mode-' + mode).append('<div class="crm-error">' + errorMessage + '</div>');
@@ -944,10 +856,6 @@
 
                 $scope.toggleHeight = function(emailActivityId) {
                     CRM.$($element).find('.com__email-activity[data-activity-id="' + emailActivityId + '"]').toggleClass('com--full-height');
-                };
-
-                $scope.handleEmailCollapsing = function() {
-                    CRM.$($element).find('.com__email-activity-accordion:not(:first)').addClass('spc--collapsed');
                 };
 
                 $scope.getFiles = function(activityId, mode) {
@@ -1000,145 +908,12 @@
             scope: {model: "="},
             controller: function($scope, $element) {
                 $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
-                $scope.reloadEmailList = $scope.$parent.getEmails;
+                $scope.getEmails = $scope.$parent.getEmails;
                 $scope.isShowSendEmailWindow = false;
-                $scope.isEmailSending = false;
                 $scope.ts = CRM.ts();
-                $scope.emailData = {
-                    'case_id': $scope.model['case_id'],
-                    'subject': $scope.model['new_email_prefill_fields']['subject'],
-                    'from_email_id': $scope.model['new_email_prefill_fields']['from_email_id'],
-                    'to_email_id': $scope.model['new_email_prefill_fields']['to_email_id'],
-                    'cc_email_ids': $scope.model['new_email_prefill_fields']['cc_email_ids'],
-                    'body': $scope.model['new_email_prefill_fields']['email_body'],
-                    'case_category_id': $scope.model['new_email_prefill_fields']['case_category_id'],
-                    'token_contact_id': $scope.model['new_email_prefill_fields']['token_contact_id'],
-                    'mode': 'new',
-                    'attachments': [],
-                };
-
-                $scope.refreshPrefillData = function() {
-                    $scope.emailData['subject'] = $scope.model['new_email_prefill_fields']['subject'];
-                    $scope.emailData['from_email_id'] = $scope.model['new_email_prefill_fields']['from_email_id'];
-                    $scope.emailData['to_email_id'] = $scope.model['new_email_prefill_fields']['to_email_id'];
-                    $scope.emailData['cc_email_ids'] = $scope.model['new_email_prefill_fields']['cc_email_ids'];
-                    $scope.emailData['body'] = $scope.model['new_email_prefill_fields']['email_body'];
-                    $scope.emailData['case_category_id'] = $scope.model['new_email_prefill_fields']['case_category_id'];
-                };
 
                 $scope.toggleSendEmailWindow = function() {
-                    $scope.refreshPrefillData();
                     $scope.isShowSendEmailWindow = !$scope.isShowSendEmailWindow;
-                };
-
-                $scope.showError = function(errorMessage) {
-                    $scope.cleanErrors();
-                    CRM.$($element).find('.com__errors-wrap').append('<div class="crm-error">' + errorMessage + '</div>');
-                };
-
-                $scope.cleanErrors = function() {
-                    CRM.$($element).find('.com__errors-wrap').empty();
-                };
-
-                $scope.send = function() {
-                    if ($scope.isEmailSending) {
-                        console.error('Email is sending');
-                        $scope.showError('Email is sending');
-                        return;
-                    }
-                    $scope.isEmailSending = true;
-
-                    var formData = new FormData();
-                    var files = $scope.getFiles();
-                    var data = {};
-                    data['case_id'] = $scope.emailData['case_id'];
-                    data['subject'] = $scope.emailData['subject'];
-                    data['body'] = $scope.emailData['body'];
-                    data['mode'] = 'new';
-                    data['to_email_id'] = $scope.emailData['to_email_id'];
-                    data['from_email_id'] = $scope.emailData['from_email_id'];
-                    data['cc_email_ids'] = $scope.emailData['cc_email_ids'];
-
-                    if (files['files'] !== undefined) {
-                        for (var i = 0; i < files['files']['length']; i++) {
-                            formData.append('attachments[]', files['files'][i]);
-                        }
-                    }
-
-                    formData.append('entity', 'SupportcaseManageCase');
-                    formData.append('action', 'send_email');
-                    formData.append('json', JSON.stringify(data));
-
-                    $.ajax({
-                        url : CRM.url('civicrm/ajax/rest'),
-                        type : 'POST',
-                        data : formData,
-                        processData: false,  // tell jQuery not to process the data
-                        contentType: false,  // tell jQuery not to set contentType
-                        success : function(response) {
-                            if (typeof response === 'string') {
-                                console.error('Error sending email:');
-                                console.error('Error parsing response.');
-                                $scope.showError('Error sending email: Error parsing response.');
-                                $scope.isEmailSending = false;
-                                return;
-                            }
-
-                            if (response['is_error'] === 0) {
-                                CRM.status('Email is sent!');
-                                $scope.toggleSendEmailWindow();
-                                $scope.reloadEmailList();
-                                $scope.$apply();
-                            } else {
-                                console.error('Error sending email:');
-                                console.error(response['error_message']);
-                                $scope.showError(response['error_message']);
-                            }
-                            $scope.isEmailSending = false;
-                        },
-                        error: function(data){
-                            var message = 'Error sending email: Server error.'
-                            console.error('Error sending email: Server error.');
-                            console.error(data);
-                            $scope.showError(message);
-                            $scope.isEmailSending = false;
-                        }
-                    });
-                };
-
-                $scope.getFiles = function() {
-                    var preparedData = {
-                        'files' : [],
-                        'dataFiles' : [],
-                    }
-
-                    if ($scope.emailData['attachments'] === undefined) {
-                        return preparedData;
-                    }
-
-                    if ($scope.emailData['attachments']['uploader'] === undefined) {
-                        return preparedData;
-                    }
-
-                    if ($scope.emailData['attachments']['uploader']['queue'] === undefined) {
-                        return preparedData;
-                    }
-
-                    var queueFiles = $scope.emailData['attachments']['uploader']['queue'];
-
-                    if (!(queueFiles['length'] > 0)) {
-                        return preparedData;
-                    }
-
-                    for (var i = 0; queueFiles['length'] > i; i++ ) {
-                        preparedData.files.push(queueFiles[i]['_file']);
-                        preparedData.dataFiles.push({
-                            'name' : queueFiles[i]['_file']['name'],
-                            'description' : queueFiles[i]['crmData']['description']
-                        });
-                    }
-
-                    return preparedData;
                 };
             }
         };
@@ -1228,6 +1003,7 @@
                 };
                 $scope.email  = {
                     'count' : 0,
+                    'draft_count' : 0,
                     'case_id' : $scope.model['id'],
                     'openMainAccordion' : $scope.openMainAccordion,
                     'new_email_prefill_fields' : $scope.model['new_email_prefill_fields'],
@@ -1728,6 +1504,9 @@
                 emailBody: "=",
             },
             controller: function($scope, $element) {
+                console.log('spcEmailEditor');
+                console.log('$scope');
+                console.log($scope);
                 $scope.recentlyAddedTemplateClass = 'spc__recently-added-template';
                 $scope.cursorClass = 'spc__editor-cursor';
 
@@ -2263,6 +2042,248 @@
                     mainElement.empty();
                     mainElement.append('<iframe class="com__iframe-origin" sandbox="allow-popups allow-popups-to-escape-sandbox" src="' + iframeUrl + '"></iframe>');
                 };
+            }
+        };
+    });
+
+    angular.module(moduleName).directive("emailEditor", function() {
+        return {
+            restrict: "E",
+            templateUrl: "~/manageCase/directives/communication/emailEditor.html",
+            scope: {
+                fromActivityId: "<fromActivityId",
+                caseId: "<caseId",
+                emailMode: "<emailMode",
+                mailutilsMessageId: "<mailutilsMessageId",
+                reloadEmailList: "<reloadEmailList",
+            },
+            controller: function($scope, $element, $timeout) {
+                $scope.isShowPreloader = false;
+                $scope.isShowEditorBlock = false;
+                $scope.autoSaveTimer = null;
+                $scope.draftReturnFields = [
+                    'head_icon',
+                    'subject',
+                    'activity_id',
+                    'date_time',
+                    'case_id',
+                    'mailutils_message_id',
+                    'from_email_ids',
+                    'to_email_ids',
+                    'cc_email_ids',
+                    'email_body',
+                    'case_category_id',
+                    'token_contact_id',
+                    'email_auto_save_interval_time',
+                ];
+
+                this.$onInit = function() {
+                    if ($scope.emailMode === 'draft') {
+                        $scope.loadDraft();
+                    } else {
+                        $scope.createDraft();
+                    }
+                };
+
+                $scope.createDraft = function() {
+                    $scope.showPreloader();
+
+                    CRM.api3('SupportcaseDraftEmail', 'create', {
+                        "case_id": $scope.caseId,
+                        "mode": $scope.emailMode,
+                        "from_activity_id": $scope.fromActivityId,
+                        "return": $scope.draftReturnFields
+                    }).then(function(result) {
+                        if (result.is_error === 1) {
+                            $scope.handleApiError(result, 'SupportcaseDraftEmail', 'create');
+                            return;
+                        }
+                        $scope.email = $scope.prepareEmail(result.values.data);
+                        $scope.emailOnSever = Object.assign({}, $scope.email);
+                        $scope.mailutilsMessageId = result.values.data.mailutils_message_id;
+                        $scope.hidePreloader();
+                        $scope.isShowEditorBlock = true;
+                        $scope.$apply();
+                        $scope.startAutoSaving();
+                    }, $scope.handleServerApiError);
+                }
+
+                $scope.loadDraft = function() {
+                    $scope.showPreloader();
+
+                    CRM.api3('SupportcaseDraftEmail', 'get', {
+                        "mailutils_message_id": $scope.mailutilsMessageId,
+                        "return": $scope.draftReturnFields
+                    }).then(function(result) {
+                        if (result.is_error === 1) {
+                            $scope.handleApiError(result, 'SupportcaseDraftEmail', 'get');
+                            return;
+                        }
+
+                        $scope.email = $scope.prepareEmail(result.values);
+                        $scope.emailOnSever = Object.assign({}, $scope.email);
+                        $scope.mailutilsMessageId = result.values.mailutils_message_id;
+                        $scope.hidePreloader();
+                        $scope.isShowEditorBlock = true;
+                        $scope.$apply();
+                        $scope.startAutoSaving();
+                    }, $scope.handleServerApiError);
+                }
+
+                $scope.deleteDraft = function() {
+                    $scope.showPreloader();
+
+                    CRM.api3('SupportcaseDraftEmail', 'delete_draft', {
+                        "mailutils_message_id": $scope.mailutilsMessageId
+                    }).then(function(result) {
+                        if (result.is_error === 1) {
+                            $scope.handleApiError(result, 'SupportcaseDraftEmail', 'delete_draft');
+                            return;
+                        }
+
+                        $scope.reloadEmailList();
+                        $scope.hidePreloader();
+                        $scope.isShowEditorBlock = false;
+                        $scope.$apply();
+                    }, $scope.handleServerApiError);
+                }
+
+                $scope.sendDraft = function() {
+                    CRM.api3('SupportcaseDraftEmail', 'send', {
+                        "mailutils_message_id": $scope.mailutilsMessageId
+                    }).then(function(result) {
+                        if (result.is_error === 1) {
+                            $scope.handleApiError(result, 'SupportcaseDraftEmail', 'send');
+                            return;
+                        }
+
+                        $scope.reloadEmailList();
+                        $scope.hidePreloader();
+                        $scope.isShowEditorBlock = false;
+                        $scope.$apply();
+                    }, $scope.handleServerApiError);
+                }
+
+                $scope.saveDraft = function() {
+                    var updateParams = {
+                        "mailutils_message_id": $scope.mailutilsMessageId,
+                        "return": $scope.draftReturnFields
+                    };
+                    var isNeedToUpdate = false;
+
+                    // when field is empty it has undefined value, but to correct compare need to convert to '' value
+                    if ($scope.email.from === undefined) {$scope.email.from = '';}
+                    if ($scope.email.to === undefined) {$scope.email.to = '';}
+                    if ($scope.email.cc === undefined) {$scope.email.cc = '';}
+
+                    if ($scope.emailOnSever.subject !== $scope.email.subject) {
+                        updateParams['subject'] = $scope.email.subject;
+                        isNeedToUpdate = true;
+                    }
+
+                    if ($scope.emailOnSever.body !== $scope.email.body) {
+                        updateParams['body'] = $scope.email.body;
+                        isNeedToUpdate = true;
+                    }
+
+                    if ($scope.emailOnSever.from !== $scope.email.from) {
+                        updateParams['from_email_ids'] = $scope.email.from;
+                        isNeedToUpdate = true;
+                    }
+
+                    if ($scope.emailOnSever.cc !== $scope.email.cc) {
+                        updateParams['cc_email_ids'] = $scope.email.cc;
+                        isNeedToUpdate = true;
+                    }
+
+                    if ($scope.emailOnSever.to !== $scope.email.to) {
+                        updateParams['to_email_ids'] = $scope.email.to;
+                        isNeedToUpdate = true;
+                    }
+
+                    if (!isNeedToUpdate) {
+                        console.info('No new changes. Email is already saved. MailutilsMessageId: ' + $scope.mailutilsMessageId);
+                        CRM.status(ts('No new changes. Email is already saved.'));
+                        $scope.startAutoSaving();
+                        return;
+                    }
+
+                    console.log('start updating mailutilsMessageId  ' + $scope.mailutilsMessageId);
+                    console.log('updateParams:');
+                    console.log(updateParams);
+
+                    $scope.showPreloader();
+                    CRM.api3('SupportcaseDraftEmail', 'update_draft', updateParams).then(function(result) {
+                        if (result.is_error === 1) {
+                            $scope.handleApiError(result, 'SupportcaseDraftEmail', 'update_draft');
+                            return;
+                        }
+
+                        $scope.hidePreloader();
+                        $scope.isShowEditorBlock = true;
+                        $scope.emailOnSever = $scope.prepareEmail(result.values.data);
+                        $scope.$apply();
+                        console.info('Email has saved. MailutilsMessageId: ' + $scope.mailutilsMessageId);
+                        CRM.status(ts('Email saved.'));
+                        $scope.startAutoSaving();
+                    }, $scope.handleServerApiError);
+                }
+
+                $scope.cancel = function() {
+                    $scope.deleteDraft();
+                }
+
+                $scope.startAutoSaving = function() {
+                    $timeout.cancel($scope.autoSaveTimer);
+                    $scope.autoSaveTimer = $timeout(function () {
+                        $scope.saveDraft()
+                    }, $scope.getEmailAutoSaveIntervalTime());
+                }
+
+                $scope.prepareEmail = function(email) {
+                    return {
+                        'from': email.from_email_ids,
+                        'to': email.to_email_ids,
+                        'cc': email.cc_email_ids,
+                        'subject': email.subject,
+                        'body' : email.email_body,
+                        'caseId' : $scope.caseId,
+                        'caseCategoryId' : email.case_category_id,
+                        'tokenContactId' : email.token_contact_id,
+                        'emailAutoSaveIntervalTime' : email.email_auto_save_interval_time,
+                        'additionalAttachments' : [],//TODO
+                    };
+                }
+
+                $scope.showPreloader = function() {
+                    $scope.isShowPreloader = true;
+                }
+
+                $scope.hidePreloader = function() {
+                    $scope.isShowPreloader = false;
+                }
+
+                $scope.handleServerApiError = function(error) {
+                    console.error('Server error!');
+                    console.error(error);
+                    CRM.status('Server error!', 'error');
+                }
+
+                $scope.handleApiError = function(result, entity, action) {
+                    CRM.status('API error: ' + result.error_message, 'error');
+                    console.error(entity + '->' + action + ' error:');
+                    console.error(result.error_message);
+                }
+
+                $scope.getEmailAutoSaveIntervalTime = function() {
+                    var interval = 10000;
+
+                    if ($scope['email']['emailAutoSaveIntervalTime'] !== undefined) {
+                        interval = 1000 * $scope['email']['emailAutoSaveIntervalTime'];
+                    }
+
+                    return interval;
+                }
             }
         };
     });

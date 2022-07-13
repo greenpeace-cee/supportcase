@@ -129,6 +129,14 @@ class CRM_Supportcase_Utils_Setting {
   }
 
   /**
+   * Time(in second).
+   * It is interval of auto save email at manage case page
+   */
+  public static function getEmailAutoSaveIntervalTime(): int {
+    return 10;// value in second
+  }
+
+  /**
    * This message will show when case is locked by self
    */
   public static function getLockedCaseBySelfMessage() {

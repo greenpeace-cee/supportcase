@@ -10,6 +10,29 @@ class CRM_Supportcase_Utils_PartyType {
   private static $partyTypesCache = null;
 
   /**
+   * Mailutils message party types
+   *
+   * @var string
+   */
+  const FROM = 'from';
+  const TO = 'to';
+  const CC = 'cc';
+  const BCC = 'bcc';
+
+  /**
+   * @param $partyType
+   * @return bool
+   */
+  public static function isExistPartyType($partyType): bool {
+    return in_array($partyType, [
+      CRM_Supportcase_Utils_PartyType::FROM,
+      CRM_Supportcase_Utils_PartyType::TO,
+      CRM_Supportcase_Utils_PartyType::CC,
+      CRM_Supportcase_Utils_PartyType::BCC,
+    ]);
+  }
+
+  /**
    * @return array
    */
   public static function getAvailablePartyTypes() {
@@ -40,28 +63,28 @@ class CRM_Supportcase_Utils_PartyType {
    * @return array|false
    */
   public static function getFromPartyTypeId() {
-    return self::getPartyTypeIdByName('from');
+    return self::getPartyTypeIdByName(CRM_Supportcase_Utils_PartyType::FROM);
   }
 
   /**
    * @return array|false
    */
   public static function getToPartyTypeId() {
-    return self::getPartyTypeIdByName('to');
+    return self::getPartyTypeIdByName(CRM_Supportcase_Utils_PartyType::TO);
   }
 
   /**
    * @return array|false
    */
   public static function getCcPartyTypeId() {
-    return self::getPartyTypeIdByName('cc');
+    return self::getPartyTypeIdByName(CRM_Supportcase_Utils_PartyType::CC);
   }
 
   /**
    * @return array|false
    */
   public static function getBccPartyTypeId() {
-    return self::getPartyTypeIdByName('bcc');
+    return self::getPartyTypeIdByName(CRM_Supportcase_Utils_PartyType::BCC);
   }
 
 }

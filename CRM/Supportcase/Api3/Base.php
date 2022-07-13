@@ -37,4 +37,20 @@ class CRM_Supportcase_Api3_Base {
     return [];
   }
 
+  /**
+   * @param $params
+   * @return string[]
+   */
+  protected function getReturnFields($params): array {
+    $returnFields = ['id'];
+
+    if (is_array($params)) {
+      foreach ($params['return'] as $fieldName) {
+        $returnFields[] = $fieldName;
+      }
+    }
+
+    return $returnFields;
+  }
+
 }

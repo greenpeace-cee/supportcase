@@ -1,374 +1,228 @@
-<div ng-if="emailActivities.length > 0">
+<div ng-if="emailActivities.length > 0 || draftEmailActivities.length > 0">
     <div class="spc__accordion spc--white-header spc--header-with-arrows">
         <div class="spc__accordion-body spc--padding-right-20 spc--padding-left-20">
-            <div data-activity-id="{{activity.id}}" ng-repeat="activity in emailActivities"
-                 class="com__email-activity crm-accordion-wrapper spc__accordion spc--header-white spc--size-little">
-                <ng-form name="activityEmailForm">
+            <div ng-if="isLoading" class="com__list-emails-loading-block">Loading...</div>
+            <div ng-if="!isLoading">
+                <div data-activity-id="{{draftActivity.activity_id}}" ng-repeat="draftActivity in draftEmailActivities" ng-class="{'spc--collapsed' : draftActivity['is_collapsed'] === '1'}">
                     <div spc-accordion class="com__email-activity-accordion spc__accordion spc--white-header">
-                        <div class="spc__accordion-header">
-                            <div class="com__email-item-accordion-head">
-                                <div class="com__email-item-accordion-head-from-email">
-                                    <span ng-if="activity.modes.view.head_icon !== ''" class="com__email-item-accordion-head-from-email-ico ui-icon {{activity.modes.view.head_icon}}"></span>
-                                    <div>From: {{activity.modes.view.from_contact_email_label}}<span ng-if="activity.modes.view.author"> by {{activity.modes.view.author}}</span></div>
+                            <div class="spc__accordion-header">
+                                <div class="com__email-item-accordion-head">
+                                    <div class="com__email-item-accordion-head-from-email">
+                                        <span ng-if="draftActivity.head_icon !== ''" class="com__email-item-accordion-head-from-email-ico ui-icon {{draftActivity.head_icon}}"></span>
+                                        <div class="com__draft-email-title">
+                                            <span>Draft message</span>
+                                            <span class="com__draft-email-title-subject-wrap" ng-if="draftActivity.subject.length > 0">
+                                                <span>"</span>
+                                                <span class="com__draft-email-title-subject">{{draftActivity.subject}}</span>
+                                                <span>"</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div>{{formatDateAndTime(draftActivity.date_time, true)}}</div>
                                 </div>
-                                <div>{{formatDateAndTime(activity.modes.view.date_time, true)}}</div>
+                            </div>
+                            <div class="spc__accordion-body">
+                                <div class="spc__accordion-body-wrap spc--padding-right-20">
+                                    <email-editor email-mode="'draft'"
+                                                  mailutils-message-id="draftActivity.mailutils_message_id"
+                                                  reload-email-list="getEmails"
+                                                  case-id="model.case_id">
+                                    </email-editor>
+                                </div>
                             </div>
                         </div>
-                        <div class="spc__accordion-body">
-                            <div class="spc__accordion-body-wrap spc--padding-right-20">
+                </div>
 
-                                <!-- view mode-->
-                                <div class="com__email-view-mode" ng-if="activity.current_mode === availableModes.view" >
-                                    <div class="com__email-block">
-                                        <div class="com__email-top-block">
-                                            <div class="com__email-view-info-rows-wrap">
-                                                <div class="com__email-info-rows-wrap">
-                                                    <div class="com__email-info-row">
-                                                        <div class="com__email-info-row-name">From:</div>
-                                                        <div class="com__email-info-row-value">
-                                                            <div class="com__contact-email-wrap">
-                                                                <a title="go to the contact '{{emailData.contact_display_name}}'" href="{{emailData.contact_link}}" target="_blank" class="com__contact-email-item" ng-repeat="emailData in activity.modes.view.from_contact_data_emails">
-                                                                    <span class="com__contact-email-item-icon {{emailData.icon}}"></span>
-                                                                    <span class="com__contact-email-item-label">{{emailData.label}}</span>
-                                                                </a>
+                <div data-activity-id="{{activity.id}}" ng-repeat="activity in emailActivities"
+                     class="com__email-activity crm-accordion-wrapper spc__accordion spc--header-white spc--size-little"
+                     ng-class="{'spc--collapsed' : activity['is_collapsed'] === '1'}">
+                    <ng-form name="activityEmailForm">
+                        <div spc-accordion class="com__email-activity-accordion spc__accordion spc--white-header">
+                            <div class="spc__accordion-header">
+                                <div class="com__email-item-accordion-head">
+                                    <div class="com__email-item-accordion-head-from-email">
+                                        <span ng-if="activity.modes.view.head_icon !== ''" class="com__email-item-accordion-head-from-email-ico ui-icon {{activity.modes.view.head_icon}}"></span>
+                                        <div>From: {{activity.modes.view.from_contact_email_label}}<span ng-if="activity.modes.view.author"> by {{activity.modes.view.author}}</span></div>
+                                    </div>
+                                    <div>{{formatDateAndTime(activity.modes.view.date_time, true)}}</div>
+                                </div>
+                            </div>
+                            <div class="spc__accordion-body">
+                                <div class="spc__accordion-body-wrap spc--padding-right-20">
+
+                                    <!-- view mode-->
+                                    <div class="com__email-view-mode" ng-if="activity.current_mode === availableModes.view" >
+                                        <div class="com__email-block">
+                                            <div class="com__email-top-block">
+                                                <div class="com__email-view-info-rows-wrap">
+                                                    <div class="com__email-info-rows-wrap">
+                                                        <div class="com__email-info-row">
+                                                            <div class="com__email-info-row-name">From:</div>
+                                                            <div class="com__email-info-row-value">
+                                                                <div class="com__contact-email-wrap">
+                                                                    <a title="go to the contact '{{emailData.contact_display_name}}'" href="{{emailData.contact_link}}" target="_blank" class="com__contact-email-item" ng-repeat="emailData in activity.modes.view.from_contact_data_emails">
+                                                                        <span class="com__contact-email-item-icon {{emailData.icon}}"></span>
+                                                                        <span class="com__contact-email-item-label">{{emailData.label}}</span>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="com__email-info-row">
+                                                            <div class="com__email-info-row-name">To:</div>
+                                                            <div class="com__email-info-row-value">
+                                                                <div class="com__contact-email-wrap">
+                                                                    <a title="go to the contact '{{emailData.contact_display_name}}'" href="{{emailData.contact_link}}" target="_blank" class="com__contact-email-item" ng-repeat="emailData in activity.modes.view.to_contact_data_emails">
+                                                                        <span class="com__contact-email-item-icon {{emailData.icon}}"></span>
+                                                                        <span class="com__contact-email-item-label">{{emailData.label}}</span>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="com__email-info-row">
+                                                            <div class="com__email-info-row-name">CC:</div>
+                                                            <div class="com__email-info-row-value">
+                                                                <div class="com__contact-email-wrap">
+                                                                    <a title="go to the contact '{{emailData.contact_display_name}}'" href="{{emailData.contact_link}}" target="_blank" class="com__contact-email-item" ng-repeat="emailData in activity.modes.view.cc_contact_data_emails">
+                                                                        <span class="com__contact-email-item-icon {{emailData.icon}}"></span>
+                                                                        <span class="com__contact-email-item-label">{{emailData.label}}</span>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="com__email-info-row">
+                                                            <div class="com__email-info-row-name">Subject:</div>
+                                                            <div class="com__email-info-row-value">{{activity.modes.view.subject}}</div>
+                                                        </div>
+                                                        <div class="com__email-info-row" ng-if="activity.modes.view.attachments['length'] > 0">
+                                                            <div class="com__email-info-row-name">Attachments:</div>
+                                                            <div class="com__email-info-row-value">
+                                                                <spc-attachment is-attachments-can-be-selected="false" model="activity.modes.view.attachments"></spc-attachment>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="com__email-info-row">
-                                                        <div class="com__email-info-row-name">To:</div>
-                                                        <div class="com__email-info-row-value">
-                                                            <div class="com__contact-email-wrap">
-                                                                <a title="go to the contact '{{emailData.contact_display_name}}'" href="{{emailData.contact_link}}" target="_blank" class="com__contact-email-item" ng-repeat="emailData in activity.modes.view.to_contact_data_emails">
-                                                                    <span class="com__contact-email-item-icon {{emailData.icon}}"></span>
-                                                                    <span class="com__contact-email-item-label">{{emailData.label}}</span>
-                                                                </a>
-                                                            </div>
+                                                    <div class="com__email-info-panel-wrap">
+                                                        <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="switchToMode(availableModes.reply, activity.id)">
+                                                          <span class="ui-button-icon ui-icon fa-reply"></span>
+                                                          <span class="ui-button-icon-space"> </span>
+                                                          <span>Reply</span>
+                                                        </button>
+                                                        <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="switchToMode(availableModes.reply_all, activity.id)">
+                                                            <span class="ui-button-icon ui-icon fa-reply-all"></span>
+                                                            <span class="ui-button-icon-space"> </span>
+                                                            <span>Reply All</span>
+                                                        </button>
+                                                        <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="switchToMode(availableModes.forward, activity.id)">
+                                                            <span class="ui-button-icon ui-icon fa-share"></span>
+                                                            <span class="ui-button-icon-space"> </span>
+                                                            <span>Forward</span>
+                                                        </button>
+                                                        <div class="com__message-toggle-height-to-full">
+                                                            <button class=" spc__button spc--height-little spc--bg-white-bordered" ng-click="toggleHeight(activity.id)">
+                                                                <span class="ui-button-icon ui-icon fa-expand"></span>
+                                                                <span class="ui-button-icon-space"> </span>
+                                                                <span>Expand Message</span>
+                                                            </button>
                                                         </div>
-                                                    </div>
-                                                    <div class="com__email-info-row">
-                                                        <div class="com__email-info-row-name">CC:</div>
-                                                        <div class="com__email-info-row-value">
-                                                            <div class="com__contact-email-wrap">
-                                                                <a title="go to the contact '{{emailData.contact_display_name}}'" href="{{emailData.contact_link}}" target="_blank" class="com__contact-email-item" ng-repeat="emailData in activity.modes.view.cc_contact_data_emails">
-                                                                    <span class="com__contact-email-item-icon {{emailData.icon}}"></span>
-                                                                    <span class="com__contact-email-item-label">{{emailData.label}}</span>
-                                                                </a>
-                                                            </div>
+                                                        <div class="com__message-toggle-height-to-part">
+                                                            <button class=" spc__button spc--height-little spc--bg-white-bordered" ng-click="toggleHeight(activity.id)">
+                                                                <span class="ui-button-icon ui-icon fa-compress"></span>
+                                                                <span class="ui-button-icon-space"> </span>
+                                                                <span>Collapse Message</span>
+                                                            </button>
                                                         </div>
-                                                    </div>
-                                                    <div class="com__email-info-row">
-                                                        <div class="com__email-info-row-name">Subject:</div>
-                                                        <div class="com__email-info-row-value">{{activity.modes.view.subject}}</div>
-                                                    </div>
-                                                    <div class="com__email-info-row" ng-if="activity.modes.view.attachments['length'] > 0">
-                                                        <div class="com__email-info-row-name">Attachments:</div>
-                                                        <div class="com__email-info-row-value">
-                                                            <spc-attachment is-attachments-can-be-selected="false" model="activity.modes.view.attachments"></spc-attachment>
-                                                        </div>
+                                                        <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="switchToMode(availableModes.origin, activity.id)">
+                                                            <span class="ui-button-icon ui-icon fa-envelope-o"></span>
+                                                            <span class="ui-button-icon-space"> </span>
+                                                            <span>Show Original Email</span>
+                                                        </button>
+                                                        <div class="com__email-info-panel-date">{{formatDateAndTime(activity.modes.view.date_time, true)}}</div>
                                                     </div>
                                                 </div>
-                                                <div class="com__email-info-panel-wrap">
-                                                    <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="switchToMode(availableModes.reply, activity.id)">
-                                                      <span class="ui-button-icon ui-icon fa-reply"></span>
+                                            </div>
+
+                                            <div class="com__email-bottom-block">
+                                                <div class="com__email-body">
+                                                    <div class="com__message-body">
+                                                        <div ng-bind-html="activity.modes.view.emailBodyResolved"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="com__errors-wrap com__errors-mode-view"></div>
+                                                <div class="com__message-buttons">
+                                                    <button class="spc__button spc--height-medium" ng-click="switchToMode(availableModes.reply_all, activity.id)">
+                                                      <span class="ui-button-icon ui-icon fa-reply-all"></span>
                                                       <span class="ui-button-icon-space"> </span>
-                                                      <span>Reply</span>
+                                                      <span>Reply All</span>
                                                     </button>
-                                                    <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="switchToMode(availableModes.reply_all, activity.id)">
-                                                        <span class="ui-button-icon ui-icon fa-reply-all"></span>
+                                                    <button class="spc__button spc--height-medium" ng-click="switchToMode(availableModes.reply, activity.id)">
+                                                        <span class="ui-button-icon ui-icon fa-reply"></span>
                                                         <span class="ui-button-icon-space"> </span>
-                                                        <span>Reply All</span>
+                                                        <span>Reply</span>
                                                     </button>
-                                                    <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="switchToMode(availableModes.forward, activity.id)">
+                                                    <button class="spc__button spc--height-medium" ng-click="switchToMode(availableModes.forward, activity.id)">
                                                         <span class="ui-button-icon ui-icon fa-share"></span>
                                                         <span class="ui-button-icon-space"> </span>
                                                         <span>Forward</span>
                                                     </button>
-                                                    <div class="com__message-toggle-height-to-full">
-                                                        <button class=" spc__button spc--height-little spc--bg-white-bordered" ng-click="toggleHeight(activity.id)">
-                                                            <span class="ui-button-icon ui-icon fa-expand"></span>
-                                                            <span class="ui-button-icon-space"> </span>
-                                                            <span>Expand Message</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="com__message-toggle-height-to-part">
-                                                        <button class=" spc__button spc--height-little spc--bg-white-bordered" ng-click="toggleHeight(activity.id)">
-                                                            <span class="ui-button-icon ui-icon fa-compress"></span>
-                                                            <span class="ui-button-icon-space"> </span>
-                                                            <span>Collapse Message</span>
-                                                        </button>
-                                                    </div>
-                                                    <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="switchToMode(availableModes.origin, activity.id)">
-                                                        <span class="ui-button-icon ui-icon fa-envelope-o"></span>
-                                                        <span class="ui-button-icon-space"> </span>
-                                                        <span>Show Original Email</span>
-                                                    </button>
-                                                    <div class="com__email-info-panel-date">{{formatDateAndTime(activity.modes.view.date_time, true)}}</div>
                                                 </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="com__email-bottom-block">
-                                            <div class="com__email-body">
-                                                <div class="com__message-body">
-                                                    <div ng-bind-html="activity.modes.view.emailBodyResolved"></div>
-                                                </div>
-                                            </div>
-                                            <div class="com__errors-wrap com__errors-mode-view"></div>
-                                            <div class="com__message-buttons">
-                                                <button class="spc__button spc--height-medium" ng-click="switchToMode(availableModes.reply_all, activity.id)">
-                                                  <span class="ui-button-icon ui-icon fa-reply-all"></span>
-                                                  <span class="ui-button-icon-space"> </span>
-                                                  <span>Reply All</span>
-                                                </button>
-                                                <button class="spc__button spc--height-medium" ng-click="switchToMode(availableModes.reply, activity.id)">
-                                                    <span class="ui-button-icon ui-icon fa-reply"></span>
-                                                    <span class="ui-button-icon-space"> </span>
-                                                    <span>Reply</span>
-                                                </button>
-                                                <button class="spc__button spc--height-medium" ng-click="switchToMode(availableModes.forward, activity.id)">
-                                                    <span class="ui-button-icon ui-icon fa-share"></span>
-                                                    <span class="ui-button-icon-space"> </span>
-                                                    <span>Forward</span>
-                                                </button>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- end of view mode-->
+                                    <!-- end of view mode-->
 
-                                <!-- reply all mode-->
-                                <div class="com__email-reply-all-mode" ng-if="activity.current_mode === availableModes.reply_all">
-                                    <div class="com__email-block">
-                                        <div class="com__email-top-block">
-                                            <div class="com__email-info-rows-wrap">
-                                                <div class="com__email-info-row">
-                                                    <div class="com__email-info-row-name">From:</div>
-                                                    <div class="com__email-info-row-value">
-                                                        <div>
-                                                            <select-email case-id="model.case_id" is-required="true" is-multiple="false" max-width="600" model="activity.modes.reply_all.emails.from"></select-email>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="com__email-info-row">
-                                                    <div class="com__email-info-row-name">To:</div>
-                                                    <div class="com__email-info-row-value">
-                                                        <div>
-                                                            <select-email case-id="model.case_id" is-required="true" is-multiple="true" max-width="600" model="activity.modes.reply_all.emails.to"></select-email>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="com__email-info-row">
-                                                    <div class="com__email-info-row-name">CC:</div>
-                                                    <div class="com__email-info-row-value">
-                                                        <div>
-                                                            <select-email case-id="model.case_id" is-required="false" is-multiple="true" max-width="600" model="activity.modes.reply_all.emails.cc"></select-email>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="com__email-info-row">
-                                                    <div class="com__email-info-row-name">Subject:</div>
-                                                    <div class="com__email-info-row-value">
-                                                        <div class="com__edit-subject-input-wrap">
-                                                            <input id="{{'reply' + subject + activity.modes.reply_all.id}}" name="subject"
-                                                                   class="spc__input spc--width-100-percent" ng-model="activity.modes.reply_all.subject" type="text" ng-required="true">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="com__email-bottom-block">
-                                            <spc-email-editor support-case-category-id="activity['modes']['reply_all']['case_category_id']"
-                                                              token-contact-id="activity['modes']['reply_all']['token_contact_id']"
-                                                              email-body="activity.modes.reply_all.email_body"
-                                            ></spc-email-editor>
-
-                                            <spc-attachment-uploader model="activity.modes.reply_all.additionalAttachments" ></spc-attachment-uploader>
-
-                                            <div class="com__errors-wrap com__errors-mode-reply"></div>
-
-                                            <div class="com__message-buttons">
-                                                <div class="com__message-buttons-loader" ng-if="isEmailSending">
-                                                    Email is sending... Please wait.
-                                                </div>
-                                                <button ng-if="!isEmailSending" class="spc__button spc--height-medium" ng-disabled="activityEmailForm.$invalid" ng-click="send(activity)">
-                                                    <span class="ui-button-icon ui-icon fa-paper-plane-o"></span>
-                                                    <span class="ui-button-icon-space"> </span>
-                                                    <span>Send</span>
-                                                </button>
-                                                <button ng-if="!isEmailSending" class="spc__button spc--height-medium button__cancel" ng-click="cancel(activity.id)">Cancel</button>
-                                            </div>
-
-                                        </div>
+                                    <!-- reply all mode-->
+                                    <div class="com__email-reply-all-mode" ng-if="activity.current_mode === availableModes.reply_all">
+                                        <email-editor email-mode="'reply_all'"
+                                                      from-activity-id="activity.id"
+                                                      reload-email-list="getEmails"
+                                                      case-id="model.case_id">
+                                        </email-editor>
                                     </div>
-                                </div>
-                                <!-- end of reply-all mode-->
+                                    <!-- end of reply-all mode-->
 
-                                <!-- reply mode-->
-                                <div class="com__email-reply-mode" ng-if="activity.current_mode === availableModes.reply">
-                                    <div class="com__email-block">
-                                        <div class="com__email-top-block">
-                                            <div class="com__email-info-rows-wrap">
-                                                <div class="com__email-info-row">
-                                                    <div class="com__email-info-row-name">From:</div>
-                                                    <div class="com__email-info-row-value">
-                                                        <div>
-                                                            <select-email case-id="model.case_id" is-required="true" is-multiple="false" max-width="600" model="activity.modes.reply.emails.from"></select-email>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="com__email-info-row">
-                                                    <div class="com__email-info-row-name">To:</div>
-                                                    <div class="com__email-info-row-value">
-                                                        <div>
-                                                            <select-email case-id="model.case_id" is-required="true" is-multiple="true" max-width="600" model="activity.modes.reply.emails.to"></select-email>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="com__email-info-row">
-                                                    <div class="com__email-info-row-name">CC:</div>
-                                                    <div class="com__email-info-row-value">
-                                                        <div>
-                                                            <select-email case-id="model.case_id" is-required="false" is-multiple="true" max-width="600" model="activity.modes.reply.emails.cc"></select-email>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="com__email-info-row">
-                                                    <div class="com__email-info-row-name">Subject:</div>
-                                                    <div class="com__email-info-row-value">
-                                                        <div class="com__edit-subject-input-wrap">
-                                                            <input id="{{'reply' + subject + activity.modes.reply.id}}" name="subject"
-                                                                   class="spc__input spc--width-100-percent" ng-model="activity.modes.reply.subject" type="text" ng-required="true">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="com__email-bottom-block">
-                                            <spc-email-editor support-case-category-id="activity['modes']['reply']['case_category_id']"
-                                                              token-contact-id="activity['modes']['reply']['token_contact_id']"
-                                                              email-body="activity.modes.reply.email_body"
-                                            ></spc-email-editor>
-
-
-                                            <spc-attachment-uploader model="activity.modes.reply.additionalAttachments" ></spc-attachment-uploader>
-
-                                            <div class="com__errors-wrap com__errors-mode-reply"></div>
-
-                                            <div class="com__message-buttons">
-                                                <div class="com__message-buttons-loader" ng-if="isEmailSending">
-                                                    Email is sending... Please wait.
-                                                </div>
-                                                <button ng-if="!isEmailSending" class="spc__button spc--height-medium" ng-disabled="activityEmailForm.$invalid" ng-click="send(activity)">
-                                                    <span class="ui-button-icon ui-icon fa-paper-plane-o"></span>
-                                                    <span class="ui-button-icon-space"> </span>
-                                                    <span>Send</span>
-                                                </button>
-                                                <button ng-if="!isEmailSending" class="spc__button spc--height-medium button__cancel" ng-click="cancel(activity.id)">Cancel</button>
-                                            </div>
-
-                                        </div>
+                                    <!-- reply mode-->
+                                    <div class="com__email-reply-mode" ng-if="activity.current_mode === availableModes.reply">
+                                        <email-editor email-mode="'reply'"
+                                                      from-activity-id="activity.id"
+                                                      reload-email-list="getEmails"
+                                                      case-id="model.case_id">
+                                        </email-editor>
                                     </div>
-                                </div>
-                                <!-- end of reply mode-->
+                                    <!-- end of reply mode-->
 
-                                <!-- forward mode-->
-                                <div class="com__email-forward-mode" ng-if="activity.current_mode === availableModes.forward">
-                                    <div class="com__email-block">
-                                        <div class="com__email-top-block">
-                                            <div class="com__email-info-rows-wrap">
-                                                <div class="com__email-info-row">
-                                                    <div class="com__email-info-row-name">From:</div>
-                                                    <div class="com__email-info-row-value">
-                                                        <div>
-                                                            <select-email case-id="model.case_id" is-required="true" is-multiple="false" max-width="600" model="activity.modes.forward.emails.from"></select-email>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="com__email-info-row">
-                                                    <div class="com__email-info-row-name">To:</div>
-                                                    <div class="com__email-info-row-value">
-                                                        <div>
-                                                            <select-email case-id="model.case_id" is-required="true" is-multiple="true" max-width="600" model="activity.modes.forward.emails.to"></select-email>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="com__email-info-row">
-                                                    <div class="com__email-info-row-name">CC:</div>
-                                                    <div class="com__email-info-row-value">
-                                                        <div>
-                                                            <select-email case-id="model.case_id" is-required="false" is-multiple="true" max-width="600" model="activity.modes.forward.emails.cc"></select-email>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="com__email-info-row">
-                                                    <div class="com__email-info-row-name">Subject:</div>
-                                                    <div class="com__email-info-row-value">
-                                                        <div class="com__edit-subject-input-wrap">
-                                                            <input id="{{'forward' + subject + activity.modes.forward.id}}" name="subject"
-                                                                   class="spc__input spc--width-100-percent" ng-model="activity.modes.forward.subject" type="text" ng-required="true">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="com__email-info-row" ng-if="activity.modes.forward.attachments['length'] > 0">
-                                                    <div class="com__email-info-row-name">Attachments:</div>
-                                                    <div class="com__email-info-row-value">
-                                                        <spc-attachment is-attachments-can-be-selected="true" model="activity.modes.forward.attachments"></spc-attachment>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <!-- forward mode-->
+                                    <div class="com__email-forward-mode" ng-if="activity.current_mode === availableModes.forward">
+                                        <email-editor email-mode="'forward'"
+                                                      from-activity-id="activity.id"
+                                                      reload-email-list="getEmails"
+                                                      case-id="model.case_id">
+                                        </email-editor>
+                                    </div>
+                                    <!-- end of forward mode-->
 
-                                        <div class="com__email-bottom-block">
-                                            <spc-email-editor support-case-category-id="activity['modes']['forward']['case_category_id']"
-                                                              token-contact-id="activity['modes']['forward']['token_contact_id']"
-                                                              email-body="activity.modes.forward.email_body"
-                                            ></spc-email-editor>
+                                    <!-- origin mode-->
+                                    <div class="com__email-origin-mode" ng-if="activity.current_mode === availableModes.origin">
+                                        <div class="com__email-block">
+                                            <div class="com__email-header-block">Original Email:</div>
 
-                                            <spc-attachment-uploader model="activity.modes.forward.additionalAttachments" ></spc-attachment-uploader>
-
-                                            <div class="com__errors-wrap com__errors-mode-forward"></div>
-
-                                            <div class="com__message-buttons">
-                                                <div class="com__message-buttons-loader" ng-if="isEmailSending">
-                                                    Email is sending... Please wait.
+                                            <div class="com__email-bottom-block">
+                                                <div class="com__email-body">
+                                                    <view-email-origin activity-id="activity.id"></view-email-origin>
                                                 </div>
-                                                <button ng-if="!isEmailSending" class="spc__button spc--height-medium" ng-disabled="activityEmailForm.$invalid" ng-click="send(activity)">
-                                                    <span class="ui-button-icon ui-icon fa-paper-plane-o"></span>
-                                                    <span class="ui-button-icon-space"> </span>
-                                                    <span>Send</span>
-                                                </button>
-                                                <button ng-if="!isEmailSending" class="spc__button spc--height-medium button__cancel" ng-click="cancel(activity.id)" >Cancel</button>
+
+                                                <div class="com__message-buttons">
+                                                    <button class="spc__button spc--height-medium button__cancel" ng-click="cancel(activity.id)">Cancel</button>
+                                                    <button class="spc__button spc--height-medium button__view" ng-click="viewFullscreen(activity.id)">View Fullscreen</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- end of origin mode-->
+
                                 </div>
-                                <!-- end of forward mode-->
-
-                                <!-- origin mode-->
-                                <div class="com__email-origin-mode" ng-if="activity.current_mode === availableModes.origin">
-                                    <div class="com__email-block">
-                                        <div class="com__email-header-block">Original Email:</div>
-
-                                        <div class="com__email-bottom-block">
-                                            <div class="com__email-body">
-                                                <view-email-origin activity-id="activity.id"></view-email-origin>
-                                            </div>
-
-                                            <div class="com__message-buttons">
-                                                <button class="spc__button spc--height-medium button__cancel" ng-click="cancel(activity.id)">Cancel</button>
-                                                <button class="spc__button spc--height-medium button__view" ng-click="viewFullscreen(activity.id)">View Fullscreen</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- end of origin mode-->
-
                             </div>
                         </div>
-                    </div>
-                </ng-form>
+                    </ng-form>
+                </div>
             </div>
         </div>
     </div>

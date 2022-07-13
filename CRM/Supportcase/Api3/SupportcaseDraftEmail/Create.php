@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Uses on 'SupportcaseManageCase->send_email' api
+ * Uses on 'SupportcaseDraftEmail->create' api
  */
-class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportcase_Api3_Base {
+class CRM_Supportcase_Api3_SupportcaseDraftEmail_Create extends CRM_Supportcase_Api3_Base {
 
   /**
    * Get results of api
@@ -17,11 +17,10 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
     }
 
     if ($this->params['email']['mode'] == 'forward') {
-      CRM_Supportcase_Utils_Activity::copyAttachment($this->params['email']['options']['email_activity_id'], $activityId, $this->params['email']['forwardFileIds']);
+      CRM_Supportcase_Utils_Activity::copyAttachment($this->params['email']['options']['from_activity_id'], $activityId, $this->params['email']['forwardFileIds']);
     }
 
     $mailutilsMessage = $this->createMailutilsMessage($activityId);
-
     foreach ($this->params['email']['toEmails'] as $emailData) {
       $this->createMailutilsMessageParty($emailData, $mailutilsMessage['id'], CRM_Supportcase_Utils_PartyType::getToPartyTypeId());
     }
@@ -34,19 +33,29 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
       $this->createMailutilsMessageParty($emailData, $mailutilsMessage['id'], CRM_Supportcase_Utils_PartyType::getCcPartyTypeId());
     }
 
-    try {
-      \Civi\Api4\MailutilsMessage::send(FALSE)
-        ->setMessageId($mailutilsMessage['id'])
-        ->execute();
-    } catch (Exception $e) {
-      throw new api_Exception('Error sending email. Error: ' . $e->getMessage(), 'cannot_send_email');
+    return [
+      'message' => 'Draft created!',
+      'activity_id' => $activityId,
+      'mode' => $this->params['email']['mode'],
+      'data' => $this->getUpdatedDraftEmailData($mailutilsMessage['id']),
+      'mailutils_message_id' => $mailutilsMessage['id'],
+    ];
+  }
+
+  /**
+   * @return array
+   */
+  private function getUpdatedDraftEmailData($mailutilsMessageId): array {
+    $updatedDraftEmailData = civicrm_api3('SupportcaseDraftEmail', 'get', [
+      'mailutils_message_id' => $mailutilsMessageId,
+      'return' => $this->params['returnFields'],
+    ]);
+
+    if (!empty($updatedDraftEmailData['values'])) {
+      return $updatedDraftEmailData['values'];
     }
 
-    return [
-      'message' => 'Email is sent.',
-      'activity_id' => $activityId,
-      'mailutils_message_id' => $mailutilsMessage['id']
-    ];
+    return [];
   }
 
   /**
@@ -72,7 +81,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
         'activity_type_id' => 'Email',
         'subject' => $this->params['email']['subject'],
         'details' => $this->params['email']['body'],
-        'status_id' => CRM_Supportcase_Utils_ActivityStatus::DRAFT_EMAIL,
+        'status_id' => CRM_Supportcase_Utils_ActivityStatus::SUPPORTCASE_DRAFT_EMAIL,
         'target_id' => $targetContactIds,// cc + to contacts - the same logic as in core
         'case_id' => $this->params['caseId'],
       ]);
@@ -168,17 +177,10 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
    * @return int
    */
   private function createMailutilsMessageParty($emailData, $mailutilsMessageId, $partyTypeId) {
-    try {
-      $messageParty = \Civi\Api4\MailutilsMessageParty::create(FALSE)
-        ->addValue('mailutils_message_id', $mailutilsMessageId)
-        ->addValue('contact_id', $emailData['contact_id'])
-        ->addValue('party_type_id', $partyTypeId)
-        ->addValue('name', $emailData['contact_custom_display_name'])
-        ->addValue('email', $emailData['email'])
-        ->execute()
-        ->first();
-    } catch (Exception $e) {
-      throw new api_Exception('Cannot create "MailutilsMessageParty". Error: ' . $e->getMessage(), 'cannot_create_mailutils_message_party');
+    $messageParty = CRM_Supportcase_Utils_MailutilsMessage::createMailutilsMessageParty($emailData, $mailutilsMessageId, $partyTypeId);
+
+    if (empty($messageParty)) {
+      throw new api_Exception('Cannot create "MailutilsMessageParty".', 'cannot_create_mailutils_message_party');
     }
 
     return $messageParty;
@@ -250,37 +252,24 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
       throw new api_Exception('The case is locked by another user.', 'case_locked_by_another_user');
     }
 
-    $toEmails = CRM_Supportcase_Utils_EmailSearch::searchByCommaSeparatedIds($params['to_email_id']);
-    if (empty($toEmails)) {
-      throw new api_Exception('Cannot find to email', 'cannot_find_to_email');
-    }
-
-    $fromEmails = CRM_Supportcase_Utils_EmailSearch::searchByCommaSeparatedIds($params['from_email_id']);
-    if (empty($fromEmails)) {
-      throw new api_Exception('Cannot find from email', 'cannot_find_from_email');
-    }
-
-    $ccEmails = CRM_Supportcase_Utils_EmailSearch::searchByCommaSeparatedIds($params['cc_email_ids']);
-    $bodyText = CRM_Utils_String::htmlToText($params['body']);
-
-    if (strlen($params['subject']) > 255) {
-      throw new api_Exception('Subject have to be less than 255 char', 'subject_to_long');
-    }
+    $options = [];
 
     if (in_array($params['mode'], [CRM_Supportcase_Utils_Email::FORWARD_MODE, CRM_Supportcase_Utils_Email::REPLY_MODE, CRM_Supportcase_Utils_Email::REPLY_ALL_MODE])) {
-      if (empty($params['email_activity_id'])) {
-        throw new api_Exception('"email_activity_id" field is required.' , 'email_activity_id_is_required');
+      if (empty($params['from_activity_id'])) {
+        throw new api_Exception('"from_activity_id" field is required.' , 'from_activity_id_is_required');
       }
 
       try {
         $emailActivity = civicrm_api3('Activity', 'getsingle', [
-          'id' => $params['email_activity_id'],
+          'id' => $params['from_activity_id'],
         ]);
       } catch (CiviCRM_API3_Exception $e) {
-        throw new api_Exception('Email activity does not exist.' , 'email_activity_does_not_exist');
+        throw new api_Exception('Email activity does not exist.' , 'from_activity_does_not_exist');
       }
 
+
       $mailutilsMessage = CRM_Supportcase_Utils_Activity::getRelatedMailUtilsMessage($emailActivity['id']);
+
       if (empty($mailutilsMessage)) {
         throw new api_Exception('Cannot find related to activity MailutilsMessage.', 'cannot_find_mailutils_message');
       }
@@ -289,32 +278,30 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_SendEmail extends CRM_Supportca
         'mailutils_thread_id' => $mailutilsMessage['mailutils_thread_id'],
         'mail_setting_id' => $mailutilsMessage['mail_setting_id'],
         'message_id' => $mailutilsMessage['message_id'],
-        'email_activity_id' => $emailActivity['id'],
-      ];
-    } else {
-      $options = [
-        'mailutils_thread_id' => $this->generateMailutilsThreadId(),
-        'mail_setting_id' => $this->generateMailSettingId(),
-        'message_id' => null,// it is always null, it is reply/forward email 'message_id'
-        'email_activity_id' => null,// it is always null, it is reply/forward email 'activity id'
+        'from_activity_id' => $emailActivity['id'],
       ];
     }
 
+    if (in_array($params['mode'], [CRM_Supportcase_Utils_Email::NEW_EMAIL_MODE])) {
+      $options = [
+        'mailutils_thread_id' => $this->generateMailutilsThreadId(),
+        'mail_setting_id' => $this->generateMailSettingId(),
+        'message_id' => null,// it is always null for new email
+        'from_activity_id' => null,// it is always null for new email
+      ];
+    }
+
+    $emailDefaultValues = CRM_Supportcase_Utils_EmailDefaultValues_Manager::getPreparedEmailDefaultValues(
+      $params['mode'],
+      $params['case_id'],
+      $options['from_activity_id']
+    );
+    $emailDefaultValues['options'] = $options;
+
     return [
-      'email' => [
-        'toEmails' => $toEmails,
-        'mode' => $params['mode'],
-        'fromEmails' => $fromEmails,
-        'ccEmails' => $ccEmails,
-        'body' => json_encode([
-          'html' => $params['body'],
-          'text' => $bodyText,
-        ]),
-        'subject' => $params['subject'],
-        'options' => $options,
-        'forwardFileIds' => !empty($params['forward_file_ids']) ? $params['forward_file_ids'] : null,
-      ],
+      'email' => $emailDefaultValues,
       'caseId' => $params['case_id'],
+      'returnFields' => $this->getReturnFields($params),
     ];
   }
 

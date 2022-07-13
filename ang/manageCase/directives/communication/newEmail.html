@@ -7,70 +7,9 @@
     </button>
 
     <div ng-if="isShowSendEmailWindow">
-        <ng-form name="sendNewEmailForm">
-            <div class="com__email-block">
-                <div class="com__email-top-block">
-                    <div class="com__email-info-rows-wrap">
-                        <div class="com__email-info-rows-title">Send new email</div>
-                        <div class="com__email-info-row">
-                            <div class="com__email-info-row-name">From:</div>
-                            <div class="com__email-info-row-value">
-                                <div>
-                                    <select-email case-id="model.case_id" is-required="true" is-multiple="false" max-width="600" model="emailData.from_email_id"></select-email>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="com__email-info-row">
-                            <div class="com__email-info-row-name">To:</div>
-                            <div class="com__email-info-row-value">
-                                <div>
-                                    <select-email case-id="model.case_id" is-required="true" is-multiple="true" max-width="600" model="emailData.to_email_id"></select-email>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="com__email-info-row">
-                            <div class="com__email-info-row-name">CC:</div>
-                            <div class="com__email-info-row-value">
-                                <div>
-                                    <select-email case-id="model.case_id" is-required="false" is-multiple="true" max-width="600" model="emailData.cc_email_ids"></select-email>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="com__email-info-row">
-                            <div class="com__email-info-row-name">Subject:</div>
-                            <div class="com__email-info-row-value">
-                                <div class="com__edit-subject-input-wrap">
-                                    <input name="subject" class="spc__input spc--width-100-percent" ng-model="emailData.subject" type="text" ng-required="true">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="com__email-bottom-block">
-                    <spc-email-editor support-case-category-id="emailData['case_category_id']"
-                                      token-contact-id="emailData['token_contact_id']"
-                                      email-body="emailData.body"
-                    ></spc-email-editor>
-
-                    <spc-attachment-uploader model="emailData.attachments" ></spc-attachment-uploader>
-
-                    <div class="com__errors-wrap"></div>
-
-                    <div class="com__message-buttons">
-                        <div class="com__message-buttons-loader" ng-if="isEmailSending">
-                            Email is sending... Please wait.
-                        </div>
-                        <button ng-if="!isEmailSending" class="spc__button spc--height-medium" ng-disabled="sendNewEmailForm.$invalid" ng-click="send()">
-                            <span class="ui-button-icon ui-icon fa-paper-plane-o"></span>
-                            <span class="ui-button-icon-space"> </span>
-                            <span>Send</span>
-                        </button>
-                        <button ng-if="!isEmailSending" class="spc__button spc--height-medium button__cancel" ng-click="toggleSendEmailWindow()">Cancel</button>
-                    </div>
-
-                </div>
-            </div>
-        </ng-form>
+        <email-editor email-mode="'new'"
+                      reload-email-list="getEmails"
+                      case-id="model.case_id">
+        </email-editor>
     </div>
 </div>

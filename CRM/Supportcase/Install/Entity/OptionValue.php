@@ -59,6 +59,12 @@ class CRM_Supportcase_Install_Entity_OptionValue extends CRM_Supportcase_Install
         'grouping' => 'Closed',
       ],
       [
+        'option_group_id' => 'activity_status',
+        'name' => CRM_Supportcase_Utils_ActivityStatus::SUPPORTCASE_DRAFT_EMAIL,
+        'label' => 'Supportcase Draft Email',
+        'grouping' => 'Closed',
+      ],
+      [
         'option_group_id' => 'wysiwyg_presets',
         'name' => 'supportcase',
         'label' => 'SupportCase',
