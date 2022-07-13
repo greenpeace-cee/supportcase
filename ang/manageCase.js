@@ -1504,9 +1504,6 @@
                 emailBody: "=",
             },
             controller: function($scope, $element) {
-                console.log('spcEmailEditor');
-                console.log('$scope');
-                console.log($scope);
                 $scope.recentlyAddedTemplateClass = 'spc__recently-added-template';
                 $scope.cursorClass = 'spc__editor-cursor';
 
