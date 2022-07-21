@@ -8,7 +8,7 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Get_ByMailUtilsMessageId extend
   /**
    * Get results of api
    */
-  public function getResult() {
+  public function getResult(): array {
     $draftEmails = [];
 
     try {
@@ -31,17 +31,19 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Get_ByMailUtilsMessageId extend
    *
    * @return array
    */
-  protected function prepareParams($params) {
+  protected function prepareParams($params): array {
     $mailutilsMessage = CRM_Supportcase_Utils_MailutilsMessage::getMailutilsMessageById($params['mailutils_message_id']);
     if (empty($mailutilsMessage)) {
       throw new api_Exception('Cannot find mailutils message id.', 'can_not_find_mailutils_message_id');
     }
 
     $caseId = CRM_Supportcase_Utils_Activity::getCaseId($mailutilsMessage['activity_id']);
+    $case = $this->getCase($caseId);
 
     return [
       'case_id' => $caseId,
-      'case_category_id' => $this->getCaseCategoryId($caseId),
+      'case' => $case,
+      'case_category_id' => $case['case_category_id'],
       'mailutils_message_id' => (int) $params['mailutils_message_id'],
       'mailutils_message' => $mailutilsMessage,
       'returnFields' => $this->getReturnFields($params),

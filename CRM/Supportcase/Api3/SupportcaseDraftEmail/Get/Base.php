@@ -49,7 +49,27 @@ abstract class CRM_Supportcase_Api3_SupportcaseDraftEmail_Get_Base extends CRM_S
 
     if (in_array('email_body', $this->params['returnFields'])) {
       $emailBody = CRM_Supportcase_Utils_Activity::getEmailBody($activity['details']);
-      $data['email_body'] = CRM_Utils_String::purifyHTML(nl2br(trim(CRM_Utils_String::stripAlternatives($emailBody['html']))));
+      $preparedEmailBody = $emailBody['html_raw'];
+      $preparedEmailBody = CRM_Utils_String::stripAlternatives($preparedEmailBody);
+      $preparedEmailBody = trim($preparedEmailBody);
+      $preparedEmailBody = nl2br($preparedEmailBody);
+      $preparedEmailBody = CRM_Utils_String::purifyHTML($preparedEmailBody);
+      $data['email_body'] = $preparedEmailBody;
+    }
+
+    if (in_array('email_body_raw', $this->params['returnFields'])) {
+      $emailBody = CRM_Supportcase_Utils_Activity::getEmailBody($activity['details']);
+      $data['email_body_raw'] = $emailBody['html_raw'];
+    }
+
+    if (in_array('email_body_text', $this->params['returnFields'])) {
+      $emailBody = CRM_Supportcase_Utils_Activity::getEmailBody($activity['details']);
+      $preparedEmailBodyText = $emailBody['text'];
+      $preparedEmailBodyText = CRM_Utils_String::stripAlternatives($preparedEmailBodyText);
+      $preparedEmailBodyText = trim($preparedEmailBodyText);
+      $preparedEmailBodyText = nl2br($preparedEmailBodyText);
+      $preparedEmailBodyText = CRM_Utils_String::purifyHTML($preparedEmailBodyText);
+      $data['email_body_text'] = $preparedEmailBodyText;
     }
 
     if (in_array('attachments', $this->params['returnFields'])) {
@@ -107,7 +127,15 @@ abstract class CRM_Supportcase_Api3_SupportcaseDraftEmail_Get_Base extends CRM_S
     return $attachments;
   }
 
-  protected function getCaseCategoryId($caseId) {
+  /**
+   * @param $caseId
+   * @return array
+   */
+  protected function getCase($caseId): array {
+    if (empty($caseId)) {
+      throw new api_Exception('Case does not exist.', 'case_does_not_exist');
+    }
+
     try {
       $case = civicrm_api3('Case', 'getsingle', [
         'id' => $caseId,
@@ -117,8 +145,9 @@ abstract class CRM_Supportcase_Api3_SupportcaseDraftEmail_Get_Base extends CRM_S
     }
 
     $categoryFieldName = CRM_Core_BAO_CustomField::getCustomFieldID(CRM_Supportcase_Install_Entity_CustomField::CATEGORY, CRM_Supportcase_Install_Entity_CustomGroup::CASE_DETAILS, TRUE);
+    $case['case_category_id'] = (!empty($case[$categoryFieldName])) ? $case[$categoryFieldName] : NULL;
 
-    return (!empty($case[$categoryFieldName])) ? $case[$categoryFieldName] : NULL;
+    return $case;
   }
 
 }

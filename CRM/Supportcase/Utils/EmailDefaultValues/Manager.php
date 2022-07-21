@@ -17,9 +17,6 @@ class CRM_Supportcase_Utils_EmailDefaultValues_Manager {
 
     $defaultValues = $email->getValues();
 
-    ////////remove
-    $defaultValues['fromEmails'] = CRM_Supportcase_Utils_EmailSearch::searchByCommaSeparatedIds(2);
-
     return $defaultValues;
   }
 

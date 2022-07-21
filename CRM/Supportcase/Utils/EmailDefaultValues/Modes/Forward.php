@@ -30,9 +30,10 @@ class CRM_Supportcase_Utils_EmailDefaultValues_Modes_Forward extends CRM_Support
     $defaultValues['attachments'] = $attachments;
     $defaultValues['subject'] = $subject;
     $defaultValues['body'] = json_encode(['html' => $preparedEmailBody, 'text' => CRM_Utils_String::htmlToText($preparedEmailBody)]);
-    $defaultValues['fromEmails'] = $prefillEmails['from'] ?? [];
+    $defaultValues['fromEmails'] = CRM_Supportcase_Utils_EmailSearch::searchByCommaSeparatedIds($prefillEmails['from']);
     $defaultValues['case_category_id'] = $case['case_category_id'];
     $defaultValues['token_contact_id'] = CRM_Supportcase_Utils_Case::getFirstClient($case);
+
 
     return $defaultValues;
   }

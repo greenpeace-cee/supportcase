@@ -41,9 +41,9 @@ abstract class CRM_Supportcase_Utils_EmailDefaultValues_Modes_Base {
    */
   protected function getDefaultFields(): array {
     return [
-      'toEmails' => '',
-      'fromEmails' => '',
-      'ccEmails' => '',
+      'toEmails' => [],
+      'fromEmails' => [],
+      'ccEmails' => [],
       'mode' => $this->mode,
       'body' => json_encode(['html' => '', 'text' => '']),
       'subject' => '',

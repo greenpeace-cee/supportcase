@@ -825,12 +825,6 @@
                     window.open(CRM.url('civicrm/supportcase/view-original', {'id' : activityId}), '_blank').focus();
                 };
 
-                $scope.removeForwardAttachment = function(fileId, activityForwardData) {
-                    activityForwardData['attachments'] = activityForwardData['attachments'].filter(function (item) {
-                        return item['file_id'] !== fileId
-                    });
-                };
-
                 $scope.getActivityElement = function(activityId) {
                     return CRM.$($element).find('.com__email-activity[data-activity-id="' + activityId + '"]');
                 };
@@ -857,46 +851,6 @@
                 $scope.toggleHeight = function(emailActivityId) {
                     CRM.$($element).find('.com__email-activity[data-activity-id="' + emailActivityId + '"]').toggleClass('com--full-height');
                 };
-
-                $scope.getFiles = function(activityId, mode) {
-                    var preparedData = {
-                        'files' : [],
-                        'dataFiles' : [],
-                    }
-
-                    var activity = $scope.getActivity(activityId);
-                    if (activity === undefined) {
-                        return preparedData;
-                    }
-
-                    if (activity['modes'][mode]['additionalAttachments'] === undefined) {
-                        return preparedData;
-                    }
-
-                    if (activity['modes'][mode]['additionalAttachments']['uploader'] === undefined) {
-                        return preparedData;
-                    }
-
-                    if (activity['modes'][mode]['additionalAttachments']['uploader']['queue'] === undefined) {
-                        return preparedData;
-                    }
-
-                    var queueFiles = activity['modes'][mode]['additionalAttachments']['uploader']['queue'];
-
-                    if (!(queueFiles['length'] > 0)) {
-                        return preparedData;
-                    }
-
-                    for (var i = 0; queueFiles['length'] > i; i++ ) {
-                        preparedData.files.push(queueFiles[i]['_file']);
-                        preparedData.dataFiles.push({
-                            'name' : queueFiles[i]['_file']['name'],
-                            'description' : queueFiles[i]['crmData']['description']
-                        });
-                    }
-
-                    return preparedData;
-                };
             }
         };
     });
@@ -911,6 +865,9 @@
                 $scope.getEmails = $scope.$parent.getEmails;
                 $scope.isShowSendEmailWindow = false;
                 $scope.ts = CRM.ts();
+                $scope.cancel = function () {
+                    $scope.isShowSendEmailWindow = false;
+                };
 
                 $scope.toggleSendEmailWindow = function() {
                     $scope.isShowSendEmailWindow = !$scope.isShowSendEmailWindow;
@@ -953,9 +910,20 @@
         return {
             restrict: "E",
             templateUrl: "~/manageCase/directives/communication/attachment/spcAttachmentUploader.html",
-            scope: {model: "="},
+            scope: {
+                model: "=",
+                activityId: "<activityId",
+            },
             controller: function($scope, $element, CrmAttachments) {
-                $scope.model = new CrmAttachments({});
+                if ($scope.activityId === undefined) {
+                    console.error('Error loading attachments!');
+                    return;
+                }
+
+                $scope.model = new CrmAttachments(function () {
+                    return {entity_table: 'civicrm_activity', entity_id: $scope.activityId};
+                });
+                $scope.model.load();
             }
         };
     });
@@ -2053,11 +2021,13 @@
                 emailMode: "<emailMode",
                 mailutilsMessageId: "<mailutilsMessageId",
                 reloadEmailList: "<reloadEmailList",
+                cancelCallback: "<cancelCallback",
             },
             controller: function($scope, $element, $timeout) {
-                $scope.isShowPreloader = false;
                 $scope.isShowEditorBlock = false;
                 $scope.autoSaveTimer = null;
+                $scope.isDisabledButtons = false;
+                $scope.messages = [];
                 $scope.draftReturnFields = [
                     'head_icon',
                     'subject',
@@ -2072,7 +2042,30 @@
                     'case_category_id',
                     'token_contact_id',
                     'email_auto_save_interval_time',
+                    'email_body_raw',
                 ];
+
+                $scope.runCancelCallback = function () {
+                    if (angular.isFunction($scope.cancelCallback)) {
+                        $scope.cancelCallback();
+                    }
+                };
+
+                $scope.addMessage = function (message) {
+                    $scope.messages.push({'text' : message});
+                };
+
+                $scope.clearMessages = function () {
+                    $scope.messages = [];
+                };
+
+                $scope.disabledButtons = function () {
+                    $scope.isDisabledButtons = true;
+                };
+
+                $scope.enableButtons = function () {
+                    $scope.isDisabledButtons = false;
+                };
 
                 this.$onInit = function() {
                     if ($scope.emailMode === 'draft') {
@@ -2083,7 +2076,9 @@
                 };
 
                 $scope.createDraft = function() {
-                    $scope.showPreloader();
+                    $scope.clearMessages();
+                    $scope.addMessage('Email is loading ...');
+                    $scope.disabledButtons();
 
                     CRM.api3('SupportcaseDraftEmail', 'create', {
                         "case_id": $scope.caseId,
@@ -2098,15 +2093,18 @@
                         $scope.email = $scope.prepareEmail(result.values.data);
                         $scope.emailOnSever = Object.assign({}, $scope.email);
                         $scope.mailutilsMessageId = result.values.data.mailutils_message_id;
-                        $scope.hidePreloader();
                         $scope.isShowEditorBlock = true;
+                        $scope.clearMessages();
+                        $scope.enableButtons();
                         $scope.$apply();
                         $scope.startAutoSaving();
                     }, $scope.handleServerApiError);
                 }
 
                 $scope.loadDraft = function() {
-                    $scope.showPreloader();
+                    $scope.clearMessages();
+                    $scope.addMessage('Email is loading ...');
+                    $scope.disabledButtons();
 
                     CRM.api3('SupportcaseDraftEmail', 'get', {
                         "mailutils_message_id": $scope.mailutilsMessageId,
@@ -2120,15 +2118,23 @@
                         $scope.email = $scope.prepareEmail(result.values);
                         $scope.emailOnSever = Object.assign({}, $scope.email);
                         $scope.mailutilsMessageId = result.values.mailutils_message_id;
-                        $scope.hidePreloader();
                         $scope.isShowEditorBlock = true;
+                        $scope.clearMessages();
+                        $scope.enableButtons();
                         $scope.$apply();
                         $scope.startAutoSaving();
                     }, $scope.handleServerApiError);
                 }
 
                 $scope.deleteDraft = function() {
-                    $scope.showPreloader();
+                    $scope.clearMessages();
+                    $scope.disabledButtons();
+
+                    if ($scope.emailMode === 'draft') {
+                        $scope.addMessage('Email is deleting ...');
+                    } else {
+                        $scope.addMessage('Email is canceling ...');
+                    }
 
                     CRM.api3('SupportcaseDraftEmail', 'delete_draft', {
                         "mailutils_message_id": $scope.mailutilsMessageId
@@ -2138,14 +2144,20 @@
                             return;
                         }
 
-                        $scope.reloadEmailList();
-                        $scope.hidePreloader();
                         $scope.isShowEditorBlock = false;
+                        $scope.clearMessages();
+                        $scope.enableButtons();
+                        $timeout.cancel($scope.autoSaveTimer);
                         $scope.$apply();
+                        $scope.reloadEmailList();
                     }, $scope.handleServerApiError);
                 }
 
                 $scope.sendDraft = function() {
+                    $scope.clearMessages();
+                    $scope.addMessage('Email is sending ...');
+                    $scope.disabledButtons();
+
                     CRM.api3('SupportcaseDraftEmail', 'send', {
                         "mailutils_message_id": $scope.mailutilsMessageId
                     }).then(function(result) {
@@ -2154,15 +2166,24 @@
                             return;
                         }
 
-                        $scope.reloadEmailList();
-                        $scope.hidePreloader();
                         $scope.isShowEditorBlock = false;
+                        $scope.clearMessages();
+                        $scope.enableButtons();
+                        $timeout.cancel($scope.autoSaveTimer);
                         $scope.$apply();
+                        $scope.reloadEmailList();
                     }, $scope.handleServerApiError);
                 }
 
                 $scope.saveDraft = function() {
-                    var updateParams = {
+                    if ($scope.$$destroyed === true) {
+                        return;
+                    }
+
+                    //TODO: prevent extra uploading, check if ned to update, test uploading big files, and a lot of saving
+                    $scope.email.additionalAttachments.save();
+
+                    var jsonUpdateParams = {
                         "mailutils_message_id": $scope.mailutilsMessageId,
                         "return": $scope.draftReturnFields
                     };
@@ -2174,63 +2195,78 @@
                     if ($scope.email.cc === undefined) {$scope.email.cc = '';}
 
                     if ($scope.emailOnSever.subject !== $scope.email.subject) {
-                        updateParams['subject'] = $scope.email.subject;
+                        jsonUpdateParams['subject'] = $scope.email.subject;
                         isNeedToUpdate = true;
                     }
 
-                    if ($scope.emailOnSever.body !== $scope.email.body) {
-                        updateParams['body'] = $scope.email.body;
+                    if ($scope.emailOnSever.bodyRaw !== $scope.email.body) {
+                        jsonUpdateParams['body'] = $scope.email.body;
                         isNeedToUpdate = true;
                     }
 
                     if ($scope.emailOnSever.from !== $scope.email.from) {
-                        updateParams['from_email_ids'] = $scope.email.from;
+                        jsonUpdateParams['from_email_ids'] = $scope.email.from;
                         isNeedToUpdate = true;
                     }
 
                     if ($scope.emailOnSever.cc !== $scope.email.cc) {
-                        updateParams['cc_email_ids'] = $scope.email.cc;
+                        jsonUpdateParams['cc_email_ids'] = $scope.email.cc;
                         isNeedToUpdate = true;
                     }
 
                     if ($scope.emailOnSever.to !== $scope.email.to) {
-                        updateParams['to_email_ids'] = $scope.email.to;
+                        jsonUpdateParams['to_email_ids'] = $scope.email.to;
                         isNeedToUpdate = true;
                     }
 
                     if (!isNeedToUpdate) {
+                        $scope.clearMessages();
                         console.info('No new changes. Email is already saved. MailutilsMessageId: ' + $scope.mailutilsMessageId);
-                        CRM.status(ts('No new changes. Email is already saved.'));
+                        $scope.addMessage('No new changes. Email is already saved.');
                         $scope.startAutoSaving();
                         return;
                     }
 
-                    console.log('start updating mailutilsMessageId  ' + $scope.mailutilsMessageId);
-                    console.log('updateParams:');
-                    console.log(updateParams);
+                    $scope.clearMessages();
+                    $scope.addMessage('Email is saving ...');
+                    $scope.disabledButtons();
 
-                    $scope.showPreloader();
-                    CRM.api3('SupportcaseDraftEmail', 'update_draft', updateParams).then(function(result) {
+                    //TODO: remove after test debug code
+                    console.log('start updating mailutilsMessageId  ' + $scope.mailutilsMessageId + 'jsonUpdateParams: ');
+                    console.log('Server email:');
+                    console.log($scope.emailOnSever);
+                    console.log('Local email:');
+                    console.log($scope.email);
+                    console.log('jsonUpdateParams:');
+                    console.log(jsonUpdateParams);
+
+                    CRM.api3('SupportcaseDraftEmail', 'update_draft', jsonUpdateParams).then(function(result) {
                         if (result.is_error === 1) {
                             $scope.handleApiError(result, 'SupportcaseDraftEmail', 'update_draft');
                             return;
                         }
 
-                        $scope.hidePreloader();
-                        $scope.isShowEditorBlock = true;
+                        $scope.clearMessages();
+                        $scope.enableButtons();
                         $scope.emailOnSever = $scope.prepareEmail(result.values.data);
                         $scope.$apply();
                         console.info('Email has saved. MailutilsMessageId: ' + $scope.mailutilsMessageId);
                         CRM.status(ts('Email saved.'));
                         $scope.startAutoSaving();
+
                     }, $scope.handleServerApiError);
                 }
 
                 $scope.cancel = function() {
                     $scope.deleteDraft();
+                    $scope.runCancelCallback();
                 }
 
                 $scope.startAutoSaving = function() {
+                    if ($scope.$$destroyed === true) {
+                        return;
+                    }
+
                     $timeout.cancel($scope.autoSaveTimer);
                     $scope.autoSaveTimer = $timeout(function () {
                         $scope.saveDraft()
@@ -2244,20 +2280,14 @@
                         'cc': email.cc_email_ids,
                         'subject': email.subject,
                         'body' : email.email_body,
+                        'bodyRaw' : email.email_body_raw,
+                        'activityId' : email.activity_id,
                         'caseId' : $scope.caseId,
                         'caseCategoryId' : email.case_category_id,
                         'tokenContactId' : email.token_contact_id,
                         'emailAutoSaveIntervalTime' : email.email_auto_save_interval_time,
-                        'additionalAttachments' : [],//TODO
+                        'additionalAttachments' : [],
                     };
-                }
-
-                $scope.showPreloader = function() {
-                    $scope.isShowPreloader = true;
-                }
-
-                $scope.hidePreloader = function() {
-                    $scope.isShowPreloader = false;
                 }
 
                 $scope.handleServerApiError = function(error) {

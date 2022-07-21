@@ -44,7 +44,11 @@ class CRM_Supportcase_Api3_Base {
   protected function getReturnFields($params): array {
     $returnFields = ['id'];
 
-    if (is_array($params)) {
+    if (empty($params['return'])) {
+      return $returnFields;
+    }
+
+    if (is_array($params['return'])) {
       foreach ($params['return'] as $fieldName) {
         $returnFields[] = $fieldName;
       }

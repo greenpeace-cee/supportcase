@@ -234,6 +234,11 @@
     background: grey !important;
 }
 
+.spc__button[disabled="disabled"].spc--cancel {
+    color: white !important;
+    border-color: grey;
+}
+
 .spc__button.spc--bg-white-bordered {
     background: #ffffff;
     border: solid 1px #d3dee2;

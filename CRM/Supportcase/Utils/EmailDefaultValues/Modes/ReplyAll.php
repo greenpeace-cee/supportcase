@@ -27,9 +27,9 @@ class CRM_Supportcase_Utils_EmailDefaultValues_Modes_ReplyAll extends CRM_Suppor
 
     $defaultValues['subject'] = $subject;
     $defaultValues['body'] = json_encode(['html' => $preparedEmailBody, 'text' => CRM_Utils_String::htmlToText($preparedEmailBody)]);
-    $defaultValues['toEmails'] = $prefillEmails['to'];
-    $defaultValues['ccEmails'] = $prefillEmails['cc'];
-    $defaultValues['fromEmails'] = $prefillEmails['from'];
+    $defaultValues['toEmails'] = CRM_Supportcase_Utils_EmailSearch::searchByCommaSeparatedIds($prefillEmails['to']);
+    $defaultValues['ccEmails'] = CRM_Supportcase_Utils_EmailSearch::searchByCommaSeparatedIds($prefillEmails['cc']);
+    $defaultValues['fromEmails'] = CRM_Supportcase_Utils_EmailSearch::searchByCommaSeparatedIds($prefillEmails['from']);
     $defaultValues['case_category_id'] = $case['case_category_id'];
     $defaultValues['token_contact_id'] = CRM_Supportcase_Utils_Case::getFirstClient($case);
 

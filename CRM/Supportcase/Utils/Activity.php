@@ -229,6 +229,7 @@ class CRM_Supportcase_Utils_Activity {
     else {
       return [
         'html' => CRM_Utils_String::stripAlternatives($activityDetails),
+        'html_raw' => $activityDetails,
         'text' => CRM_Utils_String::htmlToText(CRM_Utils_String::stripAlternatives($activityDetails)),
       ];
     }

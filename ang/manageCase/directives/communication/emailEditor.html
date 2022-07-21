@@ -1,9 +1,4 @@
-<div class="com__email-editor-wrap"style="margin-bottom: 30px;">
-    <div class="com__email-editor-pre-loader" ng-if="isShowPreloader">
-        <div class="crm-container">
-            <div class="dataTables_processing"></div>
-        </div>
-    </div>
+<div class="com__email-editor-wrap">
 
     <div class="com__email-editor" ng-if="isShowEditorBlock">
         <div class="com__email-top-block">
@@ -45,29 +40,41 @@
 
         <div class="com__email-bottom-block">
             <spc-email-editor support-case-category-id="email.caseCategoryId"
-                              token-contact-id="tokenContactId"
+                              token-contact-id="email.tokenContactId"
                               email-body="email.body"
             ></spc-email-editor>
 
-            <spc-attachment-uploader model="email.additionalAttachments" ></spc-attachment-uploader>
+            <spc-attachment-uploader model="email.additionalAttachments" activity-id="email.activityId"></spc-attachment-uploader>
 
             <div class="com__errors-wrap"></div>
 
             <div class="com__message-buttons">
-                <button class="spc__button spc--height-medium" ng-click="sendDraft()">
+                <button ng-disabled="isDisabledButtons"
+                        class="spc__button spc--height-medium"
+                        ng-click="sendDraft()">
                     <span class="ui-button-icon ui-icon fa-paper-plane-o"></span>
                     <span class="ui-button-icon-space"> </span>
                     <span>Send</span>
                 </button>
-                <button class="spc__button spc--height-medium" ng-click="saveDraft()">
+                <button ng-disabled="isDisabledButtons"
+                        class="spc__button spc--height-medium"
+                        ng-click="saveDraft()">
                     <span class="ui-button-icon ui-icon fa-save"></span>
                     <span class="ui-button-icon-space"> </span>
                     <span>Save</span>
                 </button>
-                <button class="spc__button spc--height-medium button__cancel" ng-click="cancel()">
+                <button ng-disabled="isDisabledButtons"
+                        class="spc__button spc--height-medium spc--cancel"
+                        ng-click="cancel()">
                     <span ng-if="emailMode !== 'draft'">Cancel</span>
                     <span ng-if="emailMode === 'draft'">Delete draft</span>
                 </button>
+
+                <div class="com__editor-status-message-wrap">
+                    <div ng-repeat="message in messages" class="com__editor-status-message">
+                        {{message.text}}
+                    </div>
+                </div>
             </div>
 
         </div>

@@ -50,19 +50,13 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Get_ByCaseId extends CRM_Suppor
    *
    * @return array
    */
-  protected function prepareParams($params) {
-    try {
-      civicrm_api3('Case', 'getsingle', [
-        'id' => $params['case_id'],
-        'return' => ['id'],
-      ]);
-    } catch (CiviCRM_API3_Exception $e) {
-      throw new api_Exception('Case does not exist.', 'case_does_not_exist');
-    }
+  protected function prepareParams($params): array {
+    $case = $this->getCase($params['case_id']);
 
     return [
       'case_id' => (int) $params['case_id'],
-      'case_category_id' => $this->getCaseCategoryId($params['case_id']),
+      'case' => (int) $case,
+      'case_category_id' => $case['case_category_id'],
       'returnFields' => $this->getReturnFields($params),
     ];
   }

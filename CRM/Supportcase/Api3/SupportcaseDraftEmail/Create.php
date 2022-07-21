@@ -16,7 +16,7 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Create extends CRM_Supportcase_
       throw new api_Exception('Error saving files: Error: ' . $e->getMessage(), 'error_saving_files');
     }
 
-    if ($this->params['email']['mode'] == 'forward') {
+    if ($this->params['email']['mode'] == CRM_Supportcase_Utils_Email::FORWARD_MODE) {
       CRM_Supportcase_Utils_Activity::copyAttachment($this->params['email']['options']['from_activity_id'], $activityId, $this->params['email']['forwardFileIds']);
     }
 
