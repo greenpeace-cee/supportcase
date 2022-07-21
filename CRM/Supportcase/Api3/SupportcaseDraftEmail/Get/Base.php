@@ -52,7 +52,6 @@ abstract class CRM_Supportcase_Api3_SupportcaseDraftEmail_Get_Base extends CRM_S
       $preparedEmailBody = $emailBody['html_raw'];
       $preparedEmailBody = CRM_Utils_String::stripAlternatives($preparedEmailBody);
       $preparedEmailBody = trim($preparedEmailBody);
-      $preparedEmailBody = nl2br($preparedEmailBody);
       $preparedEmailBody = CRM_Utils_String::purifyHTML($preparedEmailBody);
       $data['email_body'] = $preparedEmailBody;
     }
