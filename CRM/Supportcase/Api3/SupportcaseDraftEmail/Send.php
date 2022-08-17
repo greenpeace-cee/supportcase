@@ -9,20 +9,14 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Send extends CRM_Supportcase_Ap
    * Get results of api
    */
   public function getResult() {
-    try {
-      civicrm_api3('Activity', 'create', [
-        'id' => $this->params['mailutils_message']['activity_id'],
-        'status_id' => CRM_Supportcase_Utils_ActivityStatus::DRAFT_EMAIL,
-      ]);
-    } catch (Exception $e) {
-      throw new api_Exception('Error sending email. Error: ' . $e->getMessage(), 'cannot_send_email');
-    }
+    $this->changeActivityStatus(CRM_Supportcase_Utils_ActivityStatus::DRAFT_EMAIL);
 
     try {
       \Civi\Api4\MailutilsMessage::send(FALSE)
         ->setMessageId($this->params['mailutils_message_id'])
         ->execute();
     } catch (Exception $e) {
+      $this->changeActivityStatus(CRM_Supportcase_Utils_ActivityStatus::SUPPORTCASE_DRAFT_EMAIL);
       throw new api_Exception('Error sending email. Error: ' . $e->getMessage(), 'cannot_send_email');
     }
 
@@ -30,6 +24,21 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Send extends CRM_Supportcase_Ap
       'message' => 'Email is sent.',
       'mailutils_message_id' => $this->params['mailutils_message_id'],
     ];
+  }
+
+  /**
+   * @param $newStatus
+   * @return void
+   */
+  protected function changeActivityStatus($newStatus) {
+    try {
+      civicrm_api3('Activity', 'create', [
+        'id' => $this->params['mailutils_message']['activity_id'],
+        'status_id' => $newStatus,
+      ]);
+    } catch (Exception $e) {
+      throw new api_Exception('Error sending email. Error: ' . $e->getMessage(), 'cannot_send_email');
+    }
   }
 
   /**
@@ -53,6 +62,8 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Send extends CRM_Supportcase_Ap
     if (CRM_Supportcase_BAO_CaseLock::isCaseLockedForContact($mailutilsMessage['case_id'], $contactId)) {
       throw new api_Exception('The case is locked by another user.', 'case_locked_by_another_user');
     }
+
+    //TODO validate if activity has status SUPPORTCASE_DRAFT_EMAIL
 
     return [
       'mailutils_message_id' => (int) $params['mailutils_message_id'],

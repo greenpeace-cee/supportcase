@@ -223,6 +223,7 @@ class CRM_Supportcase_Utils_Activity {
     if (is_array($emailBody)) {
       return [
         'html' => (!empty($emailBody) && !empty($emailBody['html'])) ? $emailBody['html'] : '',
+        'html_raw' => (!empty($emailBody) && !empty($emailBody['html'])) ? $emailBody['html'] : '',
         'text' => (!empty($emailBody) && !empty($emailBody['text'])) ? $emailBody['text'] : '',
       ];
     }
@@ -240,6 +241,10 @@ class CRM_Supportcase_Utils_Activity {
    * @return int|null
    */
   public static function getCaseId($activityId) {
+    if (empty($activityId)) {
+      return null;
+    }
+
     try {
       $case = civicrm_api3('Case', 'getsingle', [
         'activity_id' => $activityId,

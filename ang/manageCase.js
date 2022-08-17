@@ -766,7 +766,7 @@
 
                             for (var i = 0; i < result.values[0].emails.length; i++) {
                                 emailActivities[i] = Object.assign({}, result.values[0].emails[i]);
-                                emailActivities[i]['modes'][$scope.availableModes.view]['emailBodyResolved'] = $sce.trustAsHtml(result.values[0].emails[i]['modes'][$scope.availableModes.view]['email_body']);
+                                emailActivities[i]['emailBodyResolved'] = $sce.trustAsHtml(result.values[0].emails[i]['email_body']);
                             }
 
                             for (var j = 0; j < result.values[0].drafts.length; j++) {
@@ -2052,11 +2052,52 @@
                 };
 
                 $scope.addMessage = function (message) {
-                    $scope.messages.push({'text' : message});
+                    $scope.messages.push({
+                        'text' : message,
+                        'type': 'info'
+                    });
+                };
+
+                $scope.addErrorMessage = function (message) {
+                    $scope.messages.push({
+                        'text' : message,
+                        'type': 'error'
+                    });
+                };
+
+                $scope.addUserErrorMessage = function (message) {
+                    $scope.messages.push({
+                        'text' : message,
+                        'type': 'user_error'
+                    });
                 };
 
                 $scope.clearMessages = function () {
                     $scope.messages = [];
+                };
+
+                $scope.clearInfoMessages = function () {
+                    var messages = [];
+
+                    for (var i = 0; i < $scope.messages.length; i++) {
+                        if ($scope.messages[i]['type'] !== 'info') {
+                            messages.push($scope.messages[i]);
+                        }
+                    }
+
+                    $scope.messages = messages;
+                };
+
+                $scope.clearUserErrorMessages = function () {
+                    var messages = [];
+
+                    for (var i = 0; i < $scope.messages.length; i++) {
+                        if ($scope.messages[i]['type'] !== 'user_error') {
+                            messages.push($scope.messages[i]);
+                        }
+                    }
+
+                    $scope.messages = messages;
                 };
 
                 $scope.disabledButtons = function () {
@@ -2076,7 +2117,7 @@
                 };
 
                 $scope.createDraft = function() {
-                    $scope.clearMessages();
+                    $scope.clearInfoMessages();
                     $scope.addMessage('Email is loading ...');
                     $scope.disabledButtons();
 
@@ -2094,7 +2135,7 @@
                         $scope.emailOnSever = Object.assign({}, $scope.email);
                         $scope.mailutilsMessageId = result.values.data.mailutils_message_id;
                         $scope.isShowEditorBlock = true;
-                        $scope.clearMessages();
+                        $scope.clearInfoMessages();
                         $scope.enableButtons();
                         $scope.$apply();
                         $scope.startAutoSaving();
@@ -2102,7 +2143,7 @@
                 }
 
                 $scope.loadDraft = function() {
-                    $scope.clearMessages();
+                    $scope.clearInfoMessages();
                     $scope.addMessage('Email is loading ...');
                     $scope.disabledButtons();
 
@@ -2119,7 +2160,7 @@
                         $scope.emailOnSever = Object.assign({}, $scope.email);
                         $scope.mailutilsMessageId = result.values.mailutils_message_id;
                         $scope.isShowEditorBlock = true;
-                        $scope.clearMessages();
+                        $scope.clearInfoMessages();
                         $scope.enableButtons();
                         $scope.$apply();
                         $scope.startAutoSaving();
@@ -2127,7 +2168,7 @@
                 }
 
                 $scope.deleteDraft = function() {
-                    $scope.clearMessages();
+                    $scope.clearInfoMessages();
                     $scope.disabledButtons();
 
                     if ($scope.emailMode === 'draft') {
@@ -2145,7 +2186,7 @@
                         }
 
                         $scope.isShowEditorBlock = false;
-                        $scope.clearMessages();
+                        $scope.clearInfoMessages();
                         $scope.enableButtons();
                         $timeout.cancel($scope.autoSaveTimer);
                         $scope.$apply();
@@ -2153,8 +2194,9 @@
                     }, $scope.handleServerApiError);
                 }
 
-                $scope.sendDraft = function() {
-                    $scope.clearMessages();
+                $scope.sendDraftApiCall = function() {
+                    console.log('Sending email...');
+                    $scope.clearInfoMessages();
                     $scope.addMessage('Email is sending ...');
                     $scope.disabledButtons();
 
@@ -2163,11 +2205,14 @@
                     }).then(function(result) {
                         if (result.is_error === 1) {
                             $scope.handleApiError(result, 'SupportcaseDraftEmail', 'send');
+                            $scope.clearInfoMessages();
+                            $scope.enableButtons();
+                            $scope.enableButtons();
                             return;
                         }
 
                         $scope.isShowEditorBlock = false;
-                        $scope.clearMessages();
+                        $scope.clearInfoMessages();
                         $scope.enableButtons();
                         $timeout.cancel($scope.autoSaveTimer);
                         $scope.$apply();
@@ -2175,14 +2220,51 @@
                     }, $scope.handleServerApiError);
                 }
 
-                $scope.saveDraft = function() {
+                $scope.sendDraft = function() {
+                    $scope.saveDraft(function () {
+                        $scope.sendDraftApiCall();
+                    });
+                }
+
+                $scope.saveAttachments = function(callback) {
+
+
+                    //TODO: how to check if file description was changed?
+                    if ($scope.email.additionalAttachments.uploader.queue.length > 0) {
+                        console.log('Updating attachments: Uploading files ...');
+
+                        $scope.email.additionalAttachments.save();
+
+                        setTimeout(function() {
+                            var interval = setInterval(function() {
+                                if ($scope.email.additionalAttachments.uploader.isUploading === false) {
+                                    clearInterval(interval);
+                                    callback();
+                                }
+                            }, 50);
+                        }, 50);
+                    } else {
+                        console.log('Updating attachments: No new attachments.');
+                        callback();
+                    }
+                }
+
+                $scope.saveDraftOnClick = function() {
+                    $scope.saveDraft(function () {});
+                }
+
+                $scope.saveDraft = function(callback) {
                     if ($scope.$$destroyed === true) {
                         return;
                     }
 
-                    //TODO: prevent extra uploading, check if ned to update, test uploading big files, and a lot of saving
-                    $scope.email.additionalAttachments.save();
+                    $scope.saveAttachments(function () {
+                        $scope.saveDraftCallApi(callback);
+                    });
 
+                }
+
+                $scope.saveDraftCallApi = function(callback) {
                     var jsonUpdateParams = {
                         "mailutils_message_id": $scope.mailutilsMessageId,
                         "return": $scope.draftReturnFields
@@ -2193,6 +2275,8 @@
                     if ($scope.email.from === undefined) {$scope.email.from = '';}
                     if ($scope.email.to === undefined) {$scope.email.to = '';}
                     if ($scope.email.cc === undefined) {$scope.email.cc = '';}
+                    if ($scope.email.subject === undefined) {$scope.email.subject = '';}
+                    if ($scope.email.body === undefined) {$scope.email.body = '';}
 
                     if ($scope.emailOnSever.subject !== $scope.email.subject) {
                         jsonUpdateParams['subject'] = $scope.email.subject;
@@ -2220,24 +2304,25 @@
                     }
 
                     if (!isNeedToUpdate) {
-                        $scope.clearMessages();
-                        console.info('No new changes. Email is already saved. MailutilsMessageId: ' + $scope.mailutilsMessageId);
+                        $scope.clearInfoMessages();
+                        console.info('Updating draft data: Email is already saved. MailutilsMessageId: ' + $scope.mailutilsMessageId);
                         $scope.addMessage('No new changes. Email is already saved.');
                         $scope.startAutoSaving();
+                        callback();
                         return;
                     }
 
-                    $scope.clearMessages();
+                    $scope.clearInfoMessages();
                     $scope.addMessage('Email is saving ...');
                     $scope.disabledButtons();
 
                     //TODO: remove after test debug code
-                    console.log('start updating mailutilsMessageId  ' + $scope.mailutilsMessageId + 'jsonUpdateParams: ');
-                    console.log('Server email:');
+                    console.log('Start updating draft data,mailutilsMessageId: ' + $scope.mailutilsMessageId);
+                    console.log('Server draft email:');
                     console.log($scope.emailOnSever);
-                    console.log('Local email:');
+                    console.log('Local draft email:');
                     console.log($scope.email);
-                    console.log('jsonUpdateParams:');
+                    console.log('Need to update draft params:');
                     console.log(jsonUpdateParams);
 
                     CRM.api3('SupportcaseDraftEmail', 'update_draft', jsonUpdateParams).then(function(result) {
@@ -2246,14 +2331,13 @@
                             return;
                         }
 
-                        $scope.clearMessages();
+                        $scope.clearInfoMessages();
                         $scope.enableButtons();
                         $scope.emailOnSever = $scope.prepareEmail(result.values.data);
                         $scope.$apply();
-                        console.info('Email has saved. MailutilsMessageId: ' + $scope.mailutilsMessageId);
                         CRM.status(ts('Email saved.'));
                         $scope.startAutoSaving();
-
+                        callback();
                     }, $scope.handleServerApiError);
                 }
 
@@ -2291,13 +2375,15 @@
                 }
 
                 $scope.handleServerApiError = function(error) {
+                    $scope.clearUserErrorMessages();
+                    $scope.addUserErrorMessage('Server error: ' + error);
                     console.error('Server error!');
                     console.error(error);
-                    CRM.status('Server error!', 'error');
                 }
 
                 $scope.handleApiError = function(result, entity, action) {
-                    CRM.status('API error: ' + result.error_message, 'error');
+                    $scope.clearUserErrorMessages();
+                    $scope.addUserErrorMessage('Error: ' + result.error_message,);
                     console.error(entity + '->' + action + ' error:');
                     console.error(result.error_message);
                 }

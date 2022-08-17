@@ -16,6 +16,7 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Create extends CRM_Supportcase_
       throw new api_Exception('Error saving files: Error: ' . $e->getMessage(), 'error_saving_files');
     }
 
+    //TODO test!!!!
     if ($this->params['email']['mode'] == CRM_Supportcase_Utils_Email::FORWARD_MODE) {
       CRM_Supportcase_Utils_Activity::copyAttachment($this->params['email']['options']['from_activity_id'], $activityId, $this->params['email']['forwardFileIds']);
     }
@@ -143,12 +144,12 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Create extends CRM_Supportcase_
    * @return int
    */
   private function createMailutilsMessage($activityId) {
-    $emailMessageId = \ezcMailTools::generateMessageId($this->params['email']['fromEmails'][0]['email']);
+    $emailMessageId = CRM_Supportcase_Utils_MailutilsMessage::generateMessageId($this->params['email']['fromEmails'][0]['email']);
     $headers = '{}';
     $inReplyTo = NULL;
 
     if (in_array($this->params['email']['mode'], [CRM_Supportcase_Utils_Email::FORWARD_MODE, CRM_Supportcase_Utils_Email::REPLY_ALL_MODE, CRM_Supportcase_Utils_Email::REPLY_MODE])) {
-      $headers = $this->generateHeaders($this->params['email']['options']['mailutils_thread_id'], $emailMessageId);
+      $headers = CRM_Supportcase_Utils_MailutilsMessage::generateHeaders($this->params['email']['options']['mailutils_thread_id'], $emailMessageId);
       $inReplyTo = $this->params['email']['options']['message_id'];
     }
 
@@ -184,32 +185,6 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Create extends CRM_Supportcase_
     }
 
     return $messageParty;
-  }
-
-  /**
-   * @param $mailutilsThreadId
-   * @param $emailMessageId
-   * @return string
-   */
-  private function generateHeaders($mailutilsThreadId, $emailMessageId) {
-    $referenceList = [$emailMessageId];
-    if (empty($mailutilsThreadId)) {
-      return json_encode([
-        "References" => '<' . implode('> <', $referenceList) . '>',
-      ]);
-    }
-
-    $mailutilsMessages = \Civi\Api4\MailutilsMessage::get(FALSE)
-      ->addSelect('*')
-      ->addWhere('mailutils_thread_id', '=', $mailutilsThreadId)
-      ->execute();
-    foreach ($mailutilsMessages as $item) {
-      $referenceList[] = $item['message_id'];
-    }
-
-    return json_encode([
-      "References" => '<' . implode('> <', $referenceList) . '>',
-    ]);
   }
 
   /**

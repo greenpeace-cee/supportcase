@@ -6,13 +6,6 @@
 class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_Supportcase_Api3_Base {
 
   /**
-   * Modes
-   *
-   * @var string
-   */
-  const VIEW = 'view';
-
-  /**
    * Get results of api
    */
   public function getResult() {
@@ -120,25 +113,20 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
       'id' => $activity['id'],
       'current_mode' => 'view',
       'is_collapsed' => '1',
-      'modes' => [
-        'view' => [
-          'case_id' => $this->params['case_id'],
-          'id' => $activity['id'],
-          'subject' => $normalizedSubject,
-          'head_icon' => $headIcon,
-          'email_body' => CRM_Utils_String::purifyHTML(nl2br(trim(CRM_Utils_String::stripAlternatives($emailBody['html'])))),
-          'date_time' => $activity['activity_date_time'],
-          'activity_type' => CRM_Core_PseudoConstant::getName('CRM_Activity_BAO_Activity', 'activity_type_id', $activity['activity_type_id']),
-          'author' => $activity['api.ActivityContact.get']['values'][0]['contact_id.display_name'] ?? NULL,
-          'attachments' => $attachments,
-          'from_contact_email_label' => $fromEmailsData['coma_separated_email_labels'],
-          'to_contact_email_label' => $toEmailsData['coma_separated_email_labels'],
-          'cc_contact_email_label' => $ccEmailsData['coma_separated_email_labels'],
-          'from_contact_data_emails' => $fromEmailsData['emails_data'],
-          'to_contact_data_emails' => $toEmailsData['emails_data'],
-          'cc_contact_data_emails' => $ccEmailsData['emails_data'],
-        ]
-      ],
+      'case_id' => $this->params['case_id'],
+      'subject' => $normalizedSubject,
+      'head_icon' => $headIcon,
+      'email_body' => CRM_Utils_String::purifyHTML(nl2br(trim(CRM_Utils_String::stripAlternatives($emailBody['html'])))),
+      'date_time' => $activity['activity_date_time'],
+      'activity_type' => CRM_Core_PseudoConstant::getName('CRM_Activity_BAO_Activity', 'activity_type_id', $activity['activity_type_id']),
+      'author' => $activity['api.ActivityContact.get']['values'][0]['contact_id.display_name'] ?? NULL,
+      'attachments' => $attachments,
+      'from_contact_email_label' => $fromEmailsData['coma_separated_email_labels'],
+      'to_contact_email_label' => $toEmailsData['coma_separated_email_labels'],
+      'cc_contact_email_label' => $ccEmailsData['coma_separated_email_labels'],
+      'from_contact_data_emails' => $fromEmailsData['emails_data'],
+      'to_contact_data_emails' => $toEmailsData['emails_data'],
+      'cc_contact_data_emails' => $ccEmailsData['emails_data'],
     ];
   }
 

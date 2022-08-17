@@ -41,10 +41,10 @@
                             <div class="spc__accordion-header">
                                 <div class="com__email-item-accordion-head">
                                     <div class="com__email-item-accordion-head-from-email">
-                                        <span ng-if="activity.modes.view.head_icon !== ''" class="com__email-item-accordion-head-from-email-ico ui-icon {{activity.modes.view.head_icon}}"></span>
-                                        <div>From: {{activity.modes.view.from_contact_email_label}}<span ng-if="activity.modes.view.author"> by {{activity.modes.view.author}}</span></div>
+                                        <span ng-if="activity.head_icon !== ''" class="com__email-item-accordion-head-from-email-ico ui-icon {{activity.head_icon}}"></span>
+                                        <div>From: {{activity.from_contact_email_label}}<span ng-if="activity.author"> by {{activity.author}}</span></div>
                                     </div>
-                                    <div>{{formatDateAndTime(activity.modes.view.date_time, true)}}</div>
+                                    <div>{{formatDateAndTime(activity.date_time, true)}}</div>
                                 </div>
                             </div>
                             <div class="spc__accordion-body">
@@ -60,7 +60,7 @@
                                                             <div class="com__email-info-row-name">From:</div>
                                                             <div class="com__email-info-row-value">
                                                                 <div class="com__contact-email-wrap">
-                                                                    <a title="go to the contact '{{emailData.contact_display_name}}'" href="{{emailData.contact_link}}" target="_blank" class="com__contact-email-item" ng-repeat="emailData in activity.modes.view.from_contact_data_emails">
+                                                                    <a title="go to the contact '{{emailData.contact_display_name}}'" href="{{emailData.contact_link}}" target="_blank" class="com__contact-email-item" ng-repeat="emailData in activity.from_contact_data_emails">
                                                                         <span class="com__contact-email-item-icon {{emailData.icon}}"></span>
                                                                         <span class="com__contact-email-item-label">{{emailData.label}}</span>
                                                                     </a>
@@ -71,7 +71,7 @@
                                                             <div class="com__email-info-row-name">To:</div>
                                                             <div class="com__email-info-row-value">
                                                                 <div class="com__contact-email-wrap">
-                                                                    <a title="go to the contact '{{emailData.contact_display_name}}'" href="{{emailData.contact_link}}" target="_blank" class="com__contact-email-item" ng-repeat="emailData in activity.modes.view.to_contact_data_emails">
+                                                                    <a title="go to the contact '{{emailData.contact_display_name}}'" href="{{emailData.contact_link}}" target="_blank" class="com__contact-email-item" ng-repeat="emailData in activity.to_contact_data_emails">
                                                                         <span class="com__contact-email-item-icon {{emailData.icon}}"></span>
                                                                         <span class="com__contact-email-item-label">{{emailData.label}}</span>
                                                                     </a>
@@ -82,7 +82,7 @@
                                                             <div class="com__email-info-row-name">CC:</div>
                                                             <div class="com__email-info-row-value">
                                                                 <div class="com__contact-email-wrap">
-                                                                    <a title="go to the contact '{{emailData.contact_display_name}}'" href="{{emailData.contact_link}}" target="_blank" class="com__contact-email-item" ng-repeat="emailData in activity.modes.view.cc_contact_data_emails">
+                                                                    <a title="go to the contact '{{emailData.contact_display_name}}'" href="{{emailData.contact_link}}" target="_blank" class="com__contact-email-item" ng-repeat="emailData in activity.cc_contact_data_emails">
                                                                         <span class="com__contact-email-item-icon {{emailData.icon}}"></span>
                                                                         <span class="com__contact-email-item-label">{{emailData.label}}</span>
                                                                     </a>
@@ -91,12 +91,12 @@
                                                         </div>
                                                         <div class="com__email-info-row">
                                                             <div class="com__email-info-row-name">Subject:</div>
-                                                            <div class="com__email-info-row-value">{{activity.modes.view.subject}}</div>
+                                                            <div class="com__email-info-row-value">{{activity.subject}}</div>
                                                         </div>
-                                                        <div class="com__email-info-row" ng-if="activity.modes.view.attachments['length'] > 0">
+                                                        <div class="com__email-info-row" ng-if="activity.attachments['length'] > 0">
                                                             <div class="com__email-info-row-name">Attachments:</div>
                                                             <div class="com__email-info-row-value">
-                                                                <spc-attachment is-attachments-can-be-selected="false" model="activity.modes.view.attachments"></spc-attachment>
+                                                                <spc-attachment is-attachments-can-be-selected="false" model="activity.attachments"></spc-attachment>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -135,7 +135,7 @@
                                                             <span class="ui-button-icon-space"> </span>
                                                             <span>Show Original Email</span>
                                                         </button>
-                                                        <div class="com__email-info-panel-date">{{formatDateAndTime(activity.modes.view.date_time, true)}}</div>
+                                                        <div class="com__email-info-panel-date">{{formatDateAndTime(activity.date_time, true)}}</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -143,7 +143,7 @@
                                             <div class="com__email-bottom-block">
                                                 <div class="com__email-body">
                                                     <div class="com__message-body">
-                                                        <div ng-bind-html="activity.modes.view.emailBodyResolved"></div>
+                                                        <div ng-bind-html="activity.emailBodyResolved"></div>
                                                     </div>
                                                 </div>
                                                 <div class="com__errors-wrap com__errors-mode-view"></div>

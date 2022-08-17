@@ -106,4 +106,38 @@ class CRM_Supportcase_Utils_MailutilsMessage {
     return $messageParty;
   }
 
+  /**
+   * @param $mailutilsThreadId
+   * @param $emailMessageId
+   * @return string
+   */
+  public static function generateHeaders($mailutilsThreadId, $emailMessageId) {
+    $referenceList = [$emailMessageId];
+    if (empty($mailutilsThreadId)) {
+      return json_encode([
+        "References" => '<' . implode('> <', $referenceList) . '>',
+      ]);
+    }
+
+    $mailutilsMessages = \Civi\Api4\MailutilsMessage::get(FALSE)
+      ->addSelect('*')
+      ->addWhere('mailutils_thread_id', '=', $mailutilsThreadId)
+      ->execute();
+    foreach ($mailutilsMessages as $item) {
+      $referenceList[] = $item['message_id'];
+    }
+
+    return json_encode([
+      "References" => '<' . implode('> <', $referenceList) . '>',
+    ]);
+  }
+
+  /**
+   * @param $email
+   * @return string
+   */
+  public static function generateMessageId($email) {
+    return \ezcMailTools::generateMessageId($email);
+  }
+
 }
