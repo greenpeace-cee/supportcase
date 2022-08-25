@@ -2353,7 +2353,7 @@
 
                     $timeout.cancel($scope.autoSaveTimer);
                     $scope.autoSaveTimer = $timeout(function () {
-                        $scope.saveDraft()
+                      $scope.saveDraft(function () {})
                     }, $scope.getEmailAutoSaveIntervalTime());
                 }
 
