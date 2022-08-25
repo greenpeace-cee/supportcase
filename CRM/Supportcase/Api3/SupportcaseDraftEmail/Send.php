@@ -59,7 +59,8 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Send extends CRM_Supportcase_Ap
       throw new api_Exception('Cannot find contact id.', 'can_not_find_contact_id');
     }
 
-    if (CRM_Supportcase_BAO_CaseLock::isCaseLockedForContact($mailutilsMessage['case_id'], $contactId)) {
+    $caseId = CRM_Supportcase_Utils_Activity::getCaseId($mailutilsMessage['activity_id']);
+    if (CRM_Supportcase_BAO_CaseLock::isCaseLockedForContact($caseId, $contactId)) {
       throw new api_Exception('The case is locked by another user.', 'case_locked_by_another_user');
     }
 
@@ -68,6 +69,7 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Send extends CRM_Supportcase_Ap
     return [
       'mailutils_message_id' => (int) $params['mailutils_message_id'],
       'mailutils_message' => $mailutilsMessage,
+      'case_id' => $caseId,
     ];
   }
 
