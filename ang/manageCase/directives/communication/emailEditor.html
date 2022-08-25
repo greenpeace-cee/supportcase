@@ -65,13 +65,12 @@
                         ng-click="saveDraftOnClick()">
                     <span class="ui-button-icon ui-icon fa-save"></span>
                     <span class="ui-button-icon-space"> </span>
-                    <span>Save</span>
+                    <span>Save Draft</span>
                 </button>
                 <button ng-disabled="isDisabledButtons"
                         class="spc__button spc--height-medium spc--cancel"
                         ng-click="cancel()">
-                    <span ng-if="emailMode !== 'draft'">Cancel</span>
-                    <span ng-if="emailMode === 'draft'">Delete draft</span>
+                    <span>Discard Draft</span>
                 </button>
 
                 <div class="com__editor-status-message-wrap">

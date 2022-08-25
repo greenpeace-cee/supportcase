@@ -2308,7 +2308,7 @@
                         console.info('Updating draft data: Email is already saved. MailutilsMessageId: ' + $scope.mailutilsMessageId);
                         $scope.addMessage('No new changes. Email is already saved.');
                         $scope.startAutoSaving();
-                        callback();
+                        callback?.();
                         return;
                     }
 
@@ -2337,7 +2337,7 @@
                         $scope.$apply();
                         CRM.status(ts('Email saved.'));
                         $scope.startAutoSaving();
-                        callback();
+                        callback?.();
                     }, $scope.handleServerApiError);
                 }
 
