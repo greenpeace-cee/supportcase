@@ -187,7 +187,7 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     parent::buildQuickForm();
 
     $this->addSortNameField();
-    CRM_Supportcase_BAO_Query::buildSearchForm($this);
+    $this->addSearchFormElements();
     $this->addRowSelectors($this->caseRows);
 
     CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/ang/element.css');
@@ -200,11 +200,104 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
   }
 
   /**
+   * @return void
+   */
+  private function addSearchFormElements() {
+    $this->addSearchFieldMetadata(['Case' => CRM_Supportcase_Form_Dashboard::getCustomSearchFieldMetadata()]);
+    $this->addFormFieldsFromMetadata();
+    $caseTags = CRM_Core_BAO_Tag::getColorTags('civicrm_case');
+    if ($caseTags) {
+      $this->add('select2', 'case_tags', ts('Case Tag(s)'), $caseTags, FALSE, ['class' => 'big', 'placeholder' => ts('- select -'), 'multiple' => TRUE]);
+    }
+
+    $this->add('text', 'case_keyword', ts('Keyword'), ['class' => 'huge', 'placeholder' => 'Search within subject or message']);
+    $this->addEntityRef('case_agents', ts('Involved Agent(s)'), ['multiple' => TRUE, 'api' => ['params' => ['group' => CRM_Supportcase_Install_Entity_Group::SUPPORT_AGENT]]], FALSE, ['class' => 'big']);
+    $this->addEntityRef('case_client', ts('Client(s)'), ['multiple' => TRUE], FALSE, ['class' => 'big']);
+    $this->add('checkbox', 'is_show_deleted_cases', ts('Show deleted cases?'));
+
+    $caseStatusIdElement = $this->getElement('case_status_id');
+    $caseStatusIdElement->setAttribute('class', 'huge crm-select2');
+    $caseStatusIdElement->_options = [];
+    foreach (CRM_Supportcase_Utils_Setting::getCaseStatusOptions() as $option) {
+      $caseStatusIdElement->addOption($option['label'], $option['value']);
+    }
+
+    $parentNames = CRM_Core_BAO_Tag::getTagSet('civicrm_case');
+    CRM_Core_Form_Tag::buildQuickForm($this, $parentNames, 'civicrm_case', NULL, TRUE, FALSE);
+
+    $additionalClasses = [
+      'case_keyword' => ['spc__input'],
+      'case_agents' => ['spc__input', 'spc--multiple-select'],
+      'case_client' => ['spc__input', 'spc--multiple-select'],
+      'case_tags' => ['spc__input', 'spc--multiple-select'],
+      'case_status_id' => ['spc__input', 'spc--multiple-select'],
+      'case_start_date_relative' => ['spc__input', 'spc--single-select'],
+      'case_start_date_low' => ['spc__input'],
+      'case_start_date_high' => ['spc__input'],
+      'case_end_date_relative' => ['spc__input', 'spc--single-select'],
+      'case_end_date_low' => ['spc__input'],
+      'case_end_date_high' => ['spc__input'],
+      'case_id' => ['spc__input', 'spc--width-100-percent'],
+    ];
+
+    foreach ($additionalClasses as $elementName => $classes) {
+      if ($this->elementExists($elementName)) {
+        $this->addClassToElement($this->getElement($elementName), $classes);
+      }
+    }
+  }
+
+  /**
+   * Add new classes to element
+   *
+   * @param $element
+   * @param $classes
+   */
+  private function addClassToElement($element, $classes) {
+    $elementClasses = $element->getAttribute('class');
+    $newClasses = $elementClasses . ' ' . implode(' ', $classes) . ' ';
+    $element->setAttribute('class', $newClasses);
+  }
+
+  /**
+   * @return array
+   */
+  public static function getCustomSearchFieldMetadata() {
+    $metadata = CRM_Case_BAO_Query::getSearchFieldMetadata();
+    $metadata['case_agents'] = [
+      'title' => ts('Involved Agent(s)'),
+      'type' => CRM_Utils_Type::T_INT,
+      'is_pseudofield' => TRUE,
+      'html' => ['type' => 'Select2'],
+    ];
+    $metadata['is_show_deleted_cases'] = [
+      'title' => ts('Show deleted cases?'),
+      'type' => CRM_Utils_Type::T_BOOLEAN,
+      'is_pseudofield' => TRUE,
+      'html' => ['type' => 'CheckBox'],
+    ];
+    $metadata['case_agent'] = [
+      'title' => ts('Client'),
+      'type' => CRM_Utils_Type::T_INT,
+      'is_pseudofield' => TRUE,
+      'html' => ['type' => 'Select2'],
+    ];
+    $metadata['case_keyword'] = [
+      'title' => ts('Keyword'),
+      'type' => CRM_Utils_Type::T_STRING,
+      'is_pseudofield' => TRUE,
+      'html' => ['type' => 'text'],
+    ];
+
+    return $metadata;
+  }
+
+  /**
    * Set the metadata for the form.
    *
    */
   protected function setSearchMetadata() {
-    $this->addSearchFieldMetadata(['Case' => CRM_Supportcase_BAO_Query::getSearchFieldMetadata()]);
+    $this->addSearchFieldMetadata(['Case' => CRM_Supportcase_Form_Dashboard::getCustomSearchFieldMetadata()]);
   }
 
   /**
