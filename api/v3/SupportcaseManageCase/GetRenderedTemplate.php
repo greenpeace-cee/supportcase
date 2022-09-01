@@ -23,8 +23,10 @@ function civicrm_api3_supportcase_manage_case_get_rendered_template($params) {
   }
 
   foreach ($mailutilsTemplates as $template) {
+    $message = CRM_Supportcase_Utils_MailutilsTemplate::removeSmartyEscapeWords($template['message']);
+
     return civicrm_api3_create_success([
-      'rendered_text' => CRM_Supportcase_Utils_SupportcaseTokenProcessor::handleTokens($template['message'], $params['token_contact_id']),
+      'rendered_text' => CRM_Supportcase_Utils_SupportcaseTokenProcessor::handleTokens($message, $params['token_contact_id']),
       'mailutils_template_id' => $template['id'],
     ]);
   }
