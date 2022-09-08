@@ -94,6 +94,12 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
       throw new api_Exception('Cannot find client id',  'cannot_find_client_id');
     }
 
+    foreach ($clientIds as $clientContactId) {
+      if (in_array($clientContactId, $params['new_related_contact_ids'])) {
+        throw new api_Exception('Cannot create relationship with case client.',  'cannot_create_relationship_with_case_client');
+      }
+    }
+
     $clientId = $clientIds[0];
 
     CRM_Supportcase_Utils_CaseRelatedContact::update($case['id'], $params['new_related_contact_ids'], $clientId);
