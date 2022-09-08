@@ -459,9 +459,11 @@
             controller: function($scope, $window, $element) {
                 $scope.showHelpInfo = $scope.$parent.showHelpInfo;
                 $scope.isEditMode = false;
+                $scope.isDoubleConfirmMode = false;
                 $scope.toggleMode = function() {
                     $($element).find('.ci__case-info-errors-wrap').empty();
                     $scope.isEditMode = !$scope.isEditMode;
+                    $scope.isDoubleConfirmMode = false;
 
                     if ($scope.isEditMode) {
                         $scope.setFieldFromModel();
@@ -469,7 +471,11 @@
                     }
                 };
                 $scope.setFieldFromModel = function() {$scope.clientId = $scope.model['client_ids'][0];};
+                $scope.goToDoubleConfirmMode = function() {
+                    $scope.isDoubleConfirmMode = true;
+                };
                 $scope.editConfirm = function() {
+                    $scope.isDoubleConfirmMode = false;
                     $scope.$parent.editConfirm('new_case_client_id', $scope.clientId, $element, function(result) {
                         CRM.alert('Client was successfully updated. Refreshing page.', 'Change case client', 'success');
                         if ($scope.model['id'] != result.values.case.id) {

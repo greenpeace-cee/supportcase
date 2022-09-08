@@ -20,14 +20,19 @@
 	</div>
 
 	<div class="ci__case-info-edit-mode" ng-show="isEditMode">
-		<div class="crm-section">
+		<div class="crm-section" ng-show="!isDoubleConfirmMode">
 			<select-contact is-required="true" search-api-params='{}' is-multiple="false" max-width="600" model="clientId"></select-contact>
 		</div>
 
-		<div class="ci__case-info-errors-wrap"></div>
+		<div class="ci__case-info-errors-wrap" ng-show="!isDoubleConfirmMode"></div>
+
+		<div class="status" ng-show="isDoubleConfirmMode">
+			Are you sure to change client?
+		</div>
 
 		<div class="ci__case-info-edit-mode-buttons">
-			<button class="ci__case-info-edit-confirm spc__button spc--height-medium" ng-click="editConfirm()">confirm</button>
+			<button ng-show="!isDoubleConfirmMode" class="ci__case-info-edit-confirm spc__button spc--height-medium" ng-click="goToDoubleConfirmMode()">confirm</button>
+			<button ng-show="isDoubleConfirmMode" class="ci__case-info-edit-confirm spc__button spc--height-medium" ng-click="editConfirm()">confirm</button>
 			<button class="button__cancel spc__button spc--height-medium"  ng-click="toggleMode()">cancel</button>
 		</div>
 	</div>
