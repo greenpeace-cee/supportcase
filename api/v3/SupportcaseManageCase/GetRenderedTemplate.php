@@ -5,33 +5,26 @@
  */
 function civicrm_api3_supportcase_manage_case_get_rendered_template($params) {
   try {
-    $mailutilsTemplateApi = \Civi\Api4\MailutilsTemplate::get();
-    $mailutilsTemplateApi->setLimit(0);
-    $mailutilsTemplateApi->setCheckPermissions(FALSE);
-
-    if (!empty($params['id'])) {
-      $mailutilsTemplateApi->addWhere('id', '=', $params['id']);
-    }
-
-    $mailutilsTemplates = $mailutilsTemplateApi->execute();
+    $mailutilsTemplate = \Civi\Api4\MailutilsTemplate::get()
+      ->setLimit(0)
+      ->setCheckPermissions(FALSE)
+      ->addWhere('id', '=', $params['id'])
+      ->execute()
+      ->first();
   } catch (API_Exception $e) {
     return civicrm_api3_create_success([]);
   }
 
-  if (!empty($mailutilsTemplates['rowCount']) && $mailutilsTemplates['rowCount'] == 0) {
+  if (empty($mailutilsTemplate)) {
     return civicrm_api3_create_success([]);
   }
 
-  foreach ($mailutilsTemplates as $template) {
-    $message = CRM_Supportcase_Utils_MailutilsTemplate::removeSmartyEscapeWords($template['message']);
+  $message = CRM_Supportcase_Utils_MailutilsTemplate::prepareToExecuteMessage($mailutilsTemplate['message']);
 
-    return civicrm_api3_create_success([
-      'rendered_text' => CRM_Supportcase_Utils_SupportcaseTokenProcessor::handleTokens($message, $params['token_contact_id']),
-      'mailutils_template_id' => $template['id'],
-    ]);
-  }
-
-  return civicrm_api3_create_success([]);
+  return civicrm_api3_create_success([
+    'rendered_text' => CRM_Supportcase_Utils_SupportcaseTokenProcessor::handleTokens($message, $params['token_contact_id']),
+    'mailutils_template_id' => $mailutilsTemplate['id'],
+  ]);
 }
 
 function _civicrm_api3_supportcase_manage_case_get_rendered_template_spec(&$params) {
