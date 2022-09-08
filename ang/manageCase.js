@@ -2033,6 +2033,7 @@
                 $scope.isShowEditorBlock = false;
                 $scope.autoSaveTimer = null;
                 $scope.isDisabledButtons = false;
+                $scope.isEmailSending = false;
                 $scope.messages = [];
                 $scope.draftReturnFields = [
                     'head_icon',
@@ -2205,6 +2206,7 @@
                     $scope.clearInfoMessages();
                     $scope.addMessage('Email is sending ...');
                     $scope.disabledButtons();
+                    $scope.isEmailSending = true;
 
                     CRM.api3('SupportcaseDraftEmail', 'send', {
                         "mailutils_message_id": $scope.mailutilsMessageId
@@ -2214,16 +2216,21 @@
                             $scope.clearInfoMessages();
                             $scope.enableButtons();
                             $scope.enableButtons();
+                            $scope.isEmailSending = false;
                             return;
                         }
 
+                        $scope.isEmailSending = false;
                         $scope.isShowEditorBlock = false;
                         $scope.clearInfoMessages();
                         $scope.enableButtons();
                         $timeout.cancel($scope.autoSaveTimer);
                         $scope.$apply();
                         $scope.reloadEmailList();
-                    }, $scope.handleServerApiError);
+                    }, function (error) {
+                        $scope.handleServerApiError(error);
+                        $scope.isEmailSending = false;
+                    });
                 }
 
                 $scope.sendDraft = function() {
@@ -2233,8 +2240,6 @@
                 }
 
                 $scope.saveAttachments = function(callback) {
-
-
                     //TODO: how to check if file description was changed?
                     if ($scope.email.additionalAttachments.uploader.queue.length > 0) {
                         console.log('Updating attachments: Uploading files ...');
@@ -2359,7 +2364,12 @@
 
                     $timeout.cancel($scope.autoSaveTimer);
                     $scope.autoSaveTimer = $timeout(function () {
-                      $scope.saveDraft(function () {})
+                        if ($scope.isEmailSending) {
+                            console.log('Prevent auto saving while email is sending.');
+                            return;
+                        }
+
+                        $scope.saveDraft(function () {});
                     }, $scope.getEmailAutoSaveIntervalTime());
                 }
 
