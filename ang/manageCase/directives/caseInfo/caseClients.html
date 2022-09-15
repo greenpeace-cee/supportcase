@@ -26,13 +26,13 @@
 
 		<div class="ci__case-info-errors-wrap" ng-show="!isDoubleConfirmMode"></div>
 
-		<div class="status" ng-show="isDoubleConfirmMode">
-			Are you sure to change client?
+		<div class="status" ng-if="confirmationMessage.length > 1">
+			{{confirmationMessage}}
 		</div>
 
 		<div class="ci__case-info-edit-mode-buttons">
-			<button ng-show="!isDoubleConfirmMode" class="ci__case-info-edit-confirm spc__button spc--height-medium" ng-click="goToDoubleConfirmMode()">confirm</button>
-			<button ng-show="isDoubleConfirmMode" class="ci__case-info-edit-confirm spc__button spc--height-medium" ng-click="editConfirm()">confirm</button>
+			<button ng-show="!isNeedToShowConfirmationMessage" class="ci__case-info-edit-confirm spc__button spc--height-medium" ng-click="editConfirm()">confirm</button>
+			<button ng-show="isNeedToShowConfirmationMessage" class="ci__case-info-edit-confirm spc__button spc--height-medium" ng-click="updateClient()">confirm</button>
 			<button class="button__cancel spc__button spc--height-medium"  ng-click="toggleMode()">cancel</button>
 		</div>
 	</div>

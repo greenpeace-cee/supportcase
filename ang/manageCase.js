@@ -459,23 +459,27 @@
             controller: function($scope, $window, $element) {
                 $scope.showHelpInfo = $scope.$parent.showHelpInfo;
                 $scope.isEditMode = false;
-                $scope.isDoubleConfirmMode = false;
+                $scope.confirmationMessage = '';
+                $scope.isNeedToShowConfirmationMessage = false;
+
                 $scope.toggleMode = function() {
                     $($element).find('.ci__case-info-errors-wrap').empty();
                     $scope.isEditMode = !$scope.isEditMode;
-                    $scope.isDoubleConfirmMode = false;
 
                     if ($scope.isEditMode) {
                         $scope.setFieldFromModel();
                         $($element).find("input.sc__select-contact-input").trigger('updateAllOptionsFromServer');
+                        $scope.confirmationMessage = '';
+                        $scope.isNeedToShowConfirmationMessage = false;
                     }
                 };
                 $scope.setFieldFromModel = function() {$scope.clientId = $scope.model['client_ids'][0];};
-                $scope.goToDoubleConfirmMode = function() {
-                    $scope.isDoubleConfirmMode = true;
-                };
-                $scope.editConfirm = function() {
-                    $scope.isDoubleConfirmMode = false;
+
+                $scope.updateClient = function() {
+                    console.log('Updating client...');
+                    $scope.isNeedToShowConfirmationMessage = false;
+                    $scope.confirmationMessage = '';
+
                     $scope.$parent.editConfirm('new_case_client_id', $scope.clientId, $element, function(result) {
                         CRM.alert('Client was successfully updated. Refreshing page.', 'Change case client', 'success');
                         if ($scope.model['id'] != result.values.case.id) {
@@ -484,6 +488,31 @@
                           window.location.reload();
                         }
                         $scope.toggleMode();
+                    });
+                };
+
+                $scope.editConfirm = function() {
+                    CRM.api3('SupportcaseManageCase', 'is_need_to_show_confirmation_message', {
+                        "case_id": $scope.model['id'],
+                        "new_case_client_id": $scope.clientId
+                    }).then(function(result) {
+                        if (result.is_error === 1) {
+                            console.error('SupportcaseManageCase->is_need_to_show_confirmation_message error:');
+                            console.error(result.error_message);
+                        } else {
+                            if (result.values.isNeedToShowConfirmationMessage === true) {
+                                $scope.isNeedToShowConfirmationMessage = true;
+                                $scope.confirmationMessage = result.values.confirmationMessage;
+                                console.log('Case client field: show confirm message.');
+                            } else {
+                                $scope.isNeedToShowConfirmationMessage = false;
+                                $scope.updateClient();
+                            }
+                            $scope.$apply();
+                        }
+                    }, function(error) {
+                        console.error('SupportcaseManageCase->is_need_to_show_confirmation_message error:');
+                        console.error(error);
                     });
                 };
 
