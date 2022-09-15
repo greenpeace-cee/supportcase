@@ -2063,6 +2063,7 @@
                 $scope.autoSaveTimer = null;
                 $scope.isDisabledButtons = false;
                 $scope.isEmailSending = false;
+                $scope.lastSavedEmailBody = '';
                 $scope.messages = [];
                 $scope.draftReturnFields = [
                     'head_icon',
@@ -2169,6 +2170,7 @@
                         }
                         $scope.email = $scope.prepareEmail(result.values.data);
                         $scope.emailOnSever = Object.assign({}, $scope.email);
+                        $scope.updateLastSavedEmailBody();
                         $scope.mailutilsMessageId = result.values.data.mailutils_message_id;
                         $scope.isShowEditorBlock = true;
                         $scope.clearInfoMessages();
@@ -2194,6 +2196,7 @@
 
                         $scope.email = $scope.prepareEmail(result.values);
                         $scope.emailOnSever = Object.assign({}, $scope.email);
+                        $scope.updateLastSavedEmailBody();
                         $scope.mailutilsMessageId = result.values.mailutils_message_id;
                         $scope.isShowEditorBlock = true;
                         $scope.clearInfoMessages();
@@ -2323,7 +2326,7 @@
                         isNeedToUpdate = true;
                     }
 
-                    if ($scope.emailOnSever.bodyRaw !== $scope.email.body) {
+                    if ($scope.lastSavedEmailBody !== $scope.email.body) {
                         jsonUpdateParams['body'] = $scope.email.body;
                         isNeedToUpdate = true;
                     }
@@ -2373,6 +2376,7 @@
 
                         $scope.clearInfoMessages();
                         $scope.enableButtons();
+                        $scope.updateLastSavedEmailBody();
                         $scope.emailOnSever = $scope.prepareEmail(result.values.data);
                         $scope.$apply();
                         CRM.status(ts('Email saved.'));
@@ -2400,6 +2404,10 @@
 
                         $scope.saveDraft(function () {});
                     }, $scope.getEmailAutoSaveIntervalTime());
+                }
+
+                $scope.updateLastSavedEmailBody = function() {
+                    $scope.lastSavedEmailBody = $scope.email.body;
                 }
 
                 $scope.prepareEmail = function(email) {
