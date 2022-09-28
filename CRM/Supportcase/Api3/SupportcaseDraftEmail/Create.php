@@ -145,7 +145,9 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Create extends CRM_Supportcase_
    */
   private function createMailutilsMessage($activityId) {
     $emailMessageId = CRM_Supportcase_Utils_MailutilsMessage::generateMessageId($this->params['email']['fromEmails'][0]['email']);
-    $headers = '{}';
+    $headers = json_encode([
+      "References" => '<>',
+    ]);
     $inReplyTo = NULL;
 
     if (in_array($this->params['email']['mode'], [CRM_Supportcase_Utils_Email::FORWARD_MODE, CRM_Supportcase_Utils_Email::REPLY_ALL_MODE, CRM_Supportcase_Utils_Email::REPLY_MODE])) {
