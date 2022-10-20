@@ -210,7 +210,9 @@ class CRM_Supportcase_Utils_Activity {
       return '';
     }
 
-    return str_replace(["\r", "\n"], '', $mailutilsTemplate['message']);
+    $message = str_replace(["\r", "\n"], '', $mailutilsTemplate['message']);
+
+    return CRM_Supportcase_Utils_MailutilsTemplate::prepareToExecuteMessage($message);
   }
 
   /**
