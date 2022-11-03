@@ -73,7 +73,9 @@ class CRM_Supportcase_Utils_EmailDefaultValues_Modes_New extends CRM_Supportcase
       return '';
     }
 
-    return $mailutilsTemplate['message'];
+    $message = str_replace(["\r", "\n"], '', $mailutilsTemplate['message']);
+
+    return CRM_Supportcase_Utils_MailutilsTemplate::prepareToExecuteMessage($message);
   }
 
 }
