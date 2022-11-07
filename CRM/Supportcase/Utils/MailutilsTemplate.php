@@ -14,7 +14,7 @@ class CRM_Supportcase_Utils_MailutilsTemplate {
     }
 
     try {
-      $mailutilsTemplate = \Civi\Api4\MailutilsTemplate::prepareToExecuteMessage()
+      $mailutilsTemplate = \Civi\Api4\MailutilsTemplate::prepareToExecuteMessage(FALSE)
         ->setMessage($message)
         ->execute()
         ->first();

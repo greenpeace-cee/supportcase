@@ -9,7 +9,7 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Delete extends CRM_Supportcase_
    * Get results of api
    */
   public function getResult() {
-    \Civi\Api4\MailutilsMessage::delete()
+    \Civi\Api4\MailutilsMessage::delete(FALSE)
       ->addWhere('id', '=', $this->params['mailutils_message_id'])
       ->setLimit(1)
       ->execute();
@@ -18,7 +18,7 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Delete extends CRM_Supportcase_
       'id' => $this->params['mailutils_message']['activity_id'],
     ]);
 
-    \Civi\Api4\MailutilsMessageParty::delete()
+    \Civi\Api4\MailutilsMessageParty::delete(FALSE)
       ->addWhere('mailutils_message_id', '=', $this->params['mailutils_message_id'])
       ->execute();
 

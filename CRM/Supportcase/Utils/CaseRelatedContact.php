@@ -132,7 +132,7 @@ class CRM_Supportcase_Utils_CaseRelatedContact {
    * @return void
    */
   private static function deleteRelationship($caseId, $relatedContactIdA, $relatedContactIdB) {
-    $results = \Civi\Api4\Relationship::delete()
+    $results = \Civi\Api4\Relationship::delete(FALSE)
       ->addWhere('contact_id_a', '=', $relatedContactIdA)
       ->addWhere('contact_id_b', '=', $relatedContactIdB)
       ->addWhere('relationship_type_id', '=', self::getRelationshipTypeId())
@@ -147,7 +147,7 @@ class CRM_Supportcase_Utils_CaseRelatedContact {
    * @return void
    */
   private static function createRelationship($caseId, $relatedContactIdA, $relatedContactIdB) {
-    $results = \Civi\Api4\Relationship::create()
+    $results = \Civi\Api4\Relationship::create(FALSE)
       ->addValue('contact_id_a', $relatedContactIdA)
       ->addValue('contact_id_b', $relatedContactIdB)
       ->addValue('relationship_type_id', self::getRelationshipTypeId())

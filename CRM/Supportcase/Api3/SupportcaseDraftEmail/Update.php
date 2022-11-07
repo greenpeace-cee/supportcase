@@ -102,7 +102,7 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Update extends CRM_Supportcase_
       return;
     }
 
-    $mailutilsMessage = \Civi\Api4\MailutilsMessage::update();
+    $mailutilsMessage = \Civi\Api4\MailutilsMessage::update(FALSE);
 
     $mailutilsMessage->addWhere('id', '=', $this->params['mailutils_message']['id']);
 

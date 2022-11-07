@@ -31,7 +31,7 @@ class CRM_Supportcase_Utils_MailutilsMessage {
       return null;
     }
 
-    $mailutilsMessages = \Civi\Api4\MailutilsMessage::get()
+    $mailutilsMessages = \Civi\Api4\MailutilsMessage::get(FALSE)
       ->addWhere('id', '=', $mailutilsMessageId)
       ->setLimit(1)
       ->execute();
@@ -49,7 +49,7 @@ class CRM_Supportcase_Utils_MailutilsMessage {
       return;
     }
 
-    $results = \Civi\Api4\MailutilsMessageParty::delete()
+    $results = \Civi\Api4\MailutilsMessageParty::delete(FALSE)
       ->addWhere('mailutils_message_id', '=', $mailutilsMessageId)
       ->addWhere('party_type_id', '=', $partyTypeId)
       ->execute();
