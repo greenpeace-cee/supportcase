@@ -52,6 +52,12 @@ abstract class CRM_Supportcase_Api3_SupportcaseDraftEmail_Get_Base extends CRM_S
       $preparedEmailBody = $emailBody['html_raw'];
       $preparedEmailBody = CRM_Utils_String::stripAlternatives($preparedEmailBody);
       $preparedEmailBody = trim($preparedEmailBody);
+
+      // Hack to fix slice effect at purifyHTML method
+      // If in string is exist open and close tag 'html' + 'body'
+      // purifyHTML method remove everything else outside those tags.
+      $preparedEmailBody = '<html><body>' . $preparedEmailBody . '</body></html>';
+
       $preparedEmailBody = CRM_Utils_String::purifyHTML($preparedEmailBody);
       $data['email_body'] = $preparedEmailBody;
     }
