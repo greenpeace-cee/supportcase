@@ -133,8 +133,8 @@ class CRM_Supportcase_Utils_EmailSearch {
       return '';
     }
 
-    $emailLabel = str_replace("<", "&lt;", $emailLabel);
-    $emailLabel = str_replace(">", "&gt;", $emailLabel);
+    $emailLabel = str_replace("<", '[', $emailLabel);
+    $emailLabel = str_replace(">", ']', $emailLabel);
 
     return $emailLabel;
   }
