@@ -45,7 +45,7 @@ class CRM_Supportcase_Upgrader extends CRM_Supportcase_Upgrader_Base {
    * Validates configuration requires to use the extension
    */
   private function validateConfiguration() {
-    $isCaseComponentEnabled = CRM_Case_BAO_Case::enabled();
+    $isCaseComponentEnabled = CRM_Case_BAO_Case::isComponentEnabled();
     $title = ts('Support case installation');
     if (!$isCaseComponentEnabled) {
       $message = ts('Case component is disabled. To correctly work with extension please enable "Case" component. See "Administer->Configuration Checklist->Enable Components".');
