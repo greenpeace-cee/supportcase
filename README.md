@@ -134,7 +134,7 @@ Resent cases:
 
 ## Installation
 
-* Install CiviCRM 5.39.0+
+* Install CiviCRM 5.57.0+
 * Install CiviCRM extension:
   * `mailutils`
   * `at.greenpeace.casetools`
