@@ -14,13 +14,13 @@ Manage case page:
 
 ## Requirements
 
-* PHP v7.3+
-* CiviCRM  5.39.0+
+* PHP v7.4+
+* CiviCRM  5.57.0+
 * CiviCRM extension:
-  * at.greenpeace.casetools
-  * mailutils
+  * [at.greenpeace.casetools](https://github.com/greenpeace-cee/at.greenpeace.casetools)
+  * [mailutils](https://github.com/greenpeace-cee/mailutils)
 * CiviCRM optional extension:
-  * org.civicrm.shoreditch - it makes better view and reduces visual issues.
+  * [org.civicrm.shoreditch](https://github.com/civicrm/org.civicrm.shoreditch) - improves layout and UX
 
 ## Usage
 
@@ -49,7 +49,7 @@ At the bottom of page is located result of search:
 
 The result of search divided by tabs.
 The first tab `all` is includes all cases from result of search.
-The second tab `My cases` is includes all cases from result of search which are related to current user. 
+The second tab `My cases` is includes all cases from result of search which are related to current user.
 Another tabs it is custom tabs. Those tabs are CiviCRM case categories, and can be added/edited/deleted.
 
 ---
@@ -75,9 +75,9 @@ Block editing one case by 2 different users on the same time:
 If user is editing some case. This case will be locked for another users.
 It prevents data conflicts while saving the case.
 
-Also, user can unlock the locked case. 
-This ability needs when some user accidentally lock the case for a long time. 
-Ex: user didn't close the tab. 
+Also, user can unlock the locked case.
+This ability needs when some user accidentally lock the case for a long time.
+Ex: user didn't close the tab.
 
 ---
 
