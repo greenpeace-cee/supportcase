@@ -2062,6 +2062,7 @@
                 $scope.isShowEditorBlock = false;
                 $scope.autoSaveTimer = null;
                 $scope.isDisabledButtons = false;
+                $scope.isEmailSendingApiCall = false;
                 $scope.isEmailSending = false;
                 $scope.lastSavedEmailBody = '';
                 $scope.messages = [];
@@ -2238,7 +2239,7 @@
                     $scope.clearInfoMessages();
                     $scope.addMessage('Email is sending ...');
                     $scope.disabledButtons();
-                    $scope.isEmailSending = true;
+                    $scope.isEmailSendingApiCall = true;
 
                     CRM.api3('SupportcaseDraftEmail', 'send', {
                         "mailutils_message_id": $scope.mailutilsMessageId
@@ -2247,11 +2248,12 @@
                             $scope.handleApiError(result, 'SupportcaseDraftEmail', 'send');
                             $scope.clearInfoMessages();
                             $scope.enableButtons();
-                            $scope.enableButtons();
+                            $scope.isEmailSendingApiCall = false;
                             $scope.isEmailSending = false;
                             return;
                         }
 
+                        $scope.isEmailSendingApiCall = false;
                         $scope.isEmailSending = false;
                         $scope.isShowEditorBlock = false;
                         $scope.clearInfoMessages();
@@ -2261,11 +2263,15 @@
                         $scope.reloadEmailList();
                     }, function (error) {
                         $scope.handleServerApiError(error);
+                        $scope.isEmailSendingApiCall = false;
                         $scope.isEmailSending = false;
                     });
                 }
 
                 $scope.sendDraft = function() {
+                    $scope.isEmailSending = true;
+                    $scope.addMessage('Email is sending ...');
+                    $scope.disabledButtons();
                     $scope.saveDraft(function () {
                         $scope.sendDraftApiCall();
                     });
@@ -2274,13 +2280,14 @@
                 $scope.saveAttachments = function(callback) {
                     //TODO: how to check if file description was changed?
                     if ($scope.email.additionalAttachments.uploader.queue.length > 0) {
+                        $scope.addMessage('Attachments are saving...');
                         console.log('Updating attachments: Uploading files ...');
 
                         $scope.email.additionalAttachments.save();
 
                         setTimeout(function() {
                             var interval = setInterval(function() {
-                                if ($scope.email.additionalAttachments.uploader.isUploading === false) {
+                                if ($scope.email.additionalAttachments.uploader.isUploading === false && $scope.email.additionalAttachments.uploader.queue.length === 0) {
                                     clearInterval(interval);
                                     callback();
                                 }
@@ -2374,8 +2381,11 @@
                             return;
                         }
 
-                        $scope.clearInfoMessages();
-                        $scope.enableButtons();
+                        if (!$scope.isEmailSending) {
+                            $scope.clearInfoMessages();
+                            $scope.enableButtons();
+                        }
+
                         $scope.updateLastSavedEmailBody();
                         $scope.emailOnSever = $scope.prepareEmail(result.values.data);
                         $scope.$apply();
@@ -2397,7 +2407,7 @@
 
                     $timeout.cancel($scope.autoSaveTimer);
                     $scope.autoSaveTimer = $timeout(function () {
-                        if ($scope.isEmailSending) {
+                        if ($scope.isEmailSendingApiCall) {
                             console.log('Prevent auto saving while email is sending.');
                             return;
                         }
