@@ -160,26 +160,6 @@ function supportcase_civicrm_links($op, $objectName, $objectId, &$links, &$mask,
   }
 }
 
-function supportcase_civicrm_tokenValues(&$values, $cids, $job = null, $tokens = [], $context = null) {
-  if (isset($tokens['supportcase_user'])) {
-    $currentContactId = CRM_Core_Session::getLoggedInContactID();
-    try {
-      $contact = \Civi\Api4\Contact::get(FALSE)
-        ->addSelect('display_name', 'addressee_display')
-        ->addWhere('id', '=', $currentContactId)
-        ->execute()
-        ->first();
-    } catch (API_Exception $e) {
-      return;
-    }
-
-    foreach ($cids as $cid) {
-      $values[$cid]['supportcase_user.display_name'] = $contact['display_name'];
-      $values[$cid]['supportcase_user.addressee'] = $contact['addressee_display'];
-    }
-  }
-}
-
 function supportcase_civicrm_preProcess($formName, &$form) {
   if ($formName == CRM_Contact_Form_Search_Builder::class) {
     $spcIsUsePrefillVal = CRM_Utils_Request::retrieve('spc_is_use_prefill_val', 'Integer');
