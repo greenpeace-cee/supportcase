@@ -4,6 +4,8 @@ require_once 'supportcase.civix.php';
 
 use Civi\Api4\CiviCase;
 use CRM_Supportcase_ExtensionUtil as E;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Config\Resource\FileResource;
 
 /**
  * Implements hook_civicrm_config().
@@ -116,6 +118,21 @@ function supportcase_civicrm_permission(&$permissions) {
       E::ts('Access support cases'),
     ],
   ];
+}
+
+/**
+ * Add token services to the container.
+ *
+ * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+ */
+function  supportcase_civicrm_container(ContainerBuilder $container) {
+  $container->addResource(new FileResource(__FILE__));
+  $container->findDefinition('dispatcher')->addMethodCall('addListener',
+    ['civi.token.list', ['\Civi\Supportcase\Hook\RegisterTokens', 'run'], -100]
+  )->setPublic(TRUE);
+  $container->findDefinition('dispatcher')->addMethodCall('addListener',
+    ['civi.token.eval', ['\Civi\Supportcase\Hook\EvaluateTokens', 'run'], -100]
+  )->setPublic(TRUE);
 }
 
 function supportcase_civicrm_alterAPIPermissions($entity, $action, &$params, &$permissions) {
