@@ -157,4 +157,79 @@ class CRM_Supportcase_Utils_Case {
     return $clientIds;
   }
 
+  /**
+   * Gets case statuses with grouping "Closed"
+   *
+   * @return array
+   */
+  public static function getCaseClosedStatuses() {
+    try {
+      $caseStatuses = civicrm_api3('OptionValue', 'get', [
+        'sequential' => 1,
+        'option_group_id' => "case_status",
+        'grouping' => "Closed",
+        'is_active' => 1,
+        'options' => [
+          'limit' => 0,
+          'sort' => 'weight',
+        ],
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      return [];
+    }
+
+    return $caseStatuses['values'];
+  }
+
+  /**
+   * Gets values of case statuses with grouping "Closed"
+   *
+   * @return array
+   */
+  public static function getCaseClosedStatusesIds() {
+    $closedCaseStatuses = CRM_Supportcase_Utils_Case::getCaseClosedStatuses();
+    $caseClosedStatusesIds = [];
+
+    foreach ($closedCaseStatuses as $status) {
+      $caseClosedStatusesIds[] = $status['value'];
+    }
+
+    return $caseClosedStatusesIds;
+  }
+
+  /**
+   * Is case has a draft email?
+   *
+   * @return bool
+   */
+  public static function isCaseHasDraftEmails($caseId) {
+    try {
+      $result = civicrm_api3('SupportcaseDraftEmail', 'get', [
+        'case_id' => $caseId,
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      return false;
+    }
+
+    return !empty($result['values']);
+  }
+
+  /**
+   * Is case has a draft email?
+   *
+   * @return bool
+   */
+  public static function isCaseHasNotAnsveredEmail($caseId) {
+    try {
+      $result = civicrm_api3('Activity', 'get', [
+        'case_id' => $caseId,
+        'activity_type_id' => "Inbound Email",
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      return false;
+    }
+
+    return !empty($result['values']);
+  }
+
 }

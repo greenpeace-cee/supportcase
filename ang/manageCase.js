@@ -200,6 +200,44 @@
         };
     });
 
+    angular.module(moduleName).service('changingCaseStatusService', function() {
+        this.getCaseStatusWarningWindowData = function(caseId, newCaseStatusId, continueChangingStatusCallback) {
+          CRM.api3('SupportcaseManageCase', 'get_case_status_warning_window_data', {
+            "case_id": caseId,
+            "new_case_status_id": newCaseStatusId,
+          }).then(function(result) {
+            if (result.is_error === 1) {
+              CRM.status('Error via trying to change case status.', 'error');
+              console.error('SupportcaseManageCase->get_case_status_warning_window_data error:');
+              console.error(result.error_message);
+            } else {
+              if (result['values']['isAllowToChangeCaseStatus']) {
+                continueChangingStatusCallback(newCaseStatusId);
+              } else {
+                CRM.confirm({
+                  title: result['values']['warningWindow']['title'],
+                  message: result['values']['warningWindow']['message'],
+                  options: {yes: result['values']['warningWindow']['yesButtonText'], no: result['values']['warningWindow']['noButtonText']},
+                }).on('crmConfirm:no', function() {
+                  if (result['values']['warningWindow']['isRunCallbackOnNoEvent']) {
+                    continueChangingStatusCallback();
+                  }
+                  continueChangingStatusCallback();
+                }).on('crmConfirm:yes', function() {
+                  if (result['values']['warningWindow']['isRunCallbackOnYesEvent']) {
+                    continueChangingStatusCallback();
+                  }
+                });
+              }
+            }
+          }, function(error) {
+            console.error('SupportcaseManageCase->get_case_status_warning_window_data error:');
+            console.error(error);
+            CRM.status('Error via trying to change case status.');
+          });
+        };
+    });
+
     angular.module(moduleName).directive("caseInfo", function() {
         return {
             restrict: "E",
@@ -296,7 +334,7 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/caseInfo/caseStatus.html",
             scope: {model: "="},
-            controller: function($scope, $element) {
+            controller: function($scope, $element, changingCaseStatusService) {
                 $scope.isEditMode = false;
                 $scope.toggleMode = function() {
                     $($element).find('.ci__case-info-errors-wrap').empty();
@@ -310,8 +348,8 @@
                     }
                 };
                 $scope.setFieldFromModel = function() {
-                    $scope.statusId = $scope.model['status_id'];}
-                ;
+                    $scope.statusId = $scope.model['status_id'];
+                };
                 $scope.updateInputValue = function() {
                     $scope.setFieldFromModel();
                     setTimeout(function() {
@@ -320,6 +358,10 @@
                 };
                 $scope.getEntityLabel = $scope.$parent.getEntityLabel;
                 $scope.editConfirm = function() {
+                  changingCaseStatusService.getCaseStatusWarningWindowData($scope.model['id'], $scope.statusId, $scope.editConfirmApiCall);
+                };
+
+                $scope.editConfirmApiCall = function() {
                     $scope.$parent.editConfirm('status_id', $scope.statusId, $element, function(result) {
                         $scope.model['status_id'] = $scope.statusId;
                         $scope.toggleMode();
@@ -327,6 +369,7 @@
                         CRM.status(ts('Status updated.'));
                     });
                 };
+
                 $scope.initSelect2 = function() {
                     setTimeout(function() {$($element).find(".ci__case-info-edit-mode select").css($scope.$parent.getInputStyles()).select2();}, 0);
                 };
@@ -1107,7 +1150,7 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/managePanel.html",
             scope: {model: "="},
-            controller: function($scope, $window, $element) {
+            controller: function($scope, $window, $element, changingCaseStatusService) {
                 if ($scope.model['dashboardSearchQfKey']) {
                     $scope.backUrl = CRM.url('civicrm/supportcase', {'qfKey': $scope.model['dashboardSearchQfKey']});
                 } else {
@@ -1140,8 +1183,13 @@
                 };
 
                 $scope.resolveCase = function() {
-                    $scope.doAction('status_id', $scope.model['settings']['case_status_ids']['resolve'], function () {
-                        $scope.model['status_id'] = $scope.model['settings']['case_status_ids']['resolve'];
+                  var resolveStatusId = $scope.model['settings']['case_status_ids']['resolve'];
+                  changingCaseStatusService.getCaseStatusWarningWindowData($scope.model['id'], resolveStatusId, $scope.resolveCaseApiCall);
+                };
+
+                $scope.resolveCaseApiCall = function(resolveStatusId) {
+                    $scope.doAction('status_id', resolveStatusId, function () {
+                        $scope.model['status_id'] = resolveStatusId;
                         CRM.status('Case was resolved.');
                         if ($scope.model['dashboardSearchQfKey']) {
                             window.location.href = CRM.url('civicrm/supportcase', {'qfKey': $scope.model['dashboardSearchQfKey']});
