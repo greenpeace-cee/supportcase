@@ -456,3 +456,7 @@
 .com__list-emails-loading-block {
   padding: 20px 0;
 }
+
+.comm__attachment-uploader-wrap .crm-attachments table tr td a.crm-hover-button[ng-click="item.remove()"] {
+  display: none !important;
+}
