@@ -17,4 +17,10 @@ function _civicrm_api3_supportcase_manage_case_get_case_status_warning_window_da
     'type' => CRM_Utils_Type::T_INT,
     'title' => 'New case status id',
   ];
+  $params['context'] = [
+    'name' => 'context',
+    'api.required' => 0,
+    'type' => CRM_Utils_Type::T_STRING,
+    'title' => 'Context',
+  ];
 }

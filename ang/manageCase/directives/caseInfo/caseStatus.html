@@ -1,29 +1,33 @@
 <div class="ci__case-info-item statusField">
-	<div class="ci__case-info-header">
-		<div class="ci__case-info-item-label">Status</div>
-		<div ng-show="!isEditMode" class="ci__case-info-edit-button" title="Edit status" ng-click="toggleMode();">
-			<i class="crm-i fa-pencil"></i>
-		</div>
-	</div>
+  <div ng-show="isShowContent">
+    <div class="ci__case-info-header">
+      <div class="ci__case-info-item-label">Status</div>
+      <div ng-show="!isEditMode" class="ci__case-info-edit-button" title="Edit status" ng-click="toggleMode();">
+        <i class="crm-i fa-pencil"></i>
+      </div>
+    </div>
 
-	<div class="ci__case-info-view-mode" ng-show="!isEditMode">
-		<div class="ci__case-info-item-content">{{getEntityLabel(model['available_statuses'], model['status_id'])}}</div>
-	</div>
+    <div class="ci__case-info-view-mode" ng-show="!isEditMode">
+      <div class="ci__case-info-item-content">{{getEntityLabel(model['available_statuses'], model['status_id'])}}</div>
+    </div>
 
-	<div class="ci__case-info-edit-mode" ng-show="isEditMode">
-		<div class="ci__case-info-errors-wrap"></div>
+    <div class="ci__case-info-edit-mode" ng-show="isEditMode">
+      <div class="ci__case-info-errors-wrap"></div>
 
-		<div class="crm-section">
-			<select ng-model="statusId" name="statusField" id="statusField" class="crm-form-select spc__input spc--single-select" >
-				<option ng-repeat="option in model['available_statuses']" value="{{option.value}}">{{option.label}}</option>
-			</select>
-		</div>
+      <div class="crm-section">
+        <select ng-model="statusId" name="statusField" id="statusField" class="crm-form-select spc__input spc--single-select" >
+          <option ng-repeat="option in model['available_statuses']" value="{{option.value}}">{{option.label}}</option>
+        </select>
+      </div>
 
-		<div class="clear"></div>
+      <div class="clear"></div>
 
-		<div class="ci__case-info-edit-mode-buttons">
-			<button class="ci__case-info-edit-confirm spc__button spc--height-medium" ng-click="editConfirm()">confirm</button>
-			<button class="button__cancel spc__button spc--height-medium" ng-click="toggleMode()">cancel</button>
-		</div>
-	</div>
+      <div class="ci__case-info-edit-mode-buttons">
+        <button class="ci__case-info-edit-confirm spc__button spc--height-medium" ng-click="editConfirm()">confirm</button>
+        <button class="button__cancel spc__button spc--height-medium" ng-click="toggleMode()">cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="caseStatusChangingStatusConfirmInlineWindow" class="ci__changing-status-confirm-inline-window"></div>
 </div>

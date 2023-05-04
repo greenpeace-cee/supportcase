@@ -201,10 +201,11 @@
     });
 
     angular.module(moduleName).service('changingCaseStatusService', function() {
-        this.getCaseStatusWarningWindowData = function(caseId, newCaseStatusId, continueChangingStatusCallback) {
+        this.handleCaseStatusChanging = function(caseId, newCaseStatusId, continueChangingStatusCallback, inlineWindowParentElement, context, cancelCallback) {
           CRM.api3('SupportcaseManageCase', 'get_case_status_warning_window_data', {
             "case_id": caseId,
             "new_case_status_id": newCaseStatusId,
+            "context": context,
           }).then(function(result) {
             if (result.is_error === 1) {
               CRM.status('Error via trying to change case status.', 'error');
@@ -214,26 +215,63 @@
               if (result['values']['isAllowToChangeCaseStatus']) {
                 continueChangingStatusCallback(newCaseStatusId);
               } else {
-                CRM.confirm({
-                  title: result['values']['warningWindow']['title'],
-                  message: result['values']['warningWindow']['message'],
-                  options: {yes: result['values']['warningWindow']['yesButtonText'], no: result['values']['warningWindow']['noButtonText']},
-                }).on('crmConfirm:no', function() {
-                  if (result['values']['warningWindow']['isRunCallbackOnNoEvent']) {
-                    continueChangingStatusCallback();
-                  }
-                  continueChangingStatusCallback();
-                }).on('crmConfirm:yes', function() {
-                  if (result['values']['warningWindow']['isRunCallbackOnYesEvent']) {
-                    continueChangingStatusCallback();
-                  }
-                });
+                if (result['values']['warningWindow']['type'] === 'modal') {
+                  showModalWindow(result, continueChangingStatusCallback, cancelCallback);
+                } else if (result['values']['warningWindow']['type'] === 'inline') {
+                  showInlineWindow(result, continueChangingStatusCallback, inlineWindowParentElement, cancelCallback);
+                } else {
+                  console.error('Unrecognized type of warning window');
+                }
               }
             }
           }, function(error) {
             console.error('SupportcaseManageCase->get_case_status_warning_window_data error:');
             console.error(error);
             CRM.status('Error via trying to change case status.');
+          });
+        };
+
+        var showModalWindow = function(result, continueChangingStatusCallback, cancelCallback) {
+          var warningWindow = result['values']['warningWindow'];
+
+          CRM.confirm({
+            title: warningWindow['title'],
+            message: warningWindow['message'],
+            options: {yes: warningWindow['yesButtonText'], no: warningWindow['noButtonText']},
+            open: function(event, ui) {
+              //hide 'close' button, because cannot run 'cancelCallback' when user click on 'close' button
+              $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
+            },
+          }).on('crmConfirm:no', function() {
+            cancelCallback();
+          }).on('crmConfirm:yes', function() {
+            continueChangingStatusCallback();
+          });
+        };
+
+        var showInlineWindow = function(result, continueChangingStatusCallback, inlineWindowParentElement, cancelCallback) {
+          var warningWindow = result['values']['warningWindow'];
+          var inlineWindow = ''+
+            '<div class="md__wrap">' +
+            '  <div class="md__title">' + warningWindow['title'] + '</div>' +
+            '  <div class="md__message">' + warningWindow['message'] + '</div>' +
+            '  <div class="md__buttons">' +
+            '    <button class="md__button-yes ' + warningWindow['yesButtonClasses'] + '">' + warningWindow['yesButtonText'] + '</button>'+
+            '    <button class="md__button-no ' + warningWindow['noButtonClasses'] + '">' + warningWindow['noButtonText'] + '</button>' +
+            '  </div>' +
+            '</div>';
+
+          inlineWindowParentElement.empty();
+          inlineWindowParentElement.append(inlineWindow);
+
+          inlineWindowParentElement.find('.md__button-yes').click(function() {
+            continueChangingStatusCallback();
+            inlineWindowParentElement.empty();
+          });
+
+          inlineWindowParentElement.find('.md__button-no').click(function() {
+            cancelCallback();
+            inlineWindowParentElement.empty();
           });
         };
     });
@@ -336,6 +374,7 @@
             scope: {model: "="},
             controller: function($scope, $element, changingCaseStatusService) {
                 $scope.isEditMode = false;
+                $scope.isShowContent = true;
                 $scope.toggleMode = function() {
                     $($element).find('.ci__case-info-errors-wrap').empty();
                     $scope.isEditMode = !$scope.isEditMode;
@@ -358,12 +397,26 @@
                 };
                 $scope.getEntityLabel = $scope.$parent.getEntityLabel;
                 $scope.editConfirm = function() {
-                  changingCaseStatusService.getCaseStatusWarningWindowData($scope.model['id'], $scope.statusId, $scope.editConfirmApiCall);
+                  $scope.isShowContent = false;
+
+                  changingCaseStatusService.handleCaseStatusChanging(
+                    $scope.model['id'],
+                    $scope.statusId,
+                    $scope.editConfirmApiCall,
+                    CRM.$('#caseStatusChangingStatusConfirmInlineWindow'),
+                    'caseStatusDirective',
+                    function () {
+                      $scope.isShowContent = true;
+                      $scope.toggleMode()
+                      $scope.$apply();
+                    }
+                  );
                 };
 
                 $scope.editConfirmApiCall = function() {
                     $scope.$parent.editConfirm('status_id', $scope.statusId, $element, function(result) {
                         $scope.model['status_id'] = $scope.statusId;
+                        $scope.isShowContent = true;
                         $scope.toggleMode();
                         $scope.$apply();
                         CRM.status(ts('Status updated.'));
@@ -1184,7 +1237,14 @@
 
                 $scope.resolveCase = function() {
                   var resolveStatusId = $scope.model['settings']['case_status_ids']['resolve'];
-                  changingCaseStatusService.getCaseStatusWarningWindowData($scope.model['id'], resolveStatusId, $scope.resolveCaseApiCall);
+                  changingCaseStatusService.handleCaseStatusChanging(
+                    $scope.model['id'],
+                    resolveStatusId,
+                    $scope.resolveCaseApiCall,
+                    CRM.$('#managePanelChangingStatusConfirmInlineWindow'),
+                    'managePanelDirective',
+                    function () {}
+                  );
                 };
 
                 $scope.resolveCaseApiCall = function(resolveStatusId) {

@@ -78,6 +78,8 @@ class CRM_Supportcase_Utils_Case {
       'activity_date_time' => '',
       'activity_details' => '',
       'activity_type_label' => '',
+      'activity_type_id' => '',
+      'activity_type_name' => '',
     ];
 
     try {
@@ -92,7 +94,9 @@ class CRM_Supportcase_Utils_Case {
           'details',
           'activity_date_time',
           'activity_type_id',
-          'activity_type_id.label'
+          'activity_type_id.label',
+          'activity_type_id.name',
+          'activity_type_id'
         ],
         'options' => [
           'sort' => "activity_date_time DESC",
@@ -108,6 +112,8 @@ class CRM_Supportcase_Utils_Case {
       $recentCommunication['activity_date_time'] = $recentActivity['values'][0]['activity_date_time'];
       $recentCommunication['activity_details'] = trim(CRM_Utils_String::stripAlternatives($recentActivity['values'][0]['details'] ?? NULL));
       $recentCommunication['activity_type_label'] = $recentActivity['values'][0]['activity_type_id.label'];
+      $recentCommunication['activity_type_id'] = $recentActivity['values'][0]['activity_type_id'];
+      $recentCommunication['activity_type_name'] = $recentActivity['values'][0]['activity_type_id.name'];
     }
 
     return $recentCommunication;
@@ -220,16 +226,17 @@ class CRM_Supportcase_Utils_Case {
    * @return bool
    */
   public static function isCaseHasNotAnsveredEmail($caseId) {
-    try {
-      $result = civicrm_api3('Activity', 'get', [
-        'case_id' => $caseId,
-        'activity_type_id' => "Inbound Email",
-      ]);
-    } catch (CiviCRM_API3_Exception $e) {
+    $data = CRM_Supportcase_Utils_Case::getRecentCommunication($caseId);
+
+    if (empty($data['activity_id'])) {
       return false;
     }
 
-    return !empty($result['values']);
+    if (in_array($data['activity_type_name'], ['Inbound Email'])) {
+      return true;
+    }
+
+    return false;
   }
 
 }

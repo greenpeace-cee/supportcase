@@ -14,11 +14,12 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetCaseStatusWarningWindowData 
       'isAllowToChangeCaseStatus' => true,
       'warningWindow' => [
         'title' => 'Changing case status',
+        'type' => 'modal', // modal, inline
         'message' => '',
-        'yesButtonText' => 'Cancel',
-        'isRunCallbackOnYesEvent' => false,
-        'noButtonText' => 'Continue WITHOUT sending the message',
-        'isRunCallbackOnNoEvent' => true,
+        'yesButtonText' => 'Continue WITHOUT sending the message',
+        'yesButtonClasses' => 'button__cancel spc__button spc--height-medium',
+        'noButtonText' => 'Cancel',
+        'noButtonClasses' => 'ci__case-info-edit-confirm spc__button spc--height-medium',
       ],
     ];
 
@@ -33,6 +34,12 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetCaseStatusWarningWindowData 
       } elseif (CRM_Supportcase_Utils_Case::isCaseHasNotAnsveredEmail($this->params['case_id'])) {
         $returnData['isAllowToChangeCaseStatus'] = false;
         $returnData['warningWindow']['message'] = 'You have not replied to the most recent message.';
+        $returnData['warningWindow']['type'] = 'inline';
+
+        if ($this->params['context'] == 'caseStatusDirective') {
+          // There not enough space, make text more short:
+          $returnData['warningWindow']['yesButtonText'] = 'Change';
+        }
       }
 
       if (!empty($returnData['warningWindow']['message'])) {
@@ -59,7 +66,10 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetCaseStatusWarningWindowData 
       throw new api_Exception('Case does not exist.', 'case_does_not_exist');
     }
 
+    $context = (!empty($params['context']) && in_array($params['context'], ['managePanelDirective', 'caseStatusDirective'])) ? $params['context'] : '';
+
     return [
+      'context' => $context,
       'new_case_status_id' => $params['new_case_status_id'],
       'case_id' => $params['case_id'],
     ];
