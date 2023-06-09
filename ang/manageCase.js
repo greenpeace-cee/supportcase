@@ -242,11 +242,26 @@
               //hide 'close' button, because cannot run 'cancelCallback' when user click on 'close' button
               $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
             },
-          }).on('crmConfirm:no', function() {
-            cancelCallback();
-          }).on('crmConfirm:yes', function() {
-            continueChangingStatusCallback();
-          });
+          }).dialog("option", "buttons", [
+            {
+              text: warningWindow['yesButtonText'],
+              icon: warningWindow['yesButtonIcon'],
+              class: warningWindow['yesButtonClasses'],
+              click: function () {
+                continueChangingStatusCallback();
+                $(this).dialog("close");
+              }
+            },
+            {
+              text: warningWindow['noButtonText'],
+              icon: warningWindow['noButtonIcon'],
+              class: warningWindow['noButtonClasses'],
+              click: function () {
+                cancelCallback();
+                $(this).dialog("close");
+              }
+            }
+          ]);
         };
 
         var showInlineWindow = function(result, continueChangingStatusCallback, inlineWindowParentElement, cancelCallback) {
@@ -256,10 +271,19 @@
             '  <div class="md__title">' + warningWindow['title'] + '</div>' +
             '  <div class="md__message">' + warningWindow['message'] + '</div>' +
             '  <div class="md__buttons">' +
-            '    <button class="md__button-yes ' + warningWindow['yesButtonClasses'] + '">' + warningWindow['yesButtonText'] + '</button>'+
-            '    <button class="md__button-no ' + warningWindow['noButtonClasses'] + '">' + warningWindow['noButtonText'] + '</button>' +
+            '    <button class="md__button-yes ' + warningWindow['yesButtonClasses'] + '">' +
+            '        <span class="ui-button-icon ui-icon ' + warningWindow['yesButtonIcon'] + '"></span>' +
+            '        <span class="ui-button-icon-space"> </span>' +
+            '        <span> ' + warningWindow['yesButtonText'] + '</span>' +
+            '    </button>' +
+            '    <button class="md__button-no ' + warningWindow['noButtonClasses'] + '">' +
+            '        <span class="ui-button-icon ui-icon ' + warningWindow['noButtonIcon'] + '"></span>' +
+            '        <span class="ui-button-icon-space"> </span>' +
+            '        <span> ' + warningWindow['noButtonText'] + '</span>' +
+            '    </button>' +
             '  </div>' +
-            '</div>';
+            '</div>' +
+          ' ';
 
           inlineWindowParentElement.empty();
           inlineWindowParentElement.append(inlineWindow);

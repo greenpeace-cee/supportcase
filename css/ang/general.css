@@ -45,7 +45,7 @@
 
 .crm-container .supportcase-manage-case-module-wrap .button__cancel {
     background: #fff;
-    border: solid 1px #4d4d69;
+    border: solid 1px #4d4d69 !important;
     color: #363342 !important;
     cursor: pointer;
 }

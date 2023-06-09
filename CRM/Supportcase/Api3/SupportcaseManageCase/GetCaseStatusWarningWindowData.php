@@ -17,9 +17,11 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetCaseStatusWarningWindowData 
         'type' => 'modal', // modal, inline
         'message' => '',
         'yesButtonText' => 'Continue WITHOUT sending the message',
-        'yesButtonClasses' => 'button__cancel spc__button spc--height-medium',
+        'yesButtonClasses' => 'spc__button spc--cancel spc--height-medium',
+        'yesButtonIcon' => 'fa-times',
         'noButtonText' => 'Cancel',
         'noButtonClasses' => 'ci__case-info-edit-confirm spc__button spc--height-medium',
+        'noButtonIcon' => 'fa-check',
       ],
     ];
 

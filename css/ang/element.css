@@ -185,11 +185,11 @@
 .spc__button {
     cursor: pointer;
     box-sizing: border-box !important;
-    display: block;
+    display: block !important;
     background: #0071bd;
     color: #fff;
     font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
-    border: none;
+    border: none !important;
 }
 
 .spc__button.spc--blue {
@@ -241,7 +241,7 @@
 
 .spc__button.spc--bg-white-bordered {
     background: #ffffff;
-    border: solid 1px #d3dee2;
+    border: solid 1px #d3dee2 !important;
     color: #464354 !important;
     cursor: pointer;
     border-radius: 0;
@@ -252,14 +252,14 @@
 }
 
 .spc__button.spc--cancel {
-    background: #fff;
-    border: solid 1px #4d4d69;
+    background: #fff !important;
+    border: solid 1px #4d4d69 !important;
     color: #363342 !important;
     cursor: pointer;
 }
 
 .spc__button.spc--cancel:hover {
-    background: #f3f6f7;
+    background: #f3f6f7 !important;
 }
 
 .spc__button.spc--icon {
@@ -267,11 +267,11 @@
     height: 35px;
     padding: 0;
     margin: 0;
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
     font-size: 18px;
-    border-radius: 50%;
+    border-radius: 50% !important;
     transition: background 0.5s;
     background: white;
 }
