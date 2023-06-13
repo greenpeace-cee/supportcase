@@ -16,7 +16,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetCaseStatusWarningWindowData 
         'title' => 'Changing case status',
         'type' => 'modal', // modal, inline
         'message' => '',
-        'yesButtonText' => 'Continue WITHOUT sending the message',
+        'yesButtonText' => 'Close WITHOUT sending the message',
         'yesButtonClasses' => 'spc__button spc--cancel spc--height-medium',
         'yesButtonIcon' => 'fa-times',
         'noButtonText' => 'Cancel',
@@ -32,10 +32,13 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetCaseStatusWarningWindowData 
     if (in_array($this->params['new_case_status_id'], $closedStatuses) && $this->params['new_case_status_id'] != $spamStatusId) {
       if (CRM_Supportcase_Utils_Case::isCaseHasDraftEmails($this->params['case_id'])) {
         $returnData['isAllowToChangeCaseStatus'] = false;
-        $returnData['warningWindow']['message'] = 'There is an unsent draft in this case.';
-      } elseif (CRM_Supportcase_Utils_Case::isCaseHasNotAnsveredEmail($this->params['case_id'])) {
+        $returnData['warningWindow']['title'] = 'Unsent Draft';
+        $returnData['warningWindow']['message'] = 'Your message has not been sent yet!';
+      } elseif (CRM_Supportcase_Utils_Case::isCaseHasNotAnsweredEmail($this->params['case_id'])) {
         $returnData['isAllowToChangeCaseStatus'] = false;
+        $returnData['warningWindow']['title'] = 'Missing Reply';
         $returnData['warningWindow']['message'] = 'You have not replied to the most recent message.';
+        $returnData['warningWindow']['yesButtonText'] = 'Close without replying';
         $returnData['warningWindow']['type'] = 'inline';
 
         if ($this->params['context'] == 'caseStatusDirective') {
@@ -45,7 +48,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetCaseStatusWarningWindowData 
       }
 
       if (!empty($returnData['warningWindow']['message'])) {
-        $returnData['warningWindow']['message'] .= ' <br> Are you sure you want to change the case status to "' . $newStatusName . '"?';
+        $returnData['warningWindow']['message'] .= ' <br> Are you sure you want to close the case without sending a reply?';
       }
     }
 

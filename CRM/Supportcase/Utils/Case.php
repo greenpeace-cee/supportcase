@@ -225,7 +225,7 @@ class CRM_Supportcase_Utils_Case {
    *
    * @return bool
    */
-  public static function isCaseHasNotAnsveredEmail($caseId) {
+  public static function isCaseHasNotAnsweredEmail($caseId) {
     $data = CRM_Supportcase_Utils_Case::getRecentCommunication($caseId);
 
     if (empty($data['activity_id'])) {
