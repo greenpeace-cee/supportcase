@@ -29,6 +29,7 @@ return [
     18 => 'css/ang/directives/actions/manageEmailSubscriptions.css',
     19 => 'css/ang/directives/selectContacts.css',
     20 => 'css/ang/directives/spcEmailEditor.css',
+    21 => 'css/ang/directives/modalWindow.css',
   ],
   'partials' => [
     0 => 'ang/manageCase',

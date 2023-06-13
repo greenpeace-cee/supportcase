@@ -200,6 +200,106 @@
         };
     });
 
+    angular.module(moduleName).service('changingCaseStatusService', function() {
+        this.handleCaseStatusChanging = function(caseId, newCaseStatusId, continueChangingStatusCallback, inlineWindowParentElement, context, cancelCallback) {
+          CRM.api3('SupportcaseManageCase', 'get_case_status_warning_window_data', {
+            "case_id": caseId,
+            "new_case_status_id": newCaseStatusId,
+            "context": context,
+          }).then(function(result) {
+            if (result.is_error === 1) {
+              CRM.status('Error via trying to change case status.', 'error');
+              console.error('SupportcaseManageCase->get_case_status_warning_window_data error:');
+              console.error(result.error_message);
+            } else {
+              if (result['values']['isAllowToChangeCaseStatus']) {
+                continueChangingStatusCallback(newCaseStatusId);
+              } else {
+                if (result['values']['warningWindow']['type'] === 'modal') {
+                  showModalWindow(result, continueChangingStatusCallback, cancelCallback);
+                } else if (result['values']['warningWindow']['type'] === 'inline') {
+                  showInlineWindow(result, continueChangingStatusCallback, inlineWindowParentElement, cancelCallback);
+                } else {
+                  console.error('Unrecognized type of warning window');
+                }
+              }
+            }
+          }, function(error) {
+            console.error('SupportcaseManageCase->get_case_status_warning_window_data error:');
+            console.error(error);
+            CRM.status('Error via trying to change case status.');
+          });
+        };
+
+        var showModalWindow = function(result, continueChangingStatusCallback, cancelCallback) {
+          var warningWindow = result['values']['warningWindow'];
+
+          CRM.confirm({
+            title: warningWindow['title'],
+            message: warningWindow['message'],
+            options: {yes: warningWindow['yesButtonText'], no: warningWindow['noButtonText']},
+            open: function(event, ui) {
+              //hide 'close' button, because cannot run 'cancelCallback' when user click on 'close' button
+              $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
+            },
+          }).dialog("option", "buttons", [
+            {
+              text: warningWindow['yesButtonText'],
+              icon: warningWindow['yesButtonIcon'],
+              class: warningWindow['yesButtonClasses'],
+              click: function () {
+                continueChangingStatusCallback();
+                $(this).dialog("close");
+              }
+            },
+            {
+              text: warningWindow['noButtonText'],
+              icon: warningWindow['noButtonIcon'],
+              class: warningWindow['noButtonClasses'],
+              click: function () {
+                cancelCallback();
+                $(this).dialog("close");
+              }
+            }
+          ]);
+        };
+
+        var showInlineWindow = function(result, continueChangingStatusCallback, inlineWindowParentElement, cancelCallback) {
+          var warningWindow = result['values']['warningWindow'];
+          var inlineWindow = ''+
+            '<div class="md__wrap">' +
+            '  <div class="md__title">' + warningWindow['title'] + '</div>' +
+            '  <div class="md__message">' + warningWindow['message'] + '</div>' +
+            '  <div class="md__buttons">' +
+            '    <button class="md__button-yes ' + warningWindow['yesButtonClasses'] + '">' +
+            '        <span class="ui-button-icon ui-icon ' + warningWindow['yesButtonIcon'] + '"></span>' +
+            '        <span class="ui-button-icon-space"> </span>' +
+            '        <span> ' + warningWindow['yesButtonText'] + '</span>' +
+            '    </button>' +
+            '    <button class="md__button-no ' + warningWindow['noButtonClasses'] + '">' +
+            '        <span class="ui-button-icon ui-icon ' + warningWindow['noButtonIcon'] + '"></span>' +
+            '        <span class="ui-button-icon-space"> </span>' +
+            '        <span> ' + warningWindow['noButtonText'] + '</span>' +
+            '    </button>' +
+            '  </div>' +
+            '</div>' +
+          ' ';
+
+          inlineWindowParentElement.empty();
+          inlineWindowParentElement.append(inlineWindow);
+
+          inlineWindowParentElement.find('.md__button-yes').click(function() {
+            continueChangingStatusCallback();
+            inlineWindowParentElement.empty();
+          });
+
+          inlineWindowParentElement.find('.md__button-no').click(function() {
+            cancelCallback();
+            inlineWindowParentElement.empty();
+          });
+        };
+    });
+
     angular.module(moduleName).directive("caseInfo", function() {
         return {
             restrict: "E",
@@ -296,8 +396,9 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/caseInfo/caseStatus.html",
             scope: {model: "="},
-            controller: function($scope, $element) {
+            controller: function($scope, $element, changingCaseStatusService) {
                 $scope.isEditMode = false;
+                $scope.isShowContent = true;
                 $scope.toggleMode = function() {
                     $($element).find('.ci__case-info-errors-wrap').empty();
                     $scope.isEditMode = !$scope.isEditMode;
@@ -310,8 +411,8 @@
                     }
                 };
                 $scope.setFieldFromModel = function() {
-                    $scope.statusId = $scope.model['status_id'];}
-                ;
+                    $scope.statusId = $scope.model['status_id'];
+                };
                 $scope.updateInputValue = function() {
                     $scope.setFieldFromModel();
                     setTimeout(function() {
@@ -320,13 +421,32 @@
                 };
                 $scope.getEntityLabel = $scope.$parent.getEntityLabel;
                 $scope.editConfirm = function() {
+                  $scope.isShowContent = false;
+
+                  changingCaseStatusService.handleCaseStatusChanging(
+                    $scope.model['id'],
+                    $scope.statusId,
+                    $scope.editConfirmApiCall,
+                    CRM.$('#caseStatusChangingStatusConfirmInlineWindow'),
+                    'caseStatusDirective',
+                    function () {
+                      $scope.isShowContent = true;
+                      $scope.toggleMode()
+                      $scope.$apply();
+                    }
+                  );
+                };
+
+                $scope.editConfirmApiCall = function() {
                     $scope.$parent.editConfirm('status_id', $scope.statusId, $element, function(result) {
                         $scope.model['status_id'] = $scope.statusId;
+                        $scope.isShowContent = true;
                         $scope.toggleMode();
                         $scope.$apply();
                         CRM.status(ts('Status updated.'));
                     });
                 };
+
                 $scope.initSelect2 = function() {
                     setTimeout(function() {$($element).find(".ci__case-info-edit-mode select").css($scope.$parent.getInputStyles()).select2();}, 0);
                 };
@@ -1107,7 +1227,7 @@
             restrict: "E",
             templateUrl: "~/manageCase/directives/managePanel.html",
             scope: {model: "="},
-            controller: function($scope, $window, $element) {
+            controller: function($scope, $window, $element, changingCaseStatusService) {
                 if ($scope.model['dashboardSearchQfKey']) {
                     $scope.backUrl = CRM.url('civicrm/supportcase', {'qfKey': $scope.model['dashboardSearchQfKey']});
                 } else {
@@ -1140,8 +1260,20 @@
                 };
 
                 $scope.resolveCase = function() {
-                    $scope.doAction('status_id', $scope.model['settings']['case_status_ids']['resolve'], function () {
-                        $scope.model['status_id'] = $scope.model['settings']['case_status_ids']['resolve'];
+                  var resolveStatusId = $scope.model['settings']['case_status_ids']['resolve'];
+                  changingCaseStatusService.handleCaseStatusChanging(
+                    $scope.model['id'],
+                    resolveStatusId,
+                    $scope.resolveCaseApiCall,
+                    CRM.$('#managePanelChangingStatusConfirmInlineWindow'),
+                    'managePanelDirective',
+                    function () {}
+                  );
+                };
+
+                $scope.resolveCaseApiCall = function(resolveStatusId) {
+                    $scope.doAction('status_id', resolveStatusId, function () {
+                        $scope.model['status_id'] = resolveStatusId;
                         CRM.status('Case was resolved.');
                         if ($scope.model['dashboardSearchQfKey']) {
                             window.location.href = CRM.url('civicrm/supportcase', {'qfKey': $scope.model['dashboardSearchQfKey']});

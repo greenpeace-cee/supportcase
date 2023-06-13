@@ -78,6 +78,8 @@ class CRM_Supportcase_Utils_Case {
       'activity_date_time' => '',
       'activity_details' => '',
       'activity_type_label' => '',
+      'activity_type_id' => '',
+      'activity_type_name' => '',
     ];
 
     try {
@@ -92,7 +94,9 @@ class CRM_Supportcase_Utils_Case {
           'details',
           'activity_date_time',
           'activity_type_id',
-          'activity_type_id.label'
+          'activity_type_id.label',
+          'activity_type_id.name',
+          'activity_type_id'
         ],
         'options' => [
           'sort' => "activity_date_time DESC",
@@ -108,6 +112,8 @@ class CRM_Supportcase_Utils_Case {
       $recentCommunication['activity_date_time'] = $recentActivity['values'][0]['activity_date_time'];
       $recentCommunication['activity_details'] = trim(CRM_Utils_String::stripAlternatives($recentActivity['values'][0]['details'] ?? NULL));
       $recentCommunication['activity_type_label'] = $recentActivity['values'][0]['activity_type_id.label'];
+      $recentCommunication['activity_type_id'] = $recentActivity['values'][0]['activity_type_id'];
+      $recentCommunication['activity_type_name'] = $recentActivity['values'][0]['activity_type_id.name'];
     }
 
     return $recentCommunication;
@@ -155,6 +161,82 @@ class CRM_Supportcase_Utils_Case {
     }
 
     return $clientIds;
+  }
+
+  /**
+   * Gets case statuses with grouping "Closed"
+   *
+   * @return array
+   */
+  public static function getCaseClosedStatuses() {
+    try {
+      $caseStatuses = civicrm_api3('OptionValue', 'get', [
+        'sequential' => 1,
+        'option_group_id' => "case_status",
+        'grouping' => "Closed",
+        'is_active' => 1,
+        'options' => [
+          'limit' => 0,
+          'sort' => 'weight',
+        ],
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      return [];
+    }
+
+    return $caseStatuses['values'];
+  }
+
+  /**
+   * Gets values of case statuses with grouping "Closed"
+   *
+   * @return array
+   */
+  public static function getCaseClosedStatusesIds() {
+    $closedCaseStatuses = CRM_Supportcase_Utils_Case::getCaseClosedStatuses();
+    $caseClosedStatusesIds = [];
+
+    foreach ($closedCaseStatuses as $status) {
+      $caseClosedStatusesIds[] = $status['value'];
+    }
+
+    return $caseClosedStatusesIds;
+  }
+
+  /**
+   * Is case has a draft email?
+   *
+   * @return bool
+   */
+  public static function isCaseHasDraftEmails($caseId) {
+    try {
+      $result = civicrm_api3('SupportcaseDraftEmail', 'get', [
+        'case_id' => $caseId,
+      ]);
+    } catch (CiviCRM_API3_Exception $e) {
+      return false;
+    }
+
+    return !empty($result['values']);
+  }
+
+  /**
+   * Is case has a draft email?
+   *
+   * @return bool
+   */
+  public static function isCaseHasNotAnsweredEmail($caseId) {
+    $data = CRM_Supportcase_Utils_Case::getRecentCommunication($caseId);
+
+    if (empty($data['activity_id'])) {
+      return false;
+    }
+
+    if (in_array($data['activity_type_name'], ['Inbound Email'])) {
+      return true;
+    }
+
+    return false;
   }
 
 }

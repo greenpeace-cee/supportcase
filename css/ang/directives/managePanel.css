@@ -11,3 +11,10 @@
     display: flex;
     gap: 10px;
 }
+
+.mp__changing-status-confirm-inline-window .md__wrap {
+  border: 1px solid #d3dee2;
+  max-width: 460px;
+  margin-top: 10px;
+}
+
