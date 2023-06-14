@@ -1264,7 +1264,7 @@
                   changingCaseStatusService.handleCaseStatusChanging(
                     $scope.model['id'],
                     resolveStatusId,
-                    $scope.resolveCaseApiCall,
+                    function () {$scope.resolveCaseApiCall(resolveStatusId);},
                     CRM.$('#managePanelChangingStatusConfirmInlineWindow'),
                     'managePanelDirective',
                     function () {}
