@@ -30,7 +30,7 @@
       {counter start=0 skip=1 print=false}
       {foreach from=$rows item=row}
 
-        <tr id='rowid{$list}{$row.case_id}' data-case-id="{$row.case_id}"
+        <tr id='rowid{$row.case_id}' data-case-id="{$row.case_id}"
           class="supportcase__case-row {' '|implode:$row.classes} {if $row.case_status == 'Urgent'}supportcase__case-row-urgent{/if} {cycle values="odd-row,even-row"} crm-case crm-case-status_{$row.case_status}">
           {assign var=cbName value=$row.checkbox}
           <td class="supportcase__case-select-column-wrap supportcase__result-table-first-column">
@@ -128,7 +128,9 @@
                 {$row.action|replace:'/%%qfKey%%':''|replace:'xx':$row.case_id|replace:'action-item crm-hover-button manage-case not-popup':'crm-hover-button manage-case'}
             {/if}
 
-            {$row.moreActions|replace:'xx':$row.case_id}
+            {if !empty($row.moreActions)}
+                {$row.moreActions|replace:'xx':$row.case_id}
+            {/if}
           </td>
         {/foreach}
     </table>
