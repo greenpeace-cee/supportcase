@@ -65,11 +65,9 @@ function supportcase_civicrm_navigationMenu(&$menu) {
 }
 
 function supportcase_civicrm_permission(&$permissions) {
-  $permissions += [
-    'access support cases' => [
-      E::ts('CiviCRM: Access Support Cases'),
-      E::ts('Access support cases'),
-    ],
+  $permissions['access support cases'] = [
+    'label' => E::ts('CiviCRM: Access Support Cases'),
+    'description' => E::ts('Access support cases'),
   ];
 }
 
