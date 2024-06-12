@@ -621,3 +621,7 @@
 /*
    End pagination:
 */
+
+.spc__hide {
+  display: none !important;
+}
