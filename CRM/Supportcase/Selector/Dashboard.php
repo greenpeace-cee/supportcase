@@ -243,6 +243,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
           'qs' => 'reset=1&action=renew&id=%%id%%&cid=%%cid%%&context=%%cxt%%' . $extraParams,
           'ref' => 'restore-case',
           'title' => ts('Restore Case'),
+          'weight' => -20,
         ],
       ];
     }
@@ -255,6 +256,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
           'ref' => 'manage-case',
           'title' => ts('Manage Case'),
           'class' => 'not-popup', // huck to make this link not in popup
+          'weight' => -20,
         ],
         CRM_Core_Action::UPDATE => [
           'name' => ts('Spam'),
@@ -262,6 +264,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
           'qs' => 'reset=1&id=%%id%%&context=%%cxt%%' . $extraParams,
           'ref' => 'report-spam',
           'title' => ts('Report Spam'),
+          'weight' => 50,
         ],
         CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
@@ -269,6 +272,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
           'qs' => 'reset=1&action=delete&id=%%id%%&cid=%%cid%%&context=%%cxt%%' . $extraParams,
           'ref' => 'delete-case',
           'title' => ts('Delete Case'),
+          'weight' => 100,
         ],
       ];
     }
@@ -566,6 +570,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
           'url' => 'civicrm/case/activity/view',
           'qs' => 'reset=1&cid=%%cid%%&caseid=%%caseid%%&aid=%%aid%%',
           'title' => ts('View'),
+          'weight' => -20,
         ],
         CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
@@ -573,6 +578,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
           'qs' => 'reset=1&cid=%%cid%%&caseid=%%caseid%%&id=%%aid%%&action=update%%cxt%%',
           'title' => ts('Edit'),
           'icon' => 'fa-pencil',
+          'weight' => -10,
         ],
         CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
@@ -580,6 +586,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
           'qs' => 'reset=1&cid=%%cid%%&caseid=%%caseid%%&id=%%aid%%&action=delete%%cxt%%',
           'title' => ts('Delete'),
           'icon' => 'fa-trash',
+          'weight' => 100,
         ],
         CRM_Core_Action::RENEW => [
           'name' => ts('Restore'),
@@ -587,6 +594,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
           'qs' => 'reset=1&cid=%%cid%%&caseid=%%caseid%%&id=%%aid%%&action=renew%%cxt%%',
           'title' => ts('Restore'),
           'icon' => 'fa-undo',
+          'weight' => 90,
         ],
         CRM_Core_Action::DETACH => [
           'name' => ts('Move To Case'),
@@ -594,6 +602,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
           'title' => ts('Move To Case'),
           'extra' => 'onclick = "Javascript:fileOnCase( \'move\', %%aid%%, %%caseid%%, this ); return false;"',
           'icon' => 'fa-clipboard',
+          'weight' => 60,
         ],
         CRM_Core_Action::COPY => [
           'name' => ts('Copy To Case'),
@@ -601,6 +610,7 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
           'title' => ts('Copy To Case'),
           'extra' => 'onclick = "Javascript:fileOnCase( \'copy\', %%aid%%, %%caseid%%, this ); return false;"',
           'icon' => 'fa-files-o',
+          'weight' => 70,
         ],
       ];
     }
