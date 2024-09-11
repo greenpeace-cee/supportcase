@@ -9,21 +9,26 @@ class CRM_Supportcase_Form_AddCase extends CRM_Core_Form {
   public function setDefaultValues() {
     $defaultValues = [];
     $prefillEmailId = CRM_Utils_Request::retrieve('prefill_email_id', 'String', $this);
-    
+    $dashboardSearchQfKey = CRM_Utils_Request::retrieve('dashboardSearchQfKey', 'String');
+
+    if (!empty($dashboardSearchQfKey)) {
+      $defaultValues['dashboard_search_qf_key'] = $dashboardSearchQfKey;
+    }
+
     if (!empty($prefillEmailId) && CRM_Supportcase_Utils_Email::isEmailExist($prefillEmailId)) {
       $contactId = CRM_Supportcase_Utils_EmailSearch::getContactIdByEmailId($prefillEmailId);
       if (!empty($contactId)) {
         $defaultValues['client_contact_id'] = $contactId;
       }
     }
-    
+
     return $defaultValues;
   }
 
   public function buildQuickForm() {
     CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/ang/element.css');
-    $this->add('hidden', 'dashboard_search_qf_key', CRM_Utils_Request::retrieve('dashboardSearchQfKey', 'String'));
-    $this->add('hidden', 'prefill_email_id', CRM_Utils_Request::retrieve('prefill_email_id', 'Integer'));
+    $this->add('text', 'dashboard_search_qf_key');
+    $this->add('text', 'prefill_email_id');
     $this->add('text', 'subject', 'Subject', ['class' => 'spc__input spc--width-100-percent'], TRUE);
     $this->add('select', 'category_id', ts('Category'), CRM_Supportcase_Utils_Category::getOptions(), TRUE, ['class' => 'spc__input spc--width-100-percent']);
     $this->addEntityRef(

@@ -26,16 +26,19 @@ class CRM_Supportcase_Utils_EmailDefaultValues_Modes_New extends CRM_Supportcase
     }
 
     if (!empty($firstClientId)) {
-      $toEmailData = CRM_Supportcase_Utils_EmailSearch::getEmailIdByContactId($firstClientId);
-      if (!empty($toEmailData)) {
-        $defaultValues['toEmails'] = CRM_Supportcase_Utils_EmailSearch::searchByCommaSeparatedIds($toEmailData['id']);
+      $toEmailsData = CRM_Supportcase_Utils_EmailSearch::getEmailsDataByContactId($firstClientId);
+      if (!empty($toEmailsData[0])) {
+        $defaultValues['toEmails'] = CRM_Supportcase_Utils_EmailSearch::searchByCommaSeparatedIds($toEmailsData[0]['id']);
       }
     }
 
     // fix when cannot find from emails
     if (empty($defaultValues['fromEmails'])) {
       $currentContactId = CRM_Core_Session::getLoggedInContactID();
-      $defaultValues['fromEmails'] = CRM_Supportcase_Utils_EmailSearch::searchByCommaSeparatedIds($currentContactId);
+      $emailsData = CRM_Supportcase_Utils_EmailSearch::getEmailsDataByContactId($currentContactId);
+      if (!empty($emailsData[0])) {
+        $defaultValues['fromEmails'] = CRM_Supportcase_Utils_EmailSearch::searchByCommaSeparatedIds($emailsData[0]['id']);
+      }
     }
 
     return $defaultValues;

@@ -141,26 +141,33 @@ class CRM_Supportcase_Utils_EmailSearch {
 
   /**
    * @param $contactId
-   * @return int|false
+   * @return array
    */
-  public static function getEmailIdByContactId($contactId) {
+  public static function getEmailsDataByContactId($contactId) {
     if (empty($contactId)) {
-      return false;
+      return [];
     }
 
+    $preparedEmails = [];
+
     try {
-      $email = civicrm_api3('Email', 'getsingle', [
+      $emails = civicrm_api3('Email', 'get', [
         'sequential' => 1,
         'return' => ['id', "contact_id.display_name" , 'email', 'contact_id.id', 'contact_id.is_deleted', 'contact_id.contact_type'],
         'contact_id' => $contactId,
       ]);
     } catch (CiviCRM_API3_Exception $e) {
-      return false;
+      return $preparedEmails;
     }
 
-    $email['email_label'] = self::prepareEmailLabel($email['contact_id.display_name'], $email['email']);
+    if (!empty($emails['values'])) {
+      foreach ($emails['values'] as $email) {
+        $email['email_label'] = self::prepareEmailLabel($email['contact_id.display_name'], $email['email']);
+        $preparedEmails[] = $email;
+      }
+    }
 
-    return $email;
+    return $preparedEmails;
   }
 
   /**
