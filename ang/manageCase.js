@@ -1802,6 +1802,16 @@
                     return !!emailString.match(patern);
                 };
 
+                $scope.isEmailAlreadyExist = function(emailString, selectedValues) {
+                    for (var i = 0; i < selectedValues.length; i++) {
+                        if (selectedValues[i]['email'] === emailString) {
+                          return true;
+                        }
+                    }
+
+                    return false;
+                };
+
                 $scope.addNewItemAndSelectIt = function(newItem) {
                     var element = $($element).find(".se__select-email-input");
                     var data = element.select2('data');
@@ -1889,7 +1899,7 @@
                             'escapeMarkup' : _.identity,
                             'createSearchChoicePosition' : 'bottom',
                             'createSearchChoice' : function(searchString, selectedValues) {
-                                if (!_.findKey(selectedValues, {label: searchString}) && $scope.isValidEmail(searchString)) {
+                                if (!_.findKey(selectedValues, {label: searchString}) && $scope.isValidEmail(searchString) && !$scope.isEmailAlreadyExist(searchString, selectedValues)) {
                                     $scope.currentSearchEmail = searchString;
 
                                     // hack to add new custom item to select2
