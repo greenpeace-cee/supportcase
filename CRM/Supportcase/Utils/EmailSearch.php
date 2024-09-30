@@ -17,7 +17,7 @@ class CRM_Supportcase_Utils_EmailSearch {
       $emailQuery = self::getEmailSearchObject();
 
       // to make better performance:
-      if (CRM_Supportcase_Utils_String::isStringContains('@', $searchString)) {
+      if (CRM_Supportcase_Utils_String::isStringContains('@', $searchString) && !CRM_Supportcase_Utils_String::isStringContains(' ', $searchString)) {
         $emailQuery->addWhere('email', 'LIKE', "%" . $searchString . "%");
       } else {
         $emailQuery->addClause('OR', ['contact.display_name', 'LIKE', "%" . $searchString . "%"], ['email', 'LIKE', "%" . $searchString . "%"]);

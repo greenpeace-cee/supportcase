@@ -1865,7 +1865,7 @@
                         })
 
                         input.select2({
-                            'tokenSeparators': [' '],
+                            'tokenSeparators': [],
                             'closeOnSelect': false,
                             "multiple" : $scope.isMultiple,
                             'placeholder': '- none -',
