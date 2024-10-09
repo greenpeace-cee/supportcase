@@ -27,7 +27,7 @@
 		<div class="ci__case-info-errors-wrap" ng-show="!isDoubleConfirmMode"></div>
 
 		<div class="status" ng-if="confirmationMessage.length > 1">
-			{{confirmationMessage}}
+      <div ng-bind-html="confirmationMessage"></div>
 		</div>
 
 		<div class="ci__case-info-edit-mode-buttons">

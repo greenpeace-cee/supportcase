@@ -14,13 +14,20 @@ class CRM_Supportcase_Utils_EmailSearch {
     $preparedEmails = [];
 
     try {
-      $emailQuery = self::getEmailSearchObject();
+      $emailQuery = \Civi\Api4\EntitySet::get(FALSE);
 
       // to make better performance:
-      if (CRM_Supportcase_Utils_String::isStringContains('@', $searchString)) {
-        $emailQuery->addWhere('email', 'LIKE', "%" . $searchString . "%");
+      if (CRM_Supportcase_Utils_String::isStringContains('@', $searchString) && !CRM_Supportcase_Utils_String::isStringContains(' ', $searchString)) {
+        $emailQuery->addSet('UNION DISTINCT', self::getEmailSearchObject()
+          ->addWhere('email', 'LIKE', $searchString . '%')
+        );
       } else {
-        $emailQuery->addClause('OR', ['contact.display_name', 'LIKE', "%" . $searchString . "%"], ['email', 'LIKE', "%" . $searchString . "%"]);
+        $emailQuery->addSet('UNION DISTINCT', self::getEmailSearchObject()
+          ->addWhere('email', 'LIKE', $searchString . '%')
+        );
+        $emailQuery->addSet('UNION DISTINCT', self::getEmailSearchObject()
+          ->addWhere('contact.sort_name', 'LIKE', $searchString . '%')
+        );
       }
 
       $emailsData = $emailQuery->execute();
@@ -45,13 +52,14 @@ class CRM_Supportcase_Utils_EmailSearch {
         'contact.first_name',
         'contact.last_name',
         'contact.display_name',
+        'contact.sort_name',
         'contact.id',
         'contact.is_deleted',
         'contact.contact_type',
         'contact.addressee_display'
       )
       ->setJoin([
-        ['Contact AS contact', 'LEFT', NULL, ['contact_id', '=', 'contact.id']],
+        ['Contact AS contact', 'INNER', NULL, ['contact_id', '=', 'contact.id']],
       ]);
   }
 
