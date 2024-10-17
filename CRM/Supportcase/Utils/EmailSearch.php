@@ -48,6 +48,7 @@ class CRM_Supportcase_Utils_EmailSearch {
   private static function getEmailSearchObject() {
     return \Civi\Api4\Email::get(FALSE)
       ->addSelect(
+        'id',
         'email',
         'contact.first_name',
         'contact.last_name',
