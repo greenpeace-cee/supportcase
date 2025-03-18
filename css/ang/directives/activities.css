@@ -4,49 +4,49 @@
 */
 
 .act__block-wrap {
-    padding: 0;
+  padding: 0;
 }
 
 .act__activities {
-    margin-top: 5px;
+  margin-top: 5px;
 }
 
 .act__column {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .act__column-subject {
-    max-width: 190px;
+  max-width: 190px;
 }
 
 .act__column-created-date {
-    max-width: 100px;
+  max-width: 100px;
 }
 
 .act__column-activity-type {
-    max-width: 100px;
+  max-width: 100px;
 }
 
 .act__column-status {
-    max-width: 100px;
+  max-width: 100px;
 }
 
 .act__action-link {
-    max-width: 100px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: block;
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
 }
 
 .act__action-link a.action-item {
-    padding: 0;
+  padding: 0;
 }
 
 .act__contact-link {
-    max-width: 150px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: block;
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
 }

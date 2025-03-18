@@ -4,23 +4,23 @@
 */
 
 .com__block-wrap {
-    padding: 0;
+  padding: 0;
 }
 
 .com__activities {
-    margin-top: 5px;
+  margin-top: 5px;
 }
 
 .com__column-subject {
-    max-width: 500px;
+  max-width: 500px;
 }
 
 .com__column-created-date {
-    max-width: 130px;
+  max-width: 130px;
 }
 
 .com__column-details {
-    max-width: 600px;
+  max-width: 600px;
 }
 
 .com__meta td {

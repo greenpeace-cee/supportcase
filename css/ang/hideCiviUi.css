@@ -4,11 +4,11 @@
 */
 
 body.manage-case-page #page-title {
-    margin: 0px !important;
+  margin: 0px !important;
 }
 
 body.manage-case-page, body.manage-case-page.page-civicrm, body.manage-case-page#page {
-    background: white !important;
+  background: white !important;
 }
 
 body.manage-case-page #header,
@@ -27,40 +27,40 @@ body.manage-case-page #sidebar-first,
 body.manage-case-page #branding,
 body.manage-case-page #toolbar,
 body.manage-case-page #crm-main-content-wrapper > .messages.status  {
-    display: none !important;
+  display: none !important;
 }
 
 body.manage-case-page {
-    background: white !important;
+  background: white !important;
 }
 
 body.manage-case-page #main, #content {
-    width: 100% !important;
-    margin: 10px 0 0 0!important;
+  width: 100% !important;
+  margin: 10px 0 0 0!important;
 }
 
 body.manage-case-page #page {
-    margin-right : 0 !important;
-    margin-left : 0 !important;
-    padding : 0 !important;
+  margin-right : 0 !important;
+  margin-left : 0 !important;
+  padding : 0 !important;
 }
 body.manage-case-page.crm-menubar-visible.crm-menubar-over-cms-menu.crm-menubar-wrapped {
-    padding-top: 0 !important;
+  padding-top: 0 !important;
 
 }
 @media (min-width: 768px) {
-    body.manage-case-page.crm-menubar-visible.crm-menubar-over-cms-menu {padding-top: 0px !important;}
+  body.manage-case-page.crm-menubar-visible.crm-menubar-over-cms-menu {padding-top: 0px !important;}
 }
 
 #crm-main-content-wrapper {
-    padding: 40px 15px 15px 15px;
-    background: white !important;
+  padding: 40px 15px 15px 15px;
+  background: white !important;
 }
 
 .page-civicrm #crm-container #crm-main-content-wrapper {
-    background: #ffffff !important;
+  background: #ffffff !important;
 }
 
 .crm-container .crm-form-block {
-    background: white !important;
+  background: white !important;
 }

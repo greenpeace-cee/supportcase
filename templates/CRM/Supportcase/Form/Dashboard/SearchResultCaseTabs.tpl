@@ -36,15 +36,15 @@
 
         <div class="supportcase__empty-result-wrap">
           <div class="crm-results-block crm-results-block-empty">
-              {include file="CRM/Supportcase/Form/Dashboard/EmptyResults.tpl"}
+            {include file="CRM/Supportcase/Form/Dashboard/EmptyResults.tpl"}
           </div>
         </div>
 
         <div class="clear"></div>
 
-          {if $cases.rows}
-              {crmScript file='js/crm.expandRow.js'}
-          {/if}
+        {if $cases.rows}
+          {crmScript file='js/crm.expandRow.js'}
+        {/if}
       </div>
     </div>
   </div>

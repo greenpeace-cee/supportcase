@@ -4,89 +4,89 @@
 */
 
 .action-panel {
-    display: flex;
-    gap: 400px;
-    background: white;
-    margin-top: 10px;
-    justify-content: space-between;
-    padding-right: 10px;
+  display: flex;
+  gap: 400px;
+  background: white;
+  margin-top: 10px;
+  justify-content: space-between;
+  padding-right: 10px;
 }
 
 .ap__actions-wrap {
-    display: flex;
-    gap: 10px;
-    align-items: start;
-    align-content: start;
-    background: white;
-    padding: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: start;
+  align-content: start;
+  background: white;
+  padding: 10px;
 }
 
 .spc__menu-block {
-    position: relative;
+  position: relative;
 }
 
 .spc__menu-wrap {
-    position: absolute;
-    top: 35px;
-    z-index: 100;
-    background: white;
-    white-space: nowrap;
-    box-shadow: 0 3px 18px 0 rgb(48 40 40 / 25%);
+  position: absolute;
+  top: 35px;
+  z-index: 100;
+  background: white;
+  white-space: nowrap;
+  box-shadow: 0 3px 18px 0 rgb(48 40 40 / 25%);
 }
 
 .spc__menu-block.spc--open .spc__menu-wrap {
-    display: block;
+  display: block;
 }
 
 .spc__menu-block .spc__menu-wrap {
-    display: none;
+  display: none;
 }
 
 .spc__menu-wrap .ui-menu {
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-    list-style-type: none;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  list-style-type: none;
 }
 
 .spc__menu-wrap > .ui-menu .ui-menu {
-    box-shadow: 0 3px 18px 0 rgb(48 40 40 / 25%);
+  box-shadow: 0 3px 18px 0 rgb(48 40 40 / 25%);
 }
 
 .spc__menu-wrap .ui-menu-item > div {
-    padding: 10px;
+  padding: 10px;
 }
 
 .spc__menu-wrap .ui-menu-item {
-    padding: 2px;
+  padding: 2px;
 }
 
 .spc__menu-item {
-    padding-right: 15px !important;
-    border: none !important;
-    margin: 0 !important;
+  padding-right: 15px !important;
+  border: none !important;
+  margin: 0 !important;
 }
 
 .spc__menu-item:hover {
-    background: #f3f6f7;
-    border: none !important;
-    margin: 0 !important;
+  background: #f3f6f7;
+  border: none !important;
+  margin: 0 !important;
 }
 
 .spc__menu-title {
-    background: #2786C2;
-    color: white;
-    font-size: 12px;
-    line-height: 20px;
-    padding: 5px 10px 5px 10px;
-    position: relative;
+  background: #2786C2;
+  color: white;
+  font-size: 12px;
+  line-height: 20px;
+  padding: 5px 10px 5px 10px;
+  position: relative;
 }
 
 .spc__selected-cases {
-    display: block;
-    line-height: 35px;
+  display: block;
+  line-height: 35px;
 }
 
 .spc__selected-cases.spc--hide {
-    display: none;
+  display: none;
 }

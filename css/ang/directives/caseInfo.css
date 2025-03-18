@@ -5,140 +5,140 @@
 */
 
 .ci__case-info {
-    padding-bottom: 5px;
+  padding-bottom: 5px;
 }
 
 .ci__block-wrap {
-    display: flex;
-    flex-wrap: wrap;
-    align-content: stretch;
-    height: 100%;
-    gap: 4px;
-    padding: 10px 10px 5px 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: stretch;
+  height: 100%;
+  gap: 4px;
+  padding: 10px 10px 5px 10px;
 }
 
 .ci__case-info-item-wrap {
-    flex-flow: column wrap;
-    width: 200px;
-    box-sizing: border-box;
-    vertical-align: top;
-    position: relative;
-    overflow: hidden;
-    background: white;
-    border: 1px solid #d3dee2;
+  flex-flow: column wrap;
+  width: 200px;
+  box-sizing: border-box;
+  vertical-align: top;
+  position: relative;
+  overflow: hidden;
+  background: white;
+  border: 1px solid #d3dee2;
 }
 
 .ci__case-info-item-wrap.ci--no-border {
-    border: none;
+  border: none;
 }
 
 .ci__case-info-item-wrap.ci--seven-items-width.ci--max-width-100,
 .ci__case-info-item-wrap.ci--seven-items-width {
-    width: 100%;
-    max-width: 1424px;
+  width: 100%;
+  max-width: 1424px;
 }
 
 .ci__case-info-item-wrap.ci--max-width-100 {
-    width: 100%;
-    max-width: 100px;
+  width: 100%;
+  max-width: 100px;
 }
 
 .ci__case-info-item-wrap.ci--seven-items-width.ci--max-width-100 {
-    width: 100%;
-    max-width: 1424px;
+  width: 100%;
+  max-width: 1424px;
 }
 
 .ci__case-info-item {
-    box-sizing: border-box;
-    position: relative;
+  box-sizing: border-box;
+  position: relative;
 }
 
 .ci__case-info-item-content {
-    word-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .ci__case-info-item-content-note {
-    border: none !important;
-    background: none !important;
+  border: none !important;
+  background: none !important;
 }
 
 .ci__case-info-header {
-    padding: 10px 10px 5px 10px;
+  padding: 10px 10px 5px 10px;
 }
 
 .ci__case-info-item-label {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .ci__case-info-view-mode {
-    position: relative;
-    padding: 5px 10px 10px 10px;
+  position: relative;
+  padding: 5px 10px 10px 10px;
 }
 
 .ci__case-info-item:hover .ci__case-info-edit-button {
-    display: block;
+  display: block;
 }
 
 .ci__case-info-edit-button {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-    border: 1px solid #d3dee2;
-    display: none;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  border: 1px solid #d3dee2;
+  display: none;
 }
 
 .ci__case-info-edit-button:hover {
-    border-color: #99a4a8;
+  border-color: #99a4a8;
 }
 
 .ci__case-info-edit-button i {
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .ci__case-info-edit-mode {
-    padding: 10px;
+  padding: 10px;
 }
 
 .ci__case-info-edit-mode-buttons {
-    justify-content: space-between;
-    display: flex;
+  justify-content: space-between;
+  display: flex;
 }
 
 .ci__case-info-edit-mode-textarea {
-    width: 100%;
-    box-sizing: border-box;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .ci__tag {
-    line-height: 135%;
-    display: block;
-    float: left;
-    margin: 1px;
-    max-width: 100px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  line-height: 135%;
+  display: block;
+  float: left;
+  margin: 1px;
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .ci__case-info-errors-wrap {
-    margin-bottom: 5px;
+  margin-bottom: 5px;
 }
 
 .ci__case-info-help-message {
-    margin-bottom: 5px;
+  margin-bottom: 5px;
 }
 
 .ci__accordion-header span i {
-    color: white;
+  color: white;
 }
 
 .com__empty-result {
-    padding: 20px 10px;
+  padding: 20px 10px;
 }

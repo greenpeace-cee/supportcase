@@ -4,12 +4,12 @@
 */
 
 .mp__manage-panel {
-    padding-bottom: 10px;
+  padding-bottom: 10px;
 }
 
 .mp__buttons-wrap {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
 }
 
 .mp__changing-status-confirm-inline-window .md__wrap {

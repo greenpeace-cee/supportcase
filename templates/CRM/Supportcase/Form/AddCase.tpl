@@ -14,13 +14,13 @@
         <div class="spc__form-input-html">{$form.category_id.html}</div>
       </div>
       <div class="spc__hide">
-          {$form.dashboard_search_qf_key.html}
-          {$form.prefill_email_id.html}
+        {$form.dashboard_search_qf_key.html}
+        {$form.prefill_email_id.html}
       </div>
     </div>
 
     <div class="crm-submit-buttons">
-        {include file="CRM/common/formButtons.tpl" location="bottom"}
+      {include file="CRM/common/formButtons.tpl" location="bottom"}
     </div>
   </div>
 </div>

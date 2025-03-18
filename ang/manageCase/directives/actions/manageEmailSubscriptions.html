@@ -1,82 +1,82 @@
 <div class="act__wrap">
-	<div ng-switch="info['stepName']" class="mes__manage-subscriptions">
+  <div ng-switch="info['stepName']" class="mes__manage-subscriptions">
 
-		<div class="act__step" ng-switch-when="confirmEmailStep">
-			<div class="act__step-title">Enter email</div>
-			<div class="act__step-description">The email will be use to find matching contacts and their subscriptions.</div>
-			<div class="act__step-body">
-				<div class="act__step-logic">
-					<input maxlength="40" class="spc__input crm-form-text" type="text" ng-model="info.email">
-				</div>
-				<div class="act__step-buttons">
-					<button class="act__next-step-button spc__button spc--height-medium" ng-disabled="info.email.length === 0" ng-click="runStep('selectSubscriptionsStep')">Next</button>
-				</div>
-			</div>
-		</div>
+    <div class="act__step" ng-switch-when="confirmEmailStep">
+      <div class="act__step-title">Enter email</div>
+      <div class="act__step-description">The email will be use to find matching contacts and their subscriptions.</div>
+      <div class="act__step-body">
+        <div class="act__step-logic">
+          <input maxlength="40" class="spc__input crm-form-text" type="text" ng-model="info.email">
+        </div>
+        <div class="act__step-buttons">
+          <button class="act__next-step-button spc__button spc--height-medium" ng-disabled="info.email.length === 0" ng-click="runStep('selectSubscriptionsStep')">Next</button>
+        </div>
+      </div>
+    </div>
 
-		<div class="act__step" ng-switch-when="selectSubscriptionsStep">
-			<div class="act__step-title">Update Subscriptions</div>
-			<div class="act__step-description" ng-if="info['tableData'].length > 0" >Manage email subscriptions of all contacts with email <strong>{{info['email']}}</strong>:</div>
-			<div class="act__step-body">
-				<div class="act__step-logic">
+    <div class="act__step" ng-switch-when="selectSubscriptionsStep">
+      <div class="act__step-title">Update Subscriptions</div>
+      <div class="act__step-description" ng-if="info['tableData'].length > 0" >Manage email subscriptions of all contacts with email <strong>{{info['email']}}</strong>:</div>
+      <div class="act__step-body">
+        <div class="act__step-logic">
 
-					<div ng-if="info['tableData'].length > 0">
-						<div class="act__table act__table-middle-width">
-							<table class="crm-search-results">
-								<thead>
-									<tr>
-										<th ng-repeat="tableHeader in info['tableHeaders']" class="act__column-head" ng-class="{'act__column-head-contact' : tableHeader.table_data_key == 'contact_id'}" title="{{tableHeader.description}}" >
-											{{tableHeader.label}}
-										</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr ng-repeat="tableRow in info['tableData']" class="act__row" data-contact-id="{{tableRow.contact_id}}">
-										<td ng-repeat="tableHeader in info['tableHeaders']">
-											<div ng-if="tableHeader.is_dynamic_header">
-												<input ng-model="tableRow[(tableHeader.table_data_key)]" class="mes__group-checkbox" data-contact-id="{{contact.id}}" ng-model="tableRow['contact_is_opt_out']" type="checkbox"/>
-											</div>
+          <div ng-if="info['tableData'].length > 0">
+            <div class="act__table act__table-middle-width">
+              <table class="crm-search-results">
+                <thead>
+                <tr>
+                  <th ng-repeat="tableHeader in info['tableHeaders']" class="act__column-head" ng-class="{'act__column-head-contact' : tableHeader.table_data_key == 'contact_id'}" title="{{tableHeader.description}}" >
+                    {{tableHeader.label}}
+                  </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="tableRow in info['tableData']" class="act__row" data-contact-id="{{tableRow.contact_id}}">
+                  <td ng-repeat="tableHeader in info['tableHeaders']">
+                    <div ng-if="tableHeader.is_dynamic_header">
+                      <input ng-model="tableRow[(tableHeader.table_data_key)]" class="mes__group-checkbox" data-contact-id="{{contact.id}}" ng-model="tableRow['contact_is_opt_out']" type="checkbox"/>
+                    </div>
 
-											<div ng-if="!tableHeader.is_dynamic_header">
-												<div class="act__column" ng-if="tableHeader.table_data_key == 'contact_id'">
-													<contact-info model="tableRow['contact_id']" is-search-duplicates="true"></contact-info>
-												</div>
+                    <div ng-if="!tableHeader.is_dynamic_header">
+                      <div class="act__column" ng-if="tableHeader.table_data_key == 'contact_id'">
+                        <contact-info model="tableRow['contact_id']" is-search-duplicates="true"></contact-info>
+                      </div>
 
-												<div class="act__column" ng-if="tableHeader.table_data_key == 'contact_is_opt_out'">
-													<label class="mes__bulk-opt-out-block">
-														<input class="mes__bulk-opt-out-checkbox" ng-model="tableRow['contact_is_opt_out']" type="checkbox"/>
-													</label>
-												</div>
-											</div>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-						<div class="mes__unsubscribe-all-groups" >
-							<button class="spc__button spc--height-medium" ng-click="unCheckAllGroups()">Remove all groups</button>
-						</div>
-					</div>
-					<div ng-if="info['tableData'].length == 0">
-						<p>Cannot find any contacts contacts matching <strong>"{{info['email']}}"</strong>.</p>
-					</div>
-				</div>
-				<div class="act__step-buttons">
-					<button class="act__next-step-button spc__button spc--height-medium" ng-click="runStep('showSuccessMessageStep')">Confirm</button>
-					<button class="button__cancel spc__button spc--height-medium" ng-click="runStep('confirmEmailStep')">Back</button>
-				</div>
-			</div>
-		</div>
+                      <div class="act__column" ng-if="tableHeader.table_data_key == 'contact_is_opt_out'">
+                        <label class="mes__bulk-opt-out-block">
+                          <input class="mes__bulk-opt-out-checkbox" ng-model="tableRow['contact_is_opt_out']" type="checkbox"/>
+                        </label>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="mes__unsubscribe-all-groups" >
+              <button class="spc__button spc--height-medium" ng-click="unCheckAllGroups()">Remove all groups</button>
+            </div>
+          </div>
+          <div ng-if="info['tableData'].length == 0">
+            <p>Cannot find any contacts contacts matching <strong>"{{info['email']}}"</strong>.</p>
+          </div>
+        </div>
+        <div class="act__step-buttons">
+          <button class="act__next-step-button spc__button spc--height-medium" ng-click="runStep('showSuccessMessageStep')">Confirm</button>
+          <button class="button__cancel spc__button spc--height-medium" ng-click="runStep('confirmEmailStep')">Back</button>
+        </div>
+      </div>
+    </div>
 
-		<div class="act__step" ng-switch-when="showSuccessMessageStep">
-			<div class="act__step-title">Success</div>
-			<div class="act__step-description">Subscriptions were updated.</div>
-			<div class="act__step-body">
-				<div class="act__step-buttons">
-					<button class="act__next-step-button spc__button spc--height-medium" ng-click="closeAction()">Close</button>
-				</div>
-			</div>
-		</div>
+    <div class="act__step" ng-switch-when="showSuccessMessageStep">
+      <div class="act__step-title">Success</div>
+      <div class="act__step-description">Subscriptions were updated.</div>
+      <div class="act__step-body">
+        <div class="act__step-buttons">
+          <button class="act__next-step-button spc__button spc--height-medium" ng-click="closeAction()">Close</button>
+        </div>
+      </div>
+    </div>
 
-	</div>
+  </div>
 </div>

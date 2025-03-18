@@ -1,26 +1,26 @@
 <div class="ci__case-info-item subjectField">
-	<div class="ci__case-info-header">
-		<div class="ci__case-info-item-label">Subject</div>
-		<div ng-show="!isEditMode" class="ci__case-info-edit-button" title="Edit subject" ng-click="toggleMode();">
-			<i class="crm-i fa-pencil"></i>
-		</div>
-	</div>
+  <div class="ci__case-info-header">
+    <div class="ci__case-info-item-label">Subject</div>
+    <div ng-show="!isEditMode" class="ci__case-info-edit-button" title="Edit subject" ng-click="toggleMode();">
+      <i class="crm-i fa-pencil"></i>
+    </div>
+  </div>
 
-	<div class="ci__case-info-view-mode" ng-show="!isEditMode">
-		<div class="ci__case-info-item-content">{{model['subject']}}</div>
-	</div>
+  <div class="ci__case-info-view-mode" ng-show="!isEditMode">
+    <div class="ci__case-info-item-content">{{model['subject']}}</div>
+  </div>
 
-	<div class="ci__case-info-edit-mode" ng-show="isEditMode">
-		<div class="ci__case-info-errors-wrap"></div>
+  <div class="ci__case-info-edit-mode" ng-show="isEditMode">
+    <div class="ci__case-info-errors-wrap"></div>
 
-		<div class="crm-section">
-			<textarea rows="3" class="ci__case-info-edit-mode-textarea spc--textarea spc__input" ng-model="subject" name="subjectField" ></textarea>
-			<div class="clear"></div>
-		</div>
+    <div class="crm-section">
+      <textarea rows="3" class="ci__case-info-edit-mode-textarea spc--textarea spc__input" ng-model="subject" name="subjectField" ></textarea>
+      <div class="clear"></div>
+    </div>
 
-		<div class="ci__case-info-edit-mode-buttons">
-			<button class="ci__case-info-edit-confirm spc__button spc--height-medium" ng-click="editConfirm()">confirm</button>
-			<button class="button__cancel spc__button spc--height-medium" ng-click="toggleMode()">cancel</button>
-		</div>
-	</div>
+    <div class="ci__case-info-edit-mode-buttons">
+      <button class="ci__case-info-edit-confirm spc__button spc--height-medium" ng-click="editConfirm()">confirm</button>
+      <button class="button__cancel spc__button spc--height-medium" ng-click="toggleMode()">cancel</button>
+    </div>
+  </div>
 </div>

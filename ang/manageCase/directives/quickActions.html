@@ -1,79 +1,79 @@
 <div class="qa__quick-actions">
-	<div class="spc__accordion crm-accordion-wrapper collapsed">
-		<div class="crm-accordion-header crm-master-accordion-header">Quick actions</div>
-		<div class="crm-accordion-body">
-			<div class="qa__block-wrap">
-				<div class="qa__panel-wrap">
-					<button class="qa__panel-button"
-						ng-class="{'active' : model['activeAction'] == 'doNotSms'}"
-						ng-click="runQuickAction('doNotSms');">
-						Do not SMS
-					</button>
-					<button class="qa__panel-button"
-						ng-class="{'active' : model['activeAction'] == 'manageEmailSubscriptions'}"
-						ng-click="runQuickAction('manageEmailSubscriptions');">
-						Manage Email Subscriptions
-					</button>
-					<button class="qa__panel-button"
-						ng-class="{'active' : model['activeAction'] == 'exampleAction'}"
-						ng-click="runQuickAction('exampleAction');">
-						Example action.
-					</button>
-				</div>
-				<div class="qa__actions-wrap">
+  <div class="spc__accordion crm-accordion-wrapper collapsed">
+    <div class="crm-accordion-header crm-master-accordion-header">Quick actions</div>
+    <div class="crm-accordion-body">
+      <div class="qa__block-wrap">
+        <div class="qa__panel-wrap">
+          <button class="qa__panel-button"
+                  ng-class="{'active' : model['activeAction'] == 'doNotSms'}"
+                  ng-click="runQuickAction('doNotSms');">
+            Do not SMS
+          </button>
+          <button class="qa__panel-button"
+                  ng-class="{'active' : model['activeAction'] == 'manageEmailSubscriptions'}"
+                  ng-click="runQuickAction('manageEmailSubscriptions');">
+            Manage Email Subscriptions
+          </button>
+          <button class="qa__panel-button"
+                  ng-class="{'active' : model['activeAction'] == 'exampleAction'}"
+                  ng-click="runQuickAction('exampleAction');">
+            Example action.
+          </button>
+        </div>
+        <div class="qa__actions-wrap">
 
-					<div class="qa__preloader">
-						<div class="crm-container">
-							<div class="dataTables_processing"></div>
-						</div>
-					</div>
+          <div class="qa__preloader">
+            <div class="crm-container">
+              <div class="dataTables_processing"></div>
+            </div>
+          </div>
 
-					<div ng-switch="model['activeAction']" class="qa__action-wrap">
+          <div ng-switch="model['activeAction']" class="qa__action-wrap">
 
-						<div ng-switch-when="doNotSms">
-							<div class="qa__action-item-wrap">
-								<div class="qa__action-item-head">
-									<button class="button__cancel spc__button spc--height-medium" ng-click="closeAction();">Cancel</button>
-									<div class="qa__action-name">Do not SMS</div>
-								</div>
-								<div class="qa__action-item-body">
-									<do-not-sms model='model'></do-not-sms>
-								</div>
-							</div>
-						</div>
+            <div ng-switch-when="doNotSms">
+              <div class="qa__action-item-wrap">
+                <div class="qa__action-item-head">
+                  <button class="button__cancel spc__button spc--height-medium" ng-click="closeAction();">Cancel</button>
+                  <div class="qa__action-name">Do not SMS</div>
+                </div>
+                <div class="qa__action-item-body">
+                  <do-not-sms model='model'></do-not-sms>
+                </div>
+              </div>
+            </div>
 
-						<div ng-switch-when="manageEmailSubscriptions">
-							<div class="qa__action-item-wrap">
-								<div class="qa__action-item-head">
-									<button class="button__cancel spc__button spc--height-medium" ng-click="closeAction();">Cancel</button>
-									<div class="qa__action-name">Manage Email Subscriptions</div>
-								</div>
-								<div class="qa__action-item-body">
-									<manage-email-subscriptions model='model'></manage-email-subscriptions>
-								</div>
-							</div>
-						</div>
+            <div ng-switch-when="manageEmailSubscriptions">
+              <div class="qa__action-item-wrap">
+                <div class="qa__action-item-head">
+                  <button class="button__cancel spc__button spc--height-medium" ng-click="closeAction();">Cancel</button>
+                  <div class="qa__action-name">Manage Email Subscriptions</div>
+                </div>
+                <div class="qa__action-item-body">
+                  <manage-email-subscriptions model='model'></manage-email-subscriptions>
+                </div>
+              </div>
+            </div>
 
-						<div ng-switch-when="exampleAction">
-							<div class="qa__action-item-wrap">
-								<div class="qa__action-item-head">
-									<button class="button__cancel spc__button spc--height-medium" ng-click="closeAction();">Cancel</button>
-									<div class="qa__action-name">Example action</div>
-								</div>
-								<div class="qa__action-item-body">
-									<example-action model='model'></example-action>
-								</div>
-							</div>
-						</div>
+            <div ng-switch-when="exampleAction">
+              <div class="qa__action-item-wrap">
+                <div class="qa__action-item-head">
+                  <button class="button__cancel spc__button spc--height-medium" ng-click="closeAction();">Cancel</button>
+                  <div class="qa__action-name">Example action</div>
+                </div>
+                <div class="qa__action-item-body">
+                  <example-action model='model'></example-action>
+                </div>
+              </div>
+            </div>
 
-						<div ng-switch-default>
-							<div class="qa__action-item-wrap">
-								<div class="qa__no-actions-message">Please choose a quick action from the left.</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+            <div ng-switch-default>
+              <div class="qa__action-item-wrap">
+                <div class="qa__no-actions-message">Please choose a quick action from the left.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

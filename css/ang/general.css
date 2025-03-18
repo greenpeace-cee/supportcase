@@ -1,64 +1,64 @@
 .supportcase-manage-case-module-wrap .crm-accordion-wrapper .crm-accordion-header {
-    padding: 7px;
+  padding: 7px;
 }
 
 .supportcase-manage-case-module-wrap .crm-accordion-wrapper .crm-accordion-body {
-    box-shadow: none !important;
+  box-shadow: none !important;
 }
 
 .crm-container .supportcase-manage-case-module-wrap .crm-accordion-header:not(.crm-master-accordion-header)+.crm-accordion-body {
-    padding: 0 !important;
+  padding: 0 !important;
 }
 
 .supportcase-manage-case-module-wrap input {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .supportcase-ico {
-    color: #464354;
-    padding-left: 5px;
-    padding-right: 5px;
-    display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: inherit;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  color: #464354;
+  padding-left: 5px;
+  padding-right: 5px;
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .supportcase-ico:hover {
-    color: #464354;
+  color: #464354;
 }
 
 .supportcase-ico.supportcase-ico-grey {
-    color: #aaaaaa;
+  color: #aaaaaa;
 }
 
 .supportcase-ico.supportcase-ico-grey:hover {
-    color: #aaaaaa;
+  color: #aaaaaa;
 }
 
 .crm-container .supportcase-manage-case-module-wrap .crm-form-block {
-    box-shadow: none;
-    margin-bottom: 0;
+  box-shadow: none;
+  margin-bottom: 0;
 }
 
 .crm-container .supportcase-manage-case-module-wrap .button__cancel {
-    background: #fff;
-    border: solid 1px #4d4d69 !important;
-    color: #363342 !important;
-    cursor: pointer;
+  background: #fff;
+  border: solid 1px #4d4d69 !important;
+  color: #363342 !important;
+  cursor: pointer;
 }
 
 .crm-container .supportcase-manage-case-module-wrap .button__cancel:hover {
-    background: #f3f6f7;
+  background: #f3f6f7;
 }
 
 #page-wrapper, #footer-wrapper {
-    background: white !important;
+  background: white !important;
 }
 
 .supportcase-manage-case-error-button-wrap {
-    margin: 20px 20px 20px 0;
-    display: flex;
+  margin: 20px 20px 20px 0;
+  display: flex;
 }

@@ -20,11 +20,11 @@
           <li>
             <div class="spc__menu-item">Change category to:</div>
             <ul>
-                {foreach from=$categories item=category}
-                  <li class="spc__menu-change-category" data-category-value="{$category.value}">
-                    <div class="spc__menu-item">{$category.label}</div>
-                  </li>
-                {/foreach}
+              {foreach from=$categories item=category}
+                <li class="spc__menu-change-category" data-category-value="{$category.value}">
+                  <div class="spc__menu-item">{$category.label}</div>
+                </li>
+              {/foreach}
             </ul>
           </li>
           <li>

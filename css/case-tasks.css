@@ -1,23 +1,23 @@
 .supportcase__task-selected-cases-subject {
-    display: block;
-    max-width: 500px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    line-height: 18px;
-    padding-left: 2px;
+  display: block;
+  max-width: 500px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: 18px;
+  padding-left: 2px;
 }
 
 .supportcase__task-selected-cases-id {
-    display: block;
-    line-height: 18px;
-    padding-left: 2px;
+  display: block;
+  line-height: 18px;
+  padding-left: 2px;
 }
 
 .supportcase__task-selected-cases-wrap {
-    padding: 10px;
+  padding: 10px;
 }
 
 .supportcase__task-message-wrap {
-    padding: 10px 10px 0 10px;
+  padding: 10px 10px 0 10px;
 }

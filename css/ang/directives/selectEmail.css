@@ -4,54 +4,54 @@
 */
 
 .se__recent-cases {
-    margin-top: 5px;
+  margin-top: 5px;
 }
 
 .se__color-blue {
-    color: #1871bd;
+  color: #1871bd;
 }
 
 .se__select-email .Individual-icon::before {
-    content: "";
-    margin-left: 2px;
+  content: "";
+  margin-left: 2px;
 }
 
 .se__select-email .Household-icon::before {
-    content: "";
-    margin-left: 0;
+  content: "";
+  margin-left: 0;
 }
 
 .se__select-email .Organization-icon::before {
-    content: "";
-    margin-left: 2px;
+  content: "";
+  margin-left: 2px;
 }
 
 .se__select-email .crm-select2-icon,
 .se__select-email .crm-select2-icon,
 .se__select-email .crm-select2-icon {
-    display: inline-block;
-    padding-right: 5px;
+  display: inline-block;
+  padding-right: 5px;
 }
 
 .se__select-email .Individual-icon::before,
 .se__select-email .Household-icon::before,
 .se__select-email .Organization-icon::before {
-    display: block;
-    font-family: 'FontAwesome';
-    font-size: 14px;
+  display: block;
+  font-family: 'FontAwesome';
+  font-size: 14px;
 }
 
 .se__select-email .select2-container .select2-choice abbr::before {
-    font-family: 'FontAwesome';
-    font-style: normal;
-    text-rendering: auto;
-    color: #0071bd;
-    content: "";
-    font-size: 13px;
+  font-family: 'FontAwesome';
+  font-style: normal;
+  text-rendering: auto;
+  color: #0071bd;
+  content: "";
+  font-size: 13px;
 }
 
 .crm-container .select2-container .select2-choice abbr {
-    background-image: none !important;
-    right: 30px;
-    top: 1px;
+  background-image: none !important;
+  right: 30px;
+  top: 1px;
 }

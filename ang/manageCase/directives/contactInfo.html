@@ -1,67 +1,67 @@
 <div class="contact-info__wrap">
-	<div ng-if="isLoading" class="contact-info__preloader">
-		<div class="contact-info__preloader-ico-wrap">
+  <div ng-if="isLoading" class="contact-info__preloader">
+    <div class="contact-info__preloader-ico-wrap">
 			<span class="contact-info__preloader-ico">
 				<span class="ui-button-icon ui-icon fa-spinner"></span>
 			</span>
-		</div>
-		<div class="contact-info__preloader-text">loading contact (id={{model}})</div>
-	</div>
-	<div ng-if="!isLoading" class="contact-info__loaded-content">
-		<div class="contact-info__accordion-wrap" ng-class="{'opened' : isOpenDescription}">
-			<div class="contact-info__accordion-header-wrap">
-				<div class="contact-info__accordion-header" title="Show details" ng-click="toggleDescription()">
-					<div class="contact-info__accordion-header-ico"></div>
-					<div class="contact-info__accordion-header-label" >{{contact.display_name}}</div>
-				</div>
-				<a class="contact-info__accordion-header-link fa-external-link" href="{{contact.link}}" target="_blank" title="Go to the contact"></a>
-			</div>
-			<div class="contact-info__accordion-body">
-				<div class="contact-info__contact-item">
-					<span class="contact-info__contact-item-label">ID:</span>
-					<span class="contact-info__contact-item-value">{{contact.contact_id}}</span>
-				</div>
-				<div class="contact-info__contact-item">
-					<span class="contact-info__contact-item-label">Email:</span>
-					<span class="contact-info__contact-item-value">{{contact.email}}</span>
-				</div>
-				<div class="contact-info__contact-item">
-					<span class="contact-info__contact-item-label">Phone:</span>
-					<span class="contact-info__contact-item-value">{{contact.phone}}</span>
-				</div>
-				<div class="contact-info__contact-item">
-					<span class="contact-info__contact-item-label">Date of Birth:</span>
-					<span class="contact-info__contact-item-value">{{contact.birth_date}}</span>
-				</div>
-				<div class="contact-info__contact-item">
-					<span class="contact-info__contact-item-label">Has BPK:</span>
-					<span class="contact-info__contact-item-value">{{contact.is_has_bpk ? 'yes' : 'no'}}</span>
-				</div>
-				<div class="contact-info__contact-item">
-					<span class="contact-info__contact-item-label">Tags:</span>
-					<div class="contact-info__contact-item-value">
-						<div class="contact-info__tags-wrap">
-							<div ng-repeat="tag in contact.tags" class="crm-tag-item contact-info__tag-item"
-								 style="{{generateStyles(tag['color'])}}"
-								 title="{{tag['description']}}">
-								{{tag['name']}}
-							</div>
-							<div class="clear"></div>
-						</div>
-					</div>
-				</div>
-			</div>
+    </div>
+    <div class="contact-info__preloader-text">loading contact (id={{model}})</div>
+  </div>
+  <div ng-if="!isLoading" class="contact-info__loaded-content">
+    <div class="contact-info__accordion-wrap" ng-class="{'opened' : isOpenDescription}">
+      <div class="contact-info__accordion-header-wrap">
+        <div class="contact-info__accordion-header" title="Show details" ng-click="toggleDescription()">
+          <div class="contact-info__accordion-header-ico"></div>
+          <div class="contact-info__accordion-header-label" >{{contact.display_name}}</div>
+        </div>
+        <a class="contact-info__accordion-header-link fa-external-link" href="{{contact.link}}" target="_blank" title="Go to the contact"></a>
+      </div>
+      <div class="contact-info__accordion-body">
+        <div class="contact-info__contact-item">
+          <span class="contact-info__contact-item-label">ID:</span>
+          <span class="contact-info__contact-item-value">{{contact.contact_id}}</span>
+        </div>
+        <div class="contact-info__contact-item">
+          <span class="contact-info__contact-item-label">Email:</span>
+          <span class="contact-info__contact-item-value">{{contact.email}}</span>
+        </div>
+        <div class="contact-info__contact-item">
+          <span class="contact-info__contact-item-label">Phone:</span>
+          <span class="contact-info__contact-item-value">{{contact.phone}}</span>
+        </div>
+        <div class="contact-info__contact-item">
+          <span class="contact-info__contact-item-label">Date of Birth:</span>
+          <span class="contact-info__contact-item-value">{{contact.birth_date}}</span>
+        </div>
+        <div class="contact-info__contact-item">
+          <span class="contact-info__contact-item-label">Has BPK:</span>
+          <span class="contact-info__contact-item-value">{{contact.is_has_bpk ? 'yes' : 'no'}}</span>
+        </div>
+        <div class="contact-info__contact-item">
+          <span class="contact-info__contact-item-label">Tags:</span>
+          <div class="contact-info__contact-item-value">
+            <div class="contact-info__tags-wrap">
+              <div ng-repeat="tag in contact.tags" class="crm-tag-item contact-info__tag-item"
+                   style="{{generateStyles(tag['color'])}}"
+                   title="{{tag['description']}}">
+                {{tag['name']}}
+              </div>
+              <div class="clear"></div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-			<div ng-if="contact.duplicate_links.length > 0" class="contact-info__duplicate-block">
-				<div class="contact-info__duplicate-title">Potential duplicates:</div>
-				<div class="contact-info__duplicate-item-wrap">
-					<a href="{{duplicate.link}}" ng-repeat="duplicate in contact.duplicate_links"
-					   title="go to the advanced search" class="contact-info__duplicate-item" target="_blank">
-						<span class="ui-icon fa-search"></span>
-						<span class="contact-info__duplicate-item-label">{{duplicate.label}}({{duplicate.count}})</span>
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
+      <div ng-if="contact.duplicate_links.length > 0" class="contact-info__duplicate-block">
+        <div class="contact-info__duplicate-title">Potential duplicates:</div>
+        <div class="contact-info__duplicate-item-wrap">
+          <a href="{{duplicate.link}}" ng-repeat="duplicate in contact.duplicate_links"
+             title="go to the advanced search" class="contact-info__duplicate-item" target="_blank">
+            <span class="ui-icon fa-search"></span>
+            <span class="contact-info__duplicate-item-label">{{duplicate.label}}({{duplicate.count}})</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
