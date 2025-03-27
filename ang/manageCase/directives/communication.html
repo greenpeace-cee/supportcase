@@ -1,18 +1,18 @@
 <div class="com__communication">
-  <div class="spc__accordion crm-accordion-wrapper collapsed">
-    <div class="crm-accordion-header crm-master-accordion-header">
+  <details class="crm-accordion-bold">
+    <summary>
       <span>Communication&nbsp;</span>
       <span ng-if="(sms.count + email.count) === 0">(no messages)</span>
       <span ng-if="(sms.count + email.count) === 1">(1 message)</span>
       <span ng-if="(sms.count + email.count) > 1">{{'(' + (sms.count +  email.count) + ' messages)'}}</span>
-    </div>
+    </summary>
     <div class="crm-accordion-body">
       <div class="com__block-wrap">
         <div ng-if="(sms.count + email.count) === 0" class="com__empty-result">
           <span>No messages</span>
         </div>
 
-        <div spc-accordion class="spc__accordion spc--white-header spc--header-with-arrows">
+        <div spc-accordion class="spc__accordion spc--header-with-arrows">
           <div class="spc__accordion-header" ng-show="sms.count > 0">
             <span>SMS Messages {{'(' + sms.count + ')'}}:</span>
           </div>
@@ -21,7 +21,7 @@
           </div>
         </div>
 
-        <div spc-accordion class="spc__accordion spc--white-header spc--header-with-arrows">
+        <div spc-accordion class="spc__accordion spc--header-with-arrows">
           <div class="spc__accordion-header" ng-show="sms.count > 0">
             <span>Email Messages {{'(' + email.count + ')'}}:</span>
           </div>
@@ -32,5 +32,5 @@
 
       </div>
     </div>
-  </div>
+  </details>
 </div>

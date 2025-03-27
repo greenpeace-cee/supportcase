@@ -1,6 +1,5 @@
 <div class="ci__case-info-item tagsField">
   <div class="ci__case-info-header">
-    <div class="ci__case-info-item-label">Tags</div>
     <div ng-show="!isEditMode" class="ci__case-info-edit-button" title="Edit tags" ng-click="toggleMode();">
       <i class="crm-i fa-pencil"></i>
     </div>
@@ -9,30 +8,35 @@
   <div class="ci__case-info-view-mode" ng-show="!isEditMode">
     <div class="ci__case-info-item-content">
       <div class="ci__tags-wrap">
+        <div>Tags:</div>
         <div ng-repeat="tagId in model['tags_ids']" class="crm-tag-item ci__tag"
              style="{{generateStyles(model['available_tags'][tagId]['color'])}}"
              title="{{model['available_tags'][tagId]['description']}}">
           {{model['available_tags'][tagId]['name']}}
         </div>
-        <div class="clear"></div>
       </div>
     </div>
   </div>
 
   <div class="ci__case-info-edit-mode" ng-show="isEditMode">
-    <div class="ci__case-info-errors-wrap"></div>
-
-    <div class="crm-section">
+    <div>
       <select ng-model="caseTags" style="width:100%;" multiple name="tagsField" id="tagsField" class="crm-form-select spc__input spc--multiple-select">
         <option ng-repeat="option in model['available_tags']" value="{{option.id}}">{{option.name}}</option>
       </select>
     </div>
 
-    <div class="clear"></div>
+    <div class="ci__case-info-errors-wrap"></div>
 
     <div class="ci__case-info-edit-mode-buttons">
-      <button class="ci__case-info-edit-confirm spc__button spc--height-medium"  ng-click="editConfirm()">confirm</button>
-      <button class="button__cancel spc__button spc--height-medium"  ng-click="toggleMode()">cancel</button>
+      <button class="btn btn-primary" ng-click="editConfirm()">
+        <i class="crm-i fa-check"></i>
+        <span>Confirm</span>
+      </button>
+
+      <button class="btn btn-secondary" ng-click="toggleMode()">
+        <i class="crm-i fa-arrow-left"></i>
+        <span>Cancel</span>
+      </button>
     </div>
   </div>
 </div>

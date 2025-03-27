@@ -1,43 +1,36 @@
 <div class="supportcase__result-block">
-  <div class="crm-content-block crm-form-block">
-    <div id="supportcaseTabContainer" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
-      <ul class="supportcase__tabs">
+  <div>
+
+    <div id="supportcaseTabContainer" class="ui-tabs">
+      <ul class="ui-tabs-nav supportcase__tabs">
         {foreach from=$cases.tabs item=tab}
-          <li class="supportcase__tabs-item ui-state-default ui-corner-all crm-tab-button ui-tabs-tab ui-corner-top ui-tab crm-tab-button supportcase__tab-link-wrap"
+          <li class="supportcase__tabs-item supportcase__tab-link-wrap ui-tab ui-tabs-active"
               data-tab-name="{$tab.name}" data-case-class-selector="{$tab.case_class_selector}">
-              <span title="{ts}{$tab.title}{/ts}" class="ui-tabs-anchor supportcase__tab-link">
-                <span>{ts}{$tab.title}{/ts} [{$tab.count_cases}]</span>
+            <a class="ui-tabs-anchor supportcase__tab-link" href="#" title="{ts}{$tab.title}{/ts}">
+                <span>{ts}{$tab.title}{/ts}</span>
+                <em>{$tab.count_cases}</em>
                 {foreach from=$tab.extra_counters item=counter}
-                  <em class="supportcase__counter" style="background: {$counter.color};" title="{$counter.title}">
+                  <em style="background: {$counter.color} !important; color: #fff !important;" title="{$counter.title}">
                     {$counter.count}
                   </em>
                 {/foreach}
-              </span>
+            </a>
           </li>
         {/foreach}
       </ul>
 
-      <div class="ui-tabs-panel ui-widget-content ui-corner-bottom" style="padding: 0;">
-
+      <div class="sc__p-10">
         <div class="supportcase__result-wrap">
           {if $cases.rows}
-            <div class="crm-results-block">
-              <div class="crm-search-results">
-                {include file="CRM/Supportcase/Form/Dashboard/Selector.tpl" rows=$cases.rows}
-              </div>
-              <div class="supportcase__result-action-block">
-
-                {include file="CRM/Supportcase/Form/Dashboard/Pagination.tpl"}
-
-              </div>
+            <div>
+              {include file="CRM/Supportcase/Form/Dashboard/Selector.tpl" rows=$cases.rows}
+              {include file="CRM/Supportcase/Form/Dashboard/Pagination.tpl"}
             </div>
           {/if}
         </div>
 
         <div class="supportcase__empty-result-wrap">
-          <div class="crm-results-block crm-results-block-empty">
-            {include file="CRM/Supportcase/Form/Dashboard/EmptyResults.tpl"}
-          </div>
+          {include file="CRM/Supportcase/Form/Dashboard/EmptyResults.tpl"}
         </div>
 
         <div class="clear"></div>
@@ -81,8 +74,8 @@
         activeTabElement = allTabs.first();
       }
 
-      allTabs.removeClass('ui-tabs-active').removeClass('ui-state-active');
-      activeTabElement.addClass('ui-tabs-active').addClass('ui-state-active');
+      allTabs.removeClass('ui-tabs-active');
+      activeTabElement.addClass('ui-tabs-active');
       allRows.hide();
       allRows.parent().children('.crm-child-row').remove();
       showCaseActivityButtons.removeClass('expanded');
@@ -119,7 +112,7 @@
     }
 
     function getVisibleRows() {
-      var activeTabElement = $('.supportcase__tab-link-wrap.ui-state-active');
+      var activeTabElement = $('.supportcase__tab-link-wrap.ui-tabs-active');
       var visibleRowsSelector = activeTabElement.data('case-class-selector');
 
       return $(visibleRowsSelector);

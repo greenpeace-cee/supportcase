@@ -1,19 +1,17 @@
 <div class="action-panel">
-
   <div class="ap__actions-wrap">
-    <a class="spc__button spc--icon" href="{crmURL p='civicrm/supportcase' q='reset=1'}" title="{ts}Clear all search criteria{/ts}" >
-      <span class="ui-button-icon ui-icon fa-undo"></span>
+    <a class="btn btn-secondary" href="{crmURL p='civicrm/supportcase' q='reset=1'}" title="{ts}Clear all search criteria{/ts}">
+      <i class="crm-i fa-undo"></i>
     </a>
 
-    <a class="spc__button spc--icon" href="{$addNewCaseUrl}" title="{ts}Add new one{/ts}" >
-      <span class="ui-button-icon ui-icon fa-plus"></span>
+    <a class="btn btn-secondary" href="{$addNewCaseUrl}" title="{ts}Add new one{/ts}" >
+      <i class="crm-i fa-plus"></i>
     </a>
 
     <div class="spc__menu-block">
-
-      <a class="spc__button spc--icon spc--disabled fastActionsMenuButton" href="#" title="{ts}Fast tasks{/ts}" >
-        <span class="ui-button-icon ui-icon fa-ellipsis-v"></span>
-      </a>
+      <button class="btn btn-secondary disabled fastActionsMenuButton" title="{ts}Fast tasks{/ts}" >
+        <i class="crm-i fa-ellipsis-v"></i>
+      </button>
 
       <div class="spc__menu-wrap">
         <ul class="spc__menu">
@@ -38,14 +36,12 @@
           </li>
         </ul>
       </div>
-
     </div>
 
     <div class="spc__selected-cases spc--hide">Selected cases: <span class="selectedCaseCounter"></span></div>
   </div>
 
   {include file="CRM/Supportcase/Form/Dashboard/Pagination.tpl"}
-
 </div>
 
 {literal}
@@ -153,9 +149,9 @@
           var menuWrap = $(".spc__menu-block");
 
           if (selectedCases.length > 0) {
-            menuButton.removeClass('spc--disabled');
+            menuButton.removeClass('disabled');
           } else {
-            menuButton.addClass('spc--disabled');
+            menuButton.addClass('disabled');
           }
 
           menuButton.removeClass('spc--active');
@@ -177,7 +173,7 @@
       function initFastActionsMenuButton() {
         $(".fastActionsMenuButton").click(function() {
           var element = $(this);
-          if (element.hasClass('spc--disabled')) {
+          if (element.hasClass('disabled')) {
             return;
           }
           element.closest('.spc__menu-block').toggleClass('spc--open');

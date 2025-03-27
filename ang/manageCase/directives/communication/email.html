@@ -1,10 +1,10 @@
 <div ng-if="emailActivities.length > 0 || draftEmailActivities.length > 0">
-  <div class="spc__accordion spc--white-header spc--header-with-arrows">
+  <div class="spc__accordion spc--header-with-arrows">
     <div class="spc__accordion-body spc--padding-right-20 spc--padding-left-20">
       <div ng-if="isLoading" class="com__list-emails-loading-block">Loading...</div>
       <div ng-if="!isLoading">
         <div data-activity-id="{{draftActivity.activity_id}}" ng-repeat="draftActivity in draftEmailActivities" ng-class="{'spc--collapsed' : draftActivity['is_collapsed'] === '1'}">
-          <div spc-accordion class="com__email-activity-accordion spc__accordion spc--white-header">
+          <div spc-accordion class="com__email-activity-accordion spc__accordion">
             <div class="spc__accordion-header">
               <div class="com__email-item-accordion-head">
                 <div class="com__email-item-accordion-head-from-email">
@@ -12,10 +12,10 @@
                   <div class="com__draft-email-title">
                     <span>Draft message</span>
                     <span class="com__draft-email-title-subject-wrap" ng-if="draftActivity.subject.length > 0">
-                                                <span>"</span>
-                                                <span class="com__draft-email-title-subject">{{draftActivity.subject}}</span>
-                                                <span>"</span>
-                                            </span>
+                      <span>"</span>
+                      <span class="com__draft-email-title-subject">{{draftActivity.subject}}</span>
+                      <span>"</span>
+                    </span>
                   </div>
                 </div>
                 <div>{{formatDateAndTime(draftActivity.date_time, true)}}</div>
@@ -24,9 +24,9 @@
             <div class="spc__accordion-body">
               <div class="spc__accordion-body-wrap spc--padding-right-20">
                 <email-editor email-mode="'draft'"
-                              mailutils-message-id="draftActivity.mailutils_message_id"
-                              reload-email-list="getEmails"
-                              case-id="model.case_id">
+                  mailutils-message-id="draftActivity.mailutils_message_id"
+                  reload-email-list="getEmails"
+                  case-id="model.case_id">
                 </email-editor>
               </div>
             </div>
@@ -34,10 +34,11 @@
         </div>
 
         <div data-activity-id="{{activity.id}}" ng-repeat="activity in emailActivities"
-             class="com__email-activity crm-accordion-wrapper spc__accordion spc--header-white spc--size-little"
-             ng-class="{'spc--collapsed' : activity['is_collapsed'] === '1'}">
+         class="com__email-activity crm-accordion-wrapper spc__accordion spc--header-white spc--size-little"
+         ng-class="{'spc--collapsed' : activity['is_collapsed'] === '1'}"
+        >
           <ng-form name="activityEmailForm">
-            <div spc-accordion class="com__email-activity-accordion spc__accordion spc--white-header">
+            <div spc-accordion class="com__email-activity-accordion spc__accordion">
               <div class="spc__accordion-header">
                 <div class="com__email-item-accordion-head">
                   <div class="com__email-item-accordion-head-from-email">
@@ -101,38 +102,32 @@
                             </div>
                           </div>
                           <div class="com__email-info-panel-wrap">
-                            <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="switchToMode(availableModes.reply, activity.id)">
-                              <span class="ui-button-icon ui-icon fa-reply"></span>
-                              <span class="ui-button-icon-space"> </span>
+                            <button class="btn btn-primary" ng-click="switchToMode(availableModes.reply, activity.id)">
+                              <i class="crm-i fa-reply"></i>
                               <span>Reply</span>
                             </button>
-                            <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="switchToMode(availableModes.reply_all, activity.id)">
-                              <span class="ui-button-icon ui-icon fa-reply-all"></span>
-                              <span class="ui-button-icon-space"> </span>
+                            <button class="btn btn-primary" ng-click="switchToMode(availableModes.reply_all, activity.id)">
+                              <i class="crm-i fa-reply-all"></i>
                               <span>Reply All</span>
                             </button>
-                            <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="switchToMode(availableModes.forward, activity.id)">
-                              <span class="ui-button-icon ui-icon fa-share"></span>
-                              <span class="ui-button-icon-space"> </span>
+                            <button class="btn btn-primary" ng-click="switchToMode(availableModes.forward, activity.id)">
+                              <i class="crm-i fa-share"></i>
                               <span>Forward</span>
                             </button>
                             <div class="com__message-toggle-height-to-full">
-                              <button class=" spc__button spc--height-little spc--bg-white-bordered" ng-click="toggleHeight(activity.id)">
-                                <span class="ui-button-icon ui-icon fa-expand"></span>
-                                <span class="ui-button-icon-space"> </span>
+                              <button class="btn btn-primary" ng-click="toggleHeight(activity.id)">
+                                <i class="crm-i fa-expand"></i>
                                 <span>Expand Message</span>
                               </button>
                             </div>
                             <div class="com__message-toggle-height-to-part">
-                              <button class=" spc__button spc--height-little spc--bg-white-bordered" ng-click="toggleHeight(activity.id)">
-                                <span class="ui-button-icon ui-icon fa-compress"></span>
-                                <span class="ui-button-icon-space"> </span>
+                              <button class="btn btn-primary" ng-click="toggleHeight(activity.id)">
+                                <i class="crm-i fa-compress"></i>
                                 <span>Collapse Message</span>
                               </button>
                             </div>
-                            <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="switchToMode(availableModes.origin, activity.id)">
-                              <span class="ui-button-icon ui-icon fa-envelope-o"></span>
-                              <span class="ui-button-icon-space"> </span>
+                            <button class="btn btn-primary" ng-click="switchToMode(availableModes.origin, activity.id)">
+                              <i class="crm-i fa-envelope-o"></i>
                               <span>Show Original Email</span>
                             </button>
                             <div class="com__email-info-panel-date">{{formatDateAndTime(activity.date_time, true)}}</div>
@@ -148,19 +143,16 @@
                         </div>
                         <div class="com__errors-wrap com__errors-mode-view"></div>
                         <div class="com__message-buttons">
-                          <button class="spc__button spc--height-medium" ng-click="switchToMode(availableModes.reply_all, activity.id)">
-                            <span class="ui-button-icon ui-icon fa-reply-all"></span>
-                            <span class="ui-button-icon-space"> </span>
+                          <button class="btn btn-primary" ng-click="switchToMode(availableModes.reply_all, activity.id)">
+                            <i class="crm-i fa-reply-all"></i>
                             <span>Reply All</span>
                           </button>
-                          <button class="spc__button spc--height-medium" ng-click="switchToMode(availableModes.reply, activity.id)">
-                            <span class="ui-button-icon ui-icon fa-reply"></span>
-                            <span class="ui-button-icon-space"> </span>
+                          <button class="btn btn-primary" ng-click="switchToMode(availableModes.reply, activity.id)">
+                            <i class="crm-i fa-reply"></i>
                             <span>Reply</span>
                           </button>
-                          <button class="spc__button spc--height-medium" ng-click="switchToMode(availableModes.forward, activity.id)">
-                            <span class="ui-button-icon ui-icon fa-share"></span>
-                            <span class="ui-button-icon-space"> </span>
+                          <button class="btn btn-primary" ng-click="switchToMode(availableModes.forward, activity.id)">
+                            <i class="crm-i fa-share"></i>
                             <span>Forward</span>
                           </button>
                         </div>
@@ -172,9 +164,9 @@
                   <!-- reply all mode-->
                   <div class="com__email-reply-all-mode" ng-if="activity.current_mode === availableModes.reply_all">
                     <email-editor email-mode="'reply_all'"
-                                  from-activity-id="activity.id"
-                                  reload-email-list="getEmails"
-                                  case-id="model.case_id">
+                      from-activity-id="activity.id"
+                      reload-email-list="getEmails"
+                      case-id="model.case_id">
                     </email-editor>
                   </div>
                   <!-- end of reply-all mode-->
@@ -182,9 +174,9 @@
                   <!-- reply mode-->
                   <div class="com__email-reply-mode" ng-if="activity.current_mode === availableModes.reply">
                     <email-editor email-mode="'reply'"
-                                  from-activity-id="activity.id"
-                                  reload-email-list="getEmails"
-                                  case-id="model.case_id">
+                      from-activity-id="activity.id"
+                      reload-email-list="getEmails"
+                      case-id="model.case_id">
                     </email-editor>
                   </div>
                   <!-- end of reply mode-->
@@ -192,9 +184,9 @@
                   <!-- forward mode-->
                   <div class="com__email-forward-mode" ng-if="activity.current_mode === availableModes.forward">
                     <email-editor email-mode="'forward'"
-                                  from-activity-id="activity.id"
-                                  reload-email-list="getEmails"
-                                  case-id="model.case_id">
+                      from-activity-id="activity.id"
+                      reload-email-list="getEmails"
+                      case-id="model.case_id">
                     </email-editor>
                   </div>
                   <!-- end of forward mode-->
@@ -210,14 +202,19 @@
                         </div>
 
                         <div class="com__message-buttons">
-                          <button class="spc__button spc--height-medium button__cancel" ng-click="cancel(activity.id)">Cancel</button>
-                          <button class="spc__button spc--height-medium button__view" ng-click="viewFullscreen(activity.id)">View Fullscreen</button>
+                          <button class="btn btn-secondary" ng-click="cancel(activity.id)">
+                            <i class="crm-i fa-arrow-left"></i>
+                            <span>Cancel</span>
+                          </button>
+                          <button class="btn btn-primary" ng-click="viewFullscreen(activity.id)">
+                            <i class="crm-i fa-fullscreen"></i>
+                            <span>View Fullscreen</span>
+                          </button>
                         </div>
                       </div>
                     </div>
                   </div>
                   <!-- end of origin mode-->
-
                 </div>
               </div>
             </div>

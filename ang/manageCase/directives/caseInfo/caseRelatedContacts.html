@@ -19,15 +19,21 @@
   </div>
 
   <div class="ci__case-info-edit-mode" ng-show="isEditMode">
-    <div class="crm-section">
+    <div>
       <select-contact is-required="false" is-multiple="true" max-width="600" model="relatedContactIds"></select-contact>
     </div>
 
     <div class="ci__case-info-errors-wrap"></div>
 
     <div class="ci__case-info-edit-mode-buttons">
-      <button class="ci__case-info-edit-confirm spc__button spc--height-medium" ng-click="editConfirm()">confirm</button>
-      <button class="button__cancel spc__button spc--height-medium"  ng-click="toggleMode()">cancel</button>
+      <button class="btn btn-primary" ng-click="editConfirm()">
+        <i class="crm-i fa-check"></i>
+        <span>Confirm</span>
+      </button>
+      <button class="btn btn-secondary" ng-click="toggleMode()">
+        <i class="crm-i fa-arrow-left"></i>
+        <span>Cancel</span>
+      </button>
     </div>
   </div>
 </div>

@@ -1,8 +1,7 @@
 <div class="comments">
   <div ng-if="isSimpleView" class="comments__simple-view">
-    <button class="spc__button spc--height-little" ng-click="toggleCreateComment();">
-      <span class="ui-button-icon ui-icon fa-plus"></span>
-      <span class="ui-button-icon-space"> </span>
+    <button class="btn btn-primary" ng-click="toggleCreateComment();">
+      <i class="crm-i fa-plus"></i>
       <span>Add comment</span>
     </button>
   </div>
@@ -11,9 +10,8 @@
 
     <div class="comments__header">
       <div class="comments__header_label">Comments</div>
-      <button class="spc__button spc--height-little spc--bg-white-bordered" ng-click="toggleCreateComment()" ng-if="!isShowCreateCommentWindow">
-        <span class="ui-button-icon ui-icon fa-plus"></span>
-        <span class="ui-button-icon-space"> </span>
+      <button class="btn btn-primary" ng-click="toggleCreateComment()" ng-if="!isShowCreateCommentWindow">
+        <i class="crm-i fa-plus"></i>
         <span>Add new comment</span>
       </button>
     </div>
@@ -23,20 +21,19 @@
         <div class="comments__header_label">Add new comment</div>
       </div>
 
-      <div class="crm-section">
+      <div>
         <textarea rows="12" class="spc--textarea spc__input spc--width-100-percent" ng-model="newCommentBody" ></textarea>
-        <div class="clear"></div>
       </div>
 
       <div class="comments__create-comment-errors-wrap"></div>
 
       <div class="grid__flex-space-between">
-        <button class="spc__button spc--height-little" ng-click="createComment()">
-          <span class="ui-button-icon ui-icon fa-check"></span>
-          <span class="ui-button-icon-space"> </span>
+        <button class="btn btn-primary" ng-click="createComment()">
+          <i class="crm-i fa-check"></i>
           <span>Create</span>
         </button>
-        <button class="spc__button spc--height-little spc--cancel" ng-click="toggleCreateComment()">
+        <button class="btn btn-secondary" ng-click="toggleCreateComment()">
+          <i class="crm-i fa-arrow-left"></i>
           <span>Cancel</span>
         </button>
       </div>
@@ -49,11 +46,11 @@
             <span>{{comment.source_contact_name}} on {{formatDateAndTime(comment.activity_date_time, true)}}</span>
           </div>
           <div class="comments__actions">
-            <button title="Delete comment" class="spc__button spc--height-little spc--bg-white-bordered" ng-click="setMode(comment, 'delete')">
-              <span class="ui-button-icon ui-icon fa-trash"></span>
+            <button title="Delete comment" class="btn btn-danger" ng-click="setMode(comment, 'delete')">
+              <i class="crm-i fa-trash"></i>
             </button>
-            <button title="Edit comment"  class="spc__button spc--height-little spc--bg-white-bordered" ng-click="setMode(comment, 'edit')">
-              <span class="ui-button-icon ui-icon fa-pencil"></span>
+            <button title="Edit comment"  class="btn btn-primary" ng-click="setMode(comment, 'edit')">
+              <i class="crm-i fa-pencil"></i>
             </button>
           </div>
         </div>
@@ -74,12 +71,12 @@
         </div>
 
         <div class="grid__flex-space-between">
-          <button class="spc__button spc--height-little" ng-click="deleteComment(comment.id)">
-            <span class="ui-button-icon ui-icon fa-check"></span>
-            <span class="ui-button-icon-space"> </span>
+          <button class="btn btn-danger" ng-click="deleteComment(comment.id)">
+            <i class="crm-i fa-trash"></i>
             <span>Delete</span>
           </button>
-          <button class="spc__button spc--height-little spc--cancel" ng-click="setMode(comment, 'view')">
+          <button class="btn btn-secondary" ng-click="setMode(comment, 'view')">
+            <i class="crm-i fa-arrow-left"></i>
             <span>Cancel</span>
           </button>
         </div>
@@ -93,18 +90,17 @@
 
         <div class="crm-section">
           <textarea rows="12" class="spc--textarea spc__input spc--width-100-percent" ng-model="comment.newCommentBody" ></textarea>
-          <div class="clear"></div>
         </div>
 
         <div class="comments__create-comment-errors-wrap"></div>
 
         <div class="grid__flex-space-between">
-          <button class="spc__button spc--height-little" ng-click="updateComment(comment)">
-            <span class="ui-button-icon ui-icon fa-check"></span>
-            <span class="ui-button-icon-space"> </span>
+          <button class="btn btn-primary" ng-click="updateComment(comment)">
+            <i class="crm-i fa-check"></i>
             <span>Update</span>
           </button>
-          <button class="spc__button spc--height-little spc--cancel" ng-click="setMode(comment, 'view')">
+          <button class="btn btn-secondary" ng-click="setMode(comment, 'view')">
+            <i class="crm-i fa-arrow-left"></i>
             <span>Cancel</span>
           </button>
         </div>

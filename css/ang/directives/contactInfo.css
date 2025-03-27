@@ -85,7 +85,6 @@
   justify-content: center;
   border: 0;
   color: #464354 !important;
-  background: white !important;
 }
 
 .contact-info__accordion-header-link:hover {
@@ -106,7 +105,7 @@
 .contact-info__accordion-header-link::before {
   content: "";
   display: block;
-  height: 15px;
+  height: 18px;
   overflow: hidden;
   font: normal normal normal 18px/1 FontAwesome;
 }

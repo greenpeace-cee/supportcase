@@ -9,7 +9,10 @@
 					<input maxlength="25" class="spc__input crm-form-text" type="text" ng-model="info.phoneNumber">
 				</div>
 				<div class="act__step-buttons">
-					<button class="act__next-step-button spc__button spc--height-medium" ng-disabled="info.phoneNumber.length === 0" ng-click="runStep('selectContactsStep')">Next</button>
+					<button class="act__next-step-button btn btn-primary" ng-disabled="info.phoneNumber.length === 0" ng-click="runStep('selectContactsStep')">
+            <i class="crm-i fa-arrow-right"></i>
+            <span>Next</span>
+          </button>
 				</div>
 			</div>
 		</div>
@@ -70,8 +73,14 @@
 					</div>
 				</div>
 				<div class="act__step-buttons">
-					<button class="act__next-step-button spc__button spc--height-medium" ng-disabled="!isSelectedMinimumOneContacts()" ng-click="runStep('showSuccessMessageStep')">Confirm</button>
-					<button class="button__cancel spc__button spc--height-medium" ng-click="runStep('confirmNumberStep')">Back</button>
+					<button class="act__next-step-button btn btn-primary" ng-disabled="!isSelectedMinimumOneContacts()" ng-click="runStep('showSuccessMessageStep')">
+            <i class="crm-i fa-check"></i>
+            <span>Confirm</span>
+          </button>
+					<button class="btn btn-secondary" ng-click="runStep('confirmNumberStep')">
+            <i class="crm-i fa-arrow-left"></i>
+            <span>Back to entering number</span>
+          </button>
 				</div>
 			</div>
 		</div>
@@ -86,9 +95,6 @@
 							<contact-info model="contact['id']" is-search-duplicates="true"></contact-info>
 						</li>
 					</ul>
-				</div>
-				<div class="act__step-buttons">
-					<button class="act__next-step-button spc__button spc--height-medium" ng-click="closeAction()">Close</button>
 				</div>
 			</div>
 		</div>

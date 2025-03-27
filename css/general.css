@@ -1,0 +1,333 @@
+/*
+    Styles for all supportcase pages
+    Prefix: sc__
+    (Support Case)
+*/
+
+.sc__ico {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  overflow: hidden;
+}
+
+.sc__ico > i {
+  line-height: 20px !important;
+}
+
+.sc__width-500 {
+  width: 500px;
+}
+
+.sc__width-250 {
+  width: 250px;
+}
+
+.sc__max-width-800 {
+  max-width: 800px;
+}
+
+.sc__max-width-300 {
+  max-width: 300px;
+}
+
+.sc__max-width-900 {
+  max-width: 900px;
+}
+
+.sc__max-width-700 {
+  max-width: 700px;
+}
+
+.sc__max-width-620 {
+  max-width: 620px;
+}
+
+.sc__max-width-500 {
+  max-width: 500px;
+}
+
+.sc__width-100-percent {
+  width: 100% !important;
+}
+
+.crm-container #bootstrap-theme .select2-container.sc__width-100-percent {
+  width: 100% !important;
+}
+
+.sc__flex {
+  display: flex;
+}
+
+.sc__display-none {
+  display: none;
+}
+
+.sc__cursor-pointer {
+  cursor: pointer;
+}
+
+.sc__flex-wrap-wrap {
+  flex-wrap: wrap;
+}
+
+.sc__flex-grow-1 {
+  flex-grow: 1;
+}
+
+.sc__flex-wrap-wrap {
+  flex-wrap: wrap;
+}
+
+.sc__gap-5 {
+  gap: 5px;
+}
+
+.sc__gap-10 {
+  gap: 10px;
+}
+
+.sc__gap-15 {
+  gap: 15px;
+}
+
+.sc__gap-20 {
+  gap: 20px;
+}
+
+.sc__align-items-center {
+  align-items: center;
+}
+
+.sc__align-content-stretch {
+  align-content: stretch;
+}
+
+.sc__justify-content-center {
+  justify-content: center;
+}
+
+.sc__pb-10 {
+  padding-bottom: 10px;
+}
+
+.sc__pb-20 {
+  padding-bottom: 20px;
+}
+
+.sc__pr-10 {
+  padding-right: 10px;
+}
+
+.sc__pt-30 {
+  padding-top: 30px;
+}
+
+.sc__pt-20 {
+  padding-top: 20px;
+}
+
+.sc__pt-10 {
+  padding-top: 10px;
+}
+
+.sc__pb-60 {
+  padding-top: 60px;
+}
+
+.sc__p-10 {
+  padding: 10px;
+}
+
+.sc__ptb-10 {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.sc__p-20 {
+  padding: 20px;
+}
+
+.sc__m-0 {
+  margin: 0 !important;
+}
+
+.sc__mb-5 {
+  margin-bottom: 5px;
+}
+
+.sc__mb-10 {
+  margin-bottom: 10px;
+}
+
+.sc__mt-10 {
+  margin-top: 10px;
+}
+
+.sc__mt-20 {
+  margin-top: 10px;
+}
+
+.sc__mb-20 {
+  margin-bottom: 20px;
+}
+
+
+.sc__font-style-italic {
+  font-style: italic;
+}
+
+.sc__bg-archived {
+  background: #fcdebd;
+}
+
+.sc__bg-enabled {
+  background: #d3f5ac;
+  padding: 10px;
+}
+
+.sc__bg-disabled {
+  background: #EFEFEF;
+}
+
+.sc__p-0 {
+  padding: 0 !important;
+}
+
+.sc__cursor-pointer {
+  cursor: pointer !important;
+}
+
+.sc__justify-content-space-between {
+  justify-content: space-between;
+}
+
+.sc__target-highlight-place {
+  box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.3) !important;
+  height: 50px !important;
+}
+
+.sc__font-size-10 {
+  font-size: 10px;
+}
+
+
+.sc__position-relative {
+  position: relative;
+}
+
+.sc__font-weight-bold {
+  font-weight: bold;
+}
+
+.sc__font-style-italic {
+  font-style: italic;
+}
+
+.sc__page-wrap {
+  padding-bottom: 600px;
+}
+
+.spc__accordion,
+.spc__accordion-body,
+.spc__accordion-header {
+    box-sizing: border-box;
+}
+
+.spc__accordion.spc--collapsed .spc__accordion-body  {
+    display: none;
+}
+
+.spc__accordion .spc__accordion-body  {
+    display: block;
+}
+
+.spc__accordion-body.spc--padding-right-20  {
+    padding-right: 20px;
+}
+
+.spc__accordion-body.spc--padding-left-20  {
+    padding-left: 20px;
+}
+
+.spc__accordion-header {
+    padding: 7px;
+    font-size: 13px;
+    position: relative;
+    font-weight: 600;
+    line-height: 18px;
+    box-sizing: border-box;
+    cursor: pointer;
+    user-select: none;
+    color: #000000;
+}
+
+.spc__accordion-header::before {
+    color: #000000;
+}
+
+.spc__accordion.spc--blue-header > .spc__accordion-header {
+    background: #0071bd;
+    color: white;
+}
+
+.spc__accordion.spc--blue-header.spc--header-with-arrows > .spc__accordion-header::before {
+    color: white;
+}
+
+.spc__accordion.spc--header-with-arrows:not(.spc--collapsed) > .spc__accordion-header::before {
+    content: '\f107';
+}
+
+.spc__accordion.spc--header-with-arrows > .spc__accordion-header::before {
+    font-style: normal;
+    text-rendering: auto;
+    font-size: 13px;
+    content: "";
+    color: white;
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    top: 7px;
+    left: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding-top: 3px;
+    box-sizing: border-box;
+}
+
+.spc__accordion.spc--header-with-arrows > .spc__accordion-header {
+    padding-left: 32px;/*   7 + 18 + 7 */
+}
+
+.spc__accordion.spc--header-big-font > .spc__accordion-header {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.spc__accordion.spc--header-big-font > .spc__accordion-header::before {
+    font-size: 18px;
+    padding-top: 2px;
+}
+
+.scm__case-subject span {
+  font-size: 14px;
+  display: block;
+  line-height: 14px;
+  max-width: 800px;
+}
+
+.btn.btn-success.sc__green-btn {
+  color: #fff !important;
+  background-color: #5cb85c !important;
+  border-color: #4cae4c !important;
+}
+
+/*
+   End supportcase Accordion
+*/

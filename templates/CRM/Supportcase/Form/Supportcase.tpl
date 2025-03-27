@@ -9,6 +9,8 @@
 *}
 {* CiviCase -  view case screen*}
 
+{*TODO: check if it uses and remove this file!*}
+
 <div class="crm-block crm-form-block crm-case-caseview-form-block">
 
   {* here we are showing related cases w/ jquery dialog *}

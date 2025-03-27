@@ -1,51 +1,55 @@
-<h1 crm-page-title>{{ts('Manage Case')}}</h1>
+<div id="bootstrap-theme">
+  <h1 crm-page-title>
+    <div class="sc__flex sc__gap-10 sc__align-items-center">
+      <span>{{ts('Manage Case #%0', [caseInfo['id']])}}</span>
+      <span class="scm__case-subject">
+        <span>{{caseInfo['subject']}}</span>
+        <span ng-if="caseInfo['is_deleted'] == 1">(<i title="This case in the trash" class="supportcase-ico fa-trash" aria-hidden="true"></i>This case is in the trash)</span>
+      </span>
+    </div>
+  </h1>
 
-<div class="supportcase-manage-case-module-wrap">
-  <div class="crm-form-block">
-    <div ng-if="!isError && !isCaseLocked">
-      <div>
-        <manage-panel model='caseInfo'></manage-panel>
-      </div>
-      <div>
+  <div class="sc__page-wrap">
+    <div class="crm-form-block">
+      <div ng-if="!isError && !isCaseLocked">
         <case-info model='caseInfo'></case-info>
+        <case-comment class="ci__case-info-item-wrap ci--no-border ci--max-width-100" model="caseInfo['id']"></case-comment>
         <communication model='caseInfo'></communication>
         <quick-actions model='caseInfo'></quick-actions>
         <activities model='caseInfo'></activities>
         <recent-cases model='caseInfo'></recent-cases>
       </div>
-    </div>
 
-    <div ng-if="isError">
-      <div class="supportcase-manage-case-error-button-wrap">
-        <a class="spc__button spc--height-big spc--blue" href="{{backUrl}}" title="Back to dashboard">
-          <span class="ui-button-icon ui-icon fa-arrow-left"></span>
-          <span class="ui-button-icon-space"> </span>
-          <span>Back to the Support Dashboard</span>
-        </a>
-      </div>
-      <div class="crm-error">{{errorMessage}}</div>
-    </div>
-
-    <div ng-if="isCaseLocked">
-      <div class="supportcase-manage-case-error-button-wrap">
-        <a class="spc__button spc--height-big spc--blue" href="{{backUrl}}" title="Back to dashboard">
-          <span class="ui-button-icon ui-icon fa-arrow-left"></span>
-          <span class="ui-button-icon-space"> </span>
-          <span>Back to the Support Dashboard</span>
-        </a>
-      </div>
-
-      <div class="crm-error">
-        <div ng-if="caseInfo.lock_message">
-          {{caseInfo.lock_message}}
+      <div ng-if="isError">
+        <div class="supportcase-manage-case-error-button-wrap">
+          <a class="btn btn-secondary" href="{{backUrl}}" title="Back to dashboard">
+            <i class="crm-i fa-arrow-left"></i>
+            <span>Back to the Support Dashboard</span>
+          </a>
         </div>
-        <div ng-if="!caseInfo.lock_message">
-          This case may have been opened in another window and/or by a different user.
-          <br />
-          Please refresh the page to see if any changes were made.
+        <div class="crm-error">{{errorMessage}}</div>
+      </div>
+
+      <div ng-if="isCaseLocked">
+        <div class="supportcase-manage-case-error-button-wrap">
+          <a class="btn btn-primary" href="{{backUrl}}" title="Back to dashboard">
+            <i class="crm-i fa-arrow-left"></i>
+            <span>Back to the Support Dashboard</span>
+          </a>
+        </div>
+
+        <div class="crm-error">
+          <div ng-if="caseInfo.lock_message">
+            {{caseInfo.lock_message}}
+          </div>
+          <div ng-if="!caseInfo.lock_message">
+            This case may have been opened in another window and/or by a different user.
+            <br />
+            Please refresh the page to see if any changes were made.
+          </div>
         </div>
       </div>
-    </div>
 
+    </div>
   </div>
 </div>

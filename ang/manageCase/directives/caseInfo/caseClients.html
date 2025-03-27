@@ -20,20 +20,29 @@
   </div>
 
   <div class="ci__case-info-edit-mode" ng-show="isEditMode">
-    <div class="crm-section" ng-show="!isDoubleConfirmMode">
+    <div ng-show="!isDoubleConfirmMode">
       <select-contact is-required="true" search-api-params='{}' is-multiple="false" max-width="600" model="clientId"></select-contact>
     </div>
-
-    <div class="ci__case-info-errors-wrap" ng-show="!isDoubleConfirmMode"></div>
 
     <div class="status" ng-if="confirmationMessage.length > 1">
       <div ng-bind-html="confirmationMessage"></div>
     </div>
 
+    <div class="ci__case-info-errors-wrap" ng-show="!isDoubleConfirmMode"></div>
+
     <div class="ci__case-info-edit-mode-buttons">
-      <button ng-show="!isNeedToShowConfirmationMessage" class="ci__case-info-edit-confirm spc__button spc--height-medium" ng-click="editConfirm()">confirm</button>
-      <button ng-show="isNeedToShowConfirmationMessage" class="ci__case-info-edit-confirm spc__button spc--height-medium" ng-click="updateClient()">confirm</button>
-      <button class="button__cancel spc__button spc--height-medium"  ng-click="toggleMode()">cancel</button>
+      <button ng-show="!isNeedToShowConfirmationMessage" class="btn btn-primary" ng-click="editConfirm()">
+        <i class="crm-i fa-check"></i>
+        <span>Confirm</span>
+      </button>
+      <button ng-show="isNeedToShowConfirmationMessage" class="btn btn-primary" ng-click="updateClient()">
+        <i class="crm-i fa-check"></i>
+        <span>Confirm</span>
+      </button>
+      <button class="btn btn-secondary" ng-click="toggleMode()">
+        <i class="crm-i fa-arrow-left"></i>
+        <span>Cancel</span>
+      </button>
     </div>
   </div>
 </div>

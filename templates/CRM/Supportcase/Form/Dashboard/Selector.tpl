@@ -9,7 +9,7 @@
 *}
 {strip}
   <div class="supportcase__result-table-wrap">
-    <table class="dataTable">
+    <table class="dataTable sc__m-0">
       <tr>
         <th class="supportcase__result-table-head-column supportcase__result-table-first-column" scope="col" title="Select Rows">
           <input type="checkbox" id="supportcaseToggleSelectCases">
@@ -60,7 +60,7 @@
               {/if}
 
               {if $row.is_case_locked}
-                <i title="Unlock case. {$row.lock_message}" data-case-id="{$row.case_id}" class="supportcase__case-ico crm-i supportcase__unlock-button supportcase__case-ico-lock {if $row.is_locked_by_self}fa-unlock{else}fa-lock{/if}" aria-hidden="true"></i>
+                <i title="Unlock case. {$row.lock_message}" data-case-id="{$row.case_id}" class="sc__cursor-pointer supportcase__case-ico crm-i supportcase__unlock-button supportcase__case-ico-lock {if $row.is_locked_by_self}fa-unlock{else}fa-lock{/if}" aria-hidden="true"></i>
               {/if}
             </div>
           </div>
@@ -99,11 +99,11 @@
           {/if}
         </td>
         <td class="{$row.class} crm-summary-row">
-          <div class="supportcase__case-tags-wrap">
+          <div>
             {if $row.case_tags}
               <div class="crm-block crm-content-block">
                 {foreach from=$row.case_tags item='tag'}
-                  <div class="crm-tag-item supportcase__case-tag-item" {if !empty($tag.color)}style="background-color: {$tag.color}; color: {$tag.color|colorContrast};" {/if} title="{$tag.description|escape}">
+                  <div class="crm-tag-item" {if !empty($tag.color)}style="background-color: {$tag.color}; color: {$tag.color|colorContrast};" {/if} title="{$tag.description|escape}">
                     {$tag.name}
                   </div>
                 {/foreach}
@@ -123,13 +123,13 @@
         </td>
         <td class="supportcase__actions-column-wrap">
           {if $dashboardSearchQfKey}
-            {$row.action|replace:'%%qfKey%%':$dashboardSearchQfKey|replace:'xx':$row.case_id|replace:'action-item crm-hover-button manage-case not-popup':'crm-hover-button manage-case'}
+            {$row.action|replace:'%%qfKey%%':$dashboardSearchQfKey|replace:'xx':$row.case_id|replace:'action-item crm-hover-button manage-case not-popup':'btn btn-primary manage-case'}
           {else}
-            {$row.action|replace:'/%%qfKey%%':''|replace:'xx':$row.case_id|replace:'action-item crm-hover-button manage-case not-popup':'crm-hover-button manage-case'}
+            {$row.action|replace:'/%%qfKey%%':''|replace:'xx':$row.case_id|replace:'action-item crm-hover-button manage-case not-popup':'btn btn-primary manage-case'}
           {/if}
 
           {if !empty($row.moreActions)}
-            {$row.moreActions|replace:'xx':$row.case_id}
+            {$row.moreActions|replace:'xx':$row.case_id|replace:'action-item crm-hover-button report-spam':'btn btn-primary report-spam'}}
           {/if}
         </td>
         {/foreach}

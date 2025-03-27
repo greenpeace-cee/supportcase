@@ -26,11 +26,11 @@ class CRM_Supportcase_Form_AddCase extends CRM_Core_Form {
   }
 
   public function buildQuickForm() {
-    CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/ang/element.css');
+    Civi::resources()->addStyleFile('supportcase', 'css/general.css');
     $this->add('text', 'dashboard_search_qf_key');
     $this->add('text', 'prefill_email_id');
-    $this->add('text', 'subject', 'Subject', ['class' => 'spc__input spc--width-100-percent'], TRUE);
-    $this->add('select', 'category_id', ts('Category'), CRM_Supportcase_Utils_Category::getOptions(), TRUE, ['class' => 'spc__input spc--width-100-percent']);
+    $this->add('text', 'subject', 'Subject', ['class' => 'sc__width-100-percent'], TRUE);
+    $this->add('select', 'category_id', ts('Category'), CRM_Supportcase_Utils_Category::getOptions(), TRUE, ['class' => 'sc__width-100-percent']);
     $this->addEntityRef(
       'client_contact_id',
       ts('Client'),
@@ -38,7 +38,7 @@ class CRM_Supportcase_Form_AddCase extends CRM_Core_Form {
         'entity' => 'Contact',
         'multiple' => FALSE,
         'placeholder' => ts('- select client -'),
-        'class' => 'spc__input spc--single-select spc--width-100-percent',
+        'class' => 'sc__width-100-percent',
         'data-create-links' => json_encode([
           [
             'label' => 'New support case contact',

@@ -3,9 +3,10 @@
 */
 
 .comments {
-  margin: 0 10px 10px 10px;
   height: 100%;
+  margin-top: -30px;
 }
+
 .comments pre {
   background: none !important;
   border: none !important;
@@ -19,7 +20,6 @@
 }
 
 .comments__item-wrap {
-  background: white;
   padding: 10px;
   border-top: 1px solid #d3dee2;
 }

@@ -1,5 +1,4 @@
 <div class="com__email-editor-wrap">
-
   <div class="com__email-editor" ng-if="isShowEditorBlock">
     <div class="com__email-top-block">
       <div class="com__email-info-rows-wrap">
@@ -39,11 +38,7 @@
     </div>
 
     <div class="com__email-bottom-block">
-      <spc-email-editor support-case-category-id="email.caseCategoryId"
-                        token-contact-id="email.tokenContactId"
-                        email-body="email.body"
-      ></spc-email-editor>
-
+      <spc-email-editor support-case-category-id="email.caseCategoryId" token-contact-id="email.tokenContactId" email-body="email.body"></spc-email-editor>
       <spc-attachment-uploader model="email.additionalAttachments" activity-id="email.activityId"></spc-attachment-uploader>
 
       <div class="com__errors-wrap">
@@ -53,37 +48,26 @@
       </div>
 
       <div class="com__message-buttons">
-        <button ng-disabled="isDisabledButtons"
-                class="spc__button spc--height-medium"
-                ng-click="sendDraft()">
-          <span class="ui-button-icon ui-icon fa-paper-plane-o"></span>
-          <span class="ui-button-icon-space"> </span>
+        <button ng-disabled="isDisabledButtons" class="btn btn-primary" ng-click="sendDraft()">
+          <i class="crm-i fa-paper-plane-o"></i>
           <span>Send</span>
         </button>
-        <button ng-disabled="isDisabledButtons"
-                class="spc__button spc--height-medium"
-                ng-click="saveDraftOnClick()">
-          <span class="ui-button-icon ui-icon fa-save"></span>
-          <span class="ui-button-icon-space"> </span>
+        <button ng-disabled="isDisabledButtons" class="btn btn-secondary" ng-click="saveDraftOnClick()">
+          <i class="crm-i fa-save"></i>
           <span>Save Draft</span>
         </button>
-        <button ng-disabled="isDisabledButtons"
-                class="spc__button spc--height-medium spc--cancel"
-                ng-click="cancel()">
+        <button ng-disabled="isDisabledButtons" class="btn btn-danger" ng-click="cancel()">
+          <i class="crm-i fa-trash"></i>
           <span>Discard Draft</span>
         </button>
 
         <div class="com__editor-status-message-wrap">
           <div ng-repeat="message in messages" class="com__editor-status-message">
-
             <div ng-if="message.type === 'error'" class="crm-error"> {{message.text}} </div>
-
             <div ng-if="message.type === 'info'"> {{message.text}} </div>
-
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </div>

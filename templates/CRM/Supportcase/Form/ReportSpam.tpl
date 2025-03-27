@@ -1,5 +1,5 @@
-<div class="crm-block crm-form-block">
-  <div class="supportcase__task-message-wrap">
+<div id="bootstrap-theme">
+  <div class="crm-form-block">
     <div class="messages status no-popup">
       <div class="icon inform-icon"></div>
       {if $caseExistence}
@@ -12,9 +12,9 @@
         <span>{ts}Case does not exist. Looks like someone has already deleted this case.{/ts}</span>
       {/if}
     </div>
-  </div>
 
-  <div class="crm-submit-buttons">
-    {include file="CRM/common/formButtons.tpl" location="bottom"}
+    <div class="crm-submit-buttons">
+      {include file="CRM/common/formButtons.tpl" location="bottom"}
+    </div>
   </div>
 </div>

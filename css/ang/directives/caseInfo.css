@@ -5,7 +5,7 @@
 */
 
 .ci__case-info {
-  padding-bottom: 5px;
+
 }
 
 .ci__block-wrap {
@@ -13,19 +13,13 @@
   flex-wrap: wrap;
   align-content: stretch;
   height: 100%;
-  gap: 4px;
-  padding: 10px 10px 5px 10px;
+  gap: 10px;
+  /*margin-top: -60px;*/
 }
 
 .ci__case-info-item-wrap {
-  flex-flow: column wrap;
-  width: 200px;
-  box-sizing: border-box;
-  vertical-align: top;
   position: relative;
   overflow: hidden;
-  background: white;
-  border: 1px solid #d3dee2;
 }
 
 .ci__case-info-item-wrap.ci--no-border {
@@ -51,10 +45,22 @@
 .ci__case-info-item {
   box-sizing: border-box;
   position: relative;
+  padding-right: 20px;
+}
+
+.ci__tags-wrap {
+  display: flex;
 }
 
 .ci__case-info-item-content {
   word-wrap: break-word;
+}
+
+.ci__case-info-item-content-subject {
+  max-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .ci__case-info-item-content-note {
@@ -63,16 +69,11 @@
 }
 
 .ci__case-info-header {
-  padding: 10px 10px 5px 10px;
-}
-
-.ci__case-info-item-label {
-  font-weight: bold;
 }
 
 .ci__case-info-view-mode {
   position: relative;
-  padding: 5px 10px 10px 10px;
+  /*padding: 5px 10px 10px 10px;*/
 }
 
 .ci__case-info-item:hover .ci__case-info-edit-button {
@@ -81,13 +82,14 @@
 
 .ci__case-info-edit-button {
   position: absolute;
-  top: 5px;
-  right: 5px;
-  width: 24px;
-  height: 24px;
+  top: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
   cursor: pointer;
-  border: 1px solid #d3dee2;
   display: none;
+  z-index: 10;
+  font-size: 16px;
 }
 
 .ci__case-info-edit-button:hover {
@@ -103,7 +105,7 @@
 }
 
 .ci__case-info-edit-mode {
-  padding: 10px;
+  margin-bottom: 30px;
 }
 
 .ci__case-info-edit-mode-buttons {
@@ -121,10 +123,13 @@
   display: block;
   float: left;
   margin: 1px;
-  max-width: 100px;
+  max-width: 140px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid grey;
 }
 
 .ci__case-info-errors-wrap {

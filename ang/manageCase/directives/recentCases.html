@@ -1,8 +1,6 @@
 <div class="rc__recent-cases">
-  <div class="spc__accordion crm-accordion-wrapper collapsed">
-    <div class="crm-accordion-header crm-master-accordion-header">
-      <span>Recent cases {{'[' + recentCases['length'] + ']'}}</span>
-    </div>
+  <details class="crm-accordion-bold">
+    <summary>Recent cases {{'[' + recentCases['length'] + ']'}}</summary>
     <div class="crm-accordion-body">
       <div class="rc__block-wrap">
         <table class="crm-search-results spc__table">
@@ -44,5 +42,5 @@
         </table>
       </div>
     </div>
-  </div>
+  </details>
 </div>

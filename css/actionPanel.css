@@ -6,7 +6,6 @@
 .action-panel {
   display: flex;
   gap: 400px;
-  background: white;
   margin-top: 10px;
   justify-content: space-between;
   padding-right: 10px;
@@ -17,8 +16,7 @@
   gap: 10px;
   align-items: start;
   align-content: start;
-  background: white;
-  padding: 10px;
+  padding: 0 10px;
 }
 
 .spc__menu-block {

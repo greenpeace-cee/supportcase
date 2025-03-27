@@ -9,7 +9,10 @@
           <input maxlength="40" class="spc__input crm-form-text" type="text" ng-model="info.email">
         </div>
         <div class="act__step-buttons">
-          <button class="act__next-step-button spc__button spc--height-medium" ng-disabled="info.email.length === 0" ng-click="runStep('selectSubscriptionsStep')">Next</button>
+          <button class="act__next-step-button btn btn-primary" ng-disabled="info.email.length === 0" ng-click="runStep('selectSubscriptionsStep')">
+            <i class="crm-i fa-arrow-right"></i>
+            <span>Next</span>
+          </button>
         </div>
       </div>
     </div>
@@ -54,7 +57,9 @@
               </table>
             </div>
             <div class="mes__unsubscribe-all-groups" >
-              <button class="spc__button spc--height-medium" ng-click="unCheckAllGroups()">Remove all groups</button>
+              <button class="btn btn-secondary" ng-click="unCheckAllGroups()">
+                <span>Remove all groups</span>
+              </button>
             </div>
           </div>
           <div ng-if="info['tableData'].length == 0">
@@ -62,8 +67,10 @@
           </div>
         </div>
         <div class="act__step-buttons">
-          <button class="act__next-step-button spc__button spc--height-medium" ng-click="runStep('showSuccessMessageStep')">Confirm</button>
-          <button class="button__cancel spc__button spc--height-medium" ng-click="runStep('confirmEmailStep')">Back</button>
+          <button class="act__next-step-button btn btn-primary" ng-click="runStep('showSuccessMessageStep')">
+            <i class="crm-i fa-check"></i>
+            <span>Confirm</span>
+          </button>
         </div>
       </div>
     </div>
@@ -71,12 +78,6 @@
     <div class="act__step" ng-switch-when="showSuccessMessageStep">
       <div class="act__step-title">Success</div>
       <div class="act__step-description">Subscriptions were updated.</div>
-      <div class="act__step-body">
-        <div class="act__step-buttons">
-          <button class="act__next-step-button spc__button spc--height-medium" ng-click="closeAction()">Close</button>
-        </div>
-      </div>
     </div>
-
   </div>
 </div>

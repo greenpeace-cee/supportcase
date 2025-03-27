@@ -1,16 +1,10 @@
 <div class="com__send-new-email-wrap">
-
-  <button ng-if="!isShowSendEmailWindow" class="com__send-new-email-button spc__button spc--height-medium" ng-click="toggleSendEmailWindow()">
-    <span class="ui-button-icon ui-icon fa-send"></span>
-    <span class="ui-button-icon-space"> </span>
+  <button ng-if="!isShowSendEmailWindow" class="btn btn-primary com__send-new-email-button" ng-click="toggleSendEmailWindow()">
+    <i class="crm-i fa-send"></i>
     <span>Send New Email</span>
   </button>
 
   <div ng-if="isShowSendEmailWindow">
-    <email-editor email-mode="'new'"
-                  reload-email-list="getEmails"
-                  case-id="model.case_id"
-                  cancel-callback="cancel">
-    </email-editor>
+    <email-editor email-mode="'new'" reload-email-list="getEmails" case-id="model.case_id" cancel-callback="cancel"></email-editor>
   </div>
 </div>

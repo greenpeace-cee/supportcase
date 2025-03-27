@@ -1,27 +1,32 @@
 <div class="ci__case-info-item startDateField">
   <div class="ci__case-info-header">
-    <div class="ci__case-info-item-label">Start Date</div>
     <div ng-show="!isEditMode" class="ci__case-info-edit-button" title="Edit start date" ng-click="toggleMode();">
       <i class="crm-i fa-pencil"></i>
     </div>
   </div>
 
   <div class="ci__case-info-view-mode" ng-show="!isEditMode">
-    <div class="ci__case-info-item-content">{{formatDateAndTime(model['start_date'], false)}}</div>
+    <div class="ci__case-info-item-content" title="Start Date">{{formatDateAndTime(model['start_date'], false)}}</div>
   </div>
 
   <div class="ci__case-info-edit-mode" ng-show="isEditMode">
-    <div class="ci__case-info-errors-wrap"></div>
-    <div class="crm-section">
+    <div>
       <form><!-- this tag need to fix issue with datepicker: you redirect to another page after selecting date-->
         <input class="spc__input" style="width:150px;" crm-ui-datepicker="{time: false}" ng-model="startDate" name="startDateField" />
-        <div class="clear"></div>
       </form>
     </div>
 
+    <div class="ci__case-info-errors-wrap"></div>
+
     <div class="ci__case-info-edit-mode-buttons">
-      <button class="ci__case-info-edit-confirm spc__button spc--height-medium" ng-click="editConfirm()">confirm</button>
-      <button class="button__cancel spc__button spc--height-medium" ng-click="toggleMode()">cancel</button>
+      <button class="btn btn-primary" ng-click="editConfirm()">
+        <i class="crm-i fa-check"></i>
+        <span>Confirm</span>
+      </button>
+      <button class="btn btn-secondary" ng-click="toggleMode()">
+        <i class="crm-i fa-arrow-left"></i>
+        <span>Cancel</span>
+      </button>
     </div>
   </div>
 </div>

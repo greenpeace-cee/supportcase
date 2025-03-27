@@ -361,6 +361,67 @@
     };
   });
 
+  angular.module(moduleName).directive("caseContacts", function() {
+    return {
+      restrict: "E",
+      templateUrl: "~/manageCase/directives/caseContacts.html",
+      scope: {model: "="},
+      controller: function($scope, $element) {
+        $scope.ts = CRM.ts();
+        $scope.formatDateAndTime = $scope.$parent.formatDateAndTime;
+
+        $scope.showHelpInfo = function(title, helpId, fileLocation) {
+          CRM.help(title, {
+            id: helpId,
+            file: fileLocation
+          });
+          return false;
+        };
+
+        $scope.getEntityLabel = function(entities, entityId) {
+          for (var i = 0; i < entities.length; i++) {
+            if (entities[i]['value'] === entityId) {
+              return entities[i]['label']
+            }
+          }
+
+          return '';
+        };
+
+        $scope.getInputStyles = function() {
+          return {
+            'width' : '100%',
+            'max-width' : '300px',
+            'box-sizing' : 'border-box',
+            'height' : '28px'
+          };
+        };
+
+        $scope.showError = function(directiveElement, errorMessage) {
+          var caseInfoItem = $(directiveElement);
+          if (caseInfoItem.length === 0) {
+            return;
+          }
+
+          caseInfoItem.find('.ci__case-info-errors-wrap').empty().append('<div class="crm-error">' + errorMessage + '</div>');
+        };
+
+        $scope.editConfirm = function(apiFieldName, apiFieldValue, directiveElement, successCallback) {
+          var apiParams = {"case_id": $scope.model['id']};
+          apiParams[apiFieldName] = apiFieldValue;
+
+          CRM.api3('SupportcaseManageCase', 'update_case_info', apiParams).then(function(result) {
+            if (result.is_error === 1) {
+              $scope.showError(directiveElement, result.error_message);
+            } else {
+              successCallback(result);
+            }
+          }, function(error) {});
+        };
+      }
+    };
+  });
+
   angular.module(moduleName).directive("caseSubject", function() {
     return {
       restrict: "E",
@@ -1116,7 +1177,7 @@
 
         $scope.openMainAccordion = function() {
           var mainElement = $($element);
-          mainElement.find('.crm-accordion-wrapper').removeClass('collapsed');
+          mainElement.find('.crm-accordion-bold').attr('open', 'open');
           mainElement.find('.crm-accordion-body').show();
         };
         $scope.sms = {
@@ -1353,19 +1414,6 @@
         $scope.hidePreloader = function() {
           $($element).find('.qa__preloader').removeClass('active');
         };
-      }
-    };
-  });
-
-  angular.module(moduleName).directive("exampleAction", function() {
-    return {
-      restrict: "E",
-      templateUrl: "~/manageCase/directives/actions/exampleAction.html",
-      scope: {model: "="},
-      controller: function($scope, $window, $element) {
-        $scope.closeAction = $scope.$parent.closeAction;
-        $scope.showPreloader = $scope.$parent.showPreloader;
-        $scope.hidePreloader = $scope.$parent.hidePreloader;
       }
     };
   });
@@ -2998,72 +3046,6 @@
         };
 
         $scope.setFieldFromModel();
-      }
-    };
-  });
-
-  angular.module(moduleName).directive("caseStatus", function() {
-    return {
-      restrict: "E",
-      templateUrl: "~/manageCase/directives/caseInfo/caseStatus.html",
-      scope: {model: "="},
-      controller: function($scope, $element, changingCaseStatusService) {
-        $scope.isEditMode = false;
-        $scope.isShowContent = true;
-        $scope.toggleMode = function() {
-          $($element).find('.ci__case-info-errors-wrap').empty();
-          $scope.isEditMode = !$scope.isEditMode;
-
-          if ($scope.isEditMode) {
-            $scope.setFieldFromModel();
-            setTimeout(function() {
-              $($element).find(".ci__case-info-edit-mode select.spc--single-select").val($scope.statusId).trigger('change');
-            }, 0);
-          }
-        };
-        $scope.setFieldFromModel = function() {
-          $scope.statusId = $scope.model['status_id'];
-        };
-        $scope.updateInputValue = function() {
-          $scope.setFieldFromModel();
-          setTimeout(function() {
-            $($element).find(".ci__case-info-edit-mode select").val($scope.statusId).trigger('change');
-          }, 0);
-        };
-        $scope.getEntityLabel = $scope.$parent.getEntityLabel;
-        $scope.editConfirm = function() {
-          $scope.isShowContent = false;
-
-          changingCaseStatusService.handleCaseStatusChanging(
-            $scope.model['id'],
-            $scope.statusId,
-            $scope.editConfirmApiCall,
-            CRM.$('#caseStatusChangingStatusConfirmInlineWindow'),
-            'caseStatusDirective',
-            function () {
-              $scope.isShowContent = true;
-              $scope.toggleMode()
-              $scope.$apply();
-            }
-          );
-        };
-
-        $scope.editConfirmApiCall = function() {
-          $scope.$parent.editConfirm('status_id', $scope.statusId, $element, function(result) {
-            $scope.model['status_id'] = $scope.statusId;
-            $scope.isShowContent = true;
-            $scope.toggleMode();
-            $scope.$apply();
-            CRM.status(ts('Status updated.'));
-          });
-        };
-
-        $scope.initSelect2 = function() {
-          setTimeout(function() {$($element).find(".ci__case-info-edit-mode select").css($scope.$parent.getInputStyles()).select2();}, 0);
-        };
-
-        $scope.setFieldFromModel();
-        $scope.initSelect2();
       }
     };
   });

@@ -9,9 +9,7 @@ return [
       0 => 'ang/manageCase.js',
     ],
   'css' => [
-    0 => 'css/ang/hideCiviUi.css',
-    1 => 'css/ang/general.css',
-    2 => 'css/ang/element.css',
+    1 => 'css/general.css',
     4 => 'css/ang/directives/caseInfo.css',
     5 => 'css/ang/directives/communication.css',
     6 => 'css/ang/directives/recentCases.css',
@@ -19,7 +17,6 @@ return [
     8 => 'css/ang/directives/managePanel.css',
     9 => 'css/ang/directives/communication.css',
     10 => 'css/ang/directives/quickAction.css',
-    11 => 'css/ang/directives/actions/exampleAction.css',
     12 => 'css/ang/directives/contactInfo.css',
     13 => 'css/ang/directives/showMoreText.css',
     14 => 'css/ang/directives/selectEmail.css',

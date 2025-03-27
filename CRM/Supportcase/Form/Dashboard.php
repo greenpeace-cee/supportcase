@@ -190,9 +190,9 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $this->addSearchFormElements();
     $this->addRowSelectors($this->caseRows);
 
-    CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/ang/element.css');
-    CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/actionPanel.css');
-    CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/dashboard.css');
+    Civi::resources()->addStyleFile('supportcase', 'css/general.css');
+    Civi::resources()->addStyleFile('supportcase', 'css/actionPanel.css');
+    Civi::resources()->addStyleFile('supportcase', 'css/dashboard.css');
   }
 
   public function postProcess() {
@@ -226,18 +226,18 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     CRM_Core_Form_Tag::buildQuickForm($this, $parentNames, 'civicrm_case', NULL, TRUE, FALSE);
 
     $additionalClasses = [
-      'case_keyword' => ['spc__input'],
-      'case_agents' => ['spc__input', 'spc--multiple-select'],
-      'case_client' => ['spc__input', 'spc--multiple-select'],
-      'case_tags' => ['spc__input', 'spc--multiple-select'],
-      'case_status_id' => ['spc__input', 'spc--multiple-select'],
-      'case_start_date_relative' => ['spc__input', 'spc--single-select'],
-      'case_start_date_low' => ['spc__input'],
-      'case_start_date_high' => ['spc__input'],
-      'case_end_date_relative' => ['spc__input', 'spc--single-select'],
-      'case_end_date_low' => ['spc__input'],
-      'case_end_date_high' => ['spc__input'],
-      'case_id' => ['spc__input', 'spc--width-100-percent'],
+      'case_keyword' => ['sc__width-100-percent'],
+      'case_agents' => ['sc__width-100-percent'],
+      'case_client' => ['sc__width-100-percent'],
+      'case_tags' => ['sc__width-100-percent'],
+      'case_status_id' => ['sc__width-100-percent'],
+      'case_start_date_relative' => ['sc__width-100-percent'],
+      'case_start_date_low' => ['sc__width-100-percent'],
+      'case_start_date_high' => ['sc__width-100-percent'],
+      'case_end_date_relative' => ['sc__width-100-percent'],
+      'case_end_date_low' => ['sc__width-100-percent'],
+      'case_end_date_high' => ['sc__width-100-percent'],
+      'case_id' => ['sc__width-100-percent'],
     ];
 
     foreach ($additionalClasses as $elementName => $classes) {

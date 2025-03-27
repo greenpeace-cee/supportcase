@@ -7,7 +7,7 @@ class CRM_Supportcase_Form_CreateSupportcaseContact extends CRM_Core_Form {
   }
 
   public function buildQuickForm() {
-    CRM_Core_Resources::singleton()->addStyleFile('supportcase', 'css/ang/element.css');
+    Civi::resources()->addStyleFile('supportcase', 'css/ang/element.css');
     $this->add('text', 'first_name', 'First name', ['class' => 'spc__input spc--width-100-percent'], TRUE);
     $this->add('text', 'last_name', 'Last name', ['class' => 'spc__input spc--width-100-percent'], TRUE);
     $this->add('email', 'email', 'Email', ['class' => 'spc__input spc--width-100-percent'], TRUE);
