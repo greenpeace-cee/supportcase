@@ -2,17 +2,18 @@
   <div>
     <manage-panel model='model'></manage-panel>
     <div class="sc__flex sc__gap-10">
-      <case-subject model="model"></case-subject>
-      <case-start-date model="model"></case-start-date>
-      <case-category model="model"></case-category>
-      <case-tags model="model"></case-tags>
+      <case-clients model="model"></case-clients>
+      <case-managers model="model"></case-managers>
+      <case-related-contacts model="model"></case-related-contacts>
     </div>
   </div>
 
-  <div class="sc__flex sc__gap-10">
-    <case-clients model="model"></case-clients>
-    <case-managers model="model"></case-managers>
-    <case-related-contacts model="model"></case-related-contacts>
+  <div>
+    <div class="sc__flex sc__gap-10 sc__justify-content-right">
+      <case-tags model="model"></case-tags>
+      <case-category model="model"></case-category>
+    </div>
+    <case-comment class="ci__case-info-item-wrap ci--no-border ci--max-width-100" model="model['id']"></case-comment>
   </div>
 </div>
 

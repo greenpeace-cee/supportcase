@@ -1,6 +1,6 @@
 <div class="comments">
-  <div ng-if="isSimpleView" class="comments__simple-view">
-    <button class="btn btn-primary" ng-click="toggleCreateComment();">
+  <div ng-if="isSimpleView" class="comments__simple-view sc__flex sc__justify-content-right">
+    <button class="btn btn-secondary sc__m-0" ng-click="toggleCreateComment();">
       <i class="crm-i fa-plus"></i>
       <span>Add comment</span>
     </button>
@@ -8,9 +8,9 @@
 
   <div ng-show="!isSimpleView" class="comments__extended-view">
 
-    <div class="comments__header">
+    <div class="comments__header sc__justify-content-space-between">
       <div class="comments__header_label">Comments</div>
-      <button class="btn btn-primary" ng-click="toggleCreateComment()" ng-if="!isShowCreateCommentWindow">
+      <button class="btn btn-secondary sc__m-0" ng-click="toggleCreateComment()" ng-if="!isShowCreateCommentWindow">
         <i class="crm-i fa-plus"></i>
         <span>Add new comment</span>
       </button>
@@ -27,7 +27,7 @@
 
       <div class="comments__create-comment-errors-wrap"></div>
 
-      <div class="grid__flex-space-between">
+      <div class="sc__flex sc__justify-content-space-between">
         <button class="btn btn-primary" ng-click="createComment()">
           <i class="crm-i fa-check"></i>
           <span>Create</span>
@@ -46,10 +46,10 @@
             <span>{{comment.source_contact_name}} on {{formatDateAndTime(comment.activity_date_time, true)}}</span>
           </div>
           <div class="comments__actions">
-            <button title="Delete comment" class="btn btn-danger" ng-click="setMode(comment, 'delete')">
+            <button title="Delete comment" class="btn btn-danger sc__m-0" ng-click="setMode(comment, 'delete')">
               <i class="crm-i fa-trash"></i>
             </button>
-            <button title="Edit comment"  class="btn btn-primary" ng-click="setMode(comment, 'edit')">
+            <button title="Edit comment"  class="btn btn-secondary sc__m-0" ng-click="setMode(comment, 'edit')">
               <i class="crm-i fa-pencil"></i>
             </button>
           </div>
@@ -70,7 +70,7 @@
           <span>Are you sure to delete comment: {{comment.source_contact_name}} on {{formatDateAndTime(comment.activity_date_time, true)}}</span>
         </div>
 
-        <div class="grid__flex-space-between">
+        <div class="sc__flex sc__justify-content-space-between">
           <button class="btn btn-danger" ng-click="deleteComment(comment.id)">
             <i class="crm-i fa-trash"></i>
             <span>Delete</span>
@@ -94,7 +94,7 @@
 
         <div class="comments__create-comment-errors-wrap"></div>
 
-        <div class="grid__flex-space-between">
+        <div class="sc__flex sc__justify-content-space-between">
           <button class="btn btn-primary" ng-click="updateComment(comment)">
             <i class="crm-i fa-check"></i>
             <span>Update</span>

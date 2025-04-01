@@ -2,9 +2,12 @@
   <h1 crm-page-title>
     <div class="sc__flex sc__gap-10 sc__align-items-center">
       <span>{{ts('Manage Case #%0', [caseInfo['id']])}}</span>
+      <span class="sc__flex sc__flex-direction-column sc__max-width-300">
+        <span class="sc__font-size-14" ng-if="caseInfo['is_deleted'] == 1"><i class="crm-i fa-trash" title="This case in the trash"></i>(This case is in the trash)</span>
+        <span class="sc__font-size-14">{{formatDateAndTime(caseInfo['start_date'], false)}}</span>
+      </span>
       <span class="scm__case-subject">
         <span>{{caseInfo['subject']}}</span>
-        <span ng-if="caseInfo['is_deleted'] == 1">(<i title="This case in the trash" class="supportcase-ico fa-trash" aria-hidden="true"></i>This case is in the trash)</span>
       </span>
     </div>
   </h1>
@@ -13,7 +16,6 @@
     <div class="crm-form-block">
       <div ng-if="!isError && !isCaseLocked">
         <case-info model='caseInfo'></case-info>
-        <case-comment class="ci__case-info-item-wrap ci--no-border ci--max-width-100" model="caseInfo['id']"></case-comment>
         <communication model='caseInfo'></communication>
         <quick-actions model='caseInfo'></quick-actions>
         <activities model='caseInfo'></activities>

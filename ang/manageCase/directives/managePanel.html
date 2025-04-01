@@ -12,11 +12,11 @@
       <i class="crm-i fa-refresh"></i>
       <span>Ongoing</span>
     </button>
-    <button ng-if="!isCaseHasStatus('urgent');" class="btn btn-danger" ng-click="makeCaseUrgent();">
+    <button ng-if="!isCaseHasStatus('urgent');" class="btn btn-danger sc__red-btn" ng-click="makeCaseUrgent();">
       <i class="crm-i fa-exclamation-circle"></i>
       <span>Urgent</span>
     </button>
-    <button ng-if="!isCaseHasStatus('spam');" class="btn btn-default" ng-click="reportSpamCase();">
+    <button ng-if="!isCaseHasStatus('spam');" class="btn btn-success sc__grey-btn" ng-click="reportSpamCase();">
       <i class="crm-i fa-flag"></i>
       <span>Report Spam</span>
     </button>
@@ -31,8 +31,8 @@
       <i class="crm-i fa-arrow-left"></i>
       <span>Back</span>
     </a>
-    <button class="btn btn-primary" ng-click="restoreCase();">
-      <i class="crm-i fa-trash-o"></i>
+    <button class="btn btn-success sc__green-btn" ng-click="restoreCase();">
+      <i class="crm-i fa-trash-restore"></i>
       <span>Restore case from trash</span>
     </button>
   </div>
@@ -42,7 +42,7 @@
       <i class="crm-i fa-arrow-left"></i>
       <span>Back</span>
     </a>
-    <button class="btn btn-primary" ng-click="makeCaseOngoing();">
+    <button class="btn btn-success sc__green-btn" ng-click="makeCaseOngoing();">
       <i class="crm-i fa-refresh"></i>
       <span>Not Spam</span>
     </button>

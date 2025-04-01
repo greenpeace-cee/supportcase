@@ -4,17 +4,12 @@
     Prefix-alias: ci = Case Info
 */
 
-.ci__case-info {
-
-}
-
 .ci__block-wrap {
   display: flex;
   flex-wrap: wrap;
   align-content: stretch;
   height: 100%;
   gap: 10px;
-  /*margin-top: -60px;*/
 }
 
 .ci__case-info-item-wrap {
@@ -45,7 +40,10 @@
 .ci__case-info-item {
   box-sizing: border-box;
   position: relative;
-  padding-right: 20px;
+}
+
+.ci__case-info-item.ci__case-info-item-tags {
+  min-width: 0;
 }
 
 .ci__tags-wrap {
@@ -68,12 +66,8 @@
   background: none !important;
 }
 
-.ci__case-info-header {
-}
-
 .ci__case-info-view-mode {
   position: relative;
-  /*padding: 5px 10px 10px 10px;*/
 }
 
 .ci__case-info-item:hover .ci__case-info-edit-button {
@@ -82,35 +76,22 @@
 
 .ci__case-info-edit-button {
   position: absolute;
-  top: 0;
   right: 0;
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
   display: none;
   z-index: 10;
-  font-size: 16px;
-}
-
-.ci__case-info-edit-button:hover {
-  border-color: #99a4a8;
-}
-
-.ci__case-info-edit-button i {
-  display: block;
-  position: absolute;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(0, -50%);
 }
 
-.ci__case-info-edit-mode {
-  margin-bottom: 30px;
+.ci__case-info-item-tags .ci__case-info-edit-button {
+  top: 0;
+  transform: translate(0, 0);
 }
 
 .ci__case-info-edit-mode-buttons {
   justify-content: space-between;
   display: flex;
+  padding-top: 4px;
 }
 
 .ci__case-info-edit-mode-textarea {
@@ -138,10 +119,6 @@
 
 .ci__case-info-help-message {
   margin-bottom: 5px;
-}
-
-.ci__accordion-header span i {
-  color: white;
 }
 
 .com__empty-result {

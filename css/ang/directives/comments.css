@@ -3,8 +3,7 @@
 */
 
 .comments {
-  height: 100%;
-  margin-top: -30px;
+  width: 650px;
 }
 
 .comments pre {
@@ -15,8 +14,6 @@
 
 .comments__simple-view {
   display: flex;
-  align-items: center;
-  height: 100%;
 }
 
 .comments__item-wrap {
@@ -51,7 +48,7 @@
   display: flex;
   gap: 10px;
   align-items: center;
-  padding: 10px 0 15px 0;
+  padding: 0 0 10px 0;
 }
 
 .comments__edit-comment-header {

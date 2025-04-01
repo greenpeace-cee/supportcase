@@ -1,7 +1,11 @@
-<div class="ci__case-info-item tagsField">
+<div class="ci__case-info-item ci__case-info-item-tags tagsField">
   <div class="ci__case-info-header">
-    <div ng-show="!isEditMode" class="ci__case-info-edit-button" title="Edit tags" ng-click="toggleMode();">
-      <i class="crm-i fa-pencil"></i>
+    <div class="sc__position-relative">
+      <div ng-show="!isEditMode" class="ci__case-info-edit-button" title="Edit tags" ng-click="toggleMode();">
+        <button ng-show="!isEditMode" class="btn btn-secondary sc__m-0">
+          <i class="crm-i fa-pencil"></i>
+        </button>
+      </div>
     </div>
   </div>
 
