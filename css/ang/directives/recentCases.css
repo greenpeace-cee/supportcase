@@ -2,15 +2,3 @@
     Uses on recentCases directive
     Prefix-alias: rc  = recentCases
 */
-
-.rc__recent-cases {
-  margin-top: 5px;
-}
-
-.rc__column-subject {
-  max-width: 400px;
-}
-
-.crm-container .rc__recent-cases .crm-search-results  {
-  margin-bottom: 0;
-}

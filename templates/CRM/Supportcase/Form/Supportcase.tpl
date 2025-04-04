@@ -93,7 +93,7 @@
       <div class="crm-accordion-header">
         {ts}Communication{/ts}
       </div><!-- /.crm-accordion-header -->
-      <div class="crm-accordion-body" style="min-height: 400px;">
+      <div class="crm-accordion-body sc__accordion-body">
         EMAIL THREAD HERE
       </div>
     </div>

@@ -2,7 +2,3 @@
     Uses on showMoreText directive
     Prefix-alias: smt = showMoreText
 */
-
-.smt__button {
-  cursor: pointer;
-}

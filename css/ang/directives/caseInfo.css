@@ -1,16 +1,8 @@
 /*
     Uses on caseInfo directive and child directives:
-    caseCategory, caseClients, caseSubject, caseStatus, caseStartDate, caseTags.
+    caseCategory, caseClients, caseStartDate, caseTags.
     Prefix-alias: ci = Case Info
 */
-
-.ci__block-wrap {
-  display: flex;
-  flex-wrap: wrap;
-  align-content: stretch;
-  height: 100%;
-  gap: 10px;
-}
 
 .ci__case-info-item-wrap {
   position: relative;
@@ -37,37 +29,8 @@
   max-width: 1424px;
 }
 
-.ci__case-info-item {
-  box-sizing: border-box;
-  position: relative;
-}
-
-.ci__case-info-item.ci__case-info-item-tags {
-  min-width: 0;
-}
-
-.ci__tags-wrap {
-  display: flex;
-}
-
 .ci__case-info-item-content {
   word-wrap: break-word;
-}
-
-.ci__case-info-item-content-subject {
-  max-width: 80px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.ci__case-info-item-content-note {
-  border: none !important;
-  background: none !important;
-}
-
-.ci__case-info-view-mode {
-  position: relative;
 }
 
 .ci__case-info-item:hover .ci__case-info-edit-button {
@@ -88,25 +51,10 @@
   transform: translate(0, 0);
 }
 
-.ci__case-info-edit-mode-buttons {
-  justify-content: space-between;
-  display: flex;
-  padding-top: 4px;
-}
-
-.ci__case-info-edit-mode-textarea {
-  width: 100%;
-  box-sizing: border-box;
-}
-
 .ci__tag {
-  line-height: 135%;
   display: block;
-  float: left;
   margin: 1px;
-  max-width: 140px;
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
   padding: 1px 5px;
   border-radius: 3px;
@@ -115,12 +63,4 @@
 
 .ci__case-info-errors-wrap {
   margin-bottom: 5px;
-}
-
-.ci__case-info-help-message {
-  margin-bottom: 5px;
-}
-
-.com__empty-result {
-  padding: 20px 10px;
 }

@@ -1,15 +1,15 @@
-<div class="act__wrap">
+<div>
   <div ng-switch="info['stepName']" class="mes__manage-subscriptions">
 
     <div class="act__step" ng-switch-when="confirmEmailStep">
       <div class="act__step-title">Enter email</div>
-      <div class="act__step-description">The email will be use to find matching contacts and their subscriptions.</div>
+      <div class="sc__pb-10">The email will be use to find matching contacts and their subscriptions.</div>
       <div class="act__step-body">
-        <div class="act__step-logic">
+        <div>
           <input maxlength="40" class="spc__input crm-form-text" type="text" ng-model="info.email">
         </div>
-        <div class="act__step-buttons">
-          <button class="act__next-step-button btn btn-primary" ng-disabled="info.email.length === 0" ng-click="runStep('selectSubscriptionsStep')">
+        <div class="sc__pt-20">
+          <button class="btn btn-primary" ng-disabled="info.email.length === 0" ng-click="runStep('selectSubscriptionsStep')">
             <i class="crm-i fa-arrow-right"></i>
             <span>Next</span>
           </button>
@@ -19,22 +19,22 @@
 
     <div class="act__step" ng-switch-when="selectSubscriptionsStep">
       <div class="act__step-title">Update Subscriptions</div>
-      <div class="act__step-description" ng-if="info['tableData'].length > 0" >Manage email subscriptions of all contacts with email <strong>{{info['email']}}</strong>:</div>
+      <div class="sc__pb-10" ng-if="info['tableData'].length > 0" >Manage email subscriptions of all contacts with email <strong>{{info['email']}}</strong>:</div>
       <div class="act__step-body">
-        <div class="act__step-logic">
+        <div>
 
           <div ng-if="info['tableData'].length > 0">
-            <div class="act__table act__table-middle-width">
-              <table class="crm-search-results">
+            <div class="act__table sc__max-width-700">
+              <table class="crm-search-results sc__mb-0">
                 <thead>
                 <tr>
-                  <th ng-repeat="tableHeader in info['tableHeaders']" class="act__column-head" ng-class="{'act__column-head-contact' : tableHeader.table_data_key == 'contact_id'}" title="{{tableHeader.description}}" >
+                  <th ng-repeat="tableHeader in info['tableHeaders']" ng-class="{'sc__width-250' : tableHeader.table_data_key == 'contact_id'}" title="{{tableHeader.description}}" >
                     {{tableHeader.label}}
                   </th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="tableRow in info['tableData']" class="act__row" data-contact-id="{{tableRow.contact_id}}">
+                <tr ng-repeat="tableRow in info['tableData']"  data-contact-id="{{tableRow.contact_id}}">
                   <td ng-repeat="tableHeader in info['tableHeaders']">
                     <div ng-if="tableHeader.is_dynamic_header">
                       <input ng-model="tableRow[(tableHeader.table_data_key)]" class="mes__group-checkbox" data-contact-id="{{contact.id}}" ng-model="tableRow['contact_is_opt_out']" type="checkbox"/>
@@ -46,8 +46,8 @@
                       </div>
 
                       <div class="act__column" ng-if="tableHeader.table_data_key == 'contact_is_opt_out'">
-                        <label class="mes__bulk-opt-out-block">
-                          <input class="mes__bulk-opt-out-checkbox" ng-model="tableRow['contact_is_opt_out']" type="checkbox"/>
+                        <label>
+                          <input ng-model="tableRow['contact_is_opt_out']" type="checkbox"/>
                         </label>
                       </div>
                     </div>
@@ -56,7 +56,7 @@
                 </tbody>
               </table>
             </div>
-            <div class="mes__unsubscribe-all-groups" >
+            <div class="sc__pt-20" >
               <button class="btn btn-secondary" ng-click="unCheckAllGroups()">
                 <span>Remove all groups</span>
               </button>
@@ -66,8 +66,8 @@
             <p>Cannot find any contacts contacts matching <strong>"{{info['email']}}"</strong>.</p>
           </div>
         </div>
-        <div class="act__step-buttons">
-          <button class="act__next-step-button btn btn-primary" ng-click="runStep('showSuccessMessageStep')">
+        <div class="sc__pt-20">
+          <button class="btn btn-primary" ng-click="runStep('showSuccessMessageStep')">
             <i class="crm-i fa-check"></i>
             <span>Confirm</span>
           </button>
@@ -77,7 +77,7 @@
 
     <div class="act__step" ng-switch-when="showSuccessMessageStep">
       <div class="act__step-title">Success</div>
-      <div class="act__step-description">Subscriptions were updated.</div>
+      <div class="sc__pb-10">Subscriptions were updated.</div>
     </div>
   </div>
 </div>

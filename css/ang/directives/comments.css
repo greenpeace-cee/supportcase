@@ -17,27 +17,17 @@
 }
 
 .comments__item-wrap {
-  padding: 10px;
-  border-top: 1px solid #d3dee2;
+  padding-bottom: 10px;
 }
 
 .comments__item-wrap:hover .comments__actions {
   opacity: 1;
 }
 
-.comments__item-view-mode,
-.comments__item-delete-mode,
-.comments__create-comment-wrap,
-.comments__item-edit-mode {
-  max-width: 900px;
-}
-
 .comments__item-delete-mode,
 .comments__item-edit-mode,
 .comments__create-comment-wrap {
-  padding: 10px;
-  background: whitesmoke;
-  border: 1px solid #d3dee2;
+
 }
 
 .comments__create-comment-wrap {
@@ -52,11 +42,11 @@
 }
 
 .comments__edit-comment-header {
-  padding: 0 10px 10px 0;
+
 }
 
 .comments__add-new-comment-header {
-  padding: 0 10px 10px 0;
+
 }
 
 .comments__delete-message {
@@ -65,11 +55,6 @@
 
 .comments__header_label {
   font-weight: bold;
-}
-
-.comments__info-wrap {
-  display: flex;
-  gap: 5px;
 }
 
 .comments__modified-date {
@@ -88,8 +73,4 @@
   align-items: center;
   gap: 10px;
   font-weight: bold;
-}
-
-.comments__body-text {
-  padding: 10px;
 }

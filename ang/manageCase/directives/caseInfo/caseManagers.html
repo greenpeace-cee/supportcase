@@ -1,4 +1,4 @@
-<div class="ci__case-info-item sc__min-width-300 managerField">
+<div class="ci__case-info-item sc__position-relative sc__min-width-300 managerField">
   <div class="panel">
     <div class="panel-heading">
       <div class="sc__flex sc__justify-content-space-between sc__position-relative">
@@ -12,7 +12,7 @@
     </div>
     <div class="panel-body">
       <div class="sc__min-height-70">
-        <div class="ci__case-info-view-mode" ng-show="!isEditMode">
+        <div class="sc__position-relative" ng-show="!isEditMode">
           <div class="ci__case-info-item-content">
             <div class="ci__clients-wrap">
               <div ng-repeat="managerContactId in model['managers_ids']">
@@ -28,7 +28,7 @@
 
           <div class="ci__case-info-errors-wrap"></div>
 
-          <div class="ci__case-info-edit-mode-buttons">
+          <div class="sc__flex sc__justify-content-space-between sc__mt-10">
             <button class="btn btn-primary sc__m-0" ng-click="editConfirm()">
               <i class="crm-i fa-check"></i>
               <span>Confirm</span>

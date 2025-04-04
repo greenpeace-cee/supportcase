@@ -26,12 +26,24 @@
   width: 250px;
 }
 
+.sc__width-300 {
+  width: 300px;
+}
+
 .sc__max-width-800 {
   max-width: 800px;
 }
 
+.sc__max-width-200 {
+  max-width: 200px;
+}
+
 .sc__max-width-300 {
   max-width: 300px;
+}
+
+.sc__max-width-400 {
+  max-width: 400px;
 }
 
 .sc__max-width-900 {
@@ -159,8 +171,16 @@
   padding: 20px;
 }
 
+.sc__pl-10 {
+  padding-left: 10px;
+}
+
 .sc__m-0 {
   margin: 0 !important;
+}
+
+.sc__mb-0 {
+  margin-bottom: 0 !important;
 }
 
 .sc__mb-5 {
@@ -224,6 +244,10 @@
 
 .sc__font-size-14 {
   font-size: 14px;
+}
+
+.sc__font-size-20 {
+  font-size: 20px;
 }
 
 .sc__min-height-70 {
@@ -359,6 +383,6 @@
   border-color: #b53f2f !important;
 }
 
-/*
-   End supportcase Accordion
-*/
+.crm-accordion-body.sc__accordion-body {
+  padding: 10px 20px 20px 20px !important;
+}

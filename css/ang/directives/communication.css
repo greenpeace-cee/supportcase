@@ -293,10 +293,6 @@
   font-weight: bold;
 }
 
-.com__email-view-mode .com__email-info-row {
-  padding-bottom: 5px;
-}
-
 .com__email-view-info-rows-wrap {
   display: flex;
   justify-content: space-between;
@@ -426,10 +422,8 @@
 }
 
 .com__send-new-email-wrap {
-  padding-left: 10px;
-  padding-right: 10px;
   border-top: 1px solid #d3dee2;
-  padding-top: 10px;
+  padding-top: 20px;
 }
 
 .com__draft-email-title {

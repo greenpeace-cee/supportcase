@@ -208,3 +208,15 @@
 .supportcase__recent-communication-meta:before {
     content: "\2014 \00A0";
 }
+
+.supportcase__tooltip-wrap {
+  width: 700px;
+}
+
+.supportcase__tooltip-activity-detail {
+  height: 200px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  border: 1px solid #d3dee2;
+  background: white;
+}

@@ -1,34 +1,34 @@
 <div class="act__activities">
   <details class="crm-accordion-bold">
     <summary>Activities  {{'[' + activities['length'] + ']'}}</summary>
-    <div class="crm-accordion-body">
+    <div class="crm-accordion-body sc__accordion-body">
       <div class="act__block-wrap">
-        <table class="crm-search-results spc__table">
+        <table class="crm-search-results sc__mb-0 spc__table">
           <thead>
           <tr>
-            <th class="act__column-head">Date</th>
-            <th class="act__column-head">Subject</th>
-            <th class="act__column-head">Type</th>
-            <th class="act__column-head">With</th>
-            <th class="act__column-head">Reporter</th>
-            <th class="act__column-head" >Assignee</th>
-            <th class="act__column-head">Status</th>
-            <th class="act__column-head">&nbsp;</th>
+            <th>Date</th>
+            <th>Subject</th>
+            <th>Type</th>
+            <th>With</th>
+            <th>Reporter</th>
+            <th >Assignee</th>
+            <th>Status</th>
+            <th>&nbsp;</th>
           </tr>
           </thead>
           <tbody>
           <tr ng-repeat="activity in activities" value="{{option.value}}" class="crm-entity">
             <td>
-              <div class="act__column act__column-created-date">{{formatDateAndTime(activity.created_date, true)}}</div>
+              <div>{{formatDateAndTime(activity.created_date, true)}}</div>
             </td>
             <td>
-              <div class="act__column act__column-subject">{{activity.subject}}</div>
+              <div>{{activity.subject}}</div>
             </td>
             <td>
-              <div class="act__column act__column-activity-type">{{activity.activity_type}}</div>
+              <div>{{activity.activity_type}}</div>
             </td>
             <td>
-              <div class="act__column act__column-creator-contacts">
+              <div class="sc__width-250">
                 <div ng-repeat="creatorContact in activity.creator_contacts">
                   <div class="act__contact-link">
                     <a href="{{creatorContact.link}}" class="action-item crm-hover-button" target="_blank">{{creatorContact.display_name}}</a>

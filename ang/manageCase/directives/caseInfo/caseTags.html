@@ -1,4 +1,4 @@
-<div class="ci__case-info-item ci__case-info-item-tags tagsField">
+<div class="ci__case-info-item sc__position-relative ci__case-info-item-tags tagsField">
   <div class="ci__case-info-header">
     <div class="sc__position-relative">
       <div ng-show="!isEditMode" class="ci__case-info-edit-button" title="Edit tags" ng-click="toggleMode();">
@@ -9,9 +9,9 @@
     </div>
   </div>
 
-  <div class="ci__case-info-view-mode" ng-show="!isEditMode">
+  <div class="sc__position-relative" ng-show="!isEditMode">
     <div class="ci__case-info-item-content">
-      <div class="ci__tags-wrap">
+      <div class="sc__flex sc__gap-5">
         <div>Tags:</div>
         <div ng-repeat="tagId in model['tags_ids']" class="crm-tag-item ci__tag"
              style="{{generateStyles(model['available_tags'][tagId]['color'])}}"
@@ -31,13 +31,13 @@
 
     <div class="ci__case-info-errors-wrap"></div>
 
-    <div class="ci__case-info-edit-mode-buttons">
-      <button class="btn btn-primary" ng-click="editConfirm()">
+    <div class="sc__flex sc__justify-content-space-between sc__mt-10 sc__mb-10">
+      <button class="btn btn-primary sc__m-0" ng-click="editConfirm()">
         <i class="crm-i fa-check"></i>
         <span>Confirm</span>
       </button>
 
-      <button class="btn btn-secondary" ng-click="toggleMode()">
+      <button class="btn btn-secondary sc__m-0" ng-click="toggleMode()">
         <i class="crm-i fa-arrow-left"></i>
         <span>Cancel</span>
       </button>

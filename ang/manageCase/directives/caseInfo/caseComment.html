@@ -7,102 +7,121 @@
   </div>
 
   <div ng-show="!isSimpleView" class="comments__extended-view">
-
-    <div class="comments__header sc__justify-content-space-between">
-      <div class="comments__header_label">Comments</div>
-      <button class="btn btn-secondary sc__m-0" ng-click="toggleCreateComment()" ng-if="!isShowCreateCommentWindow">
-        <i class="crm-i fa-plus"></i>
-        <span>Add new comment</span>
-      </button>
-    </div>
-
-    <div ng-show="isShowCreateCommentWindow" class="comments__create-comment-wrap">
-      <div class="comments__add-new-comment-header">
-        <div class="comments__header_label">Add new comment</div>
+    <div class="panel">
+      <div class="panel-heading">
+        <div class="sc__flex sc__justify-content-space-between">
+          <div class="comments__header_label">Comments</div>
+          <button class="btn btn-secondary sc__m-0" ng-click="toggleCreateComment()" ng-if="!isShowCreateCommentWindow">
+            <i class="crm-i fa-plus"></i>
+            <span>Add new comment</span>
+          </button>
+        </div>
       </div>
+      <div class="panel-body">
+        <div ng-show="isShowCreateCommentWindow" class="comments__create-comment-wrap">
+          <div class="panel">
+            <div class="panel-heading">
+              <div class="comments__add-new-comment-header">
+                <div class="comments__header_label">Add new comment</div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div>
+                <textarea rows="12" class="spc--textarea spc__input spc--width-100-percent" ng-model="newCommentBody" ></textarea>
+              </div>
 
-      <div>
-        <textarea rows="12" class="spc--textarea spc__input spc--width-100-percent" ng-model="newCommentBody" ></textarea>
-      </div>
+              <div class="comments__create-comment-errors-wrap"></div>
 
-      <div class="comments__create-comment-errors-wrap"></div>
-
-      <div class="sc__flex sc__justify-content-space-between">
-        <button class="btn btn-primary" ng-click="createComment()">
-          <i class="crm-i fa-check"></i>
-          <span>Create</span>
-        </button>
-        <button class="btn btn-secondary" ng-click="toggleCreateComment()">
-          <i class="crm-i fa-arrow-left"></i>
-          <span>Cancel</span>
-        </button>
-      </div>
-    </div>
-
-    <div ng-if="comments.length > 0" ng-repeat="comment in comments" class="comments__item-wrap">
-      <div ng-show="comment['mode'] == 'view'"  class="comments__item-view-mode">
-        <div class="comments__info-wrap">
-          <div class="comments__info">
-            <span>{{comment.source_contact_name}} on {{formatDateAndTime(comment.activity_date_time, true)}}</span>
-          </div>
-          <div class="comments__actions">
-            <button title="Delete comment" class="btn btn-danger sc__m-0" ng-click="setMode(comment, 'delete')">
-              <i class="crm-i fa-trash"></i>
-            </button>
-            <button title="Edit comment"  class="btn btn-secondary sc__m-0" ng-click="setMode(comment, 'edit')">
-              <i class="crm-i fa-pencil"></i>
-            </button>
+              <div class="sc__flex sc__justify-content-space-between">
+                <button class="btn btn-primary" ng-click="createComment()">
+                  <i class="crm-i fa-check"></i>
+                  <span>Create</span>
+                </button>
+                <button class="btn btn-secondary" ng-click="toggleCreateComment()">
+                  <i class="crm-i fa-arrow-left"></i>
+                  <span>Cancel</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="comments__body">
-          <div class="comments__body-text" ng-bind-html="comment.details"></div>
-          <div class="comments__modified-date" ng-if="comment.created_date !== comment.modified_date">Modified at: {{formatDateAndTime(comment.modified_date, true)}}</div>
-        </div>
-      </div>
+        <div ng-if="comments.length > 0" ng-repeat="comment in comments" class="comments__item-wrap">
+          <div ng-show="comment['mode'] == 'view'"  class="comments__item-view-mode">
+            <div class="sc__flex sc__gap-5">
+              <div class="comments__info">
+                <span>{{comment.source_contact_name}} on {{formatDateAndTime(comment.activity_date_time, true)}}</span>
+              </div>
+              <div class="comments__actions">
+                <button title="Delete comment" class="btn btn-danger sc__m-0" ng-click="setMode(comment, 'delete')">
+                  <i class="crm-i fa-trash"></i>
+                </button>
+                <button title="Edit comment"  class="btn btn-secondary sc__m-0" ng-click="setMode(comment, 'edit')">
+                  <i class="crm-i fa-pencil"></i>
+                </button>
+              </div>
+            </div>
 
-      <div ng-show="comment['mode'] == 'delete'"  class="comments__item-delete-mode">
-        <div class="comments__edit-comment-header">
-          <div class="comments__header_label">Delete comment</div>
-        </div>
+            <div class="sc__pl-10">
+              <div class="sc__pb-10" ng-bind-html="comment.details"></div>
+              <div class="comments__modified-date" ng-if="comment.created_date !== comment.modified_date">Modified at: {{formatDateAndTime(comment.modified_date, true)}}</div>
+            </div>
+          </div>
 
-        <div class="comments__delete-message">
-          <span>Are you sure to delete comment: {{comment.source_contact_name}} on {{formatDateAndTime(comment.activity_date_time, true)}}</span>
-        </div>
+          <div ng-show="comment['mode'] == 'delete'"  class="comments__item-delete-mode">
+            <div class="panel">
+              <div class="panel-heading">
+                <div class="comments__edit-comment-header">
+                  <div class="comments__header_label">Delete comment</div>
+                </div>
+              </div>
+                <div class="panel-body">
+                  <div class="comments__delete-message">
+                    <span>Are you sure to delete comment: {{comment.source_contact_name}} on {{formatDateAndTime(comment.activity_date_time, true)}}</span>
+                  </div>
 
-        <div class="sc__flex sc__justify-content-space-between">
-          <button class="btn btn-danger" ng-click="deleteComment(comment.id)">
-            <i class="crm-i fa-trash"></i>
-            <span>Delete</span>
-          </button>
-          <button class="btn btn-secondary" ng-click="setMode(comment, 'view')">
-            <i class="crm-i fa-arrow-left"></i>
-            <span>Cancel</span>
-          </button>
-        </div>
-      </div>
+                  <div class="sc__flex sc__justify-content-space-between">
+                    <button class="btn btn-danger" ng-click="deleteComment(comment.id)">
+                      <i class="crm-i fa-trash"></i>
+                      <span>Delete</span>
+                    </button>
+                    <button class="btn btn-secondary" ng-click="setMode(comment, 'view')">
+                      <i class="crm-i fa-arrow-left"></i>
+                      <span>Cancel</span>
+                    </button>
+                  </div>
+                </div>
+            </div>
+          </div>
 
-      <div ng-show="comment['mode'] == 'edit'" class="comments__item-edit-mode">
-        <div class="comments__edit-comment-header">
-          <div class="comments__header_label">Edit comment</div>
-          <span>{{comment.source_contact_name}} on {{formatDateAndTime(comment.activity_date_time, true)}}</span>
-        </div>
+          <div ng-show="comment['mode'] == 'edit'" class="comments__item-edit-mode">
+            <div class="panel">
+              <div class="panel-heading">
+                <div class="comments__edit-comment-header">
+                  <div class="comments__header_label">Edit comment</div>
+                  <span>{{comment.source_contact_name}} on {{formatDateAndTime(comment.activity_date_time, true)}}</span>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="crm-section">
+                  <textarea rows="12" class="spc--textarea spc__input spc--width-100-percent" ng-model="comment.newCommentBody" ></textarea>
+                </div>
 
-        <div class="crm-section">
-          <textarea rows="12" class="spc--textarea spc__input spc--width-100-percent" ng-model="comment.newCommentBody" ></textarea>
-        </div>
+                <div class="comments__create-comment-errors-wrap"></div>
 
-        <div class="comments__create-comment-errors-wrap"></div>
-
-        <div class="sc__flex sc__justify-content-space-between">
-          <button class="btn btn-primary" ng-click="updateComment(comment)">
-            <i class="crm-i fa-check"></i>
-            <span>Update</span>
-          </button>
-          <button class="btn btn-secondary" ng-click="setMode(comment, 'view')">
-            <i class="crm-i fa-arrow-left"></i>
-            <span>Cancel</span>
-          </button>
+                <div class="sc__flex sc__justify-content-space-between">
+                  <button class="btn btn-primary" ng-click="updateComment(comment)">
+                    <i class="crm-i fa-check"></i>
+                    <span>Update</span>
+                  </button>
+                  <button class="btn btn-secondary" ng-click="setMode(comment, 'view')">
+                    <i class="crm-i fa-arrow-left"></i>
+                    <span>Cancel</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -3,8 +3,8 @@
     <div>
       <details class="crm-accordion-bold" {if !$isTagsFilterEmpty}open{/if}>
         <summary>{ts}Filter{/ts}</summary>
-        <div class="crm-accordion-body">
-          <div class="crm-accordion-body">
+        <div class="crm-accordion-body sc__accordion-body">
+          <div class="crm-accordion-body sc__accordion-body">
             {strip}
               <div class="scd__search-block">
 
@@ -69,7 +69,7 @@
                     <div class="sc__max-width-620">
                       <details class="crm-accordion-light {if $isTagsFilterEmpty}collapsed{/if}">
                         <summary>{ts}Tags:{/ts}</summary>
-                        <div class="crm-accordion-body">
+                        <div class="crm-accordion-body sc__accordion-body">
                           <div>
                             {include file="CRM/common/Tagset.tpl" tagsetType='case'}
                           </div>

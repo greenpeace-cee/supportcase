@@ -3,34 +3,13 @@
     Prefix-alias: act = actions;
 */
 
-.act__wrap {
-
-}
-
 .act__step {
 
 }
 
 .act__step-title {
   font-size: 20px;
-  vertical-align: middle;
   padding-bottom: 10px;
-}
-
-.act__step-description {
-  padding-bottom: 10px;
-}
-
-.act__step-logic {
-
-}
-
-.act__step-buttons {
-  padding-top: 20px;
-}
-
-.crm-container .act__next-step-button:disabled {
-  background-color: #c1c1c1;
 }
 
 /* table */
@@ -38,24 +17,4 @@
   max-width: 100%;
   border-left: 1px solid #e8eef0;
   border-right: 1px solid #e8eef0;
-}
-
-.act__table.act__table-middle-width {
-  max-width: 650px;
-}
-
-.act__row {
-
-}
-
-.act__column {
-
-}
-
-.act__column-head {
-
-}
-
-.act__column-head.act__column-head-contact {
-  width: 250px;
 }

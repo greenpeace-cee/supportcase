@@ -6,9 +6,9 @@
       <span ng-if="(sms.count + email.count) === 1">(1 message)</span>
       <span ng-if="(sms.count + email.count) > 1">{{'(' + (sms.count +  email.count) + ' messages)'}}</span>
     </summary>
-    <div class="crm-accordion-body">
+    <div class="crm-accordion-body sc__accordion-body">
       <div class="com__block-wrap">
-        <div ng-if="(sms.count + email.count) === 0" class="com__empty-result">
+        <div ng-if="(sms.count + email.count) === 0" class="sc__pb-10">
           <span>No messages</span>
         </div>
 

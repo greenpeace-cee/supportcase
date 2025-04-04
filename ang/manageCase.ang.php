@@ -22,8 +22,6 @@ return [
     14 => 'css/ang/directives/selectEmail.css',
     15 => 'css/ang/directives/comments.css',
     16 => 'css/ang/directives/actions/actionGeneral.css',
-    17 => 'css/ang/directives/actions/doNotSms.css',
-    18 => 'css/ang/directives/actions/manageEmailSubscriptions.css',
     19 => 'css/ang/directives/selectContacts.css',
     20 => 'css/ang/directives/spcEmailEditor.css',
     21 => 'css/ang/directives/modalWindow.css',

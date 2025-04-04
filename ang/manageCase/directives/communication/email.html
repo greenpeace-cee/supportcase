@@ -1,6 +1,6 @@
 <div ng-if="emailActivities.length > 0 || draftEmailActivities.length > 0">
   <div class="spc__accordion spc--header-with-arrows">
-    <div class="spc__accordion-body spc--padding-right-20 spc--padding-left-20">
+    <div class="spc__accordion-body">
       <div ng-if="isLoading" class="com__list-emails-loading-block">Loading...</div>
       <div ng-if="!isLoading">
         <div data-activity-id="{{draftActivity.activity_id}}" ng-repeat="draftActivity in draftEmailActivities" ng-class="{'spc--collapsed' : draftActivity['is_collapsed'] === '1'}">
@@ -102,31 +102,31 @@
                             </div>
                           </div>
                           <div class="com__email-info-panel-wrap">
-                            <button class="btn btn-primary" ng-click="switchToMode(availableModes.reply, activity.id)">
+                            <button class="btn btn-primary sc__m-0" ng-click="switchToMode(availableModes.reply, activity.id)">
                               <i class="crm-i fa-reply"></i>
                               <span>Reply</span>
                             </button>
-                            <button class="btn btn-primary" ng-click="switchToMode(availableModes.reply_all, activity.id)">
+                            <button class="btn btn-primary sc__m-0" ng-click="switchToMode(availableModes.reply_all, activity.id)">
                               <i class="crm-i fa-reply-all"></i>
                               <span>Reply All</span>
                             </button>
-                            <button class="btn btn-primary" ng-click="switchToMode(availableModes.forward, activity.id)">
+                            <button class="btn btn-primary sc__m-0" ng-click="switchToMode(availableModes.forward, activity.id)">
                               <i class="crm-i fa-share"></i>
                               <span>Forward</span>
                             </button>
                             <div class="com__message-toggle-height-to-full">
-                              <button class="btn btn-primary" ng-click="toggleHeight(activity.id)">
+                              <button class="btn btn-secondary sc__m-0" ng-click="toggleHeight(activity.id)">
                                 <i class="crm-i fa-expand"></i>
                                 <span>Expand Message</span>
                               </button>
                             </div>
                             <div class="com__message-toggle-height-to-part">
-                              <button class="btn btn-primary" ng-click="toggleHeight(activity.id)">
+                              <button class="btn btn-secondary sc__m-0" ng-click="toggleHeight(activity.id)">
                                 <i class="crm-i fa-compress"></i>
                                 <span>Collapse Message</span>
                               </button>
                             </div>
-                            <button class="btn btn-primary" ng-click="switchToMode(availableModes.origin, activity.id)">
+                            <button class="btn btn-secondary sc__m-0" ng-click="switchToMode(availableModes.origin, activity.id)">
                               <i class="crm-i fa-envelope-o"></i>
                               <span>Show Original Email</span>
                             </button>
@@ -143,15 +143,15 @@
                         </div>
                         <div class="com__errors-wrap com__errors-mode-view"></div>
                         <div class="com__message-buttons">
-                          <button class="btn btn-primary" ng-click="switchToMode(availableModes.reply_all, activity.id)">
+                          <button class="btn btn-primary sc__m-0" ng-click="switchToMode(availableModes.reply_all, activity.id)">
                             <i class="crm-i fa-reply-all"></i>
                             <span>Reply All</span>
                           </button>
-                          <button class="btn btn-primary" ng-click="switchToMode(availableModes.reply, activity.id)">
+                          <button class="btn btn-primary sc__m-0" ng-click="switchToMode(availableModes.reply, activity.id)">
                             <i class="crm-i fa-reply"></i>
                             <span>Reply</span>
                           </button>
-                          <button class="btn btn-primary" ng-click="switchToMode(availableModes.forward, activity.id)">
+                          <button class="btn btn-primary sc__m-0" ng-click="switchToMode(availableModes.forward, activity.id)">
                             <i class="crm-i fa-share"></i>
                             <span>Forward</span>
                           </button>
@@ -201,13 +201,13 @@
                           <view-email-origin activity-id="activity.id"></view-email-origin>
                         </div>
 
-                        <div class="com__message-buttons">
+                        <div class="com__message-buttons sc__m-0">
                           <button class="btn btn-secondary" ng-click="cancel(activity.id)">
                             <i class="crm-i fa-arrow-left"></i>
                             <span>Cancel</span>
                           </button>
-                          <button class="btn btn-primary" ng-click="viewFullscreen(activity.id)">
-                            <i class="crm-i fa-fullscreen"></i>
+                          <button class="btn btn-primary sc__m-0" ng-click="viewFullscreen(activity.id)">
+                            <i class="crm-i fa-expand"></i>
                             <span>View Fullscreen</span>
                           </button>
                         </div>

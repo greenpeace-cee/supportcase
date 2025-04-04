@@ -1,4 +1,4 @@
-<div class="ci__case-info-item sc__min-width-300 clientsField">
+<div class="ci__case-info-item sc__position-relative sc__min-width-300 clientsField">
   <div class="panel">
     <div class="panel-heading">
       <div class="sc__flex sc__justify-content-space-between sc__position-relative">
@@ -16,7 +16,7 @@
 
     <div class="panel-body">
       <div class="sc__min-height-70">
-        <div class="ci__case-info-view-mode" ng-show="!isEditMode">
+        <div class="sc__position-relative" ng-show="!isEditMode">
           <div class="ci__case-info-item-content">
             <div class="ci__clients-wrap">
               <div ng-repeat="clientContactId in model['client_ids']">
@@ -37,7 +37,7 @@
 
           <div class="ci__case-info-errors-wrap" ng-show="!isDoubleConfirmMode"></div>
 
-          <div class="ci__case-info-edit-mode-buttons">
+          <div class="sc__flex sc__justify-content-space-between sc__mt-10">
             <button ng-show="!isNeedToShowConfirmationMessage" class="btn btn-primary sc__m-0" ng-click="editConfirm()">
               <i class="crm-i fa-check"></i>
               <span>Confirm</span>

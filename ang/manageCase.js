@@ -267,10 +267,10 @@
     var showInlineWindow = function(result, continueChangingStatusCallback, inlineWindowParentElement, cancelCallback) {
       var warningWindow = result['values']['warningWindow'];
       var inlineWindow = ''+
-        '<div class="md__wrap">' +
+        '<div class="sc__pb-10">' +
         '  <div class="md__title">' + warningWindow['title'] + '</div>' +
-        '  <div class="md__message">' + warningWindow['message'] + '</div>' +
-        '  <div class="md__buttons">' +
+        '  <div class="sc__mb-20">' + warningWindow['message'] + '</div>' +
+        '  <div class="sc__flex sc__justify-content-space-between">' +
         '    <button class="md__button-yes ' + warningWindow['yesButtonClasses'] + '">' +
         '        <span class="ui-button-icon ui-icon ' + warningWindow['yesButtonIcon'] + '"></span>' +
         '        <span class="ui-button-icon-space"> </span>' +
@@ -1789,22 +1789,22 @@
                   // hack to add new custom item to select2
                   setTimeout(function() {
                     $( ".select2-drop-active ul.select2-results" ).append( `
-                                            <li class="se_add-email-to-client-select2-option select2-results-dept-0 select2-result select2-result-selectable" role="presentation">
-                                                <div class="select2-result-label" role="option">
-                                                    <div class="crm-select2-row">
-                                                        <div>
-                                                            <div class="crm-select2-row-label se__color-blue">
-                                                                <i class="crm-i fa-plus-circle" aria-hidden="true"></i>
-                                                                    <span>&nbsp;&nbsp;Add email "` + $scope.currentSearchEmail + `" to client</span>
-                                                            </div>
-                                                            <div class="crm-select2-row-description">
-                                                                <p>Create new <strong>email</strong> and add it to client</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        ` );
+                      <li class="se_add-email-to-client-select2-option select2-results-dept-0 select2-result select2-result-selectable" role="presentation">
+                        <div class="select2-result-label" role="option">
+                          <div class="crm-select2-row">
+                            <div>
+                              <div class="crm-select2-row-label se__color-blue">
+                                <i class="crm-i fa-plus-circle" aria-hidden="true"></i>
+                                <span>&nbsp;&nbsp;Add email "` + $scope.currentSearchEmail + `" to client</span>
+                              </div>
+                              <div class="crm-select2-row-description">
+                                <p>Create new <strong>email</strong> and add it to client</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </li>
+                  ` );
                     $('.se_add-email-to-client-select2-option').click(function () {
                       $scope.addToClientEmail();
                     });

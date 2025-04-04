@@ -2,19 +2,11 @@
   Prefix-alias: md = modal-window
 */
 
-.md__wrap {
-  padding: 10px;
-}
-
 .md__title {
   padding-bottom: 30px;
   font-size: 16px;
   font-weight: 600;
   line-height: 16px;
-}
-
-.md__message {
-  padding-bottom: 30px;
 }
 
 .md__buttons {

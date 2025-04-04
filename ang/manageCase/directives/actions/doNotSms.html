@@ -1,15 +1,15 @@
-<div class="act__wrap">
+<div>
 	<div ng-switch="info['stepName']" class="nosms__do-not-sms">
 
 		<div class="act__step" ng-switch-when="confirmNumberStep">
 			<div class="act__step-title">Enter phone number</div>
-			<div class="act__step-description">The number will be use to find matching contacts.</div>
+			<div class="sc__pb-10">The number will be use to find matching contacts.</div>
 			<div class="act__step-body">
-				<div class="act__step-logic">
+				<div>
 					<input maxlength="25" class="spc__input crm-form-text" type="text" ng-model="info.phoneNumber">
 				</div>
-				<div class="act__step-buttons">
-					<button class="act__next-step-button btn btn-primary" ng-disabled="info.phoneNumber.length === 0" ng-click="runStep('selectContactsStep')">
+				<div class="sc__pt-20">
+					<button class="btn btn-primary" ng-disabled="info.phoneNumber.length === 0" ng-click="runStep('selectContactsStep')">
             <i class="crm-i fa-arrow-right"></i>
             <span>Next</span>
           </button>
@@ -19,26 +19,26 @@
 
 		<div class="act__step" ng-switch-when="selectContactsStep">
 			<div class="act__step-title">Select contacts</div>
-			<div class="act__step-description" ng-if="info['contacts'].length > 0" >Confirm all contacts matching <strong>{{info['phoneNumber']}}</strong> for which "Do not SMS" should be set:</div>
+			<div class="sc__pb-10" ng-if="info['contacts'].length > 0" >Confirm all contacts matching <strong>{{info['phoneNumber']}}</strong> for which "Do not SMS" should be set:</div>
 			<div class="act__step-body">
-				<div class="act__step-logic">
+				<div>
 					<div ng-if="info['contacts'].length > 0">
-						<div class="act__table act__table-middle-width">
-							<table class="crm-search-results spc__table">
+						<div class="act__table sc__max-width-700">
+							<table class="crm-search-results sc__mb-0 spc__table">
 								<thead>
 									<tr>
-										<th class="act__column-head">
+										<th>
 											<div class="nosms__checkbox-wrap">
 												<input ng-click="handleMainCheckbox($event)" ng-checked="isSelectedAllContacts()" type="checkbox"/>
 											</div>
 										</th>
-										<th class="act__column-head">Contact ID</th>
-										<th class="act__column-head act__column-head-contact">Contact Info</th>
-										<th class="act__column-head">Do not SMS (current value)</th>
+										<th>Contact ID</th>
+										<th class="sc__width-250">Contact Info</th>
+										<th>Do not SMS (current value)</th>
 									</tr>
 								</thead>
 								<tbody>
-									<tr ng-repeat="contact in info['contacts']" class="act__row" data-contact-id="{{contact.id}}">
+									<tr ng-repeat="contact in info['contacts']" data-contact-id="{{contact.id}}">
 										<td>
 											<div class="act__column">
 												<div class="nosms__checkbox-wrap">
@@ -72,8 +72,8 @@
 						<p>Cannot find any contacts with phone number <strong>{{info['phoneNumber']}}</strong>.</p>
 					</div>
 				</div>
-				<div class="act__step-buttons">
-					<button class="act__next-step-button btn btn-primary" ng-disabled="!isSelectedMinimumOneContacts()" ng-click="runStep('showSuccessMessageStep')">
+				<div class="sc__pt-20">
+					<button class="btn btn-primary" ng-disabled="!isSelectedMinimumOneContacts()" ng-click="runStep('showSuccessMessageStep')">
             <i class="crm-i fa-check"></i>
             <span>Confirm</span>
           </button>
@@ -87,9 +87,9 @@
 
 		<div class="act__step" ng-switch-when="showSuccessMessageStep">
 			<div class="act__step-title">Success</div>
-			<div class="act__step-description">"Do not SMS" was set for these contacts:</div>
+			<div class="sc__pb-10">"Do not SMS" was set for these contacts:</div>
 			<div class="act__tep-body">
-				<div class="act__step-logic">
+				<div>
 					<ul ng-repeat="contact in info['contacts']">
 						<li ng-if="contact['is_selected']">
 							<contact-info model="contact['id']" is-search-duplicates="true"></contact-info>
