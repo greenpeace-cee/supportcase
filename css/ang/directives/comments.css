@@ -41,20 +41,8 @@
   padding: 0 0 10px 0;
 }
 
-.comments__edit-comment-header {
-
-}
-
-.comments__add-new-comment-header {
-
-}
-
 .comments__delete-message {
   padding: 10px 10px 20px 0;
-}
-
-.comments__header_label {
-  font-weight: bold;
 }
 
 .comments__modified-date {

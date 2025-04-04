@@ -10,7 +10,7 @@
     <div class="panel">
       <div class="panel-heading">
         <div class="sc__flex sc__justify-content-space-between">
-          <div class="comments__header_label">Comments</div>
+          <div class="sc__font-weight-bold">Comments</div>
           <button class="btn btn-secondary sc__m-0" ng-click="toggleCreateComment()" ng-if="!isShowCreateCommentWindow">
             <i class="crm-i fa-plus"></i>
             <span>Add new comment</span>
@@ -21,8 +21,8 @@
         <div ng-show="isShowCreateCommentWindow" class="comments__create-comment-wrap">
           <div class="panel">
             <div class="panel-heading">
-              <div class="comments__add-new-comment-header">
-                <div class="comments__header_label">Add new comment</div>
+              <div>
+                <div class="sc__font-weight-bold">Add new comment</div>
               </div>
             </div>
             <div class="panel-body">
@@ -71,8 +71,8 @@
           <div ng-show="comment['mode'] == 'delete'"  class="comments__item-delete-mode">
             <div class="panel">
               <div class="panel-heading">
-                <div class="comments__edit-comment-header">
-                  <div class="comments__header_label">Delete comment</div>
+                <div>
+                  <div class="sc__font-weight-bold">Delete comment</div>
                 </div>
               </div>
                 <div class="panel-body">
@@ -97,9 +97,12 @@
           <div ng-show="comment['mode'] == 'edit'" class="comments__item-edit-mode">
             <div class="panel">
               <div class="panel-heading">
-                <div class="comments__edit-comment-header">
-                  <div class="comments__header_label">Edit comment</div>
-                  <span>{{comment.source_contact_name}} on {{formatDateAndTime(comment.activity_date_time, true)}}</span>
+                <div>
+                  <div class="sc__flex sc__gap-5">
+                    <span class="sc__font-weight-bold">Edit comment</span>
+                    <span>{{comment.source_contact_name}} on {{formatDateAndTime(comment.activity_date_time, true)}}</span>
+                  </div>
+
                 </div>
               </div>
               <div class="panel-body">
