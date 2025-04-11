@@ -8,8 +8,8 @@
 				<div>
 					<input maxlength="25" class="spc__input crm-form-text" type="text" ng-model="info.phoneNumber">
 				</div>
-				<div class="sc__pt-20">
-					<button class="btn btn-primary" ng-disabled="info.phoneNumber.length === 0" ng-click="runStep('selectContactsStep')">
+				<div class="sc__pt-30">
+					<button class="btn btn-primary sc__m-0" ng-disabled="info.phoneNumber.length === 0" ng-click="runStep('selectContactsStep')">
             <i class="crm-i fa-arrow-right"></i>
             <span>Next</span>
           </button>
@@ -23,7 +23,7 @@
 			<div class="act__step-body">
 				<div>
 					<div ng-if="info['contacts'].length > 0">
-						<div class="act__table sc__max-width-700">
+						<div class="sc__max-width-700">
 							<table class="crm-search-results sc__mb-0 spc__table">
 								<thead>
 									<tr>
@@ -73,11 +73,11 @@
 					</div>
 				</div>
 				<div class="sc__pt-20">
-					<button class="btn btn-primary" ng-disabled="!isSelectedMinimumOneContacts()" ng-click="runStep('showSuccessMessageStep')">
+					<button class="btn btn-primary sc__m-0" ng-disabled="!isSelectedMinimumOneContacts()" ng-click="runStep('showSuccessMessageStep')">
             <i class="crm-i fa-check"></i>
             <span>Confirm</span>
           </button>
-					<button class="btn btn-secondary" ng-click="runStep('confirmNumberStep')">
+					<button class="btn btn-secondary sc__m-0" ng-click="runStep('confirmNumberStep')">
             <i class="crm-i fa-arrow-left"></i>
             <span>Back to entering number</span>
           </button>

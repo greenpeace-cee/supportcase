@@ -14,9 +14,13 @@
 .ap__actions-wrap {
   display: flex;
   gap: 10px;
-  align-items: start;
-  align-content: start;
-  padding-left: 10px;
+  align-items: center;
+}
+
+.crm-container .ui-widget,
+.crm-container .ui-widget-content,
+.ui-tabs .ui-tabs-nav li {
+  background: white;
 }
 
 .spc__menu-block {
@@ -82,7 +86,6 @@
 
 .spc__selected-cases {
   display: block;
-  line-height: 35px;
 }
 
 .spc__selected-cases.spc--hide {

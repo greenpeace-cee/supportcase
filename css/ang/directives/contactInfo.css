@@ -16,7 +16,7 @@
 
 .contact-info__accordion-body {
   display: none;
-  padding: 5px;
+  padding: 5px 5px 0px 20px;
 }
 
 .contact-info__wrap {
@@ -49,6 +49,10 @@
 
 .contact-info__contact-item {
   padding-bottom: 10px;
+  font-size: 14px;
+  line-height: 14px;
+  display: flex;
+  gap: 5px;
 }
 
 .contact-info__contact-item-label {
@@ -84,11 +88,6 @@
   align-items: center;
   justify-content: center;
   border: 0;
-  color: #464354 !important;
-}
-
-.contact-info__accordion-header-link:hover {
-  color: black !important;
 }
 
 .contact-info__accordion-header-link > .ui-button-icon {
@@ -142,39 +141,11 @@
   cursor: progress;
 }
 
-.contact-info__duplicate-item {
-  display: flex;
-  gap: 0;
-  align-items: center;
-  justify-content: center;
-}
-
-.contact-info__duplicate-item > .ui-icon {
-  display: inline-block;
-  margin: 2px 0 0 0 !important;
-}
-
-.contact-info__duplicate-item-label {
-  display: inline-block;
-  margin: 0 !important;
-}
-
 .contact-info__duplicate-block {
   position: relative;
-  padding: 0 10px 5px 10px;
-  border-bottom: 1px solid #d3dee2;
-}
-
-.contact-info__duplicate-title {
-  font-size: 10px;
-  font-style: italic;
-  line-height: 10px;
-}
-
-.contact-info__duplicate-item-wrap {
+  padding: 0 5px 0 20px;
   display: flex;
-  flex-wrap: wrap;
-  align-content: stretch;
+  gap: 10px;
   justify-content: space-between;
-  gap: 5px;
+  align-items: center;
 }

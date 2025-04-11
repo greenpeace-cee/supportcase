@@ -1,4 +1,4 @@
-<div class="ci__case-info-item sc__position-relative ci__case-info-item-tags tagsField">
+<div class="ci__case-info-item sc__position-relative ci__case-info-item-tags sc__justify-content-right tagsField">
   <div class="ci__case-info-header">
     <div class="sc__position-relative">
       <div ng-show="!isEditMode" class="ci__case-info-edit-button" title="Edit tags" ng-click="toggleMode();">
@@ -13,10 +13,13 @@
     <div class="ci__case-info-item-content">
       <div class="sc__flex sc__gap-5 sc__pl-45">
         <div>Tags:</div>
-        <div ng-repeat="tagId in model['tags_ids']" class="crm-tag-item ci__tag"
+        <div ng-repeat="tagId in model['tags_ids']" class="crm-tag-item sc__tag"
              style="{{generateStyles(model['available_tags'][tagId]['color'])}}"
              title="{{model['available_tags'][tagId]['description']}}">
           {{model['available_tags'][tagId]['name']}}
+        </div>
+        <div ng-if="model['tags_ids'].length === 0">
+          <span>not set</span>
         </div>
       </div>
     </div>
@@ -24,7 +27,7 @@
 
   <div class="ci__case-info-edit-mode" ng-show="isEditMode">
     <div>
-      <select ng-model="caseTags" style="width:100%;" multiple name="tagsField" id="tagsField" class="crm-form-select spc__input spc--multiple-select">
+      <select ng-model="caseTags" multiple name="tagsField" id="tagsField" class="crm-form-select spc--multiple-select">
         <option ng-repeat="option in model['available_tags']" value="{{option.id}}">{{option.name}}</option>
       </select>
     </div>

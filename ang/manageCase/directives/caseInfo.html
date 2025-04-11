@@ -1,19 +1,19 @@
-<div class="sc__flex sc__gap-10 sc__justify-content-space-between">
+<div class="ci_wrap">
   <div>
     <manage-panel model='model'></manage-panel>
-    <div class="sc__flex sc__gap-10">
+    <div class="ci_left-contact-block">
       <case-clients model="model"></case-clients>
       <case-managers model="model"></case-managers>
       <case-related-contacts model="model"></case-related-contacts>
     </div>
   </div>
 
-  <div>
+  <div class="ci_right-block">
     <div class="sc__flex sc__gap-5 sc__justify-content-right">
       <case-tags model="model"></case-tags>
       <case-category model="model"></case-category>
     </div>
-    <case-comment class="ci__case-info-item-wrap" model="model['id']"></case-comment>
+    <case-comment model="model['id']"></case-comment>
   </div>
 </div>
 

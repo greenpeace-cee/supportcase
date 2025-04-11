@@ -38,6 +38,10 @@
   max-width: 200px;
 }
 
+.sc__max-width-250 {
+  max-width: 250px;
+}
+
 .sc__max-width-300 {
   max-width: 300px;
 }
@@ -207,11 +211,6 @@
   margin-bottom: 20px;
 }
 
-
-.sc__font-style-italic {
-  font-style: italic;
-}
-
 .sc__bg-archived {
   background: #fcdebd;
 }
@@ -246,6 +245,10 @@
   font-size: 10px;
 }
 
+.sc__font-size-12 {
+  font-size: 12px;
+}
+
 .sc__font-size-14 {
   font-size: 14px;
 }
@@ -274,8 +277,20 @@
   font-style: italic;
 }
 
+.sc__line-height-14 {
+  line-height: 14px;
+}
+
+.sc__line-height-12 {
+  line-height: 12px;
+}
+
 .sc__page-wrap {
   padding-bottom: 600px;
+}
+
+.sc__flex-wrap-wrap {
+  flex-wrap: wrap;
 }
 
 .spc__accordion,
@@ -389,4 +404,14 @@
 
 .crm-accordion-body.sc__accordion-body {
   padding: 10px 20px 20px 20px !important;
+}
+
+.sc__tag {
+  display: block;
+  margin: 1px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid grey;
 }

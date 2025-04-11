@@ -11,10 +11,3 @@
   font-size: 20px;
   padding-bottom: 10px;
 }
-
-/* table */
-.act__table {
-  max-width: 100%;
-  border-left: 1px solid #e8eef0;
-  border-right: 1px solid #e8eef0;
-}

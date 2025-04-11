@@ -9,7 +9,7 @@
           <input maxlength="40" class="spc__input crm-form-text" type="text" ng-model="info.email">
         </div>
         <div class="sc__pt-20">
-          <button class="btn btn-primary" ng-disabled="info.email.length === 0" ng-click="runStep('selectSubscriptionsStep')">
+          <button class="btn btn-primary sc__m-0" ng-disabled="info.email.length === 0" ng-click="runStep('selectSubscriptionsStep')">
             <i class="crm-i fa-arrow-right"></i>
             <span>Next</span>
           </button>
@@ -24,7 +24,7 @@
         <div>
 
           <div ng-if="info['tableData'].length > 0">
-            <div class="act__table sc__max-width-700">
+            <div class="sc__max-width-700">
               <table class="crm-search-results sc__mb-0">
                 <thead>
                 <tr>
@@ -40,7 +40,7 @@
                       <input ng-model="tableRow[(tableHeader.table_data_key)]" class="mes__group-checkbox" data-contact-id="{{contact.id}}" ng-model="tableRow['contact_is_opt_out']" type="checkbox"/>
                     </div>
 
-                    <div ng-if="!tableHeader.is_dynamic_header">
+                    <div ng-if="!tableHeader.is_dynamic_header" class="sc__flex">
                       <div class="act__column" ng-if="tableHeader.table_data_key == 'contact_id'">
                         <contact-info model="tableRow['contact_id']" is-search-duplicates="true"></contact-info>
                       </div>
@@ -56,8 +56,9 @@
                 </tbody>
               </table>
             </div>
-            <div class="sc__pt-20" >
-              <button class="btn btn-secondary" ng-click="unCheckAllGroups()">
+            <div class="sc__pt-10" >
+              <button class="btn btn-secondary sc__m-0" ng-click="unCheckAllGroups()">
+                <i class="crm-i fa-trash"></i>
                 <span>Remove all groups</span>
               </button>
             </div>
@@ -66,8 +67,8 @@
             <p>Cannot find any contacts contacts matching <strong>"{{info['email']}}"</strong>.</p>
           </div>
         </div>
-        <div class="sc__pt-20">
-          <button class="btn btn-primary" ng-click="runStep('showSuccessMessageStep')">
+        <div class="sc__pt-30">
+          <button class="btn btn-primary sc__m-0" ng-click="runStep('showSuccessMessageStep')">
             <i class="crm-i fa-check"></i>
             <span>Confirm</span>
           </button>

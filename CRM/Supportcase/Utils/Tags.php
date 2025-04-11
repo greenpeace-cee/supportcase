@@ -9,7 +9,7 @@ class CRM_Supportcase_Utils_Tags {
    * @param $entityTableName
    * @return array
    */
-  public static function getTagsIds($entityId, $entityTableName) {
+  public static function getTagsIds($entityId, $entityTableName): array {
     if (empty($entityId) || empty($entityTableName)) {
       return [];
     }
@@ -31,7 +31,7 @@ class CRM_Supportcase_Utils_Tags {
    * @param $entityTableName
    * @return array
    */
-  public static function getAvailableTags($entityTableName) {
+  public static function getAvailableTags($entityTableName): array {
     if (empty($entityTableName)) {
       return [];
     }
@@ -60,7 +60,7 @@ class CRM_Supportcase_Utils_Tags {
    * @param $entityTableName
    * @return array
    */
-  public static function getTags($entityId, $entityTableName) {
+  public static function getTags($entityId, $entityTableName): array {
     if (empty($entityId) || empty($entityTableName)) {
       return [];
     }
@@ -85,7 +85,7 @@ class CRM_Supportcase_Utils_Tags {
    * @param $entityTableName
    * @return bool
    */
-  public static function isTagExist($entityTagId, $entityTableName) {
+  public static function isTagExist($entityTagId, $entityTableName): bool {
     if (empty($entityTagId) || empty($entityTableName)) {
       return false;
     }
@@ -108,7 +108,7 @@ class CRM_Supportcase_Utils_Tags {
    * @param $tagName
    * @return bool
    */
-  public static function getTagId($tagName) {
+  public static function getTagId($tagName): bool|int {
     if (empty($tagName)) {
       return false;
     }
@@ -130,7 +130,7 @@ class CRM_Supportcase_Utils_Tags {
    * @param $entityId
    * @param $entityTableName
    */
-  public static function deleteAllTagsRelatedToEntity($entityId, $entityTableName) {
+  public static function deleteAllTagsRelatedToEntity($entityId, $entityTableName): void {
     if (empty($entityId) || empty($entityTableName)) {
       return;
     }
@@ -151,7 +151,7 @@ class CRM_Supportcase_Utils_Tags {
    * @param $entityTableName
    * @param bool $isOnlyAddTags
    */
-  public static function setTagIdsToEntity($entityId, $newTagsIds, $entityTableName, $isOnlyAddTags = false) {
+  public static function setTagIdsToEntity($entityId, $newTagsIds, $entityTableName, $isOnlyAddTags = false): void {
     if (!$isOnlyAddTags) {
       self::deleteAllTagsRelatedToEntity($entityId, $entityTableName);
     }

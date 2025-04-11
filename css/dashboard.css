@@ -45,114 +45,112 @@
   border: none !important;
 }
 
-.supportcase__actions-column-wrap > span {
-    display: flex;
-    align-items: center;
-    align-content: center;
-    gap: 5px;
-}
-
-.supportcase__case-row-icons {
+.scd__case-row-icons {
     display: flex !important;
     align-items: center;
     gap: 5px;
 }
 
-.supportcase__case-select-row-column {
+.scd__case-contact-item {
+  display: flex;
+  gap: 5px;
+}
+
+.scd__case-select-row-column {
     width: 80px;
     display: flex;
     align-items: center;
     gap: 5px;
 }
 
-.supportcase__result-block .supportcase__case-row.crm-case-status_Spam > td {
+.scd__result-block .scd__case-row.crm-case-status_Spam > td {
     background: #dadada !important;
 }
 
-.supportcase__result-block .supportcase__case-row.crm-case-status_Resolved > td {
+.scd__result-block .scd__case-row.crm-case-status_Resolved > td {
     background: #e2ffe2 !important;
 }
 
-.supportcase__result-block .supportcase__case-row.crm-case-status_Forwarded > td {
+.scd__result-block .scd__case-row.crm-case-status_Forwarded > td {
     background: #dce6fe !important;
 }
 
-.supportcase__empty-result-wrap {
+.scd__empty-result-wrap {
   display: none;
 }
 
-.crm-container .supportcase__result-block .supportcase__case-subject-column-wrap {
+.crm-container .scd__result-block .scd__case-subject-column-wrap {
     max-width: 220px;
     line-height: 18px;
 }
 
-.crm-container .supportcase__result-block .supportcase__case-subject-column-wrap > span {
+.crm-container .scd__result-block .scd__case-subject-column-wrap > span {
     word-wrap: break-word;
     word-break: break-all;
 }
 
-.supportcase__view-activities-column-wrap {
+.scd__view-activities-column-wrap {
     max-width: 30px;
 }
 
-.supportcase__case-client-column-wrap {
+.scd__case-client-column-wrap {
     max-width: 210px;
 }
 
-.supportcase__recent-communication-column-wrap {
+.scd__recent-communication-column-wrap {
     max-width: 590px;
 }
 
 @media screen and (max-width: 1450px) {
-    .supportcase__recent-communication-column-wrap {
+    .scd__recent-communication-column-wrap {
         max-width: 400px;
     }
 }
 
-.supportcase__case-id-column-wrap {
+.scd__case-id-column-wrap {
     font-weight: 600;
     font-size: 15px;
     max-width: 70px;
 }
 
-.supportcase__case-id-column-wrap > span {
+.scd__case-id-column-wrap > span {
     font-weight: 600;
     font-size: 15px;
     line-height: 20px !important;
     display: block;
 }
 
-.supportcase__case-select-column-wrap {
+.scd__case-select-column-wrap {
     max-width: 50px;
     font-weight: 600;
     font-size: 16px;
 }
 
-.supportcase__case-ico.supportcase__case-ico-grey {
+.scd__case-ico.scd__case-ico-grey {
     color: #aaaaaa;
 }
 
-.supportcase__case-ico.supportcase__case-ico-urgent {
+.scd__case-ico.scd__case-ico-urgent {
     color: rgb(213, 64, 64);
 }
 
-.supportcase__case-ico.supportcase__case-ico-resolved {
+.scd__case-ico.scd__case-ico-resolved {
     color: rgb(33, 135, 43);
 }
 
-.supportcase__case-ico.fa-lock {
+.scd__case-ico.fa-lock {
     color: rgb(82, 82, 82);
 }
 
-.supportcase__case-ico.fa-unlock {
+.scd__case-ico.fa-unlock {
     color: rgb(33, 135, 43);
 }
 
-.supportcase__case-select-row-checkbox {
+.scd__case-select-row-checkbox {
     display: block;
 }
 
-.supportcase__case-select-row-checkbox > input[type="checkbox"] ,
+.scd__case-select-row-checkbox > input[type="checkbox"] ,
 #supportcaseToggleSelectCases {
     width: 20px;
     height: 20px;
@@ -160,11 +158,11 @@
     display: block;
 }
 
-.supportcase__case-assignee-column-wrap {
+.scd__case-assignee-column-wrap {
   width: 210px;
 }
 
-.supportcase__bottom-pagination-wrap {
+.scd__bottom-pagination-wrap {
     border-bottom: 1px solid #e8eef0;
     padding: 10px;
     margin: 0;
@@ -172,7 +170,7 @@
     display: flex;
 }
 
-.supportcase__recent-communication-details {
+.scd__recent-communication-details {
     margin: 0;
     max-width: 600px;
     white-space: nowrap;
@@ -184,8 +182,8 @@
     line-height: 18px !important;
 }
 
-.supportcase__recent-communication-details:before,
-.supportcase__recent-communication-details:after {
+.scd__recent-communication-details:before,
+.scd__recent-communication-details:after {
     color: inherit;
     font-size: 15px;
     margin: 0 5px 0 0;
@@ -193,27 +191,27 @@
     vertical-align: 0;
 }
 
-.supportcase__recent-communication-details:before {
+.scd__recent-communication-details:before {
     content: "\201C";
 }
 
-.supportcase__recent-communication-details:after {
+.scd__recent-communication-details:after {
     content: "\201D";
 }
 
-.supportcase__recent-communication-meta {
+.scd__recent-communication-meta {
     font-size: 11px;
 }
 
-.supportcase__recent-communication-meta:before {
+.scd__recent-communication-meta:before {
     content: "\2014 \00A0";
 }
 
-.supportcase__tooltip-wrap {
+.scd__tooltip-wrap {
   width: 700px;
 }
 
-.supportcase__tooltip-activity-detail {
+.scd__tooltip-activity-detail {
   height: 200px;
   overflow-y: scroll;
   overflow-x: hidden;

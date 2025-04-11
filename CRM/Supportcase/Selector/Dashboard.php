@@ -233,51 +233,8 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
    * @return array
    */
   public static function &links($isDeleted = FALSE, $key = NULL) {
-    $extraParams = ($key) ? "&key={$key}" : NULL;
-
-    if ($isDeleted) {
-      self::$_links = [
-        CRM_Core_Action::RENEW => [
-          'name' => ts('Restore'),
-          'url' => 'civicrm/contact/view/case',
-          'qs' => 'reset=1&action=renew&id=%%id%%&cid=%%cid%%&context=%%cxt%%' . $extraParams,
-          'ref' => 'restore-case',
-          'title' => ts('Restore Case'),
-          'weight' => -20,
-        ],
-      ];
-    }
-    else {
-      self::$_links = [
-        CRM_Core_Action::VIEW => [
-          'name' => ts('Manage'),
-          'url' => 'civicrm/a/#/supportcase/manage-case/%%id%%/%%qfKey%%',
-          'qs' => 'reset=1',
-          'ref' => 'manage-case',
-          'title' => ts('Manage Case'),
-          'class' => 'not-popup', // huck to make this link not in popup
-          'weight' => -20,
-        ],
-        CRM_Core_Action::UPDATE => [
-          'name' => ts('Spam'),
-          'url' => 'civicrm/supportcase/report-spam',
-          'qs' => 'reset=1&id=%%id%%&context=%%cxt%%' . $extraParams,
-          'ref' => 'report-spam',
-          'title' => ts('Report Spam'),
-          'weight' => 50,
-        ],
-        CRM_Core_Action::DELETE => [
-          'name' => ts('Delete'),
-          'url' => 'civicrm/contact/view/case',
-          'qs' => 'reset=1&action=delete&id=%%id%%&cid=%%cid%%&context=%%cxt%%' . $extraParams,
-          'ref' => 'delete-case',
-          'title' => ts('Delete Case'),
-          'weight' => 100,
-        ],
-      ];
-    }
-
     $actionLinks = [];
+
     foreach (self::$_links as $key => $value) {
       $actionLinks['primaryActions'][$key] = $value;
     }
@@ -345,22 +302,21 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
       $this->_additionalClause
     );
 
-    //CRM-4418 check for view, edit, delete
-    $permissions = [CRM_Core_Permission::VIEW];
-    if (CRM_Core_Permission::check('access all cases and activities')
-      || CRM_Core_Permission::check('access my cases and activities')
-    ) {
-      $permissions[] = CRM_Core_Permission::EDIT;
-    }
-    if (CRM_Core_Permission::check('delete in CiviCase')) {
-      $permissions[] = CRM_Core_Permission::DELETE;
-    }
+    $supportCasePermissions = [
+      'manage' => CRM_Core_Permission::check('access all cases and activities') || CRM_Core_Permission::check('access my cases and activities'),
+      'delete' => CRM_Core_Permission::check('delete in CiviCase'),
+      'restore' => CRM_Core_Permission::check('delete in CiviCase'),
+      'spam' => CRM_Core_Permission::check('access all cases and activities') || CRM_Core_Permission::check('access my cases and activities'),
+    ];
 
     $rows = [];
     $foundCaseIds = [];
-    $mask = CRM_Core_Action::mask($permissions);
     $caseStatus = CRM_Core_OptionGroup::values('case_status', FALSE, FALSE, FALSE, " AND v.name = 'Urgent' ");
     $categoryCustomFieldName = CRM_Core_BAO_CustomField::getCustomFieldID('category', CRM_Supportcase_Install_Entity_CustomGroup::CASE_DETAILS, true);
+    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String');
+    if (empty($qfKey)) {
+      $qfKey = '';
+    }
 
     while ($result->fetch()) {
       $row = [];
@@ -373,28 +329,11 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
         }
       }
 
-      $isDeleted = FALSE;
       if ($result->case_deleted) {
-        $isDeleted = TRUE;
         $row['case_status_id'] = empty($row['case_status_id']) ? "" : $row['case_status_id'] . '<br />' . ts('(deleted)');
       }
 
       $row['checkbox'] = CRM_Core_Form::CB_PREFIX . $result->case_id;
-
-      $links = self::links($isDeleted, $this->_key);
-      $row['action'] = CRM_Core_Action::formLink($links['primaryActions'],
-        $mask, [
-          'id' => $result->case_id,
-          'cid' => $result->contact_id,
-          'cxt' => $this->_context,
-        ],
-        ts('more'),
-        FALSE,
-        'case.selector.actions',
-        'Case',
-        $result->case_id
-      );
-
       $caseManagerContactIds = CRM_Supportcase_Utils_CaseManager::getCaseManagerContactIds($result->case_id);
 
       $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ? $result->contact_sub_type : $result->contact_type);
@@ -404,6 +343,11 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
       $row['case_tags'] = $this->getCaseTags($result->case_id);
       $row['category'] = (!empty($categoryCustomFieldName)) ? $result->$categoryCustomFieldName: '';
       $row['is_case_deleted'] = $result->case_deleted == '1';
+      $row['manage_case_link'] = CRM_Utils_System::url('civicrm/a/', NULL, TRUE, 'supportcase/manage-case/' . $result->case_id . '/' . $qfKey . '/');
+      $row['report_spam_link'] = CRM_Utils_System::url('civicrm/supportcase/report-spam', ['id' => $result->case_id, 'context' => 'search', 'reset' => 1]);
+      $row['delete_case_link'] = CRM_Utils_System::url('civicrm/contact/view/case', ['id' => $result->case_id, 'context' => 'search', 'reset' => 1, 'action' => 'delete',]);
+      $row['restore_case_link'] = CRM_Utils_System::url('civicrm/contact/view/case', ['id' => $result->case_id, 'context' => 'search', 'reset' => 1, 'action' => 'renew',]);
+      $row['action_permissions'] = $supportCasePermissions;
 
       //default locking values:
       $row['is_case_locked'] = FALSE;
@@ -562,58 +506,6 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
    * @return array
    */
   public static function actionLinks() {
-    // check if variable _actionsLinks is populated
-    if (!isset(self::$_actionLinks)) {
-      self::$_actionLinks = [
-        CRM_Core_Action::VIEW => [
-          'name' => ts('View'),
-          'url' => 'civicrm/case/activity/view',
-          'qs' => 'reset=1&cid=%%cid%%&caseid=%%caseid%%&aid=%%aid%%',
-          'title' => ts('View'),
-          'weight' => -20,
-        ],
-        CRM_Core_Action::UPDATE => [
-          'name' => ts('Edit'),
-          'url' => 'civicrm/case/activity',
-          'qs' => 'reset=1&cid=%%cid%%&caseid=%%caseid%%&id=%%aid%%&action=update%%cxt%%',
-          'title' => ts('Edit'),
-          'icon' => 'fa-pencil',
-          'weight' => -10,
-        ],
-        CRM_Core_Action::DELETE => [
-          'name' => ts('Delete'),
-          'url' => 'civicrm/case/activity',
-          'qs' => 'reset=1&cid=%%cid%%&caseid=%%caseid%%&id=%%aid%%&action=delete%%cxt%%',
-          'title' => ts('Delete'),
-          'icon' => 'fa-trash',
-          'weight' => 100,
-        ],
-        CRM_Core_Action::RENEW => [
-          'name' => ts('Restore'),
-          'url' => 'civicrm/case/activity',
-          'qs' => 'reset=1&cid=%%cid%%&caseid=%%caseid%%&id=%%aid%%&action=renew%%cxt%%',
-          'title' => ts('Restore'),
-          'icon' => 'fa-undo',
-          'weight' => 90,
-        ],
-        CRM_Core_Action::DETACH => [
-          'name' => ts('Move To Case'),
-          'ref' => 'move_to_case_action',
-          'title' => ts('Move To Case'),
-          'extra' => 'onclick = "Javascript:fileOnCase( \'move\', %%aid%%, %%caseid%%, this ); return false;"',
-          'icon' => 'fa-clipboard',
-          'weight' => 60,
-        ],
-        CRM_Core_Action::COPY => [
-          'name' => ts('Copy To Case'),
-          'ref' => 'copy_to_case_action',
-          'title' => ts('Copy To Case'),
-          'extra' => 'onclick = "Javascript:fileOnCase( \'copy\', %%aid%%, %%caseid%%, this ); return false;"',
-          'icon' => 'fa-files-o',
-          'weight' => 70,
-        ],
-      ];
-    }
     return self::$_actionLinks;
   }
 

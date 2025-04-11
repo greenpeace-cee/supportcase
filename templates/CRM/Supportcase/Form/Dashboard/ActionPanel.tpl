@@ -1,15 +1,15 @@
 <div class="action-panel">
   <div class="ap__actions-wrap">
-    <a class="btn btn-secondary" href="{crmURL p='civicrm/supportcase' q='reset=1'}" title="{ts}Clear all search criteria{/ts}">
+    <a class="btn btn-secondary sc__m-0" href="{crmURL p='civicrm/supportcase' q='reset=1'}" title="{ts}Clear all search criteria{/ts}">
       <i class="crm-i fa-undo"></i>
     </a>
 
-    <a class="btn btn-secondary" href="{$addNewCaseUrl}" title="{ts}Add new one{/ts}" >
+    <a class="btn btn-secondary sc__m-0" href="{$addNewCaseUrl}" title="{ts}Add new one{/ts}" >
       <i class="crm-i fa-plus"></i>
     </a>
 
     <div class="spc__menu-block">
-      <button class="btn btn-secondary disabled fastActionsMenuButton" title="{ts}Fast tasks{/ts}" >
+      <button type="button" class="btn btn-secondary disabled fastActionsMenuButton sc__m-0" title="{ts}Fast tasks{/ts}" >
         <i class="crm-i fa-ellipsis-v"></i>
       </button>
 
@@ -137,14 +137,14 @@
       }
 
       function initHandleSelectedCases() {
-        $('.supportcase__case-select-row-checkbox input[type="checkbox"]').change(handleSelectedCases);
+        $('.scd__case-select-row-checkbox input[type="checkbox"]').change(handleSelectedCases);
         $('#supportcaseToggleSelectCases').change(handleSelectedCases);
-        $('.supportcase__tabs-item').click(handleSelectedCases);
+        $('.scd__tabs-item').click(handleSelectedCases);
       }
 
       function handleSelectedCases() {
         setTimeout(function() {
-          var selectedCases = $('.supportcase__case-select-row-checkbox input[type="checkbox"]:checked');
+          var selectedCases = $('.scd__case-select-row-checkbox input[type="checkbox"]:checked');
           var menuButton = $(".fastActionsMenuButton");
           var menuWrap = $(".spc__menu-block");
 
@@ -161,7 +161,7 @@
       }
 
       function updateSelectedCasesCounter() {
-        var selectedCases = $('.supportcase__case-select-row-checkbox input[type="checkbox"]:checked');
+        var selectedCases = $('.scd__case-select-row-checkbox input[type="checkbox"]:checked');
         $('.selectedCaseCounter').text(selectedCases.length);
         if (selectedCases.length > 0) {
           $('.spc__selected-cases').removeClass('spc--hide');
@@ -182,11 +182,11 @@
       }
 
       function getSelectedCaseIds() {
-        var fastTasksSelect = $('.supportcase__case-select-row-checkbox input[type="checkbox"]:checked');
+        var fastTasksSelect = $('.scd__case-select-row-checkbox input[type="checkbox"]:checked');
 
         var ids = [];
         fastTasksSelect.each(function( index ) {
-          var caseId = $(this).closest('.supportcase__case-row').data('case-id');
+          var caseId = $(this).closest('.scd__case-row').data('case-id');
           ids.push(caseId);
         });
 

@@ -2,11 +2,11 @@
 
 class CRM_Supportcase_Form_CreateSupportcaseContact extends CRM_Core_Form {
 
-  public function getTitle() {
+  public function getTitle(): string {
     return ts('Create Support Case Contact');
   }
 
-  public function buildQuickForm() {
+  public function buildQuickForm(): void {
     Civi::resources()->addStyleFile('supportcase', 'css/ang/element.css');
     $this->add('text', 'first_name', 'First name', ['class' => 'spc__input spc--width-100-percent'], TRUE);
     $this->add('text', 'last_name', 'Last name', ['class' => 'spc__input spc--width-100-percent'], TRUE);

@@ -17,7 +17,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetCaseStatusWarningWindowData 
         'type' => 'modal', // modal, inline
         'message' => '',
         'yesButtonText' => 'Close WITHOUT sending the message',
-        'yesButtonClasses' => 'btn btn-primary',
+        'yesButtonClasses' => 'btn btn-secondary sc__m-0',
         'yesButtonIcon' => 'fa-times',
         'noButtonText' => 'Cancel',
         'noButtonClasses' => 'btn btn-secondary',

@@ -1,8 +1,8 @@
-<div class="supportcase__tooltip-wrap sc__p-20">
+<div class="scd__tooltip-wrap sc__p-20">
   <div>
     <div class="sc__font-size-20 sc__pb-10">{$activity.subject}</div>
-    <div class="supportcase__tooltip-activity-detail">
-      {$activity.details}
+    <div class="scd__tooltip-activity-detail">
+      {$activity.details|escape:'htmlall':'UTF-8'}
     </div>
   </div>
 

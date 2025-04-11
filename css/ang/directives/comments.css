@@ -3,7 +3,8 @@
 */
 
 .comments {
-  width: 650px;
+  max-width: 650px;
+  width: 100%;
 }
 
 .comments pre {
@@ -61,4 +62,10 @@
   align-items: center;
   gap: 10px;
   font-weight: bold;
+}
+
+@media (max-width: 1500px) {
+  .comments {
+    max-width: 100%;
+  }
 }

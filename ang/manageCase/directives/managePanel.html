@@ -1,52 +1,52 @@
-<div class="mp__manage-panel">
-  <div ng-if="!isCaseDeleted() && !isCaseHasStatus('spam');" class="sc__flex sc__gap-10">
-    <a class="btn btn-secondary" href="{{backUrl}}" title="Back to dashboard">
+<div class="sc__mb-10">
+  <div ng-if="!isCaseDeleted() && !isCaseHasStatus('spam');" class="sc__flex sc__gap-10 sc__flex-wrap-wrap">
+    <a class="btn btn-secondary sc__m-0" href="{{backUrl}}" title="Back to dashboard">
       <i class="crm-i fa-arrow-left"></i>
       <span>Back</span>
     </a>
-    <button ng-if="!isCaseHasStatus('resolve');" class="btn btn-success sc__green-btn" ng-click="resolveCase();">
+    <button ng-if="!isCaseHasStatus('resolve');" class="btn btn-success sc__green-btn sc__m-0" ng-click="resolveCase();">
       <i class="crm-i fa-check"></i>
       <span>Resolve</span>
     </button>
-    <button ng-if="!isCaseHasStatus('ongoing');" class="btn btn-warning" ng-click="makeCaseOngoing();">
+    <button ng-if="!isCaseHasStatus('ongoing');" class="btn btn-warning sc__m-0" ng-click="makeCaseOngoing();">
       <i class="crm-i fa-refresh"></i>
       <span>Ongoing</span>
     </button>
-    <button ng-if="!isCaseHasStatus('urgent');" class="btn btn-danger sc__red-btn" ng-click="makeCaseUrgent();">
+    <button ng-if="!isCaseHasStatus('urgent');" class="btn btn-danger sc__red-btn sc__m-0" ng-click="makeCaseUrgent();">
       <i class="crm-i fa-exclamation-circle"></i>
       <span>Urgent</span>
     </button>
-    <button ng-if="!isCaseHasStatus('spam');" class="btn btn-success sc__grey-btn" ng-click="reportSpamCase();">
+    <button ng-if="!isCaseHasStatus('spam');" class="btn btn-success sc__grey-btn sc__m-0" ng-click="reportSpamCase();">
       <i class="crm-i fa-flag"></i>
       <span>Report Spam</span>
     </button>
-    <button class="btn btn-danger" ng-click="moveToTrashCase();">
+    <button class="btn btn-danger sc__m-0" ng-click="moveToTrashCase();">
       <i class="crm-i fa-trash"></i>
       <span>Delete case</span>
     </button>
   </div>
 
-  <div ng-if="isCaseDeleted();" class="mp__buttons-wrap">
-    <a class="btn btn-secondary" href="{{backUrl}}" title="Back to dashboard">
+  <div ng-if="isCaseDeleted();" class="sc__flex sc__gap-10 sc__flex-wrap-wrap">
+    <a class="btn btn-secondary sc__m-0" href="{{backUrl}}" title="Back to dashboard">
       <i class="crm-i fa-arrow-left"></i>
       <span>Back</span>
     </a>
-    <button class="btn btn-success sc__green-btn" ng-click="restoreCase();">
+    <button class="btn btn-success sc__green-btn sc__m-0" ng-click="restoreCase();">
       <i class="crm-i fa-trash-restore"></i>
       <span>Restore case from trash</span>
     </button>
   </div>
 
-  <div ng-if="isCaseHasStatus('spam') && !isCaseDeleted();" class="mp__buttons-wrap">
-    <a class="btn btn-secondary" href="{{backUrl}}" title="Back to dashboard">
+  <div ng-if="isCaseHasStatus('spam') && !isCaseDeleted();" class="sc__flex sc__gap-10 sc__flex-wrap-wrap">
+    <a class="btn btn-secondary sc__m-0" href="{{backUrl}}" title="Back to dashboard">
       <i class="crm-i fa-arrow-left"></i>
       <span>Back</span>
     </a>
-    <button class="btn btn-success sc__green-btn" ng-click="makeCaseOngoing();">
+    <button class="btn btn-success sc__green-btn sc__m-0" ng-click="makeCaseOngoing();">
       <i class="crm-i fa-refresh"></i>
       <span>Not Spam</span>
     </button>
-    <button class="btn btn-danger" ng-click="moveToTrashCase();">
+    <button class="btn btn-danger sc__m-0" ng-click="moveToTrashCase();">
       <i class="crm-i fa-trash"></i>
       <span>Delete case</span>
     </button>

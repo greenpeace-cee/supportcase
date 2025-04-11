@@ -9,6 +9,18 @@
   overflow: hidden;
 }
 
+.ci_right-block {
+
+}
+
+.ci_wrap {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
 .ci__case-info-item-wrap.ci--no-border {
   border: none;
 }
@@ -53,16 +65,38 @@
   right: initial;
 }
 
-.ci__tag {
-  display: block;
-  margin: 1px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  padding: 1px 5px;
-  border-radius: 3px;
-  border: 1px solid grey;
-}
-
 .ci__case-info-errors-wrap {
   margin-bottom: 5px;
+}
+
+.ci_left-contact-block {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (max-width: 1500px) {
+  .ci_right-block {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    flex-direction: column;
+    width: 100%;
+  }
+}
+
+@media (max-width: 700px) {
+  .ci_left-contact-block {
+    width: 100%;
+    display: block;
+  }
+
+  .ci__case-info-item {
+    width: 100%;
+  }
+}
+@media (max-width: 1740px) {
+  .ci_right-block {
+    max-width: 920px;
+  }
 }

@@ -3,10 +3,6 @@
     Prefix-alias: mp  = managePanel
 */
 
-.mp__manage-panel {
-
-}
-
 .mp__changing-status-confirm-inline-window .md__wrap {
   border: 1px solid #d3dee2;
   max-width: 460px;

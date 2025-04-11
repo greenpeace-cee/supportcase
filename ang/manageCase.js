@@ -701,7 +701,7 @@
           if ($scope.isEditMode) {
             $scope.setFieldFromModel();
             setTimeout(function() {
-              $($element).find(".ci__case-info-edit-mode select.spc--single-select").val($scope.categoryId).trigger('change');
+              $($element).find(".ci__case-info-edit-mode select").val($scope.categoryId).trigger('change');
             }, 0);
           }
         };
@@ -717,7 +717,7 @@
           });
         };
         $scope.initSelect2 = function() {
-          setTimeout(function() {$($element).find(".ci__case-info-edit-mode select").css($scope.$parent.getInputStyles()).select2();}, 0);
+          setTimeout(function() {$($element).find(".ci__case-info-item select").css($scope.$parent.getInputStyles()).select2();}, 0);
         };
 
         $scope.setFieldFromModel();
@@ -1606,7 +1606,7 @@
   angular.module(moduleName).directive("selectMailutilsTemplate", function() {
     return {
       restrict: "E",
-      template: '<input type="text" class="spc__input spc--single-select" />',
+      template: '<input type="text" class="spc__input" />',
       scope: {
         supportCaseCategoryId: "<supportCaseCategoryId",
         tokenContactId: "<tokenContactId",

@@ -38,10 +38,9 @@
           <span class="contact-info__contact-item-value">{{contact.is_has_bpk ? 'yes' : 'no'}}</span>
         </div>
         <div class="contact-info__contact-item">
-          <span class="contact-info__contact-item-label">Tags:</span>
           <div class="contact-info__contact-item-value">
             <div class="contact-info__tags-wrap">
-              <div ng-repeat="tag in contact.tags" class="crm-tag-item contact-info__tag-item"
+              <div ng-repeat="tag in contact.tags" class="crm-tag-item sc__tag contact-info__tag-item"
                    style="{{generateStyles(tag['color'])}}"
                    title="{{tag['description']}}">
                 {{tag['name']}}
@@ -52,12 +51,12 @@
       </div>
 
       <div ng-if="contact.duplicate_links.length > 0" class="contact-info__duplicate-block">
-        <div class="contact-info__duplicate-title">Potential duplicates:</div>
-        <div class="contact-info__duplicate-item-wrap">
-          <a href="{{duplicate.link}}" ng-repeat="duplicate in contact.duplicate_links"
-             title="go to the advanced search" class="contact-info__duplicate-item" target="_blank">
-            <span class="ui-icon fa-search"></span>
-            <span class="contact-info__duplicate-item-label">{{duplicate.label}}({{duplicate.count}})</span>
+        <div class="sc__font-size-12 sc__font-style-italic sc__line-height-12">Potential duplicates:</div>
+        <div>
+          <a class="sc__flex sc__justify-content-center sc__gap-5 sc__font-size-12" href="{{duplicate.link}}" ng-repeat="duplicate in contact.duplicate_links"
+             title="Go to the advanced search" target="_blank">
+            <span class="crm-i fa-search sc__font-size-12 sc__line-height-12"></span>
+            <span class="sc__font-size-12 sc__line-height-12">{{duplicate.label}}({{duplicate.count}})</span>
           </a>
         </div>
       </div>

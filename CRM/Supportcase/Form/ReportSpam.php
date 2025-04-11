@@ -2,24 +2,13 @@
 
 class CRM_Supportcase_Form_ReportSpam extends CRM_Core_Form {
 
-  /**
-   * Cases id
-   *
-   * @var int|null
-   */
-  private $caseId = NULL;
+  private ?int $caseId = NULL;
 
-  /**
-   * @return string
-   */
-  public function getTitle() {
+  public function getTitle(): string {
     return ts('Report spam');
   }
 
-  /**
-   * Build the form object.
-   */
-  public function buildQuickForm() {
+  public function buildQuickForm(): void {
     $this->addButtons(
       [
         [
@@ -36,10 +25,7 @@ class CRM_Supportcase_Form_ReportSpam extends CRM_Core_Form {
     );
   }
 
-  /**
-   * Processing needed for buildForm and later.
-   */
-  public function preProcess() {
+  public function preProcess(): void {
     $caseId = CRM_Utils_Request::retrieve('id', 'Integer');
     if (empty($caseId)) {
       $this->assign('caseExistence', FALSE);
@@ -60,10 +46,7 @@ class CRM_Supportcase_Form_ReportSpam extends CRM_Core_Form {
     $this->caseId = $caseId;
   }
 
-  /**
-   * Process the form after the input has been submitted and validated.
-   */
-  public function postProcess() {
+  public function postProcess(): void {
     if (empty($this->caseId)) {
       return;
     }

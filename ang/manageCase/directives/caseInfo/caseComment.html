@@ -1,4 +1,4 @@
-<div class="comments">
+<div class="comments sc__mt-10">
   <div ng-if="isSimpleView" class="comments__simple-view sc__flex sc__justify-content-right">
     <button class="btn btn-secondary sc__m-0" ng-click="toggleCreateComment();">
       <i class="crm-i fa-plus"></i>
@@ -10,7 +10,7 @@
     <div class="panel">
       <div class="panel-heading">
         <div class="sc__flex sc__justify-content-space-between">
-          <div class="sc__font-weight-bold">Comments</div>
+          <div>Comments</div>
           <button class="btn btn-secondary sc__m-0" ng-click="toggleCreateComment()" ng-if="!isShowCreateCommentWindow">
             <i class="crm-i fa-plus"></i>
             <span>Add new comment</span>
@@ -20,14 +20,10 @@
       <div class="panel-body">
         <div ng-show="isShowCreateCommentWindow" class="comments__create-comment-wrap">
           <div class="panel">
-            <div class="panel-heading">
-              <div>
-                <div class="sc__font-weight-bold">Add new comment</div>
-              </div>
-            </div>
+            <div class="panel-heading">Add new comment</div>
             <div class="panel-body">
               <div>
-                <textarea rows="12" class="spc--textarea spc__input spc--width-100-percent" ng-model="newCommentBody" ></textarea>
+                <textarea rows="12" class="spc--textarea spc--width-100-percent" ng-model="newCommentBody" ></textarea>
               </div>
 
               <div class="comments__create-comment-errors-wrap"></div>
@@ -37,7 +33,7 @@
                   <i class="crm-i fa-check"></i>
                   <span>Create</span>
                 </button>
-                <button class="btn btn-secondary" ng-click="toggleCreateComment()">
+                <button class="btn btn-secondary sc__m-0" ng-click="toggleCreateComment()">
                   <i class="crm-i fa-arrow-left"></i>
                   <span>Cancel</span>
                 </button>
@@ -70,11 +66,7 @@
 
           <div ng-show="comment['mode'] == 'delete'"  class="comments__item-delete-mode">
             <div class="panel">
-              <div class="panel-heading">
-                <div>
-                  <div class="sc__font-weight-bold">Delete comment</div>
-                </div>
-              </div>
+              <div class="panel-heading">Delete comment</div>
                 <div class="panel-body">
                   <div class="comments__delete-message">
                     <span>Are you sure to delete comment: {{comment.source_contact_name}} on {{formatDateAndTime(comment.activity_date_time, true)}}</span>
@@ -85,7 +77,7 @@
                       <i class="crm-i fa-trash"></i>
                       <span>Delete</span>
                     </button>
-                    <button class="btn btn-secondary" ng-click="setMode(comment, 'view')">
+                    <button class="btn btn-secondary sc__m-0" ng-click="setMode(comment, 'view')">
                       <i class="crm-i fa-arrow-left"></i>
                       <span>Cancel</span>
                     </button>
@@ -99,7 +91,7 @@
               <div class="panel-heading">
                 <div>
                   <div class="sc__flex sc__gap-5">
-                    <span class="sc__font-weight-bold">Edit comment</span>
+                    <span>Edit comment: </span>
                     <span>{{comment.source_contact_name}} on {{formatDateAndTime(comment.activity_date_time, true)}}</span>
                   </div>
 
@@ -107,7 +99,7 @@
               </div>
               <div class="panel-body">
                 <div class="crm-section">
-                  <textarea rows="12" class="spc--textarea spc__input spc--width-100-percent" ng-model="comment.newCommentBody" ></textarea>
+                  <textarea rows="12" class="spc--textarea spc--width-100-percent" ng-model="comment.newCommentBody" ></textarea>
                 </div>
 
                 <div class="comments__create-comment-errors-wrap"></div>
@@ -117,7 +109,7 @@
                     <i class="crm-i fa-check"></i>
                     <span>Update</span>
                   </button>
-                  <button class="btn btn-secondary" ng-click="setMode(comment, 'view')">
+                  <button class="btn btn-secondary sc__m-0" ng-click="setMode(comment, 'view')">
                     <i class="crm-i fa-arrow-left"></i>
                     <span>Cancel</span>
                   </button>

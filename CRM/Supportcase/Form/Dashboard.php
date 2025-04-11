@@ -5,40 +5,23 @@
  */
 class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
 
-  /**
-   * Row limit
-   *
-   * @var int
-   */
-  protected $_limit = NULL;
+  protected ?int $_limit = NULL;
 
-  /**
-   * Case rows - result of selector
-   *
-   * @var array
-   */
-  protected $caseRows = NULL;
+  protected ?array $caseRows = NULL;
 
-  /**
-   * @return string
-   */
-  public function getTitle() {
+  public function getTitle(): string {
     return ts('Support Dashboard');
   }
 
   /**
-   * @return array
    * @throws CRM_Core_Exception
    * @throws CiviCRM_API3_Exception
    */
-  public function setDefaultValues() {
+  public function setDefaultValues(): array {
     return array_merge(parent::setDefaultValues(), $this->getSupportcaseDefaultValues());
   }
 
-  /**
-   * @return array
-   */
-  public function getSupportcaseDefaultValues() {
+  public function getSupportcaseDefaultValues(): array {
     return [
       'case_type_id' => CRM_Supportcase_Utils_Setting::getMainCaseTypeId(),
       'case_status_id' => [
@@ -59,9 +42,6 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     ];
   }
 
-  /**
-   * Processing needed for buildForm and later.
-   */
   public function preProcess() {
     //validate case configuration.
     $isCaseComponentEnabled = CRM_Case_BAO_Case::isComponentEnabled();
@@ -75,7 +55,7 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $this->_actionButtonName = $this->getButtonName('next', 'action');
     parent::preProcess();
 
-    $queryParams = $this->getQueryParams();
+    $queryParams = $this->getSelectorQueryParams();
     $config = CRM_Core_Config::singleton();
     $this->set('queryParams', $queryParams);
     $selector = new CRM_Supportcase_Selector_Dashboard($queryParams, $this->_action);
@@ -106,16 +86,13 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $this->assign('lockReloadTimeInSek', CRM_Supportcase_Utils_Setting::getDashboardLockReloadTime());
     $this->assign('isShowPagination', $isShowPagination);
     $this->assign('civiBaseUrl', rtrim($config->userFrameworkBaseURL, "/"));
-    $this->assign('isCollapseFilter', $this->isCollapseFilter());
+    $this->assign('isCollapseFilter', $this->isFilterCollapsed());
     $this->assign('addNewCaseUrl', $this->getCreateNewCaseUrl());
     $this->assign('dashboardSearchQfKey', $dashboardSearchQfKey);
     $this->assign('categories', CRM_Supportcase_Utils_Category::get());
   }
 
-  /**
-   * @return string
-   */
-  private function getCreateNewCaseUrl() {
+  private function getCreateNewCaseUrl(): string {
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String');
 
     if (CRM_Utils_Rule::qfKey($qfKey)) {
@@ -125,13 +102,7 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     return CRM_Utils_System::url('civicrm/supportcase/add-case');
   }
 
-  /**
-   * true - search filter closed
-   * false - search filter open
-   *
-   * @return bool
-   */
-  public function isCollapseFilter() {
+  public function isFilterCollapsed(): bool {
     $submitValues = $this->getSubmitValues();
     $defaultValues = $this->getSupportcaseDefaultValues();
     if (empty($submitValues)) {
@@ -180,10 +151,7 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     return true;
   }
 
-  /**
-   * Build the form object.
-   */
-  public function buildQuickForm() {
+  public function buildQuickForm(): void {
     parent::buildQuickForm();
 
     $this->addSortNameField();
@@ -195,14 +163,11 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     Civi::resources()->addStyleFile('supportcase', 'css/dashboard.css');
   }
 
-  public function postProcess() {
+  public function postProcess(): void {
     $this->setFormValues();
   }
 
-  /**
-   * @return void
-   */
-  private function addSearchFormElements() {
+  private function addSearchFormElements(): void {
     $this->addSearchFieldMetadata(['Case' => CRM_Supportcase_Form_Dashboard::getCustomSearchFieldMetadata()]);
     $this->addFormFieldsFromMetadata();
     $caseTags = CRM_Core_BAO_Tag::getColorTags('civicrm_case');
@@ -247,22 +212,13 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     }
   }
 
-  /**
-   * Add new classes to element
-   *
-   * @param $element
-   * @param $classes
-   */
-  private function addClassToElement($element, $classes) {
+  private function addClassToElement($element, $classes): void {
     $elementClasses = $element->getAttribute('class');
     $newClasses = $elementClasses . ' ' . implode(' ', $classes) . ' ';
     $element->setAttribute('class', $newClasses);
   }
 
-  /**
-   * @return array
-   */
-  public static function getCustomSearchFieldMetadata() {
+  public static function getCustomSearchFieldMetadata(): array {
     $metadata = CRM_Case_BAO_Query::getSearchFieldMetadata();
     $metadata['case_agents'] = [
       'title' => ts('Involved Agent(s)'),
@@ -292,20 +248,11 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     return $metadata;
   }
 
-  /**
-   * Set the metadata for the form.
-   *
-   */
-  protected function setSearchMetadata() {
+  protected function setSearchMetadata(): void {
     $this->addSearchFieldMetadata(['Case' => CRM_Supportcase_Form_Dashboard::getCustomSearchFieldMetadata()]);
   }
 
-  /**
-   * Is tags filter empty?
-   *
-   * @return bool
-   */
-  protected function isTagsFilterEmpty() {
+  protected function isTagsFilterEmpty(): bool {
     if (empty($this->_formValues['case_taglist'])) {
       return TRUE;
     }
@@ -319,12 +266,7 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     return TRUE;
   }
 
-  /**
-   * Gets query params for selector
-   *
-   * @return array
-   */
-  private function getQueryParams() {
+  private function getSelectorQueryParams(): array {
     $values = [];
     $isInitialDisplay = empty($_GET['qfKey']);
     if ($isInitialDisplay) {
@@ -338,4 +280,5 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
 
     return CRM_Contact_BAO_Query::convertFormValues($values);
   }
+
 }

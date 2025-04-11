@@ -1,12 +1,12 @@
-<div class="supportcase__result-block">
+<div class="scd__result-block">
   <div>
 
     <div id="supportcaseTabContainer" class="ui-tabs">
-      <ul class="ui-tabs-nav supportcase__tabs">
+      <ul class="ui-tabs-nav scd__tabs">
         {foreach from=$cases.tabs item=tab}
-          <li class="supportcase__tabs-item supportcase__tab-link-wrap ui-tab ui-tabs-active"
+          <li class="scd__tabs-item scd__tab-link-wrap ui-tab ui-tabs-active"
               data-tab-name="{$tab.name}" data-case-class-selector="{$tab.case_class_selector}">
-            <a class="ui-tabs-anchor supportcase__tab-link" href="#" title="{ts}{$tab.title}{/ts}">
+            <a class="ui-tabs-anchor scd__tab-link" href="#" title="{ts}{$tab.title}{/ts}">
                 <span>{ts}{$tab.title}{/ts}</span>
                 <em>{$tab.count_cases}</em>
                 {foreach from=$tab.extra_counters item=counter}
@@ -20,7 +20,7 @@
       </ul>
 
       <div class="sc__p-10">
-        <div class="supportcase__result-wrap">
+        <div class="scd__result-wrap">
           {if $cases.rows}
             <div>
               {include file="CRM/Supportcase/Form/Dashboard/Selector.tpl" rows=$cases.rows}
@@ -29,7 +29,7 @@
           {/if}
         </div>
 
-        <div class="supportcase__empty-result-wrap">
+        <div class="scd__empty-result-wrap">
           {include file="CRM/Supportcase/Form/Dashboard/EmptyResults.tpl"}
         </div>
 
@@ -47,11 +47,11 @@
 <script>
   CRM.$(function ($) {
     var lockReloadTime = '{/literal}{$lockReloadTimeInSek}{literal}' * 1000;
-    var allTabs = $('.supportcase__tab-link-wrap');
-    var allRows = $('.supportcase__case-row');
-    var caseEmptyResultBlock = $('.supportcase__empty-result-wrap');
-    var caseResultBlock = $('.supportcase__result-wrap');
-    var showCaseActivityButtons = $('.supportcase__show-case-activity-button');
+    var allTabs = $('.scd__tab-link-wrap');
+    var allRows = $('.scd__case-row');
+    var caseEmptyResultBlock = $('.scd__empty-result-wrap');
+    var caseResultBlock = $('.scd__result-wrap');
+    var showCaseActivityButtons = $('.scd__show-case-activity-button');
     var caseToggleSelectButton = $('#supportcaseToggleSelectCases');
 
     initTabs();
@@ -69,7 +69,7 @@
     }
 
     function activateTab(tabName) {
-      var activeTabElement = $('.supportcase__tab-link-wrap[data-tab-name="' + tabName + '"]');
+      var activeTabElement = $('.scd__tab-link-wrap[data-tab-name="' + tabName + '"]');
       if (activeTabElement.length === 0) {
         activeTabElement = allTabs.first();
       }
@@ -79,7 +79,7 @@
       allRows.hide();
       allRows.parent().children('.crm-child-row').remove();
       showCaseActivityButtons.removeClass('expanded');
-      allRows.find('.supportcase__case-select-column-wrap input[type="checkbox"]').prop("checked", false);
+      allRows.find('.scd__case-select-column-wrap input[type="checkbox"]').prop("checked", false);
       caseToggleSelectButton.prop("checked", false);
 
       var visibleRows = getVisibleRows();
@@ -96,23 +96,23 @@
     }
 
     function handleActionTaskMenu() {
-      var checkedVisibleRows = getVisibleRows().find('.supportcase__case-select-column-wrap input[type="checkbox"]:checked');
-      var tasksActionSelect = $('.supportcase__result-action-block select#task');
-      $('.supportcase__result-action-block input[name=radio_ts][value=ts_all]').prop('checked', false);
+      var checkedVisibleRows = getVisibleRows().find('.scd__case-select-column-wrap input[type="checkbox"]:checked');
+      var tasksActionSelect = $('.scd__result-action-block select#task');
+      $('.scd__result-action-block input[name=radio_ts][value=ts_all]').prop('checked', false);
 
       if (checkedVisibleRows.length > 0) {
         tasksActionSelect.val('').select2('val', '').prop('disabled', false).select2('enable');
-        $('.supportcase__result-action-block input[name=radio_ts][value=ts_sel]').prop('checked', true);
+        $('.scd__result-action-block input[name=radio_ts][value=ts_sel]').prop('checked', true);
       } else {
         tasksActionSelect.val('').select2('val', '').prop('disabled', true).select2('disable');
-        $('.supportcase__result-action-block input[name=radio_ts][value=ts_sel]').prop('checked', false);
+        $('.scd__result-action-block input[name=radio_ts][value=ts_sel]').prop('checked', false);
       }
 
-      $('.supportcase__result-action-block label[for*=ts_sel] span').text(checkedVisibleRows.length);
+      $('.scd__result-action-block label[for*=ts_sel] span').text(checkedVisibleRows.length);
     }
 
     function getVisibleRows() {
-      var activeTabElement = $('.supportcase__tab-link-wrap.ui-tabs-active');
+      var activeTabElement = $('.scd__tab-link-wrap.ui-tabs-active');
       var visibleRowsSelector = activeTabElement.data('case-class-selector');
 
       return $(visibleRowsSelector);
@@ -120,10 +120,10 @@
 
     function initCaseToggleSelectButton() {
       caseToggleSelectButton.change(function () {
-        allRows.find('.supportcase__case-select-column-wrap input[type="checkbox"]').prop("checked", false);
+        allRows.find('.scd__case-select-column-wrap input[type="checkbox"]').prop("checked", false);
 
         if (this.checked) {
-          getVisibleRows().find('.supportcase__case-select-column-wrap input[type="checkbox"]').prop("checked", true);
+          getVisibleRows().find('.scd__case-select-column-wrap input[type="checkbox"]').prop("checked", true);
         }
 
         handleActionTaskMenu();
@@ -136,10 +136,10 @@
       }
 
       if (allRows.length > 1) {
-        var selectAllInput = $('.supportcase__result-action-block input[name=radio_ts][value=ts_all]');
+        var selectAllInput = $('.scd__result-action-block input[name=radio_ts][value=ts_all]');
         var selectAllInputId = selectAllInput.prop('id');
         selectAllInput.prop('checked', false);
-        var selectAllInputLabel = $('.supportcase__result-action-block label[for=' + selectAllInputId + ']');
+        var selectAllInputLabel = $('.scd__result-action-block label[for=' + selectAllInputId + ']');
         selectAllInput.hide();
         selectAllInputLabel.hide();
       }
@@ -173,7 +173,7 @@
 
     function findCaseIds() {
       var caseIds = [];
-      $('.supportcase__case-row ').each(function () {
+      $('.scd__case-row ').each(function () {
         caseIds.push(this.getAttribute('data-case-id'));
       });
       return caseIds;
@@ -186,14 +186,14 @@
         "case_ids": caseIds
       }).then(function (result) {
         if (!result.is_error) {
-          $('.supportcase__case-row .supportcase__case-row-icons .supportcase__case-ico-lock').remove();
+          $('.scd__case-row .scd__case-row-icons .scd__case-ico-lock').remove();
           result.values.map(caseLock => {
             var icoClass = (caseLock.is_locked_by_self) ? 'fa-unlock' : 'fa-lock';
-            var classes = 'supportcase__unlock-button supportcase__case-ico crm-i supportcase__case-ico-lock ' + icoClass;
+            var classes = 'scd__unlock-button scd__case-ico crm-i scd__case-ico-lock ' + icoClass;
             var icoHtml = '<i title="Unlock case. ' + caseLock.lock_message + '" data-case-id="' + caseLock.case_id + '" class="' + classes + '" aria-hidden="true"></i>';
-            var caseElement = $('.supportcase__case-row[data-case-id="' + caseLock.case_id + '"]');
-            caseElement.find('.supportcase__case-row-icons').append(icoHtml);
-            caseElement.find('.supportcase__case-row-icons .supportcase__unlock-button[data-case-id="' + caseLock.case_id + '"]').click(function () {
+            var caseElement = $('.scd__case-row[data-case-id="' + caseLock.case_id + '"]');
+            caseElement.find('.scd__case-row-icons').append(icoHtml);
+            caseElement.find('.scd__case-row-icons .scd__unlock-button[data-case-id="' + caseLock.case_id + '"]').click(function () {
               unlockCase(this.getAttribute('data-case-id'));
             });
           });
@@ -203,7 +203,7 @@
     }
 
     function initUnlocking() {
-      var unlockButtons = $('.supportcase__unlock-button');
+      var unlockButtons = $('.scd__unlock-button');
       if (unlockButtons.length === 0) {
         return;
       }
@@ -228,7 +228,7 @@
             console.error(result.error_message);
           } else {
             CRM.status('Case id = ' + caseId + ' is unlocked.');
-            $('.supportcase__unlock-button[data-case-id="' + caseId + '"]').remove();
+            $('.scd__unlock-button[data-case-id="' + caseId + '"]').remove();
           }
         }, function (error) {
         });

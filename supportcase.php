@@ -8,38 +8,22 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\Resource\FileResource;
 
 /**
- * Implements hook_civicrm_config().
- *
- * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_config/
+ * All hooks docks:
+ * @link https://docs.civicrm.org/dev/en/latest/hooks/list/
  */
+
 function supportcase_civicrm_config(&$config) {
   _supportcase_civix_civicrm_config($config);
 }
 
-/**
- * Implements hook_civicrm_install().
- *
- * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_install
- */
 function supportcase_civicrm_install() {
   _supportcase_civix_civicrm_install();
 }
 
-/**
- * Implements hook_civicrm_enable().
- *
- * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_enable
- */
 function supportcase_civicrm_enable() {
   _supportcase_civix_civicrm_enable();
 }
 
-/**
- * Implements hook_civicrm_navigationMenu().
- *
- * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_navigationMenu
- *
- */
 function supportcase_civicrm_navigationMenu(&$menu) {
   _supportcase_civix_insert_navigation_menu($menu, NULL, array(
     'label' => E::ts('Support Dashboard'),
@@ -71,12 +55,8 @@ function supportcase_civicrm_permission(&$permissions) {
   ];
 }
 
-/**
- * Add token services to the container.
- *
- * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
- */
 function  supportcase_civicrm_container(ContainerBuilder $container) {
+  // Add token services to the container:
   $container->addResource(new FileResource(__FILE__));
   $container->findDefinition('dispatcher')->addMethodCall('addListener',
     ['civi.token.list', ['\Civi\Supportcase\Hook\RegisterTokens', 'run'], -100]

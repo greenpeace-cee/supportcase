@@ -2,27 +2,25 @@
   <details class="crm-accordion-bold">
     <summary>Quick actions</summary>
     <div class="crm-accordion-body sc__accordion-body">
-      <div class="sc__flex sc__gap-10">
+      <div class="sc__flex sc__gap-10 sc__flex-wrap-wrap">
         <div class="qa__panel-wrap">
           <div class="panel sc__m-0">
             <div class="panel-heading">Actions</div>
             <div class="panel-body">
-              <button class="btn btn-secondary"
-                ng-class="{'active' : model['activeAction'] == 'doNotSms'}"
-                ng-click="runQuickAction('doNotSms');"
-              >
-                Do not SMS
-              </button>
-              <button class="btn btn-secondary"
-                ng-class="{'active' : model['activeAction'] == 'manageEmailSubscriptions'}"
-                ng-click="runQuickAction('manageEmailSubscriptions');"
-              >
-                Manage Email Subscriptions
-              </button>
+              <div class="sc__mb-10">
+                <button class="btn btn-secondary sc__m-0" ng-class="{'active' : model['activeAction'] == 'doNotSms'}" ng-click="runQuickAction('doNotSms');">
+                  <span>Do not SMS</span>
+                </button>
+              </div>
+              <div>
+                <button class="btn btn-secondary sc__m-0" ng-class="{'active' : model['activeAction'] == 'manageEmailSubscriptions'}" ng-click="runQuickAction('manageEmailSubscriptions');">
+                  <span>Manage Email Subscriptions</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
-        <div class="qa__actions-wrap">
+        <div class="sc__position-relative">
           <div class="qa__preloader">
             <h5>loading...</h5>
           </div>
