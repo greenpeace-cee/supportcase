@@ -303,10 +303,10 @@ class CRM_Supportcase_Selector_Dashboard extends CRM_Core_Selector_Base {
     );
 
     $supportCasePermissions = [
-      'manage' => CRM_Core_Permission::check('access all cases and activities') || CRM_Core_Permission::check('access my cases and activities'),
+      'manage' => CRM_Core_Permission::check('access support cases'),
       'delete' => CRM_Core_Permission::check('delete in CiviCase'),
       'restore' => CRM_Core_Permission::check('delete in CiviCase'),
-      'spam' => CRM_Core_Permission::check('access all cases and activities') || CRM_Core_Permission::check('access my cases and activities'),
+      'spam' => CRM_Core_Permission::check('access support cases'),
     ];
 
     $rows = [];

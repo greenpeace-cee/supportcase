@@ -3,7 +3,6 @@
     <div class="sc__flex sc__gap-10 sc__align-items-center">
       <span>{{ts('Manage Case #%0', [caseInfo['id']])}}</span>
       <span class="sc__flex sc__flex-direction-column sc__max-width-300">
-        <span class="sc__font-size-14" ng-if="caseInfo['is_deleted'] == 1"><i class="crm-i fa-trash" title="This case in the trash"></i>(This case is in the trash)</span>
         <span class="sc__font-size-14">{{formatDateAndTime(caseInfo['start_date'], false)}}</span>
       </span>
       <span class="scm__case-subject">
