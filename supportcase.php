@@ -73,16 +73,14 @@ function supportcase_civicrm_alterAPIPermissions($entity, $action, &$params, &$p
 }
 
 function supportcase_civicrm_links($op, $objectName, $objectId, &$links, &$mask, &$values) {
-  if ($objectName == 'Case' && $op == 'case.selector.actions') {
-    if (empty($objectId) || empty($links[0]['url']) || $links[0]['url'] != 'civicrm/contact/view/case') {
-      return;
-    }
+  if ($objectName == 'Case' && $op == 'case.selector.actions' && !empty($objectId) && $links[0]['ref'] == 'manage-case') {
     $isSupportCase = CiviCase::get(FALSE)
       ->selectRowCount()
       ->addWhere('id', '=', $objectId)
       ->addWhere('case_type_id:name', '=', CRM_Supportcase_Install_Entity_CaseType::SUPPORT_CASE)
       ->execute()
       ->count();
+
     if ($isSupportCase) {
       $links[0]['url'] = 'civicrm/a/#/supportcase/manage-case/%%id%%';
       $links[0]['qs'] = 'reset=1';
