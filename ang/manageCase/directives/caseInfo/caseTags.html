@@ -1,49 +1,53 @@
-<div class="ci__case-info-item sc__position-relative ci__case-info-item-tags sc__justify-content-right tagsField">
-  <div class="ci__case-info-header">
-    <div class="sc__position-relative">
-      <div ng-show="!isEditMode" class="ci__case-info-edit-button" title="Edit tags" ng-click="toggleMode();">
-        <button ng-show="!isEditMode" class="btn btn-secondary sc__m-0">
-          <i class="crm-i fa-pencil"></i>
+<div class="ci__case-info-item tagsField">
+  <button ng-if="model['tags_ids'].length === 0 && !isEditMode" class="btn btn-secondary sc__m-0" ng-click="toggleMode();">
+    <i class="crm-i fa-plus"></i>
+    <span>Add tags</span>
+  </button>
+
+  <div ng-show="model['tags_ids'].length > 0 || isEditMode" class="ci__case-info-item sc__position-relative ci__case-info-item-tags sc__justify-content-right tagsField">
+    <div class="ci__case-info-header">
+      <div class="sc__position-relative">
+        <div ng-show="!isEditMode" class="ci__case-info-edit-button" title="Edit tags" ng-click="toggleMode();">
+          <button ng-show="!isEditMode" class="btn btn-secondary sc__m-0">
+            <i class="crm-i fa-pencil"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sc__position-relative" ng-show="!isEditMode">
+      <div class="ci__case-info-item-content">
+        <div class="sc__flex sc__gap-5 sc__pl-45">
+          <div>Tags:</div>
+          <div ng-repeat="tagId in model['tags_ids']" class="crm-tag-item sc__tag"
+               style="{{generateStyles(model['available_tags'][tagId]['color'])}}"
+               title="{{model['available_tags'][tagId]['description']}}">
+            {{model['available_tags'][tagId]['name']}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ci__case-info-edit-mode" ng-show="isEditMode">
+      <div>
+        <select ng-model="caseTags" multiple name="tagsField" id="tagsField" class="crm-form-select spc--multiple-select">
+          <option ng-repeat="option in model['available_tags']" value="{{option.id}}">{{option.name}}</option>
+        </select>
+      </div>
+
+      <div class="ci__case-info-errors-wrap"></div>
+
+      <div class="sc__flex sc__justify-content-space-between sc__mt-10 sc__mb-10">
+        <button class="btn btn-primary sc__m-0" ng-click="editConfirm()">
+          <i class="crm-i fa-check"></i>
+          <span>Confirm</span>
+        </button>
+
+        <button class="btn btn-secondary sc__m-0" ng-click="toggleMode()">
+          <i class="crm-i fa-arrow-left"></i>
+          <span>Cancel</span>
         </button>
       </div>
-    </div>
-  </div>
-
-  <div class="sc__position-relative" ng-show="!isEditMode">
-    <div class="ci__case-info-item-content">
-      <div class="sc__flex sc__gap-5 sc__pl-45">
-        <div>Tags:</div>
-        <div ng-repeat="tagId in model['tags_ids']" class="crm-tag-item sc__tag"
-             style="{{generateStyles(model['available_tags'][tagId]['color'])}}"
-             title="{{model['available_tags'][tagId]['description']}}">
-          {{model['available_tags'][tagId]['name']}}
-        </div>
-        <div ng-if="model['tags_ids'].length === 0">
-          <span>not set</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="ci__case-info-edit-mode" ng-show="isEditMode">
-    <div>
-      <select ng-model="caseTags" multiple name="tagsField" id="tagsField" class="crm-form-select spc--multiple-select">
-        <option ng-repeat="option in model['available_tags']" value="{{option.id}}">{{option.name}}</option>
-      </select>
-    </div>
-
-    <div class="ci__case-info-errors-wrap"></div>
-
-    <div class="sc__flex sc__justify-content-space-between sc__mt-10 sc__mb-10">
-      <button class="btn btn-primary sc__m-0" ng-click="editConfirm()">
-        <i class="crm-i fa-check"></i>
-        <span>Confirm</span>
-      </button>
-
-      <button class="btn btn-secondary sc__m-0" ng-click="toggleMode()">
-        <i class="crm-i fa-arrow-left"></i>
-        <span>Cancel</span>
-      </button>
     </div>
   </div>
 </div>
