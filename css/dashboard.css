@@ -37,6 +37,11 @@
   flex-wrap: wrap;
 }
 
+.scd__checkbox-search-item input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+}
+
 .scd__date-picker-fix-table td,
 .scd__date-picker-fix-table tr,
 .scd__date-picker-fix-table {

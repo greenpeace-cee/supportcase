@@ -28,7 +28,7 @@
                       {$form.case_status_id.html}
                     </div>
 
-                    <div class="scd__search-item">
+                    <div class="scd__search-item scd__checkbox-search-item">
                       {$form.is_show_deleted_cases.label}
                       {$form.is_show_deleted_cases.html}
                     </div>
