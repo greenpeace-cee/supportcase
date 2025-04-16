@@ -1,7 +1,8 @@
 <div id="bootstrap-theme">
   <h1 crm-page-title>
     <div class="sc__flex sc__gap-10 sc__align-items-center">
-      <span>{{ts('Manage Case #%0', [caseInfo['id']])}}</span>
+      <del ng-if="caseInfo['is_deleted'] == 1"><span>{{ts('Manage Case #%0', [caseInfo['id']])}}</span></del>
+      <span ng-if="caseInfo['is_deleted'] == 0">{{ts('Manage Case #%0', [caseInfo['id']])}}</span>
       <span class="sc__flex sc__flex-direction-column sc__max-width-300">
         <span class="sc__font-size-14">{{formatDateAndTime(caseInfo['start_date'], false)}}</span>
       </span>
