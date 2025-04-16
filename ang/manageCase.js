@@ -1168,15 +1168,37 @@
           );
         };
 
+        $scope.makeUserMessage = function(caseId, messageType, callback) {
+          CRM.api3('SupportcaseManageCase', 'make_user_message', {
+            "sequential": 1,
+            "case_id": $scope.model['id'],
+            "type": messageType,
+          }).then(function(result) {
+            if (result.is_error === 1) {
+              console.error('SupportcaseManageCase.make_user_message get error:');
+              console.error(result.error_message);
+              CRM.status('Error via SupportcaseManageCase.make_user_message', 'error');
+            } else {
+              callback();
+            }
+          }, function(error) {
+            console.error('SupportcaseManageCase.make_user_message get error:');
+            console.error(result.error_message);
+            CRM.status('Error via SupportcaseManageCase.make_user_message', 'error');
+          });
+        }
+
         $scope.resolveCaseApiCall = function(resolveStatusId) {
           $scope.doAction('status_id', resolveStatusId, function () {
             $scope.model['status_id'] = resolveStatusId;
-            CRM.status('Case was resolved.');
-            if ($scope.model['dashboardSearchQfKey']) {
-              window.location.href = CRM.url('civicrm/supportcase', {'qfKey': $scope.model['dashboardSearchQfKey']});
-            } else {
-              window.location.href = CRM.url('civicrm/supportcase');
-            }
+
+            $scope.makeUserMessage($scope.model['id'], 'resolve-case', function() {
+              if ($scope.model['dashboardSearchQfKey']) {
+                window.location.href = CRM.url('civicrm/supportcase', {'qfKey': $scope.model['dashboardSearchQfKey']});
+              } else {
+                window.location.href = CRM.url('civicrm/supportcase');
+              }
+            });
           });
         };
 
@@ -1184,12 +1206,14 @@
           $scope.doAction('status_id', $scope.model['settings']['case_status_ids']['spam'],function () {
             $scope.model['status_id'] = $scope.model['settings']['case_status_ids']['spam'];
             $scope.$apply();
-            CRM.status('Case was marked as spam.');
-            if ($scope.model['dashboardSearchQfKey']) {
-              window.location.href = CRM.url('civicrm/supportcase', {'qfKey': $scope.model['dashboardSearchQfKey']});
-            } else {
-              window.location.href = CRM.url('civicrm/supportcase');
-            }
+
+            $scope.makeUserMessage($scope.model['id'], 'report-spam', function() {
+              if ($scope.model['dashboardSearchQfKey']) {
+                window.location.href = CRM.url('civicrm/supportcase', {'qfKey': $scope.model['dashboardSearchQfKey']});
+              } else {
+                window.location.href = CRM.url('civicrm/supportcase');
+              }
+            });
           });
         };
 
