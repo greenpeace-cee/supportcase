@@ -693,35 +693,33 @@
       templateUrl: "~/manageCase/directives/caseInfo/caseCategory.html",
       scope: {model: "="},
       controller: function($scope, $element, reloadService) {
-        $scope.isEditMode = false;
-        $scope.toggleMode = function() {
-          $($element).find('.ci__case-info-errors-wrap').empty();
-          $scope.isEditMode = !$scope.isEditMode;
-
-          if ($scope.isEditMode) {
-            $scope.setFieldFromModel();
-            setTimeout(function() {
-              $($element).find(".ci__case-info-edit-mode select").val($scope.categoryId).trigger('change');
-            }, 0);
-          }
-        };
         $scope.getEntityLabel = $scope.$parent.getEntityLabel;
-        $scope.setFieldFromModel = function() {$scope.categoryId = $scope.model['category_id'];};
-        $scope.editConfirm = function() {
-          $scope.$parent.editConfirm('category_id', $scope.categoryId, $element, function(result) {
-            $scope.model['category_id'] = $scope.categoryId;
-            $scope.toggleMode();
-            $scope.$apply();
-            CRM.status(ts('Category updated.'));
-            reloadService.reloadEmails();
+
+        $scope.toggleDropdownMenu = function() {
+          $($element).find('.btn-group').toggleClass('open');
+        };
+
+        $scope.applyCategory = function(categoryValue, event) {
+          event.preventDefault();
+
+          CRM.api3('SupportcaseManageCase', 'update_case_info', {
+            "case_id": $scope.model['id'],
+            'category_id' : categoryValue
+          }).then(function(result) {
+            if (result.is_error === 1) {
+              $scope.$parent.showError($element, result.error_message);
+            } else {
+              $scope.model['category_id'] = categoryValue;
+              $scope.$apply();
+              CRM.status(ts('Category updated.'));
+
+              $scope.toggleDropdownMenu();
+              reloadService.reloadEmails();
+            }
+          }, function(error) {
+            $scope.$parent.showError($element, error);
           });
         };
-        $scope.initSelect2 = function() {
-          setTimeout(function() {$($element).find(".ci__case-info-item select").css($scope.$parent.getInputStyles()).select2();}, 0);
-        };
-
-        $scope.setFieldFromModel();
-        $scope.initSelect2();
       }
     };
   });

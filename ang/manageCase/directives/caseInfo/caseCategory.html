@@ -1,7 +1,17 @@
 <div class="ci__case-info-item sc__position-relative categoryField">
-  <select ng-change="editConfirm()" ng-model="categoryId" name="categoryField" id="categoryField" class="crm-form-select">
-    <option ng-repeat="option in model['available_categories']" value="{{option.value}}">{{option.label}}</option>
-  </select>
+  <div class="btn-group">
+    <button ng-click="toggleDropdownMenu()" type="button" class="btn btn-primary sc__m-0">
+      <span>{{getEntityLabel(model['available_categories'], model['category_id'])}}</span>
+    </button>
+    <button ng-click="toggleDropdownMenu()" type="button" class="btn btn-primary dropdown-toggle sc__m-0">
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-right">
+      <li ng-repeat="option in model['available_categories']">
+        <a ng-click="applyCategory(option.value, $event)" href="#">{{option.label}}</a>
+      </li>
+    </ul>
+  </div>
 
   <div class="ci__case-info-errors-wrap"></div>
 </div>
