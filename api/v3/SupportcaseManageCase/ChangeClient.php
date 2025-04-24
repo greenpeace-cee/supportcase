@@ -49,7 +49,7 @@ function civicrm_api3_supportcase_manage_case_change_client($params) {
     'client_id' => $params['new_case_client_id'],
   ]);
   $activities = $result['values']['rows'][0]['activity_id'] ?? [];
-  if (count($activities > 0)) {
+  if (count($activities) > 0) {
     // extract all emails used by the contact in any moved activities
     $contactEmailsInCase = CRM_Supportcase_Utils_MailutilsMessageParty::getMessagePartyEmailByActivitiesAndContact(
       $activities,
