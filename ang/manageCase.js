@@ -327,6 +327,16 @@
           return '';
         };
 
+        $scope.getEntityIcon = function(entities, entityId) {
+          for (var i = 0; i < entities.length; i++) {
+            if (entities[i]['value'] === entityId) {
+              return entities[i]['icon']
+            }
+          }
+
+          return '';
+        };
+
         $scope.getInputStyles = function() {
           return {
             'width' : '100%',
@@ -694,6 +704,7 @@
       scope: {model: "="},
       controller: function($scope, $element, reloadService) {
         $scope.getEntityLabel = $scope.$parent.getEntityLabel;
+        $scope.getEntityIcon = $scope.$parent.getEntityIcon;
 
         $scope.toggleDropdownMenu = function() {
           $($element).find('.btn-group').toggleClass('open');
