@@ -1,6 +1,13 @@
 <div class="ci_wrap">
-  <div>
+  <div class="sc__flex sc__justify-content-space-between sc__width-100-percent">
     <manage-panel model='model'></manage-panel>
+    <div class="sc__flex sc__gap-5 sc__justify-content-right">
+      <case-tags model="model"></case-tags>
+      <case-category model="model"></case-category>
+    </div>
+  </div>
+
+  <div>
     <div class="ci_left-contact-block">
       <case-clients model="model"></case-clients>
       <case-related-contacts model="model"></case-related-contacts>
@@ -9,10 +16,6 @@
   </div>
 
   <div class="ci_right-block">
-    <div class="sc__flex sc__gap-5 sc__justify-content-right">
-      <case-tags model="model"></case-tags>
-      <case-category model="model"></case-category>
-    </div>
     <case-comment model="model['id']"></case-comment>
   </div>
 </div>

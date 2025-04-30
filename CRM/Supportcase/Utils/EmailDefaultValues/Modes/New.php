@@ -2,7 +2,7 @@
 
 class CRM_Supportcase_Utils_EmailDefaultValues_Modes_New extends CRM_Supportcase_Utils_EmailDefaultValues_Modes_Base {
 
-  public function getValues() {
+  public function getValues(): array {
     $defaultValues = $this->getDefaultFields();
 
     $case = $this->getCase();
@@ -25,7 +25,9 @@ class CRM_Supportcase_Utils_EmailDefaultValues_Modes_New extends CRM_Supportcase
       $defaultValues['body'] = json_encode(['html' => $emailBody, 'text' => CRM_Utils_String::htmlToText($emailBody)]);
     }
 
-    if (!empty($firstClientId)) {
+    if (!empty($this->toEmailPrefillEmailId) && CRM_Supportcase_Utils_Email::isEmailExist($this->toEmailPrefillEmailId)) {
+      $defaultValues['toEmails'] = CRM_Supportcase_Utils_EmailSearch::searchByCommaSeparatedIds($this->toEmailPrefillEmailId);
+    } elseif (!empty($firstClientId)) {
       $toEmailsData = CRM_Supportcase_Utils_EmailSearch::getEmailsDataByContactId($firstClientId);
       if (!empty($toEmailsData[0])) {
         $defaultValues['toEmails'] = CRM_Supportcase_Utils_EmailSearch::searchByCommaSeparatedIds($toEmailsData[0]['id']);
@@ -57,11 +59,7 @@ class CRM_Supportcase_Utils_EmailDefaultValues_Modes_New extends CRM_Supportcase
     return nl2br($message);
   }
 
-  /**
-   * @param $mailUtilsSetting
-   * @return string
-   */
-  protected function getRenderedTemplate($mailUtilsSetting) {
+  protected function getRenderedTemplate($mailUtilsSetting): string {
     if (empty($mailUtilsSetting['mailutils_template_id'])) {
       return '';
     }

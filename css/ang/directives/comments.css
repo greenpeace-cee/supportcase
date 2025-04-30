@@ -13,26 +13,16 @@
   padding: 0 !important;
 }
 
-.comments__simple-view {
-  display: flex;
-}
-
 .comments__item-wrap {
   padding-bottom: 10px;
 }
 
+.comments__item-wrap:last-child  {
+  padding-bottom: 0;
+}
+
 .comments__item-wrap:hover .comments__actions {
   opacity: 1;
-}
-
-.comments__item-delete-mode,
-.comments__item-edit-mode,
-.comments__create-comment-wrap {
-
-}
-
-.comments__create-comment-wrap {
-  margin-bottom: 10px;
 }
 
 .comments__header {
@@ -44,11 +34,6 @@
 
 .comments__delete-message {
   padding: 10px 10px 20px 0;
-}
-
-.comments__modified-date {
-  font-style: italic;
-  padding-left: 10px;
 }
 
 .comments__actions {

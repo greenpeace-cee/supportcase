@@ -5,7 +5,7 @@
  */
 class CRM_Supportcase_Api3_SupportcaseComment_Create extends CRM_Supportcase_Api3_SupportcaseComment_Base {
 
-  public function getResult() {
+  public function getResult(): array {
     try {
       $activity = civicrm_api3('Activity', 'create', [
         'source_contact_id' => (CRM_Core_Session::singleton())->get('userID'),

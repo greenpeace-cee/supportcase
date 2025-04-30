@@ -1,12 +1,16 @@
 <div class="ci__case-info-item sc__position-relative categoryField">
   <div class="btn-group">
     <button ng-click="toggleDropdownMenu()" type="button" class="btn btn-primary sc__m-0">
-      <i class="crm-i {{getEntityIcon(model['available_categories'], model['category_id'])}}"></i><span>{{getEntityLabel(model['available_categories'], model['category_id'])}}</span>
+      <i ng-if="getEntityIcon(model['available_categories'], model['category_id']) !== '' " class="crm-i {{getEntityIcon(model['available_categories'], model['category_id'])}}"></i>
+      <span>{{getEntityLabel(model['available_categories'], model['category_id'])}}</span>
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu dropdown-menu-right">
-      <li ng-repeat="option in model['available_categories']">
-        <a ng-click="applyCategory(option.value, $event)" href="#"><i class="crm-i {{option.icon}}"></i>{{option.label}}</a>
+      <li ng-repeat="option in model['available_categories']" ng-class="{'active' : model['category_id'] == option.value}">
+        <a ng-click="applyCategory(option.value, $event)" href="#">
+          <i ng-if="option.label !== '' " class="crm-i {{option.icon}}"></i>
+          <span>{{option.label}}</span>
+        </a>
       </li>
     </ul>
   </div>

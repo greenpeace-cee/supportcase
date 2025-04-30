@@ -8,7 +8,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_AddEmailToClient extends CRM_Su
   /**
    * Get results of api
    */
-  public function getResult() {
+  public function getResult(): array {
     try {
       $createdEmail = civicrm_api3('Email', 'create', [
         'contact_id' => $this->params['client_id'],

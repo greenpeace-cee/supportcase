@@ -8,7 +8,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_IsNeedToShowConfirmationMessage
   /**
    * Get results of api
    */
-  public function getResult() {
+  public function getResult(): array {
     $result = [
       'isNeedToShowConfirmationMessage' => true,
       'confirmationMessage' => '<strong>Are you sure this is the same contact?</strong><br><br>The new case client has a different name. Are you sure you want to <strong>request a merge</strong> and change the case client?<br><br>Please use "Related Contacts" in other scenarios.',

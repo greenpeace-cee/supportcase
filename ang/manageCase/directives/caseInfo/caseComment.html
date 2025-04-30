@@ -1,5 +1,5 @@
-<div class="comments sc__mt-10">
-  <div ng-if="isSimpleView" class="comments__simple-view sc__flex sc__justify-content-right">
+<div class="comments">
+  <div ng-if="isSimpleView" class="sc__flex sc__justify-content-right">
     <button class="btn btn-secondary sc__m-0" ng-click="toggleCreateComment();">
       <i class="crm-i fa-plus"></i>
       <span>Add comment</span>
@@ -7,10 +7,13 @@
   </div>
 
   <div ng-show="!isSimpleView" class="comments__extended-view">
-    <div class="panel">
+    <div class="panel sc__m-0">
       <div class="panel-heading">
         <div class="sc__flex sc__justify-content-space-between">
-          <div>Comments</div>
+          <div class="sc__flex sc__gap-5">
+            <i class="crm-i fa-comment"></i>
+            <span>Comments</span>
+          </div>
           <button class="btn btn-secondary sc__m-0" ng-click="toggleCreateComment()" ng-if="!isShowCreateCommentWindow">
             <i class="crm-i fa-plus"></i>
             <span>Add new comment</span>
@@ -18,7 +21,7 @@
         </div>
       </div>
       <div class="panel-body">
-        <div ng-show="isShowCreateCommentWindow" class="comments__create-comment-wrap">
+        <div ng-show="isShowCreateCommentWindow" class="sc__mb-10  sc__min-height-70 sc__min-width-300">
           <div class="panel">
             <div class="panel-heading">Add new comment</div>
             <div class="panel-body">
@@ -28,8 +31,8 @@
 
               <div class="comments__create-comment-errors-wrap"></div>
 
-              <div class="sc__flex sc__justify-content-space-between">
-                <button class="btn btn-primary" ng-click="createComment()">
+              <div class="sc__flex sc__justify-content-space-between sc__pt-10">
+                <button class="btn btn-primary sc__m-0" ng-click="createComment()">
                   <i class="crm-i fa-check"></i>
                   <span>Create</span>
                 </button>
@@ -60,7 +63,7 @@
 
             <div class="sc__pl-10">
               <div class="sc__pb-10" ng-bind-html="comment.details"></div>
-              <div class="comments__modified-date" ng-if="comment.created_date !== comment.modified_date">Modified at: {{formatDateAndTime(comment.modified_date, true)}}</div>
+              <div class="sc__pl-10 sc__font-style-italic" ng-if="comment.created_date !== comment.modified_date">Modified at: {{formatDateAndTime(comment.modified_date, true)}}</div>
             </div>
           </div>
 
@@ -72,8 +75,8 @@
                     <span>Are you sure to delete comment: {{comment.source_contact_name}} on {{formatDateAndTime(comment.activity_date_time, true)}}</span>
                   </div>
 
-                  <div class="sc__flex sc__justify-content-space-between">
-                    <button class="btn btn-danger" ng-click="deleteComment(comment.id)">
+                  <div class="sc__flex sc__justify-content-space-between sc__pt-10">
+                    <button class="btn btn-danger sc__m-0" ng-click="deleteComment(comment.id)">
                       <i class="crm-i fa-trash"></i>
                       <span>Delete</span>
                     </button>
@@ -104,8 +107,8 @@
 
                 <div class="comments__create-comment-errors-wrap"></div>
 
-                <div class="sc__flex sc__justify-content-space-between">
-                  <button class="btn btn-primary" ng-click="updateComment(comment)">
+                <div class="sc__flex sc__justify-content-space-between sc__pt-10">
+                  <button class="btn btn-primary sc__m-0" ng-click="updateComment(comment)">
                     <i class="crm-i fa-check"></i>
                     <span>Update</span>
                   </button>

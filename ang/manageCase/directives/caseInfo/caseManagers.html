@@ -1,8 +1,11 @@
 <div class="ci__case-info-item sc__position-relative sc__min-width-300 managerField">
-  <div class="panel">
+  <div class="panel sc__m-0">
     <div class="panel-heading">
       <div class="sc__flex sc__justify-content-space-between sc__position-relative">
-        <span>Managers</span>
+        <span class="sc__flex sc__gap-5">
+          <i class="crm-i fa-users"></i>
+          <span>Managers</span>
+        </span>
         <div ng-show="!isEditMode" class="ci__case-info-edit-button" title="Edit managers" ng-click="toggleMode();">
           <button ng-show="!isEditMode" class="btn btn-secondary sc__m-0">
             <i class="crm-i fa-pencil"></i>

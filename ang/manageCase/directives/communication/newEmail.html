@@ -5,6 +5,7 @@
   </button>
 
   <div ng-if="isShowSendEmailWindow">
-    <email-editor email-mode="'new'" reload-email-list="getEmails" case-id="model.case_id" cancel-callback="cancel"></email-editor>
+    <email-editor email-mode="'new'" reload-email-list="getEmails" case-id="model.case_id"
+      cancel-callback="cancel" prefill-email-id="model.prefillEmailId"></email-editor>
   </div>
 </div>

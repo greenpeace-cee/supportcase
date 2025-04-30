@@ -2,43 +2,20 @@
 
 abstract class CRM_Supportcase_Utils_EmailDefaultValues_Modes_Base {
 
-  /**
-   * Mode
-   *
-   * @var string
-   */
-  protected $mode;
+  protected string $mode;
+  protected int $caseId;
+  protected int|null $fromActivityId;
+  protected ?int $toEmailPrefillEmailId;
 
-  /**
-   * Case id
-   *
-   * @var int
-   */
-  protected $caseId;
-
-  /**
-   * From activity id
-   *
-   * @var int|null
-   */
-  protected $fromActivityId;
-
-  /**
-   * @param string $mode
-   * @param int|string $caseId
-   * @param int|string $fromActivityId
-   */
-  public function __construct(string $mode, $caseId, $fromActivityId = null) {
+  public function __construct(string $mode, int $caseId, ?int $fromActivityId = null, ?int $toEmailPrefillEmailId = null) {
     $this->mode = $mode;
     $this->caseId = $caseId;
     $this->fromActivityId = $fromActivityId;
+    $this->toEmailPrefillEmailId = $toEmailPrefillEmailId;
   }
 
-  abstract public function getValues();
+  abstract public function getValues(): array;
 
-  /**
-   * @return array
-   */
   protected function getDefaultFields(): array {
     return [
       'toEmails' => [],
@@ -52,7 +29,7 @@ abstract class CRM_Supportcase_Utils_EmailDefaultValues_Modes_Base {
     ];
   }
 
-  protected function getFromActivityParams() {
+  protected function getFromActivityParams(): array {
     return [
       'id' => $this->fromActivityId,
       'return' => ['target_contact_id', 'source_contact_id', 'activity_type_id', 'activity_date_time', 'subject', 'details', 'status_id'],
@@ -60,9 +37,6 @@ abstract class CRM_Supportcase_Utils_EmailDefaultValues_Modes_Base {
     ];
   }
 
-  /**
-   * @return array
-   */
   protected function getFromActivity(): array {
     try {
       $activity = civicrm_api3('Activity', 'getsingle', $this->getFromActivityParams());
@@ -73,9 +47,6 @@ abstract class CRM_Supportcase_Utils_EmailDefaultValues_Modes_Base {
     return $activity;
   }
 
-  /**
-   * @return array
-   */
   protected function getCase(): array {
     try {
       $case = civicrm_api3('Case', 'getsingle', [
@@ -91,9 +62,6 @@ abstract class CRM_Supportcase_Utils_EmailDefaultValues_Modes_Base {
     return $case;
   }
 
-  /**
-   * @return array
-   */
   protected function getRelatedMailUtilsMessage(): array {
     $mailUtilsMessage = CRM_Supportcase_Utils_Activity::getRelatedMailUtilsMessage($this->fromActivityId);
     if (empty($mailUtilsMessage)) {
@@ -103,11 +71,7 @@ abstract class CRM_Supportcase_Utils_EmailDefaultValues_Modes_Base {
     return $mailUtilsMessage;
   }
 
-  /**
-   * @param $mailSettingId
-   * @return int
-   */
-  protected function getMainEmailId($mailSettingId): int {
+  protected function getMainEmailId(int $mailSettingId): int {
     $mainEmailId =  CRM_Supportcase_Utils_Activity::getMainEmailId($mailSettingId);
     if (empty($mainEmailId)) {
       throw new api_Exception('Error. Cannot get main email for mailSettingId = ' . $mailSettingId, 'error_getting_main_email');
@@ -180,12 +144,7 @@ abstract class CRM_Supportcase_Utils_EmailDefaultValues_Modes_Base {
     ];
   }
 
-  /**
-   * @param $activity
-   * @param $fromEmailLabel
-   * @return string
-   */
-  protected function prepareQuotedBody($activity, $fromEmailLabel, $fromEmailContactId, $ccEmailLabels, $toEmailLabels, $subject, $emailBody, $mode) {
+  protected function prepareQuotedBody($activity, $fromEmailLabel, $fromEmailContactId, $ccEmailLabels, $toEmailLabels, $subject, $emailBody, $mode): string {
     $fromEmailLabel = CRM_Supportcase_Utils_EmailSearch::replaceHtmlSymbolInEmailLabel($fromEmailLabel);
     $date = CRM_Utils_Date::customFormat($activity['activity_date_time']);
     $mailUtilsRenderedTemplate = CRM_Supportcase_Utils_Activity::getRenderedTemplateRelatedToActivity($activity['id']);
@@ -224,11 +183,7 @@ abstract class CRM_Supportcase_Utils_EmailDefaultValues_Modes_Base {
     return nl2br($message);
   }
 
-  /**
-   * @param $caseCategoryId
-   * @return false|array
-   */
-  protected function getFirstRelatedMailutilsSetting($caseCategoryId) {
+  protected function getFirstRelatedMailutilsSetting($caseCategoryId): array {
     if (empty($caseCategoryId)) {
       return false;
     }
@@ -242,7 +197,7 @@ abstract class CRM_Supportcase_Utils_EmailDefaultValues_Modes_Base {
       ->first();
 
     if (empty($mailutilsSetting)) {
-      return false;
+      return [];
     }
 
     return $mailutilsSetting;

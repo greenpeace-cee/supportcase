@@ -2,14 +2,14 @@
 
 class CRM_Supportcase_Utils_EmailDefaultValues_Modes_Forward extends CRM_Supportcase_Utils_EmailDefaultValues_Modes_Base {
 
-  public function getValues() {
+  public function getValues(): array {
     $defaultValues = $this->getDefaultFields();
 
     $fromActivity = $this->getFromActivity();
     $attachments = $this->prepareAttachments($fromActivity);
     $case = $this->getCase();
     $mailUtilsMessage = $this->getRelatedMailUtilsMessage();
-    $mainEmailId = $this->getMainEmailId($mailUtilsMessage['mail_setting_id']);
+    $mainEmailId = $this->getMainEmailId((int) $mailUtilsMessage['mail_setting_id']);
     $emailsData = CRM_Supportcase_Utils_MailutilsMessageParty::getEmailsData($mailUtilsMessage['id']);
     $normalizedSubject = CRM_Supportcase_Utils_Email::normalizeEmailSubject($fromActivity['subject']);
     $subject = CRM_Supportcase_Utils_Email::addSubjectPrefix($normalizedSubject, CRM_Supportcase_Utils_Email::FORWARD_MODE);
@@ -38,7 +38,7 @@ class CRM_Supportcase_Utils_EmailDefaultValues_Modes_Forward extends CRM_Support
     return $defaultValues;
   }
 
-  protected function getFromActivityParams() {
+  protected function getFromActivityParams(): array {
     $activityParams = parent::getFromActivityParams();
     $activityParams['api.Attachment.get'] = [];
 

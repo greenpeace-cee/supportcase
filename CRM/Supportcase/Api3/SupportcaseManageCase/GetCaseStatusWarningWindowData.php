@@ -9,7 +9,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetCaseStatusWarningWindowData 
   /**
    * Get results of api
    */
-  public function getResult() {
+  public function getResult(): array {
     $returnData = [
       'isAllowToChangeCaseStatus' => true,
       'warningWindow' => [

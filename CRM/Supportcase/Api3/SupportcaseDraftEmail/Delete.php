@@ -8,7 +8,7 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Delete extends CRM_Supportcase_
   /**
    * Get results of api
    */
-  public function getResult() {
+  public function getResult(): array {
     \Civi\Api4\MailutilsMessage::delete(FALSE)
       ->addWhere('id', '=', $this->params['mailutils_message_id'])
       ->setLimit(1)

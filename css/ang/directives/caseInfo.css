@@ -19,6 +19,7 @@
   justify-content: space-between;
   flex-wrap: wrap;
   align-items: flex-start;
+  padding-bottom: 10px;
 }
 
 .ci__case-info-item-wrap.ci--no-border {

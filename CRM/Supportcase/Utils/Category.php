@@ -29,7 +29,17 @@ class CRM_Supportcase_Utils_Category {
       return [];
     }
 
-    return $categories['values'];
+    $preparedCategories = [];
+    foreach ($categories['values'] as $category) {
+      $preparedCategories[] = [
+        'id' => $category['id'],
+        'value' => $category['value'],
+        'label' => $category['label'],
+        'icon' => !empty($category['icon']) ? $category['icon'] : '',
+      ];
+    }
+
+    return $preparedCategories;
   }
 
   /**

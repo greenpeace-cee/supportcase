@@ -84,7 +84,7 @@ class CRM_Supportcase_Form_CreateSupportcaseContact extends CRM_Core_Form {
    * @param $email
    * @return array
    */
-  private function createContact($firstName, $lastName, $email) {
+  private function createContact($firstName, $lastName, $email): array {
     $contact = civicrm_api3('Contact', 'create', [
       'first_name' => $firstName,
       'last_name' => $lastName,

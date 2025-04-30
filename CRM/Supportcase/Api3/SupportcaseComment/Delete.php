@@ -5,7 +5,7 @@
  */
 class CRM_Supportcase_Api3_SupportcaseComment_Delete extends CRM_Supportcase_Api3_SupportcaseComment_Base {
 
-  public function getResult() {
+  public function getResult(): array {
     try {
       civicrm_api3('Activity', 'delete', [
         'id' => $this->params['activity_id'],

@@ -19,10 +19,8 @@ class CRM_Supportcase_Api3_Base {
 
   /**
    * Returns results to api
-   *
-   * @return array
    */
-  public function getResult() {
+  public function getResult(): array {
     return [];
   }
 

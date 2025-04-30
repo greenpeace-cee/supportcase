@@ -8,7 +8,7 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Create extends CRM_Supportcase_
   /**
    * Get results of api
    */
-  public function getResult() {
+  public function getResult(): array {
     $activityId = $this->createActivity();
     try {
       $this->attachFiles($activityId);
@@ -43,9 +43,6 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Create extends CRM_Supportcase_
     ];
   }
 
-  /**
-   * @return array
-   */
   private function getUpdatedDraftEmailData($mailutilsMessageId): array {
     $updatedDraftEmailData = civicrm_api3('SupportcaseDraftEmail', 'get', [
       'mailutils_message_id' => $mailutilsMessageId,
@@ -268,10 +265,16 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Create extends CRM_Supportcase_
       ];
     }
 
+    $toEmailPrefillEmailId = null;
+    if (!empty($params['to_email_prefill_email_id'])) {
+      $toEmailPrefillEmailId = (int) $params['to_email_prefill_email_id'];
+    }
+
     $emailDefaultValues = CRM_Supportcase_Utils_EmailDefaultValues_Manager::getPreparedEmailDefaultValues(
       $params['mode'],
       $params['case_id'],
-      $options['from_activity_id']
+      $options['from_activity_id'],
+      $toEmailPrefillEmailId
     );
     $emailDefaultValues['options'] = $options;
 
