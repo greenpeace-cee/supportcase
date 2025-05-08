@@ -1,13 +1,11 @@
 <div id="bootstrap-theme">
   <h1 crm-page-title>
     <div class="sc__flex sc__gap-10 sc__align-items-center">
-      <del ng-if="caseInfo['is_deleted'] == 1"><span>{{ts('Manage Case #%0', [caseInfo['id']])}}</span></del>
-      <span ng-if="caseInfo['is_deleted'] == 0">{{ts('Manage Case #%0', [caseInfo['id']])}}</span>
+      <del ng-if="caseInfo['is_deleted'] == 1"><span>{{ts('Support Case Case #%0: %1', [caseInfo['id'], caseInfo['subject']])}}</span></del>
+      <span ng-if="caseInfo['is_deleted'] == 0">{{ts('Support Case #%0: %1', [caseInfo['id'], caseInfo['subject']])}}</span>
       <span class="sc__flex sc__flex-direction-column sc__max-width-300">
-        <span class="sc__font-size-14">{{formatDateAndTime(caseInfo['start_date'], false)}}</span>
-      </span>
-      <span class="scm__case-subject">
-        <span>{{caseInfo['subject']}}</span>
+        <span class="sc__font-size-14">Started: {{formatDateAndTime(caseInfo['start_date'], false)}}</span>
+        <span ng-if="caseInfo['end_date']" class="sc__font-size-14">Ended: {{formatDateAndTime(caseInfo['end_date'], false)}}</span>
       </span>
     </div>
   </h1>

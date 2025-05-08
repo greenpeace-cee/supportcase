@@ -592,6 +592,7 @@
       templateUrl: "~/manageCase/directives/caseInfo/caseManagers.html",
       scope: {model: "="},
       controller: function($scope, $window, $element) {
+        $scope.showHelpInfo = $scope.$parent.showHelpInfo;
         $scope.isEditMode = false;
         $scope.toggleMode = function() {
           $($element).find('.ci__case-info-errors-wrap').empty();
@@ -626,6 +627,7 @@
       templateUrl: "~/manageCase/directives/caseInfo/caseRelatedContacts.html",
       scope: {model: "="},
       controller: function($scope, $window, $element) {
+        $scope.showHelpInfo = $scope.$parent.showHelpInfo;
         $scope.isEditMode = false;
         $scope.toggleMode = function() {
           $($element).find('.ci__case-info-errors-wrap').empty();

@@ -138,7 +138,7 @@
                 </a>
               {/if}
               {if $row.action_permissions.spam}
-                <a href="{$row.report_spam_link}" class="btn btn-success sc__grey-btn sc__m-0 crm-popup medium-popup" >
+                <a href="{$row.report_spam_link}" class="btn btn-warning sc__m-0 crm-popup medium-popup" >
                   <i class="crm-i fa-flag"></i>
                   <span>Spam</span>
                 </a>

@@ -12,30 +12,46 @@ function civicrm_api3_supportcase_manage_case_make_user_message($params) {
   }
   $manageCaseLink = CRM_Utils_System::url('civicrm/a/', NULL, TRUE, 'supportcase/manage-case/' . $params['case_id']);
 
+  $contact = \Civi\Api4\Contact::get(FALSE)
+    ->addSelect('display_name')
+    ->addWhere('id', '=', CRM_Supportcase_Utils_Case::getFirstClient($case))
+    ->execute()
+    ->first();
+  $viewContactLink = CRM_Utils_System::url('civicrm/contact/view/', 'cid=' . $contact['id']);
   if ($params['type'] == 'resolve-case') {
     CRM_Core_Session::setStatus(
       E::ts(
         '
-          <span>
-            <span>You can view this case by link:</span>
-            <a href="%1">Manage this Case</a>
-          </span>
+          <div>
+            <p>Case #%1 from <a href="%2">%3</a> was resolved.</p>
+            <a class="button" href="%4"><span><i class="crm-i fa-undo" aria-hidden="true"></i> Back to Case</span></a>
+          </div>
         ',
-        [1 => $manageCaseLink]
+        [
+          1 => $case['id'],
+          2 => $viewContactLink,
+          3 => $contact['display_name'],
+          4 => $manageCaseLink,
+        ]
       ),
-      'Case is resolved!',
+      'Case was resolved!',
       'success'
     );
   } elseif ($params['type'] == 'report-spam') {
     CRM_Core_Session::setStatus(
       E::ts(
         '
-          <span>
-            <span>You can view this case by link:</span>
-            <a href="%1">Manage this Case</a>
-          </span>
+          <div>
+            <p>Case #%1 from <a href="%2">%3</a> was reported as spam.</p>
+            <a class="button" href="%4"><span><i class="crm-i fa-undo" aria-hidden="true"></i> Back to Case</span></a>
+          </div>
         ',
-        [1 => $manageCaseLink]
+        [
+          1 => $case['id'],
+          2 => $viewContactLink,
+          3 => $contact['display_name'],
+          4 => $manageCaseLink,
+        ]
       ),
       'Case reported as spam!',
       'success'

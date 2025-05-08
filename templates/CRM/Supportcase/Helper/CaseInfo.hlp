@@ -1,3 +1,14 @@
-{htxt id='id-about-clients-updating'}
-  <p>{ts}If you change the client, CiviCRM will create re-create this case (with the same activities and tags) for the new client and delete the old one.{/ts}</p>
+{htxt id='id-client'}
+  <p>{ts}You can change the client if the case is currently assigned to the wrong (duplicate) contact.{/ts}</p>
+  <p><strong>{ts}Avoid changing the client if the mail was sent on behalf of someone else and use the Related Contacts feature instead.{/ts}</strong></p>
+{/htxt}
+
+{htxt id='id-related-contacts'}
+  <p>{ts}Use Related Contacts to keep track of other contacts affected by this case.{/ts}</p>
+  <p>{ts}Example: If the case client is a family member sending a message on behalf of someone else, add the person the message relates to as a related contact.{/ts}</p>
+{/htxt}
+
+{htxt id='id-managers'}
+  <p>{ts}Add a manager to a case to assign it to a specific person.{/ts}</p>
+  <p>{ts}Cases that are assigned to someone will show up in the "My Cases" tab of the manager.{/ts}</p>
 {/htxt}

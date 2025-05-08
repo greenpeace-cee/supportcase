@@ -8,21 +8,21 @@
       <i class="crm-i fa-check"></i>
       <span>Resolve</span>
     </button>
-    <button ng-if="!isCaseHasStatus('ongoing');" class="btn btn-warning sc__m-0" ng-click="makeCaseOngoing();">
+    <button ng-if="!isCaseHasStatus('ongoing');" class="btn btn-default sc__m-0" ng-click="makeCaseOngoing();">
       <i class="crm-i fa-refresh"></i>
-      <span>Ongoing</span>
+      <span>Reopen Case</span>
     </button>
     <button ng-if="!isCaseHasStatus('urgent');" class="btn btn-danger sc__red-btn sc__m-0" ng-click="makeCaseUrgent();">
       <i class="crm-i fa-exclamation-circle"></i>
       <span>Urgent</span>
     </button>
-    <button ng-if="!isCaseHasStatus('spam');" class="btn btn-success sc__grey-btn sc__m-0" ng-click="reportSpamCase();">
+    <button ng-if="!isCaseHasStatus('spam');" class="btn btn-warning sc__m-0" ng-click="reportSpamCase();">
       <i class="crm-i fa-flag"></i>
       <span>Report Spam</span>
     </button>
     <button class="btn btn-danger sc__m-0" ng-click="moveToTrashCase();">
       <i class="crm-i fa-trash"></i>
-      <span>Delete case</span>
+      <span>Delete Case</span>
     </button>
   </div>
 
@@ -48,7 +48,7 @@
     </button>
     <button class="btn btn-danger sc__m-0" ng-click="moveToTrashCase();">
       <i class="crm-i fa-trash"></i>
-      <span>Delete case</span>
+      <span>Delete Case</span>
     </button>
   </div>
   <div class="mp__error-wrap"></div>
