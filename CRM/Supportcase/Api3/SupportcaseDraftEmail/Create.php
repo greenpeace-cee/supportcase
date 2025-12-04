@@ -82,6 +82,7 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Create extends CRM_Supportcase_
         'activity_type_id' => 'Email',
         'subject' => $this->params['email']['subject'],
         'details' => $this->params['email']['body'],
+        'medium_id' => 'email',
         'status_id' => CRM_Supportcase_Utils_ActivityStatus::SUPPORTCASE_DRAFT_EMAIL,
         'target_id' => $targetContactIds,// cc + to contacts - the same logic as in core
         'case_id' => $this->params['caseId'],
