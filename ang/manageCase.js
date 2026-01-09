@@ -60,6 +60,7 @@
             } else {
                 $scope.caseInfo = apiCalls.caseInfoResponse.values;
                 $scope.caseInfo['dashboardSearchQfKey'] = dashboardSearchQfKey;
+                $scope.caseInfo['prefillEmailId'] = prefillEmailId;
                 $scope.isCaseLocked = $scope.caseInfo['is_case_locked'] && !$scope.caseInfo['is_locked_by_self'];
             }
         };
@@ -1128,6 +1129,7 @@
                     'count' : 0,
                     'draft_count' : 0,
                     'case_id' : $scope.model['id'],
+                    'prefillEmailId' : $scope.model['prefillEmailId'],
                     'openMainAccordion' : $scope.openMainAccordion,
                     'new_email_prefill_fields' : $scope.model['new_email_prefill_fields'],
                 };
@@ -2052,7 +2054,7 @@
                     setTimeout(function() {
                         var input = $($element).find(".sc__select-contact-input");
                         input.css({
-                            'width' : '100%',
+                            'width' : '100% !important',
                             'max-width' : $scope.maxWidth + 'px',
                             'box-sizing' : 'border-box',
                         });
@@ -2199,8 +2201,13 @@
                 mailutilsMessageId: "<mailutilsMessageId",
                 reloadEmailList: "<reloadEmailList",
                 cancelCallback: "<cancelCallback",
+                prefillEmailId: "<prefillEmailId",
             },
             controller: function($scope, $element, $timeout) {
+                if ($scope['prefillEmailId'] === undefined) {
+                  $scope['prefillEmailId'] = null;
+                }
+
                 $scope.isShowEditorBlock = false;
                 $scope.autoSaveTimer = null;
                 $scope.isDisabledButtons = false;
@@ -2305,6 +2312,7 @@
                         "case_id": $scope.caseId,
                         "mode": $scope.emailMode,
                         "from_activity_id": $scope.fromActivityId,
+                        "to_email_prefill_email_id": $scope.prefillEmailId,
                         "return": $scope.draftReturnFields
                     }).then(function(result) {
                         if (result.is_error === 1) {

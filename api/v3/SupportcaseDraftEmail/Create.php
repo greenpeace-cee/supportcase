@@ -17,6 +17,12 @@ function _civicrm_api3_supportcase_draft_email_create_spec(&$params) {
     'type' => CRM_Utils_Type::T_INT,
     'title' => 'From email activity id',
   ];
+  $params['to_email_prefill_email_id'] = [
+    'name' => 'to_email_prefill_email_id',
+    'api.required' => 0,
+    'type' => CRM_Utils_Type::T_INT,
+    'title' => 'To email prefill email id',
+  ];
   $params['mode'] = [
     'name' => 'mode',
     'api.required' => 1,
