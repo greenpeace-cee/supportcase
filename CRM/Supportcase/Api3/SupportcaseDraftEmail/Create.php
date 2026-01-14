@@ -269,10 +269,16 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Create extends CRM_Supportcase_
       ];
     }
 
+    $toEmailPrefillEmailId = null;
+    if (!empty($params['to_email_prefill_email_id'])) {
+      $toEmailPrefillEmailId = (int) $params['to_email_prefill_email_id'];
+    }
+
     $emailDefaultValues = CRM_Supportcase_Utils_EmailDefaultValues_Manager::getPreparedEmailDefaultValues(
       $params['mode'],
       $params['case_id'],
-      $options['from_activity_id']
+      $options['from_activity_id'],
+      $toEmailPrefillEmailId
     );
     $emailDefaultValues['options'] = $options;
 

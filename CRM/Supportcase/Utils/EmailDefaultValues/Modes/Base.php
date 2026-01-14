@@ -23,15 +23,19 @@ abstract class CRM_Supportcase_Utils_EmailDefaultValues_Modes_Base {
    */
   protected $fromActivityId;
 
+
+  protected $toEmailPrefillEmailId;
+
   /**
    * @param string $mode
    * @param int|string $caseId
    * @param int|string $fromActivityId
    */
-  public function __construct(string $mode, $caseId, $fromActivityId = null) {
+  public function __construct(string $mode, $caseId, $fromActivityId = null,  $toEmailPrefillEmailId = null) {
     $this->mode = $mode;
     $this->caseId = $caseId;
     $this->fromActivityId = $fromActivityId;
+    $this->toEmailPrefillEmailId = $toEmailPrefillEmailId;
   }
 
   abstract public function getValues();
@@ -224,10 +228,6 @@ abstract class CRM_Supportcase_Utils_EmailDefaultValues_Modes_Base {
     return nl2br($message);
   }
 
-  /**
-   * @param $caseCategoryId
-   * @return false|array
-   */
   protected function getFirstRelatedMailutilsSetting($caseCategoryId) {
     if (empty($caseCategoryId)) {
       return false;

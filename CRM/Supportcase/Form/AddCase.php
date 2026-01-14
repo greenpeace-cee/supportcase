@@ -15,6 +15,10 @@ class CRM_Supportcase_Form_AddCase extends CRM_Core_Form {
       $defaultValues['dashboard_search_qf_key'] = $dashboardSearchQfKey;
     }
 
+    if (!empty($prefillEmailId)) {
+      $defaultValues['prefill_email_id'] = $prefillEmailId;
+    }
+
     if (!empty($prefillEmailId) && CRM_Supportcase_Utils_Email::isEmailExist($prefillEmailId)) {
       $contactId = CRM_Supportcase_Utils_EmailSearch::getContactIdByEmailId($prefillEmailId);
       if (!empty($contactId)) {
