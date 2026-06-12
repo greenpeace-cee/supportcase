@@ -1025,6 +1025,7 @@
 
         $scope.openMainAccordion = function() {
           var mainElement = $($element);
+          mainElement.find('.crm-accordion-wrapper').removeClass('collapsed');// TODO: test
           mainElement.find('.crm-accordion-bold').attr('open', 'open');
           mainElement.find('.crm-accordion-body').show();
         };
@@ -2126,8 +2127,7 @@
         if ($scope['prefillEmailId'] === undefined) {
           $scope['prefillEmailId'] = null;
         }
-        console.log('$scope.prefillEmailId');
-        console.log($scope.prefillEmailId);
+
         $scope.isShowEditorBlock = false;
         $scope.autoSaveTimer = null;
         $scope.isDisabledButtons = false;
