@@ -4,6 +4,10 @@
     (Support Case Dashboard)
 */
 
+.scd__result-table-wrap table {
+  box-sizing: border-box;
+}
+
 .scd__button-go-to-advanced-search {
   display: none;
 }
