@@ -72,7 +72,7 @@ class CRM_Supportcase_Form_Dashboard extends CRM_Core_Form_Search {
     $controller->setEmbedded(TRUE);
     $controller->moveFromSessionToTemplate();
 
-    $pager = (CRM_Core_Smarty::singleton())->get_template_vars('pager');
+    $pager = (CRM_Core_Smarty::singleton())->getTemplateVars('pager');
     $isShowPagination = !empty($pager) && $pager->numItems() > $pager->_perPage;
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String');
     $dashboardSearchQfKey = CRM_Utils_Rule::qfKey($qfKey) ? $qfKey : false;
