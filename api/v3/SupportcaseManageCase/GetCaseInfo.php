@@ -72,7 +72,7 @@ function civicrm_api3_supportcase_manage_case_get_case_info($params) {
     "category_id" => $case[$categoryFieldName],
     'available_categories' => CRM_Supportcase_Utils_Category::get(),
     'tags_ids' => CRM_Supportcase_Utils_Tags::getTagsIds($params['case_id'],'civicrm_case'),
-    'available_tags' => CRM_Supportcase_Utils_Tags::getAvailableTags('civicrm_case'),
+    'available_tags' => CRM_Supportcase_Utils_Tags::getAvailableTags('civicrm_case', CRM_Supportcase_Install_Entity_TagSet::ACTIONS_TAGS),
     'phone_number_for_do_not_sms_action' => CRM_Supportcase_Utils_Case::findPhoneNumberInActivities($params['case_id']),
     'email_for_manage_email_subscriptions' => CRM_Supportcase_Utils_Case::findEmailInActivities($params['case_id']),
     'settings' => [

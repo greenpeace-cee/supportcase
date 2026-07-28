@@ -28,29 +28,28 @@ class CRM_Supportcase_Utils_Tags {
 
   /**
    * Gets available tags for entity
+   *
    * @param $entityTableName
+   * @param null $parentId limit to tags with this parent
+   *
    * @return array
    */
-  public static function getAvailableTags($entityTableName) {
+  public static function getAvailableTags($entityTableName, $parentTagName = NULL): array {
     if (empty($entityTableName)) {
       return [];
     }
 
-    $preparedAvailableTags = [];
-    $availableTags = CRM_Core_BAO_Tag::getTagsUsedFor($entityTableName, FALSE);
-
-    if (!empty($availableTags)) {
-      foreach ($availableTags as $tagId => $availableTag) {
-        $preparedAvailableTags[$tagId] = [
-          'id' => $tagId,
-          'name' => $availableTag['name'],
-          'description' => $availableTag['description'],
-          'color' => $availableTag['color'],
-        ];
-      }
+    $availableTags = \Civi\Api4\Tag::get(FALSE)
+      ->addSelect('id', 'name', 'label', 'description', 'color')
+      ->addWhere('used_for', 'CONTAINS', $entityTableName)
+      ->addOrderBy('parent_id', 'ASC');
+    if (!is_null($parentTagName)) {
+      $availableTags->addWhere('parent_id:name', '=', $parentTagName);
     }
 
-    return $preparedAvailableTags;
+    return $availableTags->execute()
+      ->indexBy('id')
+      ->getArrayCopy();
   }
 
   /**

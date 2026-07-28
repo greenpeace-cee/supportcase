@@ -25,6 +25,12 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_IsNeedToShowConfirmationMessage
       }
     }
 
+    // ignore client changes when current client is a placeholder
+    if (in_array($this->params['current_case_client']['contact_id'], Civi::settings()->get('supportcase_placeholder_clients') ?? [])) {
+      $result['isNeedToShowConfirmationMessage'] = false;
+      $result['confirmationMessage'] = '';
+    }
+
     return $result;
   }
 

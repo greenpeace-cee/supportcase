@@ -61,4 +61,15 @@ return [
     'is_contact' => 0,
     'description' => 'List of email addresses that are known aliases of an inbox and should be discarded for To/CC prefills',
   ],
+  'supportcase_placeholder_clients' => [
+    'group_name' => 'SupportcaseConfig',
+    'group' => 'SupportcaseConfig',
+    'name' => 'supportcase_placeholder_clients',
+    'type' => 'Array',
+    'default' => [],
+    'add' => '4.7',
+    'is_domain' => 1,
+    'is_contact' => 0,
+    'description' => 'List of contact IDs of placeholder case clients that should be excluded from regular client change policies/checks',
+  ],
 ];
