@@ -8,7 +8,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetEmailActivities extends CRM_
   /**
    * Get results of api
    */
-  public function getResult() {
+  public function getResult(): array {
     $result = [
       [
         'emails' => [],

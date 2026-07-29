@@ -2,12 +2,12 @@
   <div ng-if="isNeedToShowButtons">
     <div ng-if="isShowLess">
       <span>{{shortText}}</span>
-      <a class="smt__button" ng-click="toggleMode()">show more</a>
+      <a class="sc__cursor-pointer" ng-click="toggleMode()">show more</a>
     </div>
 
     <div ng-if="!isShowLess">
       <span>{{fullText}}</span>
-      <a class="smt__button" ng-if="!isShowLess" ng-click="toggleMode()">show less</a>
+      <a class="sc__cursor-pointer" ng-if="!isShowLess" ng-click="toggleMode()">show less</a>
     </div>
   </div>
 

@@ -2,12 +2,12 @@
 
 class CRM_Supportcase_Utils_EmailDefaultValues_Modes_ReplyAll extends CRM_Supportcase_Utils_EmailDefaultValues_Modes_Base {
 
-  public function getValues() {
+  public function getValues(): array {
     $defaultValues = $this->getDefaultFields();
     $fromActivity = $this->getFromActivity();
     $case = $this->getCase();
     $mailUtilsMessage = $this->getRelatedMailUtilsMessage();
-    $mainEmailId = $this->getMainEmailId($mailUtilsMessage['mail_setting_id']);
+    $mainEmailId = $this->getMainEmailId((int) $mailUtilsMessage['mail_setting_id']);
     $emailsData = CRM_Supportcase_Utils_MailutilsMessageParty::getEmailsData($mailUtilsMessage['id']);
     $normalizedSubject = CRM_Supportcase_Utils_Email::normalizeEmailSubject($fromActivity['subject']);
     $subject = CRM_Supportcase_Utils_Email::addSubjectPrefix($normalizedSubject, CRM_Supportcase_Utils_Email::REPLY_MODE);

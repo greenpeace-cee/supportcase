@@ -5,7 +5,7 @@
  */
 class CRM_Supportcase_Api3_SupportcaseComment_GetAll extends CRM_Supportcase_Api3_SupportcaseComment_Base {
 
-  public function getResult() {
+  public function getResult(): array {
     try {
       $activities = civicrm_api3('Activity', 'get', [
         'case_id' => $this->params['case_id'],

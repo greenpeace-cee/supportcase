@@ -8,7 +8,7 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Get_ByCaseId extends CRM_Suppor
   /**
    * Get results of api
    */
-  public function getResult() {;
+  public function getResult(): array {
     $draftEmails = [];
 
     try {

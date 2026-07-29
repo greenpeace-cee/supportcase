@@ -1,27 +1,19 @@
-<div class="ci__case-info-item categoryField">
-	<div class="ci__case-info-header">
-		<div class="ci__case-info-item-label">Category</div>
-		<div ng-show="!isEditMode" class="ci__case-info-edit-button" title="Edit category" ng-click="toggleMode();">
-			<i class="crm-i fa-pencil"></i>
-		</div>
-	</div>
+<div class="ci__case-info-item sc__position-relative categoryField">
+  <div class="btn-group">
+    <button ng-click="toggleDropdownMenu()" type="button" class="btn btn-primary sc__m-0">
+      <i ng-if="getEntityIcon(model['available_categories'], model['category_id']) !== '' " class="crm-i {{getEntityIcon(model['available_categories'], model['category_id'])}}"></i>
+      <span>{{getEntityLabel(model['available_categories'], model['category_id'])}}</span>
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-right">
+      <li ng-repeat="option in model['available_categories']" ng-class="{'active' : model['category_id'] == option.value}">
+        <a ng-click="applyCategory(option.value, $event)" href="#">
+          <i ng-if="option.label !== '' " class="crm-i {{option.icon}}"></i>
+          <span>{{option.label}}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
 
-	<div class="ci__case-info-view-mode" ng-show="!isEditMode">
-		<div class="ci__case-info-item-content">{{getEntityLabel(model['available_categories'], model['category_id'])}}</div>
-	</div>
-
-	<div class="ci__case-info-edit-mode" ng-show="isEditMode">
-		<div class="ci__case-info-errors-wrap"></div>
-
-		<div class="crm-section">
-			<select ng-model="categoryId" name="categoryField" id="categoryField" class="crm-form-select spc__input spc--single-select">
-				<option ng-repeat="option in model['available_categories']" value="{{option.value}}">{{option.label}}</option>
-			</select>
-		</div>
-
-		<div class="ci__case-info-edit-mode-buttons">
-			<button class="ci__case-info-edit-confirm spc__button spc--height-medium" ng-click="editConfirm()">confirm</button>
-			<button class="button__cancel spc__button spc--height-medium"  ng-click="toggleMode()">cancel</button>
-		</div>
-	</div>
+  <div class="ci__case-info-errors-wrap"></div>
 </div>

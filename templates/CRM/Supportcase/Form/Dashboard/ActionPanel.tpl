@@ -1,30 +1,28 @@
 <div class="action-panel">
-
   <div class="ap__actions-wrap">
-    <a class="spc__button spc--icon" href="{crmURL p='civicrm/supportcase' q='reset=1'}" title="{ts}Clear all search criteria{/ts}" >
-      <span class="ui-button-icon ui-icon fa-undo"></span>
+    <a class="btn btn-secondary sc__m-0" href="{crmURL p='civicrm/supportcase' q='reset=1'}" title="{ts}Clear all search criteria{/ts}">
+      <i class="crm-i fa-undo"></i>
     </a>
 
-    <a class="spc__button spc--icon" href="{$addNewCaseUrl}" title="{ts}Add new one{/ts}" >
-      <span class="ui-button-icon ui-icon fa-plus"></span>
+    <a class="btn btn-secondary sc__m-0" href="{$addNewCaseUrl}" title="{ts}Add new one{/ts}" >
+      <i class="crm-i fa-plus"></i>
     </a>
 
     <div class="spc__menu-block">
-
-      <a class="spc__button spc--icon spc--disabled fastActionsMenuButton" href="#" title="{ts}Fast tasks{/ts}" >
-        <span class="ui-button-icon ui-icon fa-ellipsis-v"></span>
-      </a>
+      <button type="button" class="btn btn-secondary disabled fastActionsMenuButton sc__m-0" title="{ts}Fast tasks{/ts}" >
+        <i class="crm-i fa-ellipsis-v"></i>
+      </button>
 
       <div class="spc__menu-wrap">
         <ul class="spc__menu">
           <li>
             <div class="spc__menu-item">Change category to:</div>
             <ul>
-                {foreach from=$categories item=category}
-                  <li class="spc__menu-change-category" data-category-value="{$category.value}">
-                    <div class="spc__menu-item">{$category.label}</div>
-                  </li>
-                {/foreach}
+              {foreach from=$categories item=category}
+                <li class="spc__menu-change-category" data-category-value="{$category.value}">
+                  <div class="spc__menu-item">{$category.label}</div>
+                </li>
+              {/foreach}
             </ul>
           </li>
           <li>
@@ -38,14 +36,12 @@
           </li>
         </ul>
       </div>
-
     </div>
 
     <div class="spc__selected-cases spc--hide">Selected cases: <span class="selectedCaseCounter"></span></div>
   </div>
 
   {include file="CRM/Supportcase/Form/Dashboard/Pagination.tpl"}
-
 </div>
 
 {literal}
@@ -141,21 +137,21 @@
       }
 
       function initHandleSelectedCases() {
-        $('.supportcase__case-select-row-checkbox input[type="checkbox"]').change(handleSelectedCases);
+        $('.scd__case-select-row-checkbox input[type="checkbox"]').change(handleSelectedCases);
         $('#supportcaseToggleSelectCases').change(handleSelectedCases);
-        $('.supportcase__tabs-item').click(handleSelectedCases);
+        $('.scd__tabs-item').click(handleSelectedCases);
       }
 
       function handleSelectedCases() {
         setTimeout(function() {
-          var selectedCases = $('.supportcase__case-select-row-checkbox input[type="checkbox"]:checked');
+          var selectedCases = $('.scd__case-select-row-checkbox input[type="checkbox"]:checked');
           var menuButton = $(".fastActionsMenuButton");
           var menuWrap = $(".spc__menu-block");
 
           if (selectedCases.length > 0) {
-            menuButton.removeClass('spc--disabled');
+            menuButton.removeClass('disabled');
           } else {
-            menuButton.addClass('spc--disabled');
+            menuButton.addClass('disabled');
           }
 
           menuButton.removeClass('spc--active');
@@ -165,7 +161,7 @@
       }
 
       function updateSelectedCasesCounter() {
-        var selectedCases = $('.supportcase__case-select-row-checkbox input[type="checkbox"]:checked');
+        var selectedCases = $('.scd__case-select-row-checkbox input[type="checkbox"]:checked');
         $('.selectedCaseCounter').text(selectedCases.length);
         if (selectedCases.length > 0) {
           $('.spc__selected-cases').removeClass('spc--hide');
@@ -177,7 +173,7 @@
       function initFastActionsMenuButton() {
         $(".fastActionsMenuButton").click(function() {
           var element = $(this);
-          if (element.hasClass('spc--disabled')) {
+          if (element.hasClass('disabled')) {
             return;
           }
           element.closest('.spc__menu-block').toggleClass('spc--open');
@@ -186,11 +182,11 @@
       }
 
       function getSelectedCaseIds() {
-        var fastTasksSelect = $('.supportcase__case-select-row-checkbox input[type="checkbox"]:checked');
+        var fastTasksSelect = $('.scd__case-select-row-checkbox input[type="checkbox"]:checked');
 
         var ids = [];
         fastTasksSelect.each(function( index ) {
-          var caseId = $(this).closest('.supportcase__case-row').data('case-id');
+          var caseId = $(this).closest('.scd__case-row').data('case-id');
           ids.push(caseId);
         });
 

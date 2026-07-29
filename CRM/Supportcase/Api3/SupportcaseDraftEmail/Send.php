@@ -8,7 +8,7 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Send extends CRM_Supportcase_Ap
   /**
    * Get results of api
    */
-  public function getResult() {
+  public function getResult(): array {
     $this->changeActivityStatus(CRM_Supportcase_Utils_ActivityStatus::DRAFT_EMAIL);
 
     try {

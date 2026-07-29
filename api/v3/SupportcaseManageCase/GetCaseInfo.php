@@ -61,6 +61,7 @@ function civicrm_api3_supportcase_manage_case_get_case_info($params) {
     'managers_ids' => $managerIds,
     'related_contact_data' => CRM_Supportcase_Utils_CaseRelatedContact::get($case['id'], $clientIds),
     'start_date' => $case['start_date'],
+    'end_date' => $case['end_date'],
     'status_id' => $case['status_id'],
     'available_statuses' => $availableStatuses,
     "is_case_locked" => $isCaseLocked,

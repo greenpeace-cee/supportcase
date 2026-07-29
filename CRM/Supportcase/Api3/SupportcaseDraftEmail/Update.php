@@ -8,7 +8,7 @@ class CRM_Supportcase_Api3_SupportcaseDraftEmail_Update extends CRM_Supportcase_
   /**
    * Get results of api
    */
-  public function getResult() {
+  public function getResult(): array {
     $activityParams = [];
     $mailutilsMessageParams = [];
 

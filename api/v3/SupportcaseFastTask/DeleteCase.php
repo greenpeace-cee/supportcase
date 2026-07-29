@@ -9,8 +9,9 @@ function civicrm_api3_supportcase_fast_task_delete_case($params) {
     throw new api_Exception('Cannot read case ids', 'cannot_read_case_ids');
   }
   foreach ($caseIds as $caseId) {
-    civicrm_api3('Case', 'delete', [
+    civicrm_api3('Case', 'create', [
       'id' => $caseId,
+      'is_deleted' => 1
     ]);
   }
 

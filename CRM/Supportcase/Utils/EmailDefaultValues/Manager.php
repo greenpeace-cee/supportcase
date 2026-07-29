@@ -2,7 +2,7 @@
 
 class CRM_Supportcase_Utils_EmailDefaultValues_Manager {
 
-  public static function getPreparedEmailDefaultValues($mode, $caseId, $fromActivityId = null, $toEmailPrefillEmailId = null) {
+  public static function getPreparedEmailDefaultValues(string $mode, int $caseId, ?int $fromActivityId = null, ?int $toEmailPrefillEmailId = null) {
     if ($mode === CRM_Supportcase_Utils_Email::NEW_EMAIL_MODE) {
       $email = new CRM_Supportcase_Utils_EmailDefaultValues_Modes_New($mode, $caseId, null, $toEmailPrefillEmailId);
     } elseif ($mode === CRM_Supportcase_Utils_Email::REPLY_ALL_MODE) {

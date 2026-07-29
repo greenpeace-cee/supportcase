@@ -9,7 +9,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetCaseStatusWarningWindowData 
   /**
    * Get results of api
    */
-  public function getResult() {
+  public function getResult(): array {
     $returnData = [
       'isAllowToChangeCaseStatus' => true,
       'warningWindow' => [
@@ -17,10 +17,10 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_GetCaseStatusWarningWindowData 
         'type' => 'modal', // modal, inline
         'message' => '',
         'yesButtonText' => 'Close WITHOUT sending the message',
-        'yesButtonClasses' => 'spc__button spc--cancel spc--height-medium',
+        'yesButtonClasses' => 'btn btn-secondary sc__m-0',
         'yesButtonIcon' => 'fa-times',
         'noButtonText' => 'Cancel',
-        'noButtonClasses' => 'ci__case-info-edit-confirm spc__button spc--height-medium',
+        'noButtonClasses' => 'btn btn-secondary',
         'noButtonIcon' => 'fa-check',
       ],
     ];

@@ -2,7 +2,7 @@
 
 class CRM_Supportcase_Utils_EmailDefaultValues_Modes_New extends CRM_Supportcase_Utils_EmailDefaultValues_Modes_Base {
 
-  public function getValues() {
+  public function getValues(): array {
     $defaultValues = $this->getDefaultFields();
 
     $case = $this->getCase();
@@ -59,11 +59,7 @@ class CRM_Supportcase_Utils_EmailDefaultValues_Modes_New extends CRM_Supportcase
     return nl2br($message);
   }
 
-  /**
-   * @param $mailUtilsSetting
-   * @return string
-   */
-  protected function getRenderedTemplate($mailUtilsSetting) {
+  protected function getRenderedTemplate($mailUtilsSetting): string {
     if (empty($mailUtilsSetting['mailutils_template_id'])) {
       return '';
     }
