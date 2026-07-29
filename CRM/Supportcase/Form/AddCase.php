@@ -1,5 +1,7 @@
 <?php
 
+use CRM_Supportcase_ExtensionUtil as E;
+
 class CRM_Supportcase_Form_AddCase extends CRM_Core_Form {
 
   public function getTitle() {
@@ -26,6 +28,11 @@ class CRM_Supportcase_Form_AddCase extends CRM_Core_Form {
       }
     }
 
+    $prefillContactId = CRM_Utils_Request::retrieve('prefill_contact_id', 'Integer', $this);
+    if (empty($defaultValues['client_contact_id']) && !empty($prefillContactId)) {
+      $defaultValues['client_contact_id'] = $prefillContactId;
+    }
+
     return $defaultValues;
   }
 
@@ -34,7 +41,7 @@ class CRM_Supportcase_Form_AddCase extends CRM_Core_Form {
     $this->add('text', 'dashboard_search_qf_key');
     $this->add('text', 'prefill_email_id');
     $this->add('text', 'subject', 'Subject', ['class' => 'sc__width-100-percent'], TRUE);
-    $this->add('select', 'category_id', ts('Category'), CRM_Supportcase_Utils_Category::getOptions(), TRUE, ['class' => 'sc__width-100-percent']);
+    $this->add('select', 'category_id', ts('Category'), ['' => E::ts('-- please select --')] + CRM_Supportcase_Utils_Category::getOptions(), TRUE, ['class' => 'sc__width-100-percent']);
     $this->addEntityRef(
       'client_contact_id',
       ts('Client'),

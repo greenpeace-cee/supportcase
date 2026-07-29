@@ -48,32 +48,35 @@ function civicrm_api3_supportcase_manage_case_change_client($params) {
     'id' => $params['case_id'],
     'client_id' => $params['new_case_client_id'],
   ]);
-  $activities = $result['values']['rows'][0]['activity_id'] ?? [];
-  if (count($activities) > 0) {
-    // extract all emails used by the contact in any moved activities
-    $contactEmailsInCase = CRM_Supportcase_Utils_MailutilsMessageParty::getMessagePartyEmailByActivitiesAndContact(
-      $activities,
+  if (!in_array($currentClientId, Civi::settings()->get('supportcase_placeholder_clients') ?? [])) {
+    // move stuff unless this is a placeholder client
+    $activities = $result['values']['rows'][0]['activity_id'] ?? [];
+    if (count($activities) > 0) {
+      // extract all emails used by the contact in any moved activities
+      $contactEmailsInCase = CRM_Supportcase_Utils_MailutilsMessageParty::getMessagePartyEmailByActivitiesAndContact(
+        $activities,
+        $currentClientId
+      );
+      // add emails to new contact if necessary
+      CRM_Supportcase_Utils_Email::addSupportEmailsToContact(
+        $params['new_case_client_id'],
+        $contactEmailsInCase
+      );
+      // update contact_id in MailutilsMessageParty to new client
+      CRM_Supportcase_Utils_MailutilsMessageParty::updateMessagePartyContactByActivitiesAndContact(
+        $activities,
+        $currentClientId,
+        $params['new_case_client_id']
+      );
+    }
+
+    // create a dupe relationship between old and new client
+    CRM_Supportcase_Utils_DuplicateContacts::createDuplicateRelationship(
+      $params['case_id'],
+      $params['new_case_client_id'],
       $currentClientId
     );
-    // add emails to new contact if necessary
-    CRM_Supportcase_Utils_Email::addSupportEmailsToContact(
-      $params['new_case_client_id'],
-      $contactEmailsInCase
-    );
-    // update contact_id in MailutilsMessageParty to new client
-    CRM_Supportcase_Utils_MailutilsMessageParty::updateMessagePartyContactByActivitiesAndContact(
-      $activities,
-      $currentClientId,
-      $params['new_case_client_id']
-    );
   }
-
-  // create a dupe relationship between old and new client
-  CRM_Supportcase_Utils_DuplicateContacts::createDuplicateRelationship(
-    $params['case_id'],
-    $params['new_case_client_id'],
-    $currentClientId
-  );
 
   return civicrm_api3_create_success();
 }
