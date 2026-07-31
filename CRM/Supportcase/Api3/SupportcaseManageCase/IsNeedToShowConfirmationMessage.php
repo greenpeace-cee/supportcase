@@ -11,7 +11,7 @@ class CRM_Supportcase_Api3_SupportcaseManageCase_IsNeedToShowConfirmationMessage
   public function getResult(): array {
     $result = [
       'isNeedToShowConfirmationMessage' => true,
-      'confirmationMessage' => '<strong>Are you sure this is the same contact?</strong><br><br>The new case client has a different name. Are you sure you want to <strong>request a merge</strong> and change the case client?<br><br>Please use "Related Contacts" in other scenarios.',
+      'confirmationMessage' => '<strong>Are you sure this is the same contact?</strong><br><br>The new case client has a different name. Are you sure you want to <strong>request a merge</strong> and change the case client?<br>Please use "Related Contacts" in other scenarios.',
     ];
 
     $isCurrentClientHasLastAndFirstName = !empty($this->params['current_case_client']['last_name']) && !empty($this->params['current_case_client']['first_name']);

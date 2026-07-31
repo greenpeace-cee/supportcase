@@ -73,26 +73,14 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
       throw new api_Exception('Invalid data at "new_related_contact_ids" field',  'invalid_data');
     }
 
-    $relationshipTypeId = CRM_Supportcase_Utils_CaseRelatedContact::getRelationshipTypeId();
-    if (empty($relationshipTypeId)) {
-      $message = 'Cannot find relationship type id by name_a: ' . CRM_Supportcase_Install_Entity_RelationshipType::MADE_SUPPORT_REQUEST_RELATED_TO;
-      throw new api_Exception($message, 'cannot_find_relationship_type_id');
-    }
+    supportcaseCaseInfo_ValidateRelationshipTypeId();
 
     foreach ($params['new_related_contact_ids'] as $contactId) {
-      try {
-        civicrm_api3('Contact', 'getsingle', [
-          'id' => $contactId,
-        ]);
-      } catch (CiviCRM_API3_Exception $e) {
-        throw new api_Exception('Contact does not exist.', 'contact_does_not_exist');
-      }
+      supportcaseCaseInfo_ValidateContactId($contactId);
     }
 
+    supportcaseCaseInfo_ValidateClientIds($case);
     $clientIds = CRM_Supportcase_Utils_Case::findClientsIds($case);
-    if (empty($clientIds[0])) {
-      throw new api_Exception('Cannot find client id',  'cannot_find_client_id');
-    }
 
     foreach ($clientIds as $clientContactId) {
       if (in_array($clientContactId, $params['new_related_contact_ids'])) {
@@ -103,6 +91,24 @@ function civicrm_api3_supportcase_manage_case_update_case_info($params) {
     $clientId = $clientIds[0];
 
     CRM_Supportcase_Utils_CaseRelatedContact::update($case['id'], $params['new_related_contact_ids'], $clientId);
+  }
+
+  //handles add_related_contact_id:
+  if (isset($params['add_related_contact_id'])) {
+    supportcaseCaseInfo_ValidateRelationshipTypeId();
+    supportcaseCaseInfo_ValidateContactId($params['add_related_contact_id']);
+    supportcaseCaseInfo_ValidateClientIds($case);
+
+    $clientIds = CRM_Supportcase_Utils_Case::findClientsIds($case);
+    foreach ($clientIds as $clientContactId) {
+      if ($clientContactId == $params['add_related_contact_id']) {
+        throw new api_Exception('Cannot create relationship with case client.',  'cannot_create_relationship_with_case_client');
+      }
+    }
+
+    $clientId = $clientIds[0];
+
+    CRM_Supportcase_Utils_CaseRelatedContact::addSingle($case['id'], $params['add_related_contact_id'], $clientId);
   }
 
   //handles new_case_client_id:
@@ -226,4 +232,29 @@ function _civicrm_api3_supportcase_manage_case_update_case_info_spec(&$params) {
     'type' => CRM_Utils_Type::T_BOOLEAN,
     'title' => 'Is case deleted',
   ];
+}
+
+function supportcaseCaseInfo_ValidateContactId($contactId) {
+  try {
+    civicrm_api3('Contact', 'getsingle', [
+      'id' => $contactId,
+    ]);
+  } catch (CiviCRM_API3_Exception $e) {
+    throw new api_Exception('Contact does not exist.', 'contact_does_not_exist');
+  }
+}
+
+function supportcaseCaseInfo_ValidateClientIds($case) {
+  $clientIds = CRM_Supportcase_Utils_Case::findClientsIds($case);
+  if (empty($clientIds[0])) {
+    throw new api_Exception('Cannot find client id',  'cannot_find_client_id');
+  }
+}
+
+function supportcaseCaseInfo_ValidateRelationshipTypeId() {
+  $relationshipTypeId = CRM_Supportcase_Utils_CaseRelatedContact::getRelationshipTypeId();
+  if (empty($relationshipTypeId)) {
+    $message = 'Cannot find relationship type id by name_a: ' . CRM_Supportcase_Install_Entity_RelationshipType::MADE_SUPPORT_REQUEST_RELATED_TO;
+    throw new api_Exception($message, 'cannot_find_relationship_type_id');
+  }
 }

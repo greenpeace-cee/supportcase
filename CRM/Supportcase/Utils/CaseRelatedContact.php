@@ -70,6 +70,19 @@ class CRM_Supportcase_Utils_CaseRelatedContact {
     }
   }
 
+  public static function addSingle($caseId, $newRelatedContactId, $relatedContactIdA) {
+    if (empty($caseId) || empty($relatedContactIdA)) {
+      return;
+    }
+
+    $relationshipTypeId = self::getRelationshipTypeId();
+    if (empty($relationshipTypeId)) {
+      return;
+    }
+
+    self::createRelationship($caseId, $relatedContactIdA, $newRelatedContactId);
+  }
+
   /**
    * @param $caseId
    * @param $contactIdA
