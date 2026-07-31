@@ -28,22 +28,38 @@
         </div>
 
         <div class="ci__case-info-edit-mode" ng-show="isEditMode">
-          <div ng-show="!isDoubleConfirmMode">
+          <div ng-show="!isDoubleConfirmMode && !isNeedToShowConfirmationMessage">
             <select-contact is-required="true" search-api-params='{}' is-multiple="false" max-width="600" model="clientId"></select-contact>
           </div>
 
-          <div class="status" ng-if="confirmationMessage.length > 1">
-            <div ng-bind-html="confirmationMessage"></div>
+          <div ng-if="isNeedToShowConfirmationMessage">
+            <div class="status">
+              <p class="sc__mb-0 sc__mt-0"><strong>New Client:</strong></p>
+              <contact-info model="clientId" is-search-duplicates="true"></contact-info>
+            </div>
+            <div class="status">
+              <div class="sc__mb-10" ng-bind-html="confirmationMessage"></div>
+
+              <button class="btn btn-primary sc__m-0" ng-click="updateClient()">
+                <i class="crm-i fa-check"></i>
+                <span>Confirm changing client</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="status" ng-if="isNeedToShowConfirmationMessage">
+            <strong>Adding to Related Contacts</strong>
+            <p class="sc__mb-10 sc__mt-10">If you not sure if you need to change client, better to save this contact to "Related Contacts".</p>
+            <button  class="btn btn-success sc__green-btn sc__m-0" ng-click="addContactToRelatedContacts()">
+              <i class="crm-i fa-add"></i>
+              <span>Add this Contact to Related Contacts</span>
+            </button>
           </div>
 
           <div class="ci__case-info-errors-wrap" ng-show="!isDoubleConfirmMode"></div>
 
           <div class="sc__flex sc__justify-content-space-between sc__mt-10">
             <button ng-show="!isNeedToShowConfirmationMessage" class="btn btn-primary sc__m-0" ng-click="editConfirm()">
-              <i class="crm-i fa-check"></i>
-              <span>Confirm</span>
-            </button>
-            <button ng-show="isNeedToShowConfirmationMessage" class="btn btn-primary sc__m-0" ng-click="updateClient()">
               <i class="crm-i fa-check"></i>
               <span>Confirm</span>
             </button>

@@ -192,12 +192,24 @@
 
   angular.module(moduleName).service('reloadService', function() {
     this.reloadEmailsCallback = function() {};
+    this.reloadRelatedContactsCallback = function() {};
 
     this.reloadEmails = function() {
       this.reloadEmailsCallback();
     };
     this.setReloadEmailsCallback = function(callback) {
       this.reloadEmailsCallback = callback;
+    };
+
+    this.updateRelatedContactsData = function(model, newRelatedContact) {
+      model['related_contact_data']['related_contact_ids'].push(newRelatedContact);
+    };
+
+    this.reloadRelatedContacts = function() {
+      this.reloadRelatedContactsCallback();
+    };
+    this.setReloadRelatedContactsCallback = function(callback) {
+      this.reloadRelatedContactsCallback = callback;
     };
   });
 
@@ -521,14 +533,14 @@
       restrict: "E",
       templateUrl: "~/manageCase/directives/caseInfo/caseClients.html",
       scope: {model: "="},
-      controller: function($scope, $window, $element) {
+      controller: function($scope, $window, $element, reloadService) {
         $scope.showHelpInfo = $scope.$parent.showHelpInfo;
         $scope.isEditMode = false;
         $scope.confirmationMessage = '';
         $scope.isNeedToShowConfirmationMessage = false;
 
         $scope.toggleMode = function() {
-          $($element).find('.ci__case-info-errors-wrap').empty();
+          $scope.cleanClientErrors();
           $scope.isEditMode = !$scope.isEditMode;
 
           if ($scope.isEditMode) {
@@ -539,9 +551,13 @@
           }
         };
         $scope.setFieldFromModel = function() {$scope.clientId = $scope.model['client_ids'][0];};
+        $scope.cleanClientErrors = function() {
+          $($element).find('.ci__case-info-errors-wrap').empty();
+        };
 
         $scope.updateClient = function() {
           console.log('Updating client...');
+          $scope.cleanClientErrors();
           $scope.isNeedToShowConfirmationMessage = false;
           $scope.confirmationMessage = '';
 
@@ -566,6 +582,7 @@
               console.error(result.error_message);
             } else {
               if (result.values.isNeedToShowConfirmationMessage === true) {
+                $scope.cleanClientErrors();
                 $scope.isNeedToShowConfirmationMessage = true;
                 $scope.confirmationMessage = result.values.confirmationMessage;
                 console.log('Case client field: show confirm message.');
@@ -578,6 +595,16 @@
           }, function(error) {
             console.error('SupportcaseManageCase->is_need_to_show_confirmation_message error:');
             console.error(error);
+          });
+        };
+
+        $scope.addContactToRelatedContacts = function() {
+          $scope.$parent.editConfirm('add_related_contact_id', $scope.clientId, $element, function(result) {
+            $scope.toggleMode();
+            reloadService.updateRelatedContactsData($scope.model,$scope.clientId);
+            reloadService.reloadRelatedContacts();
+            $scope.$apply();
+            CRM.status(ts('Related contacts is Added.'));
           });
         };
 
@@ -626,7 +653,7 @@
       restrict: "E",
       templateUrl: "~/manageCase/directives/caseInfo/caseRelatedContacts.html",
       scope: {model: "="},
-      controller: function($scope, $window, $element) {
+      controller: function($scope, $window, $element, reloadService) {
         $scope.showHelpInfo = $scope.$parent.showHelpInfo;
         $scope.isEditMode = false;
         $scope.toggleMode = function() {
@@ -651,6 +678,7 @@
           });
         };
 
+        reloadService.setReloadRelatedContactsCallback($scope.setFieldFromModel);
         $scope.setFieldFromModel();
       }
     };
