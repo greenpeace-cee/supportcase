@@ -4,10 +4,10 @@
 */
 
 .contact-info__tag-item {
-  line-height: 135%;
+  line-height: 10px;
+  font-size: 10px;
+  padding: 2px;
   display: block;
-  float: left;
-  margin: 1px;
   max-width: 100px;
   white-space: nowrap;
   overflow: hidden;
@@ -33,7 +33,7 @@
 }
 
 .contact-info__accordion-wrap.opened .contact-info__accordion-header-ico {
-  top: 14px;
+  top: 11px;
   left: 6px;
   border: 4px solid transparent;
   border-top: 4px solid #212121;
@@ -41,14 +41,14 @@
 
 .contact-info__accordion-header-ico {
   position: absolute;
-  top: 12px;
+  top: 9px;
   left: 8px;
   border: 4px solid transparent;
   border-left: 4px solid #212121;
 }
 
 .contact-info__contact-item {
-  padding-bottom: 10px;
+  padding-bottom: 6px;
   font-size: 14px;
   line-height: 14px;
   display: flex;
@@ -70,8 +70,8 @@
 }
 .contact-info__preloader-text,
 .contact-info__accordion-header-label {
-  line-height: 30px;
-  max-width: 150px;
+  line-height: 24px;
+  max-width: 180px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -79,8 +79,8 @@
 
 .contact-info__accordion-header-link {
   position: absolute;
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   top: 0;
   overflow: hidden;
   right: 0;
@@ -95,10 +95,13 @@
 }
 
 .contact-info__accordion-header-wrap {
-  padding-right: 30px;
-  height: 30px;
-  overflow: hidden;
+  padding-right: 24px;
   position: relative;
+}
+
+.contact-info__tags-wrap {
+  display: flex;
+  gap: 2px;
 }
 
 .contact-info__accordion-header-link::before {
@@ -117,7 +120,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  height: 30px;
+  height: 24px;
   width: 20px;
 }
 

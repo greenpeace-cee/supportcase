@@ -689,12 +689,30 @@
               $scope.contact = result['values'][0];
               $scope.isLoading = false;
               $scope.$apply();
+              $scope.initTagTooltips();
             }
           }, function(error) {});
         };
         $scope.toggleDescription = function() {
           $scope.isOpenDescription = !$scope.isOpenDescription;
           $($element).find(".contact-info__accordion-body").slideToggle('fast');
+        };
+
+        $scope.initTagTooltips = function() {
+          $($element).find('.contact-info__tag-item-tooltip').each(function () {
+            const isAlreadyInit = $(this).data('isAlreadyInit');
+            if (isAlreadyInit) {
+              return;
+            }
+
+            var title = $(this).attr('data-title');
+            var description = $(this).attr('data-description');
+            var tooltipText = title + ': ' + description;
+
+            $(this).attr('title', tooltipText);
+            $(this).attr('isAlreadyInit', true);
+            $(this).tooltip({'html': true});
+          });
         };
       }
     };
