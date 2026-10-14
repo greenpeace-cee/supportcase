@@ -13,6 +13,17 @@
         <div class="contact-info__accordion-header" title="Show details" ng-click="toggleDescription()">
           <div class="contact-info__accordion-header-ico"></div>
           <div class="contact-info__accordion-header-label" >{{contact.display_name}}</div>
+          <div class="contact-info__tags-wrap" >
+            <div
+              ng-repeat="tag in contact.tags"
+              class="crm-tag-item sc__tag contact-info__tag-item contact-info__tag-item-tooltip sc__m-0"
+              style="{{ generateStyles(tag['color']) }}"
+              data-title="{{ tag['label'] }}"
+              data-description="{{ tag['description'] }}"
+            >
+              {{tag['label']}}
+            </div>
+          </div>
         </div>
         <a class="contact-info__accordion-header-link fa-external-link" href="{{contact.link}}" target="_blank" title="Go to the contact"></a>
       </div>
@@ -36,17 +47,6 @@
         <div class="contact-info__contact-item">
           <span class="contact-info__contact-item-label">Has BPK:</span>
           <span class="contact-info__contact-item-value">{{contact.is_has_bpk ? 'yes' : 'no'}}</span>
-        </div>
-        <div class="contact-info__contact-item">
-          <div class="contact-info__contact-item-value">
-            <div class="contact-info__tags-wrap">
-              <div ng-repeat="tag in contact.tags" class="crm-tag-item sc__tag contact-info__tag-item"
-                   style="{{generateStyles(tag['color'])}}"
-                   title="{{tag['description']}}">
-                {{tag['name']}}
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
